@@ -1721,12 +1721,6 @@ db.auth.onAuthStateChange(async(event,session)=>{
   if(!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;}
 })();
 
-// ── INIT ON LOAD ──
-(function(){
-  if(!window.hbInit){loadSection('strategy');window.hbInit=true;}
-  if(!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;}
-})();
-
 // ── SWITCH KT TAB ──
 function switchKTTab(tab){
   setTimeout(()=>{ window.scrollTo(0,0); },0);
