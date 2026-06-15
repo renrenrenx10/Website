@@ -648,13 +648,11 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
         <h2>Events <span>Calendar</span></h2>
         <p>NucCol's live calendar — upcoming events, webinars, and sector dates.</p>
       </div>
-      <div style="border:1px solid #dde4ee;border-radius:10px;overflow:hidden;background:var(--white)">
-        <iframe
-          src="https://outlook.office365.com/owa/calendar/f6516775997447cab5c650bac181856b@nuccol.co.uk/a09e0d276c0b4455bd6bc944f7f1665314033751845783143609/calendar.html"
-          style="width:100%;height:680px;border:none;display:block"
-          title="NucCol Events Calendar"
-          loading="lazy">
-        </iframe>
+      <div style="border:1px solid #dde4ee;border-radius:10px;padding:40px;background:var(--white);text-align:center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00c8d4" stroke-width="1.5" style="width:48px;height:48px;margin-bottom:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;text-transform:uppercase;color:var(--navy);margin-bottom:8px">NucCol Events Calendar</h3>
+        <p style="font-size:.9rem;color:#5a6a80;margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto">View upcoming NucCol events, webinars and sector dates in the shared Outlook calendar.</p>
+        <a href="https://outlook.office365.com/owa/calendar/f6516775997447cab5c650bac181856b@nuccol.co.uk/a09e0d276c0b4455bd6bc944f7f1665314033751845783143609/calendar.html" target="_blank" rel="noopener" style="display:inline-block;background:#00c8d4;color:#0a1628;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:12px 28px;border-radius:6px">Open Calendar ↗</a>
       </div>
     </div>
 
@@ -1012,7 +1010,7 @@ function nav(id){
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('bc').innerHTML=`<span>${labels[id]||id}</span>`;
   if(id==='handbook'&&!window.hbInit){loadSection('strategy');window.hbInit=true}
-  if(id==='nhandbook'&&!window.nhbInit){loadNSection('nif');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
+  if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
   if(window.innerWidth<=900){document.getElementById('sidebar').classList.remove('open');}
   window.scrollTo(0,0);
 }
@@ -1720,13 +1718,13 @@ db.auth.onAuthStateChange(async(event,session)=>{
 // ── INIT ON LOAD ──
 (function(){
   if(!window.hbInit){loadSection('strategy');window.hbInit=true;}
-  if(!window.nhbInit){loadNSection('nif');window.nhbInit=true;}
+  if(!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;}
 })();
 
 // ── INIT ON LOAD ──
 (function(){
   if(!window.hbInit){loadSection('strategy');window.hbInit=true;}
-  if(!window.nhbInit){loadNSection('nif');window.nhbInit=true;}
+  if(!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;}
 })();
 
 // ── SWITCH KT TAB ──
