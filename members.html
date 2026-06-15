@@ -1413,7 +1413,7 @@ db.auth.onAuthStateChange((event,session)=>{
     document.getElementById('shell').style.display='flex';
     loadLiveBadges();
   }
-  if(event==='SIGNED_OUT'||event==='USER_DELETED'){
+  if(event==='SIGNED_OUT'){
     document.getElementById('auth-gate').style.display='flex';
     document.getElementById('shell').style.display='none';
   }
@@ -1658,4 +1658,102 @@ async function commToggleComments(postId){
     <button type="button" class="btn-reply" onclick="commSubmitComment('${postId}')">Reply</button>
   </div>`;
   const inp=document.getElementById('lcin-'+postId);
-  if(inp) inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();commSubm
+  if(inp) inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();commSubmitComment(postId);}});
+}
+
+// ── SUBMIT COMMENT ──
+async function commSubmitComment(postId){
+  const inp=document.getElementById('lcin-'+postId);
+  const text=inp.value.trim();
+  if(!text) return;
+  inp.value='';inp.disabled=true;
+  const {error}=await db.from('comments').insert({post_id:postId,user_id:commUser.id,content:text});
+  inp.disabled=false;
+  if(error){commToast('Failed to comment.','err');return;}
+  await commToggleComments(postId);
+  await commToggleComments(postId);
+}
+
+// ── DELETE POST ──
+async function commDeletePost(postId){
+  if(!confirm('Delete this post?')) return;
+  const {error}=await db.from('posts').delete().eq('id',postId);
+  if(error){commToast('Could not delete.','err');return;}
+  commPosts=commPosts.filter(p=>p.id!==postId);
+  commRenderPosts();
+  commToast('Post deleted.');
+}
+
+// ── LOAD MEMBERS ──
+async function commLoadMembers(){
+  const {data}=await db.from('profiles').select('full_name,company').order('created_at',{ascending:false}).limit(8);
+  const el=document.getElementById('comm-members-list');
+  if(!el) return;
+  if(!data||data.length===0){el.innerHTML='<div style="font-size:.76rem;color:var(--grey)">No members yet</div>';return;}
+  el.innerHTML=data.map(m=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2)">
+      <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;color:var(--navy);flex-shrink:0">${commInitials(m.full_name)}</div>
+      <div>
+        <div style="font-size:.76rem;font-weight:600">${commEsc(m.full_name)}</div>
+        <div style="font-size:.68rem;color:var(--grey)">${commEsc(m.company||'')}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── REALTIME ──
+function commSubscribeRealtime(){
+  commRealtimeSub=db.channel('community-posts')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'posts'},async()=>{await commLoadPosts();})
+    .on('postgres_changes',{event:'DELETE',schema:'public',table:'posts'},async()=>{await commLoadPosts();})
+    .subscribe();
+}
+
+// ── AUTH STATE LISTENER ──
+db.auth.onAuthStateChange(async(event,session)=>{
+  if(session?.user){
+    if(document.getElementById('comm-feed-wrap')){
+      await commInit(session.user);
+    }
+  }
+});
+
+// ── INIT ON LOAD ──
+(function(){
+  if(!window.hbInit){loadSection('strategy');window.hbInit=true;}
+  if(!window.nhbInit){loadNSection('nif');window.nhbInit=true;}
+})();
+
+// ── INIT ON LOAD ──
+(function(){
+  if(!window.hbInit){loadSection('strategy');window.hbInit=true;}
+  if(!window.nhbInit){loadNSection('nif');window.nhbInit=true;}
+})();
+
+// ── SWITCH KT TAB ──
+function switchKTTab(tab){
+  setTimeout(()=>{ window.scrollTo(0,0); },0);
+  const tabEls=['be','micro','60s'].map(t=>document.getElementById('ktvtab-'+t)).filter(Boolean);
+  const catEls=['be','micro','60s'].map(t=>document.getElementById('ktvcat-'+t)).filter(Boolean);
+  tabEls.forEach(t=>t.classList.remove('active'));
+  catEls.forEach(c=>c.style.display='none');
+  const tabEl=document.getElementById('ktvtab-'+tab);
+  const catEl=document.getElementById('ktvcat-'+tab);
+  if(tabEl) tabEl.classList.add('active');
+  if(catEl) catEl.style.display='block';
+  if(tab==='60s'){
+    const grid=document.getElementById('sixty-grid');
+    if(grid&&grid.children.length===0) buildSixtyGrid();
+  }
+}
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.id==='comm-pass') commSignIn();
+  if(e.key==='Enter'&&e.target.id==='comm-email') document.getElementById('comm-pass').focus();
+});
+
+
+
+</script>
+</body>
+</html>
