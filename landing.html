@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>NucCol – Nuclear Collaboration Ltd</title>
+  <meta name="description" content="NucCol is the UK's leading nuclear supply chain specialist. Find out about our services or the Fit for Nuclear programme.">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0a1628;--navy2:#0e2040;--cyan:#29b6e8;--cyan2:#1a96c8;--light:#e8eef6;--white:#fff;--grey:#8a9bb0;--border:rgba(41,182,232,0.18)}
+    html,body{height:100%}
+    body{font-family:'Barlow',sans-serif;background:var(--white);color:#1a1a2e;overflow-x:hidden}
+
+    /* HEADER BAND */
+    .page-header{padding:80px 48px 72px;background:var(--navy);border-bottom:1px solid var(--border);position:relative;overflow:hidden;text-align:center}
+    .page-header-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(41,182,232,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,182,232,0.04) 1px,transparent 1px);background-size:60px 60px}
+    .page-header-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(41,182,232,0.09) 0%,transparent 70%)}
+    .page-header-content{position:relative;max-width:700px;margin:0 auto}
+
+    .logo-wrap{margin-bottom:28px}
+    .logo-wrap img{height:64px;width:64px;object-fit:contain;border-radius:6px}
+
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .eyebrow::before,.eyebrow::after{content:'';display:block;width:24px;height:2px;background:var(--cyan)}
+
+    h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.6rem,6vw,4.8rem);font-weight:800;line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;color:var(--white);margin-bottom:20px}
+    h1 span{color:var(--cyan)}
+
+    .page-header p{font-size:1rem;font-weight:300;line-height:1.75;color:rgba(232,238,246,0.75);max-width:480px;margin:0 auto}
+
+    /* CARDS SECTION */
+    .section{padding:72px 48px 80px;background:var(--white)}
+    .cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;max-width:900px;margin:0 auto}
+
+    .card{flex:1;min-width:280px;max-width:400px;background:var(--white);border:1px solid #dde4ee;border-radius:8px;padding:40px 36px;text-decoration:none;color:#1a1a2e;transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;display:flex;flex-direction:column;gap:10px}
+    .card:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 12px 40px rgba(41,182,232,0.12)}
+
+    .card-label{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan)}
+
+    .card h2{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:800;text-transform:uppercase;line-height:1;color:var(--navy)}
+
+    .card p{font-size:0.88rem;line-height:1.7;color:#5a6a80;flex:1}
+
+    .card-cta{display:inline-flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);margin-top:12px;transition:gap 0.2s}
+    .card:hover .card-cta{gap:14px}
+    .card-cta svg{width:16px;height:16px;stroke:var(--cyan);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+    /* accent card */
+    .card.primary{background:#f4f7fb;border-color:#dde4ee}
+    .card.primary:hover{border-color:var(--cyan)}
+
+    .divider{display:flex;flex-direction:column;align-items:center;gap:12px;color:#b0bcc8;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;align-self:center}
+    .divider::before,.divider::after{content:'';width:1px;height:48px;background:#dde4ee}
+
+    /* FOOTER */
+    footer{background:#060f1c;padding:32px 48px;border-top:1px solid var(--border);text-align:center}
+    footer p{font-size:0.78rem;color:var(--grey)}
+    footer a{color:rgba(41,182,232,0.7);text-decoration:none}
+    footer a:hover{color:var(--cyan)}
+
+    @media(max-width:700px){
+      .page-header{padding:60px 24px 52px}
+      .section{padding:48px 24px 60px}
+      .divider{flex-direction:row}.divider::before,.divider::after{width:48px;height:1px}
+      footer{padding:24px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="page-header-grid"></div>
+    <div class="page-header-glow"></div>
+    <div class="page-header-content">
+      <div class="logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol">
+      </div>
+      <div class="eyebrow">Nuclear Collaboration Ltd</div>
+      <h1>What are you<br>looking for<span>?</span></h1>
+      <p>We work across the nuclear and clean energy supply chain. Tell us where you'd like to go.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="cards">
+
+      <a class="card primary" href="https://glittery-beignet-ec9969.netlify.app/index.html">
+        <div class="card-label">Supply chain specialists</div>
+        <h2>NucCol</h2>
+        <p>Services, programmes, and expertise for nuclear primes, SMEs, and government bodies across the UK energy sector.</p>
+        <div class="card-cta">
+          Visit NucCol
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </a>
+
+      <div class="divider">or</div>
+
+      <a class="card" href="https://glittery-beignet-ec9969.netlify.app/f4n.html">
+        <div class="card-label">Programme</div>
+        <h2>Fit for Nuclear</h2>
+        <p>The UK's leading nuclear supply chain development programme — helping manufacturers win work in the nuclear sector.</p>
+        <div class="card-cta">
+          Visit F4N
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Nuclear Collaboration Ltd &nbsp;·&nbsp; Derby, UK &nbsp;·&nbsp; <a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></p>
+  </footer>
+
+</body>
+</html>

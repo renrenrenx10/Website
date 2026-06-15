@@ -1,0 +1,23 @@
+# Videos — hosted on Azure Blob Storage, not GitHub
+Resources/Videos/
+
+# Environment / secrets
+.env
+.env.*
+*.env
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+
+# Working docs
+Website bios.docx
+
+# Temp files
+*.tmp
+*.log

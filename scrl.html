@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Supply Chain Readiness Level (SCRL) – NucCol</title>
+  <meta name="description" content="NucCol's SCRL assessments provide an in-depth evaluation of UK manufacturers' readiness to meet the demands of energy infrastructure projects — identifying gaps and delivering actionable insights.">
+  <meta name="keywords" content="SCRL, Supply Chain Readiness Level, nuclear supply chain assessment, UK content, supplier readiness, nuclear manufacturing assessment, NucCol">
+  <meta name="author" content="NucCol – Nuclear Collaboration Ltd">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://nuccol.co.uk/scrl">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Supply Chain Readiness Level (SCRL) – NucCol">
+  <meta property="og:description" content="NucCol's SCRL assessments evaluate UK manufacturers' ability to meet the demands of major energy infrastructure projects.">
+  <meta property="og:url" content="https://nuccol.co.uk/scrl">
+  <meta property="og:site_name" content="NucCol – Nuclear Collaboration Ltd">
+  <meta property="og:image" content="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0a1628;--navy2:#0e2040;--cyan:#29b6e8;--cyan2:#1a96c8;--light:#e8eef6;--white:#fff;--grey:#8a9bb0;--border:rgba(41,182,232,0.18)}
+    html{scroll-behavior:smooth}
+    body{font-family:'Barlow',sans-serif;background:var(--white);color:#1a1a2e;overflow-x:hidden}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;height:52px;flex-shrink:0;text-decoration:none}
+    .nav-logo img{height:48px;width:48px;object-fit:contain;border-radius:4px;display:block}
+    .nav-links{display:flex;gap:1px;align-items:center;list-style:none;flex-wrap:wrap}
+    .nav-links a{color:var(--light);text-decoration:none;font-size:0.72rem;font-weight:500;letter-spacing:0.02em;padding:6px 8px;border-radius:4px;transition:color 0.2s,background 0.2s;white-space:nowrap}
+    .nav-links a:hover{color:var(--cyan);background:rgba(41,182,232,0.08)}
+    .nav-links a.active{color:var(--cyan)}
+    .nav-cta{background:var(--cyan)!important;color:var(--navy)!important;font-weight:700!important;padding:6px 14px!important;border-radius:4px}
+    .nav-cta:hover{background:var(--cyan2)!important}
+
+    /* PAGE HEADER */
+    .page-header{padding:140px 48px 80px;background:var(--navy);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+    .page-header-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(41,182,232,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,182,232,0.04) 1px,transparent 1px);background-size:60px 60px}
+    .page-header-glow{position:absolute;top:-100px;right:10%;width:500px;height:500px;background:radial-gradient(circle,rgba(41,182,232,0.1) 0%,transparent 70%)}
+    .page-header-content{position:relative;max-width:1200px;margin:0 auto}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .eyebrow::before{content:'';display:block;width:24px;height:2px;background:var(--cyan)}
+    h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;color:var(--white);margin-bottom:20px}
+    h1 span,h2 span{color:var(--cyan)}
+    .page-header p{font-size:1.05rem;font-weight:300;line-height:1.75;color:rgba(232,238,246,0.82);max-width:620px}
+    .header-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+    .header-tag{font-size:0.74rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:6px 14px;border-radius:30px;border:1px solid rgba(41,182,232,0.3);color:var(--cyan);background:rgba(41,182,232,0.06)}
+
+    /* SECTIONS */
+    section{padding:88px 48px}
+    section.alt{background:#f4f7fb}
+    section.dark{background:var(--navy)}
+    .sw{max-width:1200px;margin:0 auto}
+    .sey{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .sey::before{content:'';display:block;width:24px;height:2px;background:var(--cyan)}
+    h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;text-transform:uppercase;letter-spacing:-0.01em;line-height:1.05;margin-bottom:14px;color:var(--navy)}
+    .intro{font-size:1rem;font-weight:300;line-height:1.75;color:#4a5568;max-width:680px;margin-bottom:52px}
+
+    /* SPLIT LAYOUT */
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+    .split-visual{border-radius:8px;overflow:hidden;box-shadow:0 12px 48px rgba(41,182,232,0.15)}
+    .split-visual img{width:100%;display:block}
+    .split-body h2{color:var(--navy);margin-bottom:16px}
+    .split-body p{font-size:0.95rem;line-height:1.8;color:#4a5568;margin-bottom:16px}
+
+    /* LEVEL SCALE */
+    .scale{display:flex;flex-direction:column;gap:0;max-width:900px;margin:48px auto 0}
+    .scale-row{display:grid;grid-template-columns:72px 1fr;gap:0;border:1px solid #dde4ee;border-bottom:none;background:var(--white);transition:box-shadow 0.2s}
+    .scale-row:first-child{border-radius:6px 6px 0 0}
+    .scale-row:last-child{border-bottom:1px solid #dde4ee;border-radius:0 0 6px 6px}
+    .scale-row:hover{box-shadow:0 4px 24px rgba(41,182,232,0.1);z-index:1;position:relative}
+    .scale-num{background:var(--navy);color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:0.02em;flex-shrink:0}
+    .scale-content{padding:20px 24px;border-left:1px solid #dde4ee}
+    .scale-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--navy);margin-bottom:4px}
+    .scale-desc{font-size:0.86rem;line-height:1.6;color:#5a6a80}
+    .scale-row.highlight .scale-num{background:var(--cyan);color:var(--navy)}
+    .scale-row.highlight .scale-content{background:rgba(41,182,232,0.04)}
+
+    /* PROCESS STEPS */
+    .steps{display:flex;flex-direction:column;gap:0;max-width:860px;margin:48px auto 0;counter-reset:steps}
+    .step{display:grid;grid-template-columns:56px 1fr;gap:0;position:relative}
+    .step:not(:last-child)::before{content:'';position:absolute;left:27px;top:56px;bottom:0;width:2px;background:linear-gradient(to bottom,var(--cyan),rgba(41,182,232,0.1))}
+    .step-num{width:56px;height:56px;border-radius:50%;background:var(--navy);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:var(--cyan);flex-shrink:0;z-index:1}
+    .step-body{padding:0 0 40px 24px}
+    .step-body h3{font-family:'Barlow Condensed',sans-serif;font-size:1.15rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--navy);margin-bottom:6px;padding-top:12px}
+    .step-body p{font-size:0.9rem;line-height:1.72;color:#5a6a80}
+
+    /* OUTCOMES GRID */
+    .outcomes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+    .outcome-card{background:var(--white);border:1px solid #dde4ee;border-radius:8px;padding:32px 28px;transition:box-shadow 0.2s,border-color 0.2s}
+    .outcome-card:hover{box-shadow:0 8px 32px rgba(41,182,232,0.12);border-color:rgba(41,182,232,0.4)}
+    .outcome-icon{width:44px;height:44px;border-radius:8px;background:rgba(41,182,232,0.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+    .outcome-icon svg{width:22px;height:22px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .outcome-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--navy);margin-bottom:8px}
+    .outcome-card p{font-size:0.86rem;line-height:1.65;color:#5a6a80}
+
+    /* WHO IS IT FOR */
+    .audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+    .audience-card{padding:28px 24px;border-radius:6px;border:1px solid rgba(41,182,232,0.2);background:rgba(41,182,232,0.04)}
+    .audience-card .label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+    .audience-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;text-transform:uppercase;color:var(--white);margin-bottom:8px}
+    .audience-card p{font-size:0.86rem;line-height:1.65;color:var(--grey)}
+
+    /* WORKBOOK SECTION */
+    .workbook-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;margin-top:48px}
+    .workbook-body p{font-size:0.95rem;line-height:1.8;color:#4a5568;margin-bottom:16px}
+    .workbook-body h3{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--navy);margin:28px 0 12px}
+    .workbook-visual{border-radius:8px;overflow:hidden;box-shadow:0 12px 48px rgba(41,182,232,0.15);background:var(--white);border:1px solid #dde4ee}
+    .workbook-visual img{width:100%;display:block}
+    .workbook-visual .img-caption{padding:14px 18px;font-size:0.78rem;color:var(--grey);border-top:1px solid #dde4ee;font-style:italic}
+
+    /* REPORT STRUCTURE */
+    .report-structure{margin-top:40px;display:flex;flex-direction:column;gap:0}
+    .report-item{display:grid;grid-template-columns:28px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid #dde4ee;align-items:start}
+    .report-item:last-child{border-bottom:none}
+    .report-bullet{width:28px;height:28px;border-radius:50%;background:var(--navy);color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+    .report-item-title{font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--navy);margin-bottom:4px}
+    .report-item-desc{font-size:0.86rem;line-height:1.6;color:#5a6a80}
+
+    /* CTA BAND */
+    .cta-band{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center;max-width:1200px;margin:0 auto;padding:64px 56px;background:var(--navy2);border-radius:10px;border:1px solid var(--border)}
+    .cta-band h2{font-size:clamp(1.6rem,3vw,2.4rem);color:var(--white);margin-bottom:8px}
+    .cta-band p{font-size:0.95rem;color:var(--grey);line-height:1.7;max-width:560px}
+    .cta-btns{display:flex;gap:12px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+    .btn-p{display:inline-block;background:var(--cyan);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:12px 24px;border-radius:4px;text-decoration:none;transition:background 0.2s}
+    .btn-p:hover{background:var(--cyan2)}
+    .btn-g{display:inline-block;border:1px solid rgba(41,182,232,0.4);color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:12px 24px;border-radius:4px;text-decoration:none;transition:border-color 0.2s,background 0.2s}
+    .btn-g:hover{border-color:var(--cyan);background:rgba(41,182,232,0.08)}
+
+    /* RELATED SERVICES */
+    .related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px}
+    .related-card{display:flex;align-items:center;gap:20px;padding:24px;border:1px solid #dde4ee;border-radius:6px;text-decoration:none;background:var(--white);transition:box-shadow 0.2s,border-color 0.2s}
+    .related-card:hover{box-shadow:0 4px 24px rgba(41,182,232,0.1);border-color:rgba(41,182,232,0.35)}
+    .related-num{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;color:rgba(41,182,232,0.25);flex-shrink:0;line-height:1}
+    .related-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--navy);margin-bottom:4px}
+    .related-card p{font-size:0.82rem;color:#5a6a80;line-height:1.5}
+
+    /* FOOTER */
+    footer{background:#060f1c;padding:64px 48px 32px;border-top:1px solid var(--border)}
+    .fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+    .fl{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+    .fl img{height:36px;width:36px;object-fit:contain;border-radius:3px}
+    .fl span{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--white);letter-spacing:0.04em}
+    .fa{font-size:0.85rem;color:var(--grey);line-height:1.7;margin-bottom:12px}
+    .fad{font-size:0.8rem;color:var(--grey);line-height:1.8}
+    .fc h4{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .fc ul{list-style:none}
+    .fc li{margin-bottom:9px}
+    .fc a{font-size:0.84rem;color:var(--grey);text-decoration:none;transition:color 0.2s}
+    .fc a:hover{color:var(--white)}
+    .fb{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:var(--grey)}
+    .fb a{color:var(--grey);text-decoration:none}
+    .fb a:hover{color:var(--white)}
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      nav{padding:0 24px}
+      .nav-links{display:none}
+      .page-header{padding:120px 24px 64px}
+      section{padding:64px 24px}
+      .split{grid-template-columns:1fr;gap:40px}
+      .workbook-grid{grid-template-columns:1fr;gap:40px}
+      .outcomes-grid{grid-template-columns:repeat(2,1fr)}
+      .audience-grid{grid-template-columns:repeat(2,1fr)}
+      .cta-band{grid-template-columns:1fr;gap:32px;padding:40px 32px}
+      .cta-btns{justify-content:flex-start}
+      .fg{grid-template-columns:1fr 1fr;gap:32px}
+      footer{padding:48px 24px 24px}
+      .related-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:640px){
+      .outcomes-grid{grid-template-columns:1fr}
+      .audience-grid{grid-template-columns:1fr}
+      .fg{grid-template-columns:1fr}
+      .fb{flex-direction:column;gap:12px;text-align:center}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol">
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">Who We Are</a></li>
+    <li><a href="markets.html">Markets</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="f4n-companies.html">F4 Community</a></li>
+    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="careers.html">Careers</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+    <li><a href="members.html">Members Login</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-grid"></div>
+  <div class="page-header-glow"></div>
+  <div class="page-header-content">
+    <div class="eyebrow">Supply Chain Development</div>
+    <h1>Supply Chain<br><span>Analysis &amp; SCRL</span></h1>
+    <p>From ground-level capability mapping to structured readiness assessments — NucCol provides the expertise and tools to understand, grow, and strengthen your supply chain.</p>
+    <div class="header-tags">
+      <span class="header-tag">Supply Chain Analysis</span>
+      <span class="header-tag">SCRL Assessment</span>
+      <span class="header-tag">Capability Gap Analysis</span>
+      <span class="header-tag">UK Content</span>
+      <span class="header-tag">Supplier Engagement</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPLY CHAIN ANALYSIS -->
+<section>
+  <div class="sw">
+    <div class="split">
+      <div class="split-body">
+        <div class="sey">Our Approach</div>
+        <h2>Supply Chain <span>Analysis</span></h2>
+        <p>Our supply chain analysis approach goes beyond assessment. We work directly with organisations developing new reactors, energy infrastructure technology, and other complex programmes — as well as regional authorities — to understand and grow supply chain capacity and capability from the ground up.</p>
+        <p>By engaging potential suppliers early, we give them a deeper understanding of your technology and specific requirements, bridging the gap between what the market currently offers and what your programme demands.</p>
+        <p>Whether you are looking to understand existing UK supply chain capability, identify and engage with new suppliers, or maximise UK content across your programme — NucCol provides the expertise and tools to make it happen. Our end-to-end approach ensures that gaps become opportunities, and that your supply chain is positioned for long-term success.</p>
+      </div>
+      <div class="split-visual">
+        <img src="images/site/SCRL_Pie.png" alt="SCRL Findings pie chart">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS SCRL -->
+<section class="alt">
+  <div class="sw">
+    <div class="sey">What is SCRL?</div>
+    <h2>Supply Chain Readiness Level <span>Assessment</span></h2>
+    <p class="intro">A proven, methodical process designed to evaluate the UK manufacturing supply chain's capability — giving programme teams and suppliers a clear, evidence-based picture and a roadmap to improve it.</p>
+
+    <div class="split" style="margin-top:0">
+      <div class="split-body">
+        <p>NucCol's SCRL assessment uses a combination of F4N company data, an in-house company portal of 3,500+ companies, and knowledge from targeted supplier engagement. Our assessments measure manufacturers' operational and technical capacity — identifying gaps in production, quality, and capability.</p>
+        <p>Modelled on the concept of Technology Readiness Levels (TRLs) used across advanced engineering, SCRL provides a consistent, repeatable score that reflects a supplier's true readiness — not just their ambition. It covers quality management, operational capability, financial stability, health &amp; safety, workforce capacity, and sector-specific compliance.</p>
+        <p>Findings are delivered in a structured workbook format accompanied by a detailed report, highlighting strengths, weaknesses, and actionable recommendations to strengthen your supply chain.</p>
+      </div>
+      <div class="split-visual">
+        <img src="images/site/SCRL_RAG.png" alt="Supply chain readiness levels key — Grey, Red, Amber, Green">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- WORKBOOK REPORT -->
+<section class="alt">
+  <div class="sw">
+    <div class="sey">Deliverables</div>
+    <h2>The Workbook <span>Report</span></h2>
+
+    <div class="workbook-grid">
+      <div class="workbook-body">
+        <p>The Workbook is a comprehensive, version-controlled document that evolves throughout the project lifecycle. It is structured to ensure consistency and transparency across every stage of the assessment, incorporating project assumptions, customer-supplied component data, and full revision history.</p>
+        <p>At its core is the SCRL Assessment itself — a detailed list of identified UK suppliers for each commodity, including a brief description of their capabilities, a link to their webpage, and a clear indication of which components they have been assessed as capable of producing.</p>
+        <p>Supporting notes and citations provide the evidence base behind every assessment decision, while any assumptions made regarding components, manufacturing processes, or required standards are captured against the specific item and explored in greater depth in the accompanying final report.</p>
+        <p>The more detailed the customer data provided, the more refined and accurate the supply chain review — making early and thorough engagement a key factor in delivering maximum value.</p>
+
+        <h3>Structure of the Report</h3>
+        <div class="report-structure">
+          <div class="report-item">
+            <div class="report-bullet">1</div>
+            <div>
+              <div class="report-item-title">Introduction</div>
+              <div class="report-item-desc">Outline of the project, the technology reviewed, and component requirements.</div>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-bullet">2</div>
+            <div>
+              <div class="report-item-title">Methodology</div>
+              <div class="report-item-desc">Outlines NucCol desktop research, data sources, and scope of the project.</div>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-bullet">3</div>
+            <div>
+              <div class="report-item-title">Assumptions Made</div>
+              <div class="report-item-desc">Details of the assumptions made during the SCRL review process, why they were made, and how they shape the final assessment.</div>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-bullet">4</div>
+            <div>
+              <div class="report-item-title">Assessment</div>
+              <div class="report-item-desc">Headlines from the SCRL and breakdown of the Supply Chain Readiness Level across all assessed commodities.</div>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-bullet">5</div>
+            <div>
+              <div class="report-item-title">Results &amp; Discussion</div>
+              <div class="report-item-desc">Deeper review into each RAG section and specific components — exploring why the supply chain may or may not be able to fulfil requirements.</div>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-bullet">6</div>
+            <div>
+              <div class="report-item-title">Next Steps</div>
+              <div class="report-item-desc">Details on future actions to turn reds to ambers and ambers to greens — a practical roadmap for supply chain development.</div>
+            </div>
+          </div>
+          <div class="report-item">
+            <div class="report-bullet">A</div>
+            <div>
+              <div class="report-item-title">Appendix</div>
+              <div class="report-item-desc">Full list of components assessed and companies identified during the review.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="workbook-visual">
+          <img src="images/site/scrl_report.png" alt="SCRL workbook — component assessment table with RAG ratings and potential UK suppliers">
+          <div class="img-caption">Example SCRL workbook output — AMR Supply Chain Readiness Level Comparison across four reactor technologies</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section class="dark">
+  <div class="sw">
+    <div class="sey" style="color:var(--cyan)">Who It Serves</div>
+    <h2 style="color:var(--white)">Built for <span>Both Sides</span> of the Supply Chain</h2>
+    <p class="intro" style="color:var(--grey)">SCRL is equally valuable to manufacturers seeking to grow into major programmes, and to programme teams who need confidence in the supply base they are building.</p>
+
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="label">For Manufacturers</div>
+        <h3>UK Suppliers &amp; SMEs</h3>
+        <p>Understand exactly where you stand against programme requirements, identify the improvements that will open doors to major contracts, and demonstrate your commitment to sector standards.</p>
+      </div>
+      <div class="audience-card">
+        <div class="label">For Programme Teams</div>
+        <h3>Primes &amp; Tier 1s</h3>
+        <p>Build confidence in your supply base with independent, evidence-based assessments. Identify gaps before they become programme risks, and target development investment where it matters most.</p>
+      </div>
+      <div class="audience-card">
+        <div class="label">For Policy &amp; Strategy</div>
+        <h3>Government &amp; Regional Bodies</h3>
+        <p>Understand the true readiness of the regional or national supply base to support major infrastructure programmes — and target intervention funding for maximum UK content impact.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RELATED SERVICES -->
+<section class="alt">
+  <div class="sw">
+    <div class="sey">Related Services</div>
+    <h2>Also From <span>NucCol</span></h2>
+    <p class="intro">SCRL assessments work best alongside NucCol's broader supply chain development capability.</p>
+
+    <div class="related-grid">
+      <a href="f4n.html" class="related-card">
+        <div class="related-num">F4N</div>
+        <div>
+          <h3>Fit for Nuclear</h3>
+          <p>The UK's leading programme for preparing manufacturers to meet nuclear sector requirements — assessment, development, and recognition.</p>
+        </div>
+      </a>
+      <a href="demand-modelling.html" class="related-card">
+        <div class="related-num">DM</div>
+        <div>
+          <h3>Demand Modelling</h3>
+          <p>Commodity-level demand forecasting across major programmes — giving suppliers and programme teams a clear picture of what is needed, when, and from which tier.</p>
+        </div>
+      </a>
+      <a href="services.html" class="related-card">
+        <div class="related-num">SC</div>
+        <div>
+          <h3>Supply Chain Development</h3>
+          <p>Hands-on development support to help suppliers close gaps identified in their SCRL assessment and build long-term programme capability.</p>
+        </div>
+      </a>
+      <a href="services.html" class="related-card">
+        <div class="related-num">IT</div>
+        <div>
+          <h3>Supplier Intelligence</h3>
+          <p>Access to NucCol's database of 3,500+ UK suppliers — searchable by sector, capability, certification, and SCRL rating.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section>
+  <div class="sw">
+    <div class="cta-band">
+      <div>
+        <h2>Ready to <span>Understand Your Supply Chain?</span></h2>
+        <p>Whether you need a rapid capability overview or a full SCRL assessment across a complex programme — talk to NucCol about how we can help.</p>
+      </div>
+      <div class="cta-btns">
+        <a href="contact.html" class="btn-p">Commission an Assessment</a>
+        <a href="services.html" class="btn-g">All Services</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fg">
+    <div>
+      <div class="fl"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"><span>NucCol</span></div>
+      <p class="fa">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+      <p class="fad">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</p>
+    </div>
+    <div class="fc"><h4>Services</h4><ul>
+      <li><a href="services.html">Supply Chain Development</a></li>
+      <li><a href="scrl.html">SCRL Assessment</a></li>
+      <li><a href="demand-modelling.html">Demand Modelling</a></li>
+      <li><a href="services.html">Manufacturing Innovation</a></li>
+      <li><a href="services.html">IT Services</a></li>
+    </ul></div>
+    <div class="fc"><h4>Company</h4><ul>
+      <li><a href="about.html">Who We Are</a></li>
+      <li><a href="markets.html">Markets</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="f4n.html">F4N Programme</a></li>
+      <li><a href="careers.html">Careers</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="fc"><h4>Connect</h4><ul>
+      <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+      <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
+      <li><a href="members.html">Members Login</a></li>
+    </ul></div>
+  </div>
+  <div class="fb">
+    <span>© 2025 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
+    <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+  </div>
+</footer>
+</body>
+</html>

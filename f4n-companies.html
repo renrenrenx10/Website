@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>F4N Companies – NucCol</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0a1628;--navy2:#0e2040;--cyan:#29b6e8;--cyan2:#1a96c8;--light:#e8eef6;--white:#fff;--grey:#8a9bb0;--border:rgba(41,182,232,0.18);--amber:#f0b429}
+    html{scroll-behavior:smooth}
+    body{font-family:'Barlow',sans-serif;background:var(--white);color:#1a1a2e;overflow-x:hidden}
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;height:52px;flex-shrink:0;text-decoration:none}
+    .nav-logo img{height:48px;width:48px;object-fit:contain;border-radius:4px;display:block}
+    .nav-links{display:flex;gap:1px;align-items:center;list-style:none;flex-wrap:wrap}
+    .nav-links a{color:var(--light);text-decoration:none;font-size:0.72rem;font-weight:500;letter-spacing:0.02em;padding:6px 8px;border-radius:4px;transition:color 0.2s,background 0.2s;white-space:nowrap}
+    .nav-links a:hover{color:var(--cyan);background:rgba(41,182,232,0.08)}
+    .nav-links a.active{color:var(--cyan)}
+    .nav-cta{background:var(--cyan)!important;color:var(--navy)!important;font-weight:700!important;padding:6px 14px!important;border-radius:4px}
+    .nav-cta:hover{background:var(--cyan2)!important}
+
+    .page-header{padding:140px 48px 80px;background:var(--navy);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+    .page-header-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(41,182,232,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,182,232,0.04) 1px,transparent 1px);background-size:60px 60px}
+    .page-header-glow{position:absolute;top:-100px;right:10%;width:500px;height:500px;background:radial-gradient(circle,rgba(41,182,232,0.1) 0%,transparent 70%)}
+    .page-header-content{position:relative;max-width:1200px;margin:0 auto}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .eyebrow::before{content:'';display:block;width:24px;height:2px;background:var(--cyan)}
+    h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:800;line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;color:var(--white);margin-bottom:20px}
+    h1 span,h2 span{color:var(--cyan)}
+    .page-header p{font-size:1.05rem;font-weight:300;line-height:1.75;color:rgba(232,238,246,0.82);max-width:680px}
+    .page-header p a{color:var(--cyan);text-decoration:none}
+    .page-header p a:hover{text-decoration:underline}
+
+    section{padding:80px 48px}
+    section.alt{background:#f4f7fb}
+    .sw{max-width:1200px;margin:0 auto}
+    .sey{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .sey::before{content:'';display:block;width:24px;height:2px;background:var(--cyan)}
+    h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;text-transform:uppercase;letter-spacing:-0.01em;line-height:1.05;margin-bottom:14px;color:var(--navy)}
+    .intro{font-size:1rem;font-weight:300;line-height:1.75;color:#4a5568;max-width:720px;margin-bottom:36px}
+
+    /* PODCAST SCROLLING GALLERY */
+    .podcast-section{background:var(--navy);padding:80px 0;overflow:hidden}
+    .podcast-header{max-width:1200px;margin:0 auto 48px;padding:0 48px}
+    .podcast-header h2{color:var(--white)}
+    .podcast-header .intro{color:rgba(232,238,246,0.75);max-width:640px;margin-bottom:0}
+    .podcast-track-wrap{overflow:hidden;position:relative}
+    .podcast-track-wrap::before,.podcast-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+    .podcast-track-wrap::before{left:0;background:linear-gradient(to right,var(--navy),transparent)}
+    .podcast-track-wrap::after{right:0;background:linear-gradient(to left,var(--navy),transparent)}
+    .podcast-track{display:flex;gap:20px;width:max-content;animation:podScroll 55s linear infinite;padding:4px 0}
+    .podcast-track:hover{animation-play-state:paused}
+    @keyframes podScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .pod-card{flex-shrink:0;width:280px;background:var(--navy2);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color 0.2s,transform 0.2s}
+    .pod-card:hover{border-color:var(--cyan);transform:translateY(-3px)}
+    .pod-thumb{height:160px;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0e2040,#1a4a8a)}
+    .pod-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:0.6}
+    .pod-play{position:absolute;width:52px;height:52px;background:var(--cyan);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:1;transition:transform 0.2s}
+    .pod-card:hover .pod-play{transform:scale(1.12)}
+    .pod-play svg{width:20px;height:20px;fill:var(--navy);margin-left:3px}
+    .pod-ep{position:absolute;top:12px;left:12px;background:rgba(10,22,40,0.85);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;color:var(--cyan)}
+    .pod-dur{position:absolute;bottom:10px;right:10px;background:rgba(10,22,40,0.85);font-size:0.68rem;font-weight:600;padding:3px 7px;border-radius:3px;color:var(--light)}
+    .pod-body{padding:16px 18px 20px}
+    .pod-company{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:5px}
+    .pod-title{font-size:0.88rem;font-weight:600;line-height:1.4;color:var(--white);margin-bottom:6px}
+    .pod-desc{font-size:0.75rem;color:var(--grey);line-height:1.5}
+
+    /* STATUS BADGES */
+    .status-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(41,182,232,0.08);border:1px solid var(--border);border-radius:20px;padding:6px 16px;margin-bottom:28px;font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan)}
+    .status-badge.journey{color:var(--amber);background:rgba(240,180,41,0.08);border-color:rgba(240,180,41,0.25)}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+    .status-badge.journey .status-dot{background:var(--amber)}
+
+    /* COMPANY GRID — reused from source */
+    .company-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+    .company-card{background:var(--white);display:flex;flex-direction:column;text-decoration:none;color:#1a1a2e;transition:background 0.2s;position:relative}
+    .company-card:hover{background:#f0f6ff}
+    .company-card-nolink{cursor:default}
+    .company-card-nolink:hover{background:var(--white)}
+    .company-logo-wrap{height:110px;display:flex;align-items:center;justify-content:center;padding:20px 24px;border-bottom:1px solid var(--border);background:#ffffff}
+    .company-logo-wrap img{max-width:100%;max-height:70px;width:auto;height:auto;object-fit:contain}
+    .company-body{padding:20px 22px 24px;flex:1;display:flex;flex-direction:column}
+    .company-name{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;line-height:1.15;color:var(--navy)}
+    .company-desc{font-size:0.8rem;line-height:1.6;color:var(--grey);flex:1}
+    .company-link-indicator{display:inline-flex;align-items:center;gap:5px;margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--cyan)}
+    .company-link-indicator::after{content:'↗';font-size:0.85em}
+
+    /* CTA */
+    .cta-strip{background:var(--cyan);padding:60px 48px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+    .cta-strip h2{color:var(--navy);margin-bottom:6px}
+    .cta-label{font-family:'Barlow Condensed',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;color:var(--navy);margin-bottom:8px}
+    .btn-dark{flex-shrink:0;display:inline-block;background:var(--navy);color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:16px 36px;text-decoration:none;border-radius:3px;transition:background 0.2s;white-space:nowrap}
+    .btn-dark:hover{background:#05101e}
+
+    footer{background:#060f1c;padding:64px 48px 32px;border-top:1px solid var(--border)}
+    .fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+    .fl{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+    .fl img{height:44px;width:44px;object-fit:contain;border-radius:4px;display:block}
+    .fl span{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--white);letter-spacing:0.06em;text-transform:uppercase}
+    .fa{font-size:0.85rem;color:var(--grey);line-height:1.7;margin-bottom:16px}
+    .fad{font-size:0.8rem;color:var(--grey);line-height:1.8}
+    .fc h4{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .fc ul{list-style:none}.fc li{margin-bottom:9px}
+    .fc a{font-size:0.84rem;color:var(--grey);text-decoration:none;transition:color 0.2s}
+    .fc a:hover{color:var(--white)}
+    .fb{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:var(--grey)}
+    .fb a{color:var(--grey);text-decoration:none}.fb a:hover{color:var(--white)}
+
+    @media(max-width:1200px){.company-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:1024px){
+      nav{padding:0 24px}.nav-links{display:none}
+      .page-header{padding:120px 24px 64px}
+      section{padding:64px 24px}
+      .company-grid{grid-template-columns:repeat(2,1fr)}
+      .podcast-header{padding:0 24px}
+      .cta-strip{padding:48px 24px;flex-direction:column;align-items:flex-start}
+      .fg{grid-template-columns:1fr 1fr;gap:32px}
+      footer{padding:48px 24px 24px}
+    }
+    @media(max-width:640px){.fg{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">Who We Are</a></li>
+    <li><a href="markets.html">Markets</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="f4n-companies.html">F4 Community</a></li>
+    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="careers.html">Careers</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="members.html" class="nav-cta">Members Login</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-grid"></div><div class="page-header-glow"></div>
+  <div class="page-header-content">
+    <div class="eyebrow">F4N Programme</div>
+    <h1>Our Fit For <span>Nuclear</span> Companies</h1>
+    <p>At NucCol, we are proud to work with a wide range of organisations committed to strengthening the UK's nuclear supply chain. For detailed profiles and F4N assessment results, visit NAMRC's <a href="https://connect.f4n.namrc.co.uk/" target="_blank" rel="noopener">F4N Connect ↗</a></p>
+  </div>
+</div>
+
+
+<!-- F4N GRANTED COMPANIES -->
+<section>
+  <div class="sw">
+    <div class="sey">F4N Status</div>
+    <h2>F4N <span>Granted</span> Companies</h2>
+    <div class="status-badge"><span class="status-dot"></span>Fit For Nuclear Granted</div>
+    <p class="intro">These companies have successfully achieved Fit For Nuclear granted status — demonstrating that their people, processes, and performance meet the exacting requirements of the UK nuclear sector.</p>
+    <div class="company-grid">
+<a class="company-card" href="https://www.amazonfilters.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/3515f-amazon-filters.png?resize=450%2C200&ssl=1" alt="Amazon Filters" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Amazon Filters</div>
+        <p class="company-desc">A leading European supplier of high-quality filters and vessels, with expertise in bespoke filtration solutions.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://bep-st.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/87ffc-bep.png?resize=450%2C200&ssl=1" alt="BEP Surface Technologies" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">BEP Surface Technologies</div>
+        <p class="company-desc">Advanced chrome, nickel, and copper plating, precision grinding, and electroforming for energy, nuclear, and industrial sectors.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.ellispatents.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/ellis.jpg?resize=450%2C200&ssl=1" alt="Ellis Patents" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Ellis Patents</div>
+        <p class="company-desc">Designs and manufactures high-performance cable cleats, protecting critical electrical systems across nuclear, transport, and renewable energy.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.caunton.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/caunton.jpg?resize=450%2C200&ssl=1" alt="Caunton Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Caunton Engineering</div>
+        <p class="company-desc">High-quality structural steel solutions combining 50+ years of experience with agility, innovation, and sustainable construction practices.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.fortvale.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/cc48f-fortvale.png?ssl=1" alt="Fort Vale Nuclear Ltd" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Fort Vale Nuclear Ltd</div>
+        <p class="company-desc">World leader in precision manufacture of valves and fittings for the transportation of bulk liquids in tank container, road tanker, and rail industries.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.graham-hart.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/923a3-graham-hart.png?resize=450%2C200&ssl=1" alt="Graham Hart" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Graham Hart (Process Technology) Ltd</div>
+        <p class="company-desc">Designs and manufactures high-integrity heat transfer and pressure equipment, including heat exchangers and reactor vessels.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://extract-technology.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/extract.jpg?resize=450%2C200&ssl=1" alt="Extract Technology" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Extract Technology</div>
+        <p class="company-desc">Supplies containment and aseptic systems globally, serving pharmaceutical, healthcare, biotech, chemical, and nuclear markets.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://exalto.co.uk/en/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/exalto.jpg?resize=450%2C200&ssl=1" alt="Exalto Bearings UK" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Exalto Bearings UK</div>
+        <p class="company-desc">Manufactures high-quality rubber-lined and composite cutlass bearings for pump and marine industries, in bespoke and standard sizes.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.oldham-eng.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/a9813-oldham.png?resize=450%2C200&ssl=1" alt="Oldham Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Oldham Engineering</div>
+        <p class="company-desc">Long-established company providing in-house fabrication and machining for complex projects in the nuclear and defence sectors.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.rtr-group.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/2e7f0-rtr.png?resize=450%2C200&ssl=1" alt="RTR GmbH" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">RTR GmbH &amp; Co. KG</div>
+        <p class="company-desc">Delivers end-to-end steel solutions, from inventory and mill production to bespoke fabrication, with a global supply chain.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://score-group.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/82378-score.png?resize=450%2C200&ssl=1" alt="Score Europe" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Score Europe</div>
+        <p class="company-desc">Specialises in valves, fuel systems, and components, delivering complex engineering solutions across energy, aerospace, defence, and nuclear.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.landguardengineering.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/150d0-langard.png?ssl=1" alt="Landguard Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Landguard Engineering</div>
+        <p class="company-desc">Delivers high-quality steel fabrication and installation, specialising in acoustic control, structural steel, and offshore projects.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.syspal.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/09/download-5-1.png?resize=450%2C200&ssl=1" alt="SYSPAL Ltd" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">SYSPAL Ltd</div>
+        <p class="company-desc">Bespoke and standard stainless steel and aluminium equipment, supported by in-house design and over four decades of manufacturing experience.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.tridentllc.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/1ab98-trident.png?resize=450%2C200&ssl=1" alt="Trident Maritime Systems" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Trident Maritime Systems</div>
+        <p class="company-desc">Combines innovative engineering and precision manufacturing to provide reliable maritime systems for harsh environments.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.xl-eng.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/9eb79-xl.png?resize=450%2C200&ssl=1" alt="XL Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">XL Engineering</div>
+        <p class="company-desc">Provides complex and rapid short batch small to medium sheet metal fabrications from a purpose-built facility in Sandbach, Cheshire.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.trilliumflow.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/fb08a-trillium.png?resize=450%2C200&ssl=1" alt="Trillium Flow Technologies" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Trillium Flow Technologies</div>
+        <p class="company-desc">Global designer, manufacturer, and aftermarket service provider of engineered valves and pumps for critical infrastructure and industrial applications.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://hydroboltgroup.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/c8172-hydrobolt-1.png?resize=450%2C200&ssl=1" alt="Hydrobolt" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Hydrobolt</div>
+        <p class="company-desc">UK market leader specialising in manufacturing high integrity fasteners for the energy industries.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://bhc.ltd.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/64eb5-bhc.png?resize=450%2C200&ssl=1" alt="BHC Ltd" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">BHC</div>
+        <p class="company-desc">One of the UK's leading structural steel fabrication and construction companies, supplying and erecting fabricated steel across the UK and Ireland.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <div class="company-card company-card-nolink">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/01/rhyal.jpg?resize=450%2C200&ssl=1" alt="Rhyal Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Rhyal Engineering</div>
+        <p class="company-desc">One of the UK's leading site-built storage tank and vessel contractors, dealing with the design and build of new tanks and refurbishment of existing ones.</p>
+      </div>
+    </div>
+
+    <a class="company-card" href="https://eurofabs.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/01/eurofab.jpg?resize=450%2C200&ssl=1" alt="Eurofabs (UK) Ltd" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Eurofabs (UK) Ltd</div>
+        <p class="company-desc">Leading high-end fabrication company specialising in the design and manufacture of specialist stainless steel and precision-engineered solutions.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://kentintrol.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/kent.jpg?resize=450%2C200&ssl=1" alt="Koso Kent" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Koso Kent</div>
+        <p class="company-desc">Delivers globally trusted valves, combining quality engineering, customer focus, and rapid technical response for critical applications.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://acepolishingservices.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/01/aps.jpg?resize=720%2C326&ssl=1" alt="Ace Polishing Services" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Ace Polishing Services Ltd</div>
+        <p class="company-desc">Over 30 years of metal polishing and beadblasting expertise across Nuclear, Pharmaceutical, Architectural, Aerospace, and Oil &amp; Gas sectors.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://mce-group.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/04/download.jpg?resize=554%2C206&ssl=1" alt="MCE Group" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">MCE Group</div>
+        <p class="company-desc">Improving UK plant reliability since 1990. Provides 24/7 emergency services, diagnostic services, and comprehensive valve management solutions.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.vecom-group.com/en-uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/04/vecom.jpg?resize=450%2C200&ssl=1" alt="Vecom UK" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Vecom UK</div>
+        <p class="company-desc">Based in Bury, a leading specialist in metal surface treatments including pickling, passivation, and mechanical polishing.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://asd.ltd/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/04/cropped-ASD-2024.jpg?resize=417%2C200&ssl=1" alt="ASD Limited" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">ASD Limited</div>
+        <p class="company-desc">One of the UK's leading metal stockholders and processing suppliers and a proud member of the Hierros Añón Group.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://dynamicaerofabs.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/04/Dynamic-Aero-Fabs-Logo.png?resize=3102%2C1469&ssl=1" alt="Dynamic Aerospace Fabrications" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Dynamic Aerospace Fabrications</div>
+        <p class="company-desc">Supplies complex, high-precision fabricated and machined metal parts and assemblies to market-leading aerospace companies.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <div class="company-card company-card-nolink">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/11/heatrod.jpg?resize=450%2C200&ssl=1" alt="Backer Heatrod" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Backer Heatrod</div>
+        <p class="company-desc">Greater Manchester based UK leader in manufacturing heating elements and associated process heating equipment for industrial applications.</p>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- F4N JOURNEY COMPANIES -->
+<section class="alt">
+  <div class="sw">
+    <div class="sey">In Progress</div>
+    <h2>Companies On Their <span>F4N Journey</span></h2>
+    <div class="status-badge journey"><span class="status-dot"></span>F4N In Progress</div>
+    <p class="intro">These organisations are actively progressing through the F4N programme — working closely with their Supply Chain Consultants to identify strengths, close gaps, and embed best practice across their operations.</p>
+    <div class="company-grid">
+<a class="company-card" href="https://agemaspark.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/agema.jpg?resize=450%2C200&ssl=1" alt="Agemaspark" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Agemaspark</div>
+        <p class="company-desc">Delivers bespoke manufacturing services, from single components to full assemblies, supported by extensive industry experience and supplier networks.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.c2-construction.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/c2.jpg?resize=450%2C200&ssl=1" alt="C2 Construction" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">C2 Construction &amp; Fabrication</div>
+        <p class="company-desc">Specialises in complex construction projects, offering turnkey solutions, bespoke steel fabrication, and full principal contractor services.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.exentec.net/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/hargreaves.jpg?resize=450%2C200&ssl=1" alt="Exentec" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Exentec</div>
+        <p class="company-desc">Part of the Exyte Group, providing tailored, mission-critical solutions for high-tech industries, combining reliability, innovation, and energy-efficient design.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://bfs-fabs.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2026/01/bfs.jpg?resize=720%2C326&ssl=1" alt="BFS Enterprise" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">BFS Enterprise (Fabrications) Ltd</div>
+        <p class="company-desc">Specialises in bespoke structural steel fabrications and precision machining for the energy, oil &amp; gas, and renewables sectors.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.mayflower-engineering.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/mayflower.jpg?resize=450%2C200&ssl=1" alt="Mayflower Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Mayflower Engineering</div>
+        <p class="company-desc">Delivers high-quality engineered solutions across offshore, nuclear, renewable, rail, and military sectors, backed by 50 years of expertise.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.mscmltd.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/mscm.jpg?resize=450%2C200&ssl=1" alt="MSCM Limited" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">MSCM Limited</div>
+        <p class="company-desc">Designs and manufactures hydraulic distribution products and systems for subsea production, delivering fully in-house solutions with unmatched flexibility.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.ovivowater.com/en/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/ovio.jpg?resize=450%2C200&ssl=1" alt="Ovivo" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Ovivo</div>
+        <p class="company-desc">Global leader in water treatment, delivering advanced equipment, technologies, and systems for purification and wastewater management.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.preformedwindings.com/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/preformed.jpg?resize=450%2C200&ssl=1" alt="Preformed Windings" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Preformed Windings</div>
+        <p class="company-desc">Leading UK manufacturer of high-voltage coils, delivering customised, award-winning solutions with a 10-year performance guarantee.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.prismpower.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/prism.jpg?resize=450%2C200&ssl=1" alt="Prism Power Group" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Prism Power Group</div>
+        <p class="company-desc">Designs, manufactures, and maintains electrical switchgear, critical power systems, and monitoring solutions across diverse industries.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.robert-stuart.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/rob.jpg?resize=450%2C200&ssl=1" alt="Robert Stuart" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Robert Stuart</div>
+        <p class="company-desc">Applies decades of aerospace expertise to provide integrated treatments and process evaluation for precision engineering across multiple industries.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://specialpipingmaterials.com/en/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/special-pipe.jpg?resize=450%2C200&ssl=1" alt="Special Piping Materials" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Special Piping Materials</div>
+        <p class="company-desc">Global leader in high-quality and exotic piping products, supplying pipes, fittings, flanges, and bar from trusted mills worldwide.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <a class="company-card" href="https://www.wrighteng.co.uk/" target="_blank" rel="noopener">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/wright.jpg?resize=450%2C200&ssl=1" alt="Wright Engineering" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">Wright Engineering</div>
+        <p class="company-desc">Provides global engineering solutions from bulk materials processing to mechanical services, backed by decades of industry leadership.</p>
+        <span class="company-link-indicator">Visit Website</span>
+      </div>
+    </a>
+
+    <div class="company-card company-card-nolink">
+      <div class="company-logo-wrap">
+        <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/11/parc.jpg?resize=450%2C200&ssl=1" alt="P.A.R.C. Ltd" />
+      </div>
+      <div class="company-body">
+        <div class="company-name">P.A.R.C. Ltd</div>
+        <p class="company-desc">One of the UK's leading UKAS accredited test laboratories, offering a wide range of environmental tests using modern equipment and experienced engineers.</p>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div>
+    <div class="cta-label">Join the Programme</div>
+    <h2>Ready to Start Your F4N Journey?</h2>
+  </div>
+  <a href="f4n.html" class="btn-dark">Find Out More</a>
+</div>
+
+<footer>
+  <div class="fg">
+    <div>
+      <div class="fl"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"><span>NucCol</span></div>
+      <p class="fa">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+      <p class="fad">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</p>
+    </div>
+    <div class="fc"><h4>Services</h4><ul>
+      <li><a href="services.html">Supply Chain Development</a></li><li><a href="services.html">Manufacturing Innovation</a></li>
+      <li><a href="services.html">IT Services</a></li><li><a href="services.html">Networking &amp; Events</a></li>
+    </ul></div>
+    <div class="fc"><h4>Company</h4><ul>
+      <li><a href="about.html">Who We Are</a></li><li><a href="markets.html">Markets</a></li>
+      <li><a href="projects.html">Projects</a></li><li><a href="f4n.html">F4N Programme</a></li>
+      <li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="fc"><h4>Connect</h4><ul>
+      <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+      <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
+      <li><a href="members.html">Members Login</a></li>
+    </ul></div>
+  </div>
+  <div class="fb">
+    <span>© 2025 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
+    <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+  </div>
+</footer>
+</body></html>

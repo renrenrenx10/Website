@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>NucCol – Member Intelligence Hub</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:  #0a1628; --navy2: #f4f7fb; --navy3: #e8eef6; --blue: #1a4a8a; --blue2: #dde4ee;
+      --cyan:  #29b6e8; --cyan2: #1a96c8; --cyan3: rgba(41,182,232,.10); --light: #1a1a2e;
+      --white: #ffffff; --grey:  #6a7a90; --border: rgba(41,182,232,.2); --border2: rgba(41,182,232,.08);
+      --amber: #d97706; --green: #16a34a; --red: #ef4444;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Barlow', sans-serif; background: #f4f7fb; color: var(--navy); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 72px;
+      background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--blue2);
+    }
+    .nav-logo img { height: 44px; width: auto; }
+    .nav-links { display: flex; gap: 8px; align-items: center; list-style: none; }
+    .nav-links a {
+      color: #3a4a5c; text-decoration: none; font-size: 0.85rem;
+      font-weight: 500; letter-spacing: 0.04em; padding: 8px 14px;
+      border-radius: 4px; transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: var(--cyan); background: var(--cyan3); }
+    .nav-links a.active { color: var(--cyan); }
+    .nav-cta { background: var(--cyan) !important; color: var(--navy) !important; font-weight: 600 !important; padding: 8px 20px !important; border-radius: 4px; }
+    .nav-cta:hover { background: var(--cyan2) !important; }
+    .nav-members { position: relative; }
+    .nav-members > a::after { content: ' ▾'; font-size: 0.7em; }
+    .nav-dropdown {
+      display: none; position: absolute; top: 100%; right: 0;
+      background: var(--white); border: 1px solid var(--blue2);
+      border-radius: 6px; padding: 6px 0; min-width: 180px; z-index: 200;
+      box-shadow: 0 4px 16px rgba(10,22,40,0.1);
+    }
+    .nav-members:hover .nav-dropdown { display: block; }
+    .nav-dropdown a { display: block; padding: 8px 18px !important; font-size: 0.82rem !important; color: #3a4a5c !important; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 140px 48px 80px;
+      background: var(--navy);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .page-header-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(41,182,232,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(41,182,232,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .page-header-glow {
+      position: absolute; top: -100px; right: 10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(41,182,232,0.12) 0%, transparent 70%);
+    }
+    .page-header-content { position: relative; max-width: 700px; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--cyan); margin-bottom: 16px;
+    }
+    .eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--cyan); }
+    h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 800;
+      line-height: 0.95; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 20px;
+      color: var(--white);
+    }
+    h1 span, h2 span { color: var(--cyan); }
+    .page-header p {
+      font-size: 1.05rem; font-weight: 300; line-height: 1.7;
+      color: rgba(232,238,246,0.8); max-width: 580px;
+    }
+    .hub-nav-bar {
+      position: sticky; top: 72px; z-index: 80;
+      background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--blue2);
+      display: flex; flex-wrap: wrap; gap: 0;
+    }
+    .hub-nav-bar::-webkit-scrollbar { height: 0; }
+    .hub-tab {
+      flex: 1 1 150px; justify-content: center; padding: 14px 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--grey); cursor: pointer;
+      border-bottom: 3px solid transparent; transition: color 0.2s, border-color 0.2s;
+      display: flex; align-items: center; gap: 8px; white-space: normal; text-align: center;
+      text-decoration: none;
+    }
+    .hub-tab:hover { color: var(--navy); }
+    .hub-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+    .hub-tab-icon { font-size: 1rem; }
+
+    /* SECTIONS */
+    .hub-section { padding: 64px 48px; display: none; }
+    .hub-section.visible { display: block; }
+    h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800;
+      text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.05; margin-bottom: 16px;
+      color: var(--navy);
+    }
+    .section-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--cyan);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .section-eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--cyan); }
+    .section-intro {
+      font-size: 1rem; font-weight: 300; line-height: 1.75;
+      color: #5a6a80; max-width: 640px; margin-bottom: 40px;
+    }
+
+    /* SEARCH / FILTER BAR */
+    .filter-bar {
+      display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; align-items: center;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 220px; max-width: 380px; }
+    .search-wrap input {
+      width: 100%; background: var(--white); border: 1px solid var(--blue2);
+      color: var(--navy); font-family: 'Barlow', sans-serif; font-size: 0.88rem;
+      padding: 10px 14px 10px 38px; border-radius: 4px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--cyan); }
+    .search-wrap input::placeholder { color: var(--grey); }
+    .search-wrap::before { content: '🔍'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.85rem; }
+    .filter-select {
+      background: var(--white); border: 1px solid var(--blue2); color: var(--navy);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.05em; padding: 10px 16px; border-radius: 4px;
+      outline: none; cursor: pointer; appearance: none; padding-right: 28px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a7a90'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+    }
+    .results-count { font-size: 0.8rem; color: var(--grey); margin-left: auto; }
+
+    /* HEADLINE NUMBERS */
+    .headline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .stat-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      padding: 28px; position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--cyan);
+    }
+    .stat-card-label {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 10px;
+    }
+    .stat-card-value {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 2.2rem; font-weight: 800;
+      color: var(--navy); line-height: 1; margin-bottom: 8px;
+    }
+    .stat-card-sub { font-size: 0.83rem; color: #5a6a80; line-height: 1.55; }
+    .info-box {
+      background: var(--cyan3); border: 1px solid var(--border); border-radius: 8px;
+      padding: 28px 32px; margin-bottom: 32px;
+    }
+    .info-box h3 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em; color: var(--cyan2); margin-bottom: 12px;
+    }
+    .info-box ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .info-box li { font-size: 0.88rem; color: #3a4a5c; padding-left: 18px; position: relative; line-height: 1.55; }
+    .info-box li::before { content: '▸'; position: absolute; left: 0; color: var(--cyan); }
+
+    /* OPPORTUNITY TIMELINE */
+    .timeline-table-wrap { overflow-x: auto; border: 1px solid var(--blue2); border-radius: 8px; }
+    .timeline-table { border-collapse: collapse; width: 100%; min-width: 860px; }
+    .timeline-table th {
+      background: #f4f7fb; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--cyan2); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--blue2);
+      white-space: nowrap;
+    }
+    .timeline-table td { padding: 12px 16px; border-bottom: 1px solid #edf2f7; font-size: 0.85rem; vertical-align: top; color: #3a4a5c; }
+    .timeline-table tr:last-child td { border-bottom: none; }
+    .timeline-table tr:hover td { background: var(--cyan3); }
+    .confidence-badge {
+      display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem;
+      font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .conf-high { background: rgba(16,185,129,0.15); color: #10b981; }
+    .conf-medium { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .conf-low { background: rgba(139,92,246,0.15); color: #a78bfa; }
+    .sector-badge {
+      display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 2px; margin-right: 4px; margin-bottom: 4px;
+    }
+    .sec-existing { background: var(--cyan3); color: var(--cyan2); }
+    .sec-gw { background: rgba(26,74,138,0.12); color: var(--blue); }
+    .sec-smr { background: rgba(16,185,129,0.15); color: #10b981; }
+    .sec-amr { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .sec-defence { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .sec-decomm { background: rgba(139,92,246,0.15); color: #a78bfa; }
+    .sec-fusion { background: rgba(236,72,153,0.15); color: #f472b6; }
+    .sec-micro { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .gantt-bar {
+      display: flex; gap: 3px; flex-wrap: wrap; margin-top: 4px;
+    }
+    .gantt-chip {
+      font-size: 0.68rem; font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600; letter-spacing: 0.04em;
+      padding: 2px 8px; border-radius: 2px; white-space: nowrap;
+    }
+    .chip-construction { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .chip-generation { background: rgba(16,185,129,0.2); color: #10b981; }
+    .chip-decommissioning { background: rgba(139,92,246,0.2); color: #a78bfa; }
+    .chip-operations { background: var(--cyan3); color: var(--cyan2); }
+    .chip-design { background: rgba(96,165,250,0.2); color: #60a5fa; }
+    .chip-other { background: rgba(156,163,175,0.15); color: #9ca3af; }
+    td.comment-cell { color: var(--grey); font-size: 0.78rem; line-height: 1.5; max-width: 300px; }
+    td.comment-cell a { color: var(--cyan2); text-decoration: none; }
+
+    /* STAKEHOLDERS */
+    .stakeholder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .stakeholder-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      padding: 22px; transition: border-color 0.2s, transform 0.2s;
+    }
+    .stakeholder-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+    .stakeholder-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .stakeholder-name {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.03em; line-height: 1.2; color: var(--navy);
+    }
+    .stakeholder-link {
+      flex-shrink: 0; font-size: 0.75rem; color: var(--cyan); text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 600; letter-spacing: 0.06em;
+      padding: 4px 10px; border: 1px solid rgba(41,182,232,0.3); border-radius: 2px;
+      white-space: nowrap; transition: background 0.2s;
+    }
+    .stakeholder-link:hover { background: var(--cyan3); }
+    .cat-tag {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan2);
+      margin-bottom: 8px; opacity: 0.85;
+    }
+    .stakeholder-desc { font-size: 0.82rem; color: #5a6a80; line-height: 1.6; }
+
+    /* PORTALS */
+    .portal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .portal-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.2s;
+    }
+    .portal-card:hover { border-color: var(--cyan); }
+    .portal-name {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.03em; color: var(--navy);
+    }
+    .portal-desc { font-size: 0.82rem; color: #5a6a80; line-height: 1.55; flex: 1; }
+    .portal-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan);
+      text-decoration: none;
+    }
+    .portal-link:hover { text-decoration: underline; }
+
+    /* SELLAFIELD */
+    .sellafield-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .demand-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      overflow: hidden;
+    }
+    .demand-card-header {
+      padding: 18px 22px; background: var(--navy2);
+      border-bottom: 1px solid var(--blue2);
+    }
+    .demand-product {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.03em; color: var(--navy);
+    }
+    .demand-sub { font-size: 0.78rem; color: #5a6a80; margin-top: 4px; }
+    .demand-card-body { padding: 18px 22px; }
+    .demand-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
+    .demand-year {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--grey);
+      width: 48px; flex-shrink: 0;
+    }
+    .demand-bar-wrap { flex: 1; display: flex; gap: 2px; align-items: center; height: 20px; }
+    .demand-bar {
+      height: 100%; border-radius: 2px; transition: width 0.3s;
+      display: flex; align-items: center; padding: 0 6px;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700;
+      overflow: hidden; white-space: nowrap;
+    }
+    .bar-lower { background: rgba(41,182,232,0.2); color: var(--cyan2); }
+    .bar-baseline { background: rgba(41,182,232,0.5); color: var(--white); }
+    .bar-upper { background: var(--cyan); color: var(--navy); }
+    .demand-legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.73rem; color: var(--grey); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+    /* FUNDING */
+    .funding-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .funding-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      padding: 22px; display: flex; flex-direction: column; gap: 12px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .funding-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+    .funding-org {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.03em; color: var(--navy);
+    }
+    .funding-value {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.88rem; font-weight: 700;
+      color: var(--cyan2); letter-spacing: 0.04em;
+    }
+    .funding-summary { font-size: 0.82rem; color: #5a6a80; line-height: 1.6; flex: 1; }
+    .funding-link {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan);
+      text-decoration: none;
+    }
+    .funding-link:hover { text-decoration: underline; }
+
+    /* TIPS */
+    .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    .tip-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      padding: 22px; display: flex; gap: 16px;
+    }
+    .tip-icon {
+      width: 40px; height: 40px; flex-shrink: 0; background: var(--cyan3);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .tip-title {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; color: var(--navy);
+    }
+    .tip-body { font-size: 0.82rem; color: #5a6a80; line-height: 1.6; }
+
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .skill-card {
+      background: var(--white); border: 1px solid var(--blue2); border-radius: 8px;
+      padding: 22px; display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 0.2s;
+    }
+    .skill-card:hover { border-color: var(--cyan); }
+    .skill-org {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.03em; color: var(--navy);
+    }
+    .skill-member {
+      font-size: 0.72rem; font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px;
+      border-radius: 20px; width: fit-content;
+    }
+    .member-yes { background: rgba(22,163,74,0.12); color: #16a34a; }
+    .member-no { background: rgba(239,68,68,0.1); color: #ef4444; }
+    .skill-what { font-size: 0.82rem; color: #3a4a5c; line-height: 1.6; }
+    .skill-offers { font-size: 0.8rem; color: #5a6a80; line-height: 1.6; }
+    .skill-link {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan);
+      text-decoration: none;
+    }
+    .skill-link:hover { text-decoration: underline; }
+
+    /* REGIONAL FUNDING */
+    .regional-table-wrap { overflow-x: auto; border: 1px solid var(--blue2); border-radius: 8px; }
+    .regional-table { border-collapse: collapse; width: 100%; min-width: 900px; }
+    .regional-table th {
+      background: #f4f7fb; font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--cyan2); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--blue2);
+    }
+    .regional-table td { padding: 12px 16px; border-bottom: 1px solid #edf2f7; font-size: 0.83rem; vertical-align: top; line-height: 1.5; color: #3a4a5c; }
+    .regional-table tr:last-child td { border-bottom: none; }
+    .regional-table tr:hover td { background: var(--cyan3); }
+    .region-badge {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px;
+      border-radius: 20px; background: var(--cyan3); color: var(--cyan2);
+      white-space: nowrap;
+    }
+    .fund-val { color: var(--cyan2); font-weight: 500; font-size: 0.8rem; }
+    td a { color: var(--cyan2); text-decoration: none; font-size: 0.8rem; }
+    td a:hover { text-decoration: underline; }
+
+    /* HIDDEN by filter */
+    .hidden { display: none !important; }
+
+    /* FOOTER */
+    footer { background: var(--navy); padding: 60px 48px 32px; border-top: 1px solid var(--border); }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-logo img { height: 40px; width: auto; filter: brightness(0) invert(1); margin-bottom: 16px; }
+    .footer-about { font-size: 0.85rem; color: var(--grey); line-height: 1.7; margin-bottom: 20px; }
+    .footer-address { font-size: 0.8rem; color: var(--grey); line-height: 1.7; }
+    .footer-col h4 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan); margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 8px; }
+    .footer-col a { font-size: 0.85rem; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.78rem; color: var(--grey);
+    }
+    .footer-bottom a { color: var(--grey); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--white); }
+
+    @media (max-width: 1024px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .page-header, .hub-section { padding-left: 24px; padding-right: 24px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      footer { padding: 48px 24px 24px; }
+    }
+    @media (max-width: 640px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .headline-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- ── MEMBERS AUTH GATE ── -->
+<div id="auth-gate" style="position:fixed;inset:0;background:#0a1628;z-index:9999;align-items:center;justify-content:center;font-family:'Barlow',sans-serif;display:none">
+  <div style="background:#111e35;border:1px solid #1e3a5f;border-radius:12px;padding:40px 48px;width:100%;max-width:400px;text-align:center">
+    <svg viewBox="0 0 24 24" style="width:36px;height:36px;margin-bottom:16px;stroke:#00c8d4;fill:none;stroke-width:2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#00c8d4;margin-bottom:8px">NucCol</div>
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;text-transform:uppercase;color:#e8eef6;margin-bottom:6px">Members Only</h2>
+    <p style="font-size:.85rem;color:#6a7a90;margin-bottom:28px;line-height:1.6">Sign in with your NucCol account to access the Intelligence Hub.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+      <input id="gate-email" type="email" placeholder="your@email.co.uk" autocomplete="email"
+        style="background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:12px 16px;color:#e8eef6;font-family:'Barlow',sans-serif;font-size:.9rem;outline:none;width:100%;box-sizing:border-box"/>
+      <input id="gate-pass" type="password" placeholder="Password" autocomplete="current-password"
+        style="background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:12px 16px;color:#e8eef6;font-family:'Barlow',sans-serif;font-size:.9rem;outline:none;width:100%;box-sizing:border-box"/>
+      <button id="gate-btn" onclick="gateSignIn()"
+        style="background:#00c8d4;color:#0a1628;border:none;border-radius:6px;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer">
+        Sign In
+      </button>
+    </div>
+    <div id="gate-msg" style="display:none;font-size:.78rem;padding:8px 12px;border-radius:5px;background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.3)"></div>
+    <p style="margin-top:16px;font-size:.75rem;color:#6a7a90"><a href="members.html" style="color:#00c8d4;text-decoration:none">← Back to Members Portal</a></p>
+  </div>
+</div>
+<div id="page-content" style="display:none">
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="https://nuccol.co.uk/wp-content/uploads/2024/09/nuccol-png.png" alt="NucCol" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li class="nav-members">
+      <a href="#">Members</a>
+      <div class="nav-dropdown">
+        <a href="members.html" class="nav-cta">Members Login</a>
+        <a href="https://nuccol.co.uk/membershomev2/">Members Home</a>
+        <a href="https://nuccol.co.uk/groups">Community</a>
+      </div>
+    </li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-grid"></div>
+  <div class="page-header-glow"></div>
+  <div class="page-header-content">
+    <div class="eyebrow">Member Intelligence</div>
+    <h1>Nuclear Sector<br><span>Intelligence Hub</span></h1>
+    <p>Strategic intelligence for UK nuclear and clean energy supply chain businesses. Market opportunities, key stakeholders, procurement portals, and funding — all in one place.</p>
+  </div>
+</div>
+
+<!-- HUB NAV BAR -->
+<div class="hub-nav-bar" id="hubNav">
+  <a class="hub-tab active" data-section="headlines" href="#headlines"><span class="hub-tab-icon">📊</span>Headline Numbers</a>
+  <a class="hub-tab" data-section="pipeline" href="#pipeline"><span class="hub-tab-icon">📅</span>Opportunity Pipeline</a>
+  <a class="hub-tab" data-section="stakeholders" href="#stakeholders"><span class="hub-tab-icon">🏛️</span>Key Stakeholders</a>
+  <a class="hub-tab" data-section="portals" href="#portals"><span class="hub-tab-icon">🔗</span>Procurement Portals</a>
+  <a class="hub-tab" data-section="sellafield" href="#sellafield"><span class="hub-tab-icon">⚙️</span>Sellafield Demand</a>
+  <a class="hub-tab" data-section="funding" href="#funding"><span class="hub-tab-icon">💰</span>SME Funding</a>
+  <a class="hub-tab" data-section="skills" href="#skills"><span class="hub-tab-icon">🎓</span>Skills Organisations</a>
+  <a class="hub-tab" data-section="regional" href="#regional"><span class="hub-tab-icon">📍</span>Regional Funding</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1 – HEADLINE NUMBERS
+═══════════════════════════════════════════════════ -->
+<section class="hub-section visible" id="headlines">
+  <div class="section-eyebrow">Market Overview</div>
+  <h2>Headline <span>Numbers</span></h2>
+  <p class="section-intro">Key market statistics across UK and European nuclear energy, SMR programmes, and decommissioning — providing strategic context for supply chain positioning.</p>
+
+  <div class="info-box" style="margin-bottom:40px">
+    <h3>UK Nuclear Investment Context</h3>
+    <ul>
+      <li>Hinkley Point C and Sizewell C: combined ~£50–65bn capital programme</li>
+      <li>UK Government SMR Programme delivered by Rolls-Royce SMR — target deployment from early 2030s</li>
+      <li>STEP Fusion prototype power plant at West Burton — construction estimated 2032</li>
+      <li>AUKUS Submarine programme: long-term cross-government commitment</li>
+      <li>Nuclear decommissioning across NDA estate and AGR sites: £3–4bn annual spend</li>
+      <li>Collectively these programmes represent tens of billions of investment and are expected to support a 29% increase in the UK nuclear workforce by 2030</li>
+      <li>The Midlands workforce alone is expected to increase 102% by 2030</li>
+    </ul>
+  </div>
+
+  <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--cyan);margin-bottom:20px;">GW New Build — Large Reactors</h3>
+  <div class="headline-grid" style="margin-bottom:48px">
+    <div class="stat-card">
+      <div class="stat-card-label">UK Installed Capacity</div>
+      <div class="stat-card-value">~5.9 GW</div>
+      <div class="stat-card-sub">Current operational nuclear capacity with target of 24 GW by 2050</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Implied Build Requirement</div>
+      <div class="stat-card-value">~18 GW</div>
+      <div class="stat-card-sub">Additional capacity beyond existing fleet needed to hit 2050 target</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Hinkley Point C</div>
+      <div class="stat-card-value">3.2 GW</div>
+      <div class="stat-card-sub">Estimated total project value £30–35bn. Peak UK content >£20bn</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Sizewell C</div>
+      <div class="stat-card-value">3.2 GW</div>
+      <div class="stat-card-sub">Estimated CAPEX £20–30bn. UK government committed £14bn+</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Potential Additional Market</div>
+      <div class="stat-card-value">£90–120bn</div>
+      <div class="stat-card-sub">Through 2050 at £6–8bn per GW for remaining ~15 GW capacity beyond HPC & SZC</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">European New Build Market</div>
+      <div class="stat-card-value">€300–400bn</div>
+      <div class="stat-card-sub">~50 GW build envelope to 2050 across France, Poland, Czech Republic, Netherlands & others</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--cyan);margin-bottom:20px;">Small Modular Reactors (SMRs)</h3>
+  <div class="headline-grid" style="margin-bottom:48px">
+    <div class="stat-card">
+      <div class="stat-card-label">Government Backing</div>
+      <div class="stat-card-value">£2.5bn</div>
+      <div class="stat-card-sub">Government support announced for SMR programme. Target deployment from early 2030s</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Rolls-Royce SMR — 10 Units</div>
+      <div class="stat-card-value">~£20bn</div>
+      <div class="stat-card-sub">Estimated cost per unit £1.8–2.2bn. Fleet ambition 10–16 units (4.7–7.5 GW)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Rolls-Royce SMR — 16 Units</div>
+      <div class="stat-card-value">~£30–35bn</div>
+      <div class="stat-card-sub">Full fleet deployment potential UK market size</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Other Private SMR/AMR Projects</div>
+      <div class="stat-card-value">Up to £40bn</div>
+      <div class="stat-card-sub">Up to 20 units from private and funded AMR/SMR projects beyond Rolls-Royce</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">EU SMR Market</div>
+      <div class="stat-card-value">€60–150bn</div>
+      <div class="stat-card-sub">Potential market if 30–50 SMRs deployed across EU by 2045 at €2–3bn per unit</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--cyan);margin-bottom:20px;">Decommissioning &amp; Waste Management</h3>
+  <div class="headline-grid">
+    <div class="stat-card">
+      <div class="stat-card-label">UK Decommissioning Liability</div>
+      <div class="stat-card-value">£160bn+</div>
+      <div class="stat-card-sub">Lifetime estimate for full UK nuclear decommissioning programme</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Annual Spend</div>
+      <div class="stat-card-value">£3–4bn</div>
+      <div class="stat-card-sub">Current annual UK decommissioning spend. Sellafield alone ~£2bn/year</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">EU Decommissioning Liability</div>
+      <div class="stat-card-value">€150–200bn</div>
+      <div class="stat-card-sub">Estimated cumulative decommissioning liability across EU nuclear fleet</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2 – OPPORTUNITY PIPELINE
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="pipeline">
+  <div class="section-eyebrow">Strategic Intelligence</div>
+  <h2>Opportunity <span>Pipeline</span></h2>
+  <p class="section-intro">UK nuclear and adjacent sector programmes from 2025–2070. Phases indicate expected activity windows. Confidence ratings reflect current evidence base as at late 2024.</p>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <input type="text" id="pipelineSearch" placeholder="Search programmes…" oninput="filterPipeline()">
+    </div>
+    <select class="filter-select" id="pipelineSector" onchange="filterPipeline()">
+      <option value="">All Sectors</option>
+      <option value="Existing fleet">Existing Fleet</option>
+      <option value="GW New Build">GW New Build</option>
+      <option value="SMR New Build">SMR New Build</option>
+      <option value="AMR New Build">AMR New Build</option>
+      <option value="Micro Reactor">Micro Reactor</option>
+      <option value="Fusion">Fusion</option>
+      <option value="Defence">Defence</option>
+      <option value="Decomm">Decommissioning</option>
+    </select>
+    <select class="filter-select" id="pipelineConf" onchange="filterPipeline()">
+      <option value="">All Confidence</option>
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+    <span class="results-count" id="pipelineCount"></span>
+  </div>
+
+  <div class="timeline-table-wrap">
+    <table class="timeline-table" id="pipelineTable">
+      <thead>
+        <tr>
+          <th>Sector</th>
+          <th>Programme</th>
+          <th>Confidence</th>
+          <th>Activity Phases</th>
+          <th style="max-width:280px">Notes</th>
+        </tr>
+      </thead>
+      <tbody id="pipelineTbody">
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3 – KEY STAKEHOLDERS
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="stakeholders">
+  <div class="section-eyebrow">Sector Landscape</div>
+  <h2>Key <span>Stakeholders</span></h2>
+  <p class="section-intro">Organisations shaping the UK nuclear sector — government, regulators, R&amp;D bodies, trade associations, professional bodies, skills organisations and more.</p>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <input type="text" id="stakeholderSearch" placeholder="Search organisations…" oninput="filterStakeholders()">
+    </div>
+    <select class="filter-select" id="stakeholderCat" onchange="filterStakeholders()">
+      <option value="">All Categories</option>
+      <option value="Government">Government</option>
+      <option value="Regulators">Regulators</option>
+      <option value="Trade Associations">Trade Associations</option>
+      <option value="Research and Development">Research &amp; Development</option>
+      <option value="Professional Bodies">Professional Bodies</option>
+      <option value="Skills Development Bodies">Skills Development</option>
+      <option value="Existing Generation">Existing Generation</option>
+      <option value="Trade Unions">Trade Unions</option>
+      <option value="Regional Organisations">Regional Organisations</option>
+      <option value="University Technology Centres (UTCs)">Universities / UTCs</option>
+      <option value="New Build Developers">New Build Developers</option>
+    </select>
+    <span class="results-count" id="stakeholderCount"></span>
+  </div>
+
+  <div class="stakeholder-grid" id="stakeholderGrid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4 – PROCUREMENT PORTALS
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="portals">
+  <div class="section-eyebrow">Tendering &amp; Procurement</div>
+  <h2>Procurement <span>Portals</span></h2>
+  <p class="section-intro">Direct links to the key UK and international procurement and supplier registration portals relevant to the nuclear and industrial supply chain.</p>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <input type="text" id="portalSearch" placeholder="Search portals…" oninput="filterPortals()">
+    </div>
+    <span class="results-count" id="portalCount"></span>
+  </div>
+
+  <div class="portal-grid" id="portalGrid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5 – SELLAFIELD DEMAND
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="sellafield">
+  <div class="section-eyebrow">Manufactured Products Partnership</div>
+  <h2>Sellafield <span>MPP Demand</span></h2>
+  <p class="section-intro">Anticipated demand for Sellafield Ltd's Manufactured Products Partnership (MPP) products 2023–2044. Indicative only — demand is subject to review and operational changes. Lower/Baseline/Upper scenarios shown.</p>
+
+  <div class="info-box" style="margin-bottom:32px">
+    <h3>Important Notice</h3>
+    <ul>
+      <li>This data is indicative only — it should not be relied upon as definitive future demand</li>
+      <li>Demand is constantly under review; the market will be kept up-to-date through future market engagement</li>
+      <li>New contracts are required at points indicated — watch for formal tendering notices</li>
+    </ul>
+  </div>
+
+  <div class="sellafield-grid" id="sellafieldGrid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6 – SME FUNDING
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="funding">
+  <div class="section-eyebrow">Financial Support</div>
+  <h2>SME <span>Funding Finder</span></h2>
+  <p class="section-intro">Key funding programmes and grants available to UK SMEs in the nuclear and industrial supply chain — from Innovate UK to regional growth funds.</p>
+
+  <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cyan);margin-bottom:20px;">💡 Top Tips</h3>
+  <div class="tips-grid" id="tipsGrid"></div>
+
+  <div class="filter-bar" style="margin-top:40px">
+    <div class="search-wrap">
+      <input type="text" id="fundingSearch" placeholder="Search funding programmes…" oninput="filterFunding()">
+    </div>
+    <span class="results-count" id="fundingCount"></span>
+  </div>
+
+  <div class="funding-grid" id="fundingGrid"></div>
+
+  <div class="info-box" style="margin-top:40px">
+    <h3>Key Websites</h3>
+    <ul>
+      <li><a href="https://apply-for-innovation-funding.service.gov.uk/competition/search" target="_blank" rel="noopener" style="color:var(--cyan)">Innovate UK Innovation Funding Service (IFS) ↗</a></li>
+      <li><a href="https://www.ukri.org/councils/innovate-uk/" target="_blank" rel="noopener" style="color:var(--cyan)">UKRI / Innovate UK ↗</a></li>
+      <li><a href="https://www.madesmarter.uk/adoption/" target="_blank" rel="noopener" style="color:var(--cyan)">Made Smarter Adoption ↗</a></li>
+      <li><a href="https://find-employer-schemes.education.gov.uk/interim/growth-and-skills-levy" target="_blank" rel="noopener" style="color:var(--cyan)">Growth &amp; Skills Levy / Apprenticeships ↗</a></li>
+      <li><a href="https://www.gov.uk/business-finance-support" target="_blank" rel="noopener" style="color:var(--cyan)">Business Finance Support Tool (GOV.UK) ↗</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 7 – SKILLS ORGANISATIONS
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="skills">
+  <div class="section-eyebrow">Workforce Development</div>
+  <h2>Skills <span>Organisations</span></h2>
+  <p class="section-intro">The nuclear skills landscape — membership bodies, training providers, industry standards organisations, and apprenticeship delivery partners.</p>
+
+  <div class="skills-grid" id="skillsGrid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 8 – REGIONAL FUNDING
+═══════════════════════════════════════════════════ -->
+<section class="hub-section" id="regional">
+  <div class="section-eyebrow">Place-Based Support</div>
+  <h2>Regional <span>Funding Matrix</span></h2>
+  <p class="section-intro">Business funding and support programmes by UK region — from Combined Authorities and Growth Hubs to sector-specific investment funds.</p>
+
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <input type="text" id="regionalSearch" placeholder="Search region or programme…" oninput="filterRegional()">
+    </div>
+    <select class="filter-select" id="regionalRegion" onchange="filterRegional()">
+      <option value="">All Regions</option>
+    </select>
+    <span class="results-count" id="regionalCount"></span>
+  </div>
+
+  <div class="regional-table-wrap">
+    <table class="regional-table" id="regionalTable">
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th>Organisation</th>
+          <th>Opportunity</th>
+          <th>Funding Value</th>
+          <th>Summary</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody id="regionalTbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><img src="https://nuccol.co.uk/wp-content/uploads/2024/09/nuccol-png.png" alt="NucCol" /></div>
+      <p class="footer-about">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+      <p class="footer-address">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="services.html">Supply Chain Development</a></li>
+        <li><a href="services.html">Demand Modelling</a></li>
+        <li><a href="services.html">Business Strategy</a></li>
+        <li><a href="services.html">Government Policy</a></li>
+        <li><a href="services.html">Manufacturing Integration</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="about.html">About NucCol</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="f4n.html">Fit For Nuclear</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+        <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
+        <li><a href="members.html">Members Login</a></li>
+        <li><a href="https://nuccol.co.uk/membershomev2/">Members Home</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 NucCol &ndash; Nuclear Collaboration Ltd. All rights reserved.</span>
+    <a href="https://nuccol.co.uk/privacy-policy/">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════
+// TAB NAVIGATION
+// ═══════════════════════════
+document.querySelectorAll('.hub-tab').forEach(tab => {
+  tab.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.hub-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.hub-section').forEach(s => s.classList.remove('visible'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.section).classList.add('visible');
+    window.scrollTo({ top: document.getElementById('hubNav').offsetTop - 73, behavior: 'smooth' });
+  });
+});
+
+// ═══════════════════════════
+// PIPELINE DATA
+// ═══════════════════════════
+const pipelineData = [
+  { sector: 'Existing fleet', programme: 'AGRs', confidence: 'High',
+    phases: [{label:'Generation',type:'generation'},{label:'De-fuel & decommissioning',type:'decommissioning'}],
+    comment: 'Torness end of generation = 2028. Heysham 1 = 2026. Heysham 2 = 2028. Hartlepool = March 2026' },
+  { sector: 'Existing fleet', programme: 'Sizewell B', confidence: 'High',
+    phases: [{label:'Generation',type:'generation'},{label:'De-fuel & decommissioning',type:'decommissioning'}],
+    comment: 'Estimated end of generation = 2035' },
+  { sector: 'GW New Build', programme: 'HPC', confidence: 'High',
+    phases: [{label:'Construction (2025–2030)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: 'Estimated start of generation = 2030. R1–R2 no firm generation date.' },
+  { sector: 'GW New Build', programme: 'Sizewell C', confidence: 'High',
+    phases: [{label:'Construction (2030–2040)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: 'No formal start of generation. Assumed 2035–36 with 12-year construction phase.' },
+  { sector: 'GW New Build', programme: 'TBC (3rd site)', confidence: 'Medium',
+    phases: [{label:'Construction (2035–2045)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: 'No clear plans. Wylfa and Oldbury identified as potential sites. Subject to DESNZ pursuit.' },
+  { sector: 'GW New Build', programme: 'TBC (4th site)', confidence: 'Medium',
+    phases: [{label:'Construction (2040–2050)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: 'Nuclear roadmap: aiming to secure 3–7 GW every five years from 2030 to 2044.' },
+  { sector: 'SMR New Build', programme: 'SMR Tech Selection Wave 1', confidence: 'Medium',
+    phases: [{label:'Construction (2030–2035)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: '4 selected for next tender stage — competition completion expected spring 2025. FID target 2029.' },
+  { sector: 'SMR New Build', programme: 'SMR Tech Selection Wave 2', confidence: 'Medium',
+    phases: [{label:'Construction (2035–2040)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: 'Subsequent waves subject to Government commitment to 3–7 GW per 5-year window.' },
+  { sector: 'SMR New Build', programme: 'SMR Tech Selection Wave 3', confidence: 'Medium',
+    phases: [{label:'Construction (2040–2045)',type:'construction'},{label:'Generation 60 years',type:'generation'}],
+    comment: 'As above' },
+  { sector: 'HTGR demonstrator', programme: 'AMR RD&D', confidence: 'Low',
+    phases: [{label:'Construction (2030–2035)',type:'construction'},{label:'Generation (demonstrator)',type:'generation'}],
+    comment: 'AMR demonstrator looking to be established by early 2030s to support AMR deployment in early 2050s.' },
+  { sector: 'AMR New Build', programme: 'X Energy / Cavendish', confidence: 'Low',
+    phases: [{label:'Design & Construction (2025–2030)',type:'design'},{label:'Generation ~60 years',type:'generation'}],
+    comment: 'FNEF Funding announced April 2024. Intention: 12-reactor unit Hartlepool, up to 40 XE-100 reactors.' },
+  { sector: 'AMR New Build', programme: 'Newcleo', confidence: 'Low',
+    phases: [{label:'Construction (2028–2033)',type:'construction'},{label:'Generation',type:'generation'}],
+    comment: 'Newcleo recently moved HQ to Paris but remain committed to a UK reactor by 2033.' },
+  { sector: 'AMR New Build', programme: 'TBC AMR', confidence: 'Low',
+    phases: [{label:'Construction (2048–2055)',type:'construction'},{label:'Generation',type:'generation'}],
+    comment: 'No confirmed programme. Dependent on AMR RD&D demonstrator success.' },
+  { sector: 'Micro Reactor', programme: 'Last Energy', confidence: 'Low',
+    phases: [{label:'Construction (2025–2027)',type:'construction'},{label:'Generation 20–40 years',type:'generation'}],
+    comment: 'Last Energy aiming for 4 micro reactors in Bridgend, Wales operating by 2027. Delivery timescale considered optimistic.' },
+  { sector: 'Micro reactor', programme: 'TBC Micro', confidence: 'Medium',
+    phases: [{label:'Construction (2030–2035)',type:'construction'},{label:'Generation',type:'generation'}],
+    comment: 'Funded from multiple sources including space and defence. NSIP funding award of £4.8m.' },
+  { sector: 'Fusion', programme: 'JET Decommissioning', confidence: 'High',
+    phases: [{label:'Decommissioning (2025–2040)',type:'decommissioning'}],
+    comment: 'JET repurposed end 2023, ready for decommissioning. Decommissioning runs to ~2040.' },
+  { sector: 'Fusion', programme: 'STEP', confidence: 'Medium',
+    phases: [{label:'Construction (2030–2040)',type:'construction'},{label:'Generation (2040+)',type:'generation'}],
+    comment: 'Construction estimated to begin 2032. First operations targeted early 2040s. Aims to demonstrate net energy from fusion.' },
+  { sector: 'Fusion', programme: 'UKAEA Operations', confidence: 'High',
+    phases: [{label:'Ongoing Operations & R&D',type:'operations'}],
+    comment: 'Ongoing HMG programme.' },
+  { sector: 'Defence', programme: 'AWE', confidence: 'High',
+    phases: [{label:'Operations & Infrastructure Development',type:'operations'}],
+    comment: 'Future Material Campus (FMC) and Future Infrastructure Program (FIP). Combined funding ~£900m.' },
+  { sector: 'Defence', programme: 'Vanguard class', confidence: 'High',
+    phases: [{label:'Operation',type:'operations'}],
+    comment: 'HMS Victorious refitted 2024 with expected life well into the 2030s.' },
+  { sector: 'Defence', programme: 'Astute class', confidence: 'High',
+    phases: [{label:'Design & Build → Operation',type:'construction'}],
+    comment: 'Construction and handover of boat 7 estimated complete 2026.' },
+  { sector: 'Defence', programme: 'Dreadnought class', confidence: 'High',
+    phases: [{label:'Design (2025–2030)',type:'design'},{label:'Build → Operation (2030–2040)',type:'construction'}],
+    comment: '20-year build phase — due to complete 2030s.' },
+  { sector: 'Defence', programme: 'SDP – Subs Dismantling', confidence: 'High',
+    phases: [{label:'Decommissioning (ongoing)',type:'decommissioning'}],
+    comment: 'Long-term commitment to recycling RN submarines. Goal: repeatable method for all successor classes.' },
+  { sector: 'Defence', programme: 'AUKUS', confidence: 'High',
+    phases: [{label:'Design & Preparation (2025–2040)',type:'design'},{label:'Operation (2040+)',type:'operations'}],
+    comment: 'Delivery of Astute class replacement submarines. RN commitment + Australia to procure 5 boats.' },
+  { sector: 'Decomm', programme: 'Site Decommissioning & Remediation', confidence: 'High',
+    phases: [{label:'Ongoing Operations',type:'operations'}],
+    comment: 'NDA estate — ongoing operations and evolving strategy.' },
+  { sector: 'Decomm', programme: 'Spent Fuel & Waste Management', confidence: 'High',
+    phases: [{label:'Ongoing (transfer to GDF 2050+)',type:'operations'}],
+    comment: 'Ongoing operations. Some liabilities will transfer to GDF.' },
+  { sector: 'Decomm', programme: 'Containers (£30bn)', confidence: 'High',
+    phases: [{label:'Design (2025–2030)',type:'design'},{label:'Manufacture £30bn (2030–2040)',type:'construction'}],
+    comment: 'Major container manufacturing programme.' },
+  { sector: 'Decomm', programme: 'GDF (Geological Disposal Facility)', confidence: 'Medium',
+    phases: [{label:'Planning (2025–2040)',type:'design'},{label:'Construction (2040–2055)',type:'construction'},{label:'Operation (2055+)',type:'operations'}],
+    comment: 'Construction starts only when suitable site confirmed. ILW available ~2050–60. HLW from ~2075.' },
+];
+
+function getSectorClass(sector) {
+  const s = sector.toLowerCase();
+  if (s.includes('existing')) return 'sec-existing';
+  if (s.includes('gw new')) return 'sec-gw';
+  if (s.includes('smr')) return 'sec-smr';
+  if (s.includes('amr') || s.includes('htgr')) return 'sec-amr';
+  if (s.includes('micro')) return 'sec-micro';
+  if (s.includes('fusion')) return 'sec-fusion';
+  if (s.includes('defence')) return 'sec-defence';
+  if (s.includes('decomm')) return 'sec-decomm';
+  return 'sec-existing';
+}
+function getPhaseClass(type) {
+  if (type === 'construction') return 'chip-construction';
+  if (type === 'generation') return 'chip-generation';
+  if (type === 'decommissioning') return 'chip-decommissioning';
+  if (type === 'operations') return 'chip-operations';
+  if (type === 'design') return 'chip-design';
+  return 'chip-other';
+}
+
+function renderPipeline(data) {
+  const tbody = document.getElementById('pipelineTbody');
+  tbody.innerHTML = data.map(row => `
+    <tr>
+      <td><span class="sector-badge ${getSectorClass(row.sector)}">${row.sector}</span></td>
+      <td style="font-weight:600;font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;letter-spacing:0.02em;">${row.programme}</td>
+      <td><span class="confidence-badge conf-${row.confidence.toLowerCase()}">${row.confidence}</span></td>
+      <td>
+        <div class="gantt-bar">
+          ${row.phases.map(p => `<span class="gantt-chip ${getPhaseClass(p.type)}">${p.label}</span>`).join('')}
+        </div>
+      </td>
+      <td class="comment-cell">${row.comment}</td>
+    </tr>`).join('');
+  document.getElementById('pipelineCount').textContent = `${data.length} programmes`;
+}
+
+function filterPipeline() {
+  const q = document.getElementById('pipelineSearch').value.toLowerCase();
+  const sec = document.getElementById('pipelineSector').value.toLowerCase();
+  const conf = document.getElementById('pipelineConf').value;
+  const filtered = pipelineData.filter(r => {
+    const matchQ = !q || r.programme.toLowerCase().includes(q) || r.sector.toLowerCase().includes(q) || r.comment.toLowerCase().includes(q);
+    const matchSec = !sec || r.sector.toLowerCase().includes(sec);
+    const matchConf = !conf || r.confidence === conf;
+    return matchQ && matchSec && matchConf;
+  });
+  renderPipeline(filtered);
+}
+renderPipeline(pipelineData);
+
+// ═══════════════════════════
+// STAKEHOLDERS DATA
+// ═══════════════════════════
+const stakeholderData = [
+  { name:'ADS', cat:'Trade Associations', url:'https://www.adsgroup.org.uk/', desc:'Represents aerospace, defence, security and space industries, including companies operating in defence nuclear programmes. Advocates for industrial capability, innovation and skills.' },
+  { name:'Alan Turing Institute', cat:'Research and Development', url:'https://www.turing.ac.uk/', desc:'UK national institute for data science and AI. In nuclear, supports digital twins, predictive maintenance, safety case analytics, and complex system modelling.' },
+  { name:'Association for Project Management (APM)', cat:'Professional Bodies', url:'https://www.apm.org.uk/', desc:'Promotes project management professionalism. In nuclear, supports delivery of complex, high-hazard, long-lifecycle programmes.' },
+  { name:'Cabinet Office', cat:'Government', url:'https://www.gov.uk/government/organisations/cabinet-office', desc:'Sets collective government policy, including decisions on nuclear energy, defence, decommissioning and skills investment.' },
+  { name:'Cogent Skills', cat:'Skills Development Bodies', url:'https://cogentskills.com/', desc:'Former Sector Skills Council for nuclear, chemicals and pharmaceuticals. Parent company of NSAN. End Point Assessment Service for science-based apprenticeships.' },
+  { name:'Cost Assurance & Analysis Service (CAAS)', cat:'Government', url:'https://www.gov.uk/government/organisations/cost-assurance-and-analysis-service', desc:'Provides independent cost scrutiny of major government projects including nuclear infrastructure and decommissioning programmes.' },
+  { name:'Defence Nuclear Safety Regulator (DNSR)', cat:'Regulators', url:'https://www.gov.uk/government/organisations/defence-nuclear-safety-regulator', desc:'Regulates nuclear safety within the UK defence nuclear enterprise, including submarine reactors and defence nuclear facilities.' },
+  { name:'Defence Suppliers Forum (DSF)', cat:'Government', url:'https://www.gov.uk/government/groups/defence-suppliers-forum', desc:'Represents companies supplying the UK defence sector, including nuclear-qualified suppliers supporting the submarine and weapons programmes.' },
+  { name:'Department for Business and Trade (DBT)', cat:'Government', url:'https://www.gov.uk/government/organisations/department-for-business-and-trade', desc:'Supports economic growth, exports and industrial capability, including nuclear supply chain promotion and inward investment.' },
+  { name:'Department for Energy Security and Net Zero (DESNZ)', cat:'Government', url:'https://www.gov.uk/government/organisations/department-for-energy-security-and-net-zero', desc:'Leads UK policy on nuclear power as a cornerstone of energy security and net zero delivery. Sets strategic direction for new build, SMRs, fusion and legacy management.' },
+  { name:'EDF Energy', cat:'Existing Generation', url:'https://www.edfenergy.com/', desc:'UK\'s largest nuclear power operator. Responsible for the existing AGR fleet and leading delivery of HPC and SZC. Central role in energy security and net zero strategy.' },
+  { name:'EPSRC', cat:'Research and Development', url:'https://www.ukri.org/councils/epsrc/', desc:'Primary UK research council funding engineering and physical sciences. Funds university research, doctoral training, and national facilities across fission, fusion, materials, robotics, and decommissioning.' },
+  { name:'Environment Agency (EA)', cat:'Regulators', url:'https://www.gov.uk/government/organisations/environment-agency', desc:'Regulates environmental protection at nuclear sites in England, covering radioactive discharges, waste management and land quality.' },
+  { name:'GMB', cat:'Trade Unions', url:'https://www.gmb.org.uk/', desc:'One of the UK\'s largest trade unions, representing workers across civil nuclear, defence nuclear and energy infrastructure. Engages on pay, safety, skills and industrial relations.' },
+  { name:'Health & Safety Executive (HSE)', cat:'Regulators', url:'https://www.hse.gov.uk/', desc:'UK\'s national regulator for workplace health and safety. Hosts the Office for Nuclear Regulation as a statutory function.' },
+  { name:'Henry Royce Institute', cat:'Research and Development', url:'https://royce.ac.uk/', desc:'UK\'s national institute for advanced materials research. Significant role in nuclear materials including steels, ceramics, and composites used in reactors, fusion devices, and waste containment.' },
+  { name:'HM Treasury (HMT)', cat:'Government', url:'https://www.gov.uk/government/organisations/hm-treasury', desc:'Controls public spending and investment decisions affecting nuclear energy, decommissioning and defence. Pivotal in determining funding models and long-term affordability.' },
+  { name:'Imperial College', cat:'University Technology Centres (UTCs)', url:'https://www.imperial.ac.uk/', desc:'Leading research university with strengths in nuclear engineering, materials, thermal hydraulics, and fusion science.' },
+  { name:'Innovate UK', cat:'Research and Development', url:'https://www.ukri.org/councils/innovate-uk/', desc:'UK\'s innovation agency, supporting business-led R&D. Funds technology development, demonstration, and commercialisation across new build, SMRs, fusion, decommissioning, and digital technologies.' },
+  { name:'IChemE', cat:'Professional Bodies', url:'https://www.icheme.org/', desc:'Supports chemical engineering disciplines critical to nuclear fuel cycles, reprocessing, waste treatment, and safety case development.' },
+  { name:'IET', cat:'Professional Bodies', url:'https://www.theiet.org/', desc:'Supports electrical, electronic, and systems engineering, all essential to nuclear plant design, control, and safety systems.' },
+  { name:'IMechE', cat:'Professional Bodies', url:'https://www.imeche.org/', desc:'Represents mechanical engineers across industries. Contributes to nuclear standards, skills development, and independent technical challenge.' },
+  { name:'IAEA', cat:'Government', url:'https://www.iaea.org/', desc:'UN\'s global authority on nuclear safety, security and safeguards. Sets international standards and supports peaceful use of nuclear technology.' },
+  { name:'Local Enterprise Partnerships (LEPs)', cat:'Regional Organisations', url:'https://www.lepnetwork.net/', desc:'Support regional economic development and skills, often aligned to nuclear clusters such as Cumbria, Somerset and Derbyshire.' },
+  { name:'Magnox', cat:'Existing Generation', url:'https://www.gov.uk/government/organisations/magnox-ltd', desc:'NDA-owned site licence company responsible for decommissioning the UK\'s first generation of nuclear power stations. Focused on hazard reduction, site remediation and workforce transition.' },
+  { name:'Manufacturing Technology Association (MTA)', cat:'Trade Associations', url:'https://www.mta.org.uk/', desc:'Represents UK manufacturing technology suppliers, many of whom support nuclear-grade manufacturing. Promotes advanced manufacturing capability critical to nuclear quality.' },
+  { name:'Ministry of Defence (MOD)', cat:'Government', url:'https://www.gov.uk/government/organisations/ministry-of-defence', desc:'Responsible for the UK\'s defence nuclear enterprise, including the Continuous At-Sea Deterrent and nuclear-powered submarines.' },
+  { name:'National College for Nuclear (NCfN)', cat:'Skills Development Bodies', url:'https://www.ncfn.ac.uk/', desc:'Specialist FE institution delivering technical and leadership training for nuclear. Hubs in Cumbria and Somerset. Operates hub-and-spoke model with staff seconded from industry.' },
+  { name:'National Nuclear User Facility (NNUF)', cat:'Research and Development', url:'https://www.nnu-facility.co.uk/', desc:'UKRI-funded programme providing access to specialist nuclear research infrastructure. Enables experimental work on irradiated materials, fuels, and radioactive substances.' },
+  { name:'Nuclear Decommissioning Authority (NDA)', cat:'Government', url:'https://www.gov.uk/government/organisations/nuclear-decommissioning-authority', desc:'Responsible for decommissioning and clean-up of the UK\'s civil nuclear legacy. Manages ~17 sites and the UK\'s largest environmental restoration programme.' },
+  { name:'Nuclear Industry Association (NIA)', cat:'Trade Associations', url:'https://www.niauk.org/', desc:'Trade association for the UK\'s civil nuclear industry, supporting over 280 member companies across the supply chain.' },
+  { name:'Nuclear Institute', cat:'Professional Bodies', url:'https://www.nuclearinst.com/', desc:'The only professional membership body dedicated to the nuclear sector. Facilitates CPD, accreditation of nuclear professionals, and routes to chartership.' },
+  { name:'National Skills Academy Nuclear (NSAN)', cat:'Skills Development Bodies', url:'https://www.nsan.co.uk/', desc:'Skills-for-nuclear membership organisation led by nuclear sector employers. Provides EPA for nuclear apprenticeships and has a large training provider network.' },
+  { name:'Office for Nuclear Regulation (ONR)', cat:'Regulators', url:'https://www.onr.org.uk/', desc:'Statutory function of HSE. Regulates nuclear safety, security, safeguards, and transport across the UK civil nuclear sector.' },
+  { name:'Rolls-Royce SMR', cat:'New Build Developers', url:'https://www.rolls-royce-smr.com/', desc:'Lead developer of the UK SMR programme. Targeting FID by 2029. Each unit estimated at £1.8–2.2bn. Fleet ambition of 10–16 units.' },
+  { name:'Sellafield Ltd', cat:'Existing Generation', url:'https://www.gov.uk/government/organisations/sellafield-ltd', desc:'Responsible for the safe and efficient operation and decommissioning of Sellafield — the UK\'s most complex nuclear site. ~£2bn annual programme.' },
+  { name:'UKAEA', cat:'Research and Development', url:'https://www.gov.uk/government/organisations/uk-atomic-energy-authority', desc:'Responsible for fusion energy research and development in the UK, including STEP prototype power plant and international collaborations.' },
+  { name:'Great British Nuclear (GBN)', cat:'Government', url:'https://www.gov.uk/government/organisations/great-british-nuclear', desc:'Delivers the UK\'s nuclear new build programme, including the SMR technology selection process and support for nuclear investment decisions.' },
+];
+
+function renderStakeholders(data) {
+  const grid = document.getElementById('stakeholderGrid');
+  grid.innerHTML = data.map(s => `
+    <div class="stakeholder-card">
+      <div class="stakeholder-card-top">
+        <div class="stakeholder-name">${s.name}</div>
+        ${s.url ? `<a href="${s.url}" target="_blank" rel="noopener" class="stakeholder-link">Visit ↗</a>` : ''}
+      </div>
+      <div class="cat-tag">${s.cat}</div>
+      <div class="stakeholder-desc">${s.desc}</div>
+    </div>`).join('');
+  document.getElementById('stakeholderCount').textContent = `${data.length} organisations`;
+}
+
+function filterStakeholders() {
+  const q = document.getElementById('stakeholderSearch').value.toLowerCase();
+  const cat = document.getElementById('stakeholderCat').value;
+  const filtered = stakeholderData.filter(s => {
+    const matchQ = !q || s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.cat.toLowerCase().includes(q);
+    const matchCat = !cat || s.cat === cat;
+    return matchQ && matchCat;
+  });
+  renderStakeholders(filtered);
+}
+renderStakeholders(stakeholderData);
+
+// ═══════════════════════════
+// PORTALS DATA
+// ═══════════════════════════
+const portalsData = [
+  { name:'Contracts Finder', url:'https://www.contractsfinder.service.gov.uk', desc:'Official free UK government portal for finding public sector contracts in England above set thresholds, plus recent contract awards.' },
+  { name:'Find a Tender (FTS)', url:'https://www.find-tender.service.gov.uk', desc:'Search and apply for high value contracts (>£139,668) in UK public and utilities sectors. Useful for PIAs, market engagement notices, and large framework announcements.' },
+  { name:'EDF Hinkley Point C Supplier Portal', url:'https://www.hinkleysupplychain.co.uk/', desc:'Hinkley Point C dedicated supplier registration and opportunity portal.' },
+  { name:'EDF Sizewell C Supplier Portal', url:'https://www.sizewellc.com/building-sizewell-c/our-suppliers/', desc:'Sizewell C supplier registration and supply chain engagement portal.' },
+  { name:'EDF Energy Supplier Management (HICX)', url:'https://edf.hicx.net/edf/hicxesm-portal/', desc:'EDF Energy supplier management and pre-qualification portal.' },
+  { name:'Rolls-Royce SMR Supplier Portal', url:'https://suppliers.rolls-royce-smr.com/', desc:'Supplier registration and opportunity portal for the Rolls-Royce SMR programme.' },
+  { name:'Magnox / Sellafield (EU Supply)', url:'https://sharedsystems.eu-supply.com/', desc:'EU Supply registration portal used for Magnox and Sellafield procurement.' },
+  { name:'Babcock Extranet', url:'https://extranet.babcock.co.za/Account/Register', desc:'Babcock International supplier registration and extranet portal.' },
+  { name:'Jacobs Supplier Portal', url:'https://www.jacobs.com/suppliers', desc:'Jacobs Engineering Group supplier portal for registration and opportunity access.' },
+  { name:'Tenderbase', url:'https://tenderbase.co.uk/', desc:'Commercial platform aggregating public sector tenders (UK & Ireland) with advanced search, tracking, and alert features.' },
+  { name:'BidStats', url:'https://app.bidstats.uk/', desc:'Aggregates notices from thousands of UK public tender portals including live opportunities, historical data, contract awards, and analytics.' },
+  { name:'D3 Tenders', url:'https://d3tenders.com/', desc:'Free UK tender aggregator including local councils and smaller tenders.' },
+  { name:'Delta eSourcing', url:'https://www.delta-esourcing.com/delta', desc:'e-Tendering portal used by many UK public sector organisations. Register as a supplier to search and respond.' },
+  { name:'Mercell Procurement Platform', url:'https://info.mercell.com/en', desc:'Commercial tender platform used by public and private buyers across Europe including the UK. Suppliers register to search and receive alerts.' },
+  { name:'Proactis / Due North', url:'https://procontract.due-north.com/SupplierRegistration/Register', desc:'Supplier portal used by many UK local authorities and public bodies. Includes Derbyshire County Council below-threshold works.' },
+  { name:'Public Contracts Scotland', url:'https://www.publiccontractsscotland.gov.uk/', desc:'Main procurement portal for Scottish public sector opportunities including tenders and contract notices.' },
+  { name:'eTenders NI', url:'https://etendersni.gov.uk/epps/home.do', desc:'Central portal for Northern Ireland public sector tenders. Registration required to view and respond.' },
+  { name:'Constructionline', url:'https://www.constructionline.co.uk/', desc:'National pre-qualification scheme to ease public sector access for construction and engineering suppliers.' },
+  { name:'CERN Procurement', url:'https://procurement.cern.ch', desc:'CERN procurement portal for suppliers wishing to work on international science infrastructure.' },
+  { name:'Altrad Doosan (Scanmarket)', url:'https://login.scanmarket.com/', desc:'Scanmarket portal used by Altrad Doosan for supplier management and tendering.' },
+  { name:'Balfour Beatty (BravoSolution)', url:'https://balfourbeatty.bravosolution.co.uk/web/login.html', desc:'Balfour Beatty BravoSolution supplier and tender management portal.' },
+  { name:'Requis Supply Chain Portal', url:'https://supplychain.requis.com', desc:'Supply chain management and procurement portal.' },
+  { name:'Ivalua (Uniper)', url:'https://uniper-supplier.ivalua.app/', desc:'Uniper supplier management portal using the Ivalua platform.' },
+  { name:'IntegrityNext (RWE)', url:'https://app.integritynext.com/registration', desc:'RWE supplier sustainability and compliance registration portal.' },
+  { name:'ESB eTenders', url:'https://www.gov.ie/en/publication/9a109-etenders-is-changing-updates-for-businesses/', desc:'Irish government eTenders platform for public procurement opportunities.' },
+  { name:'Nova Scotia Power (Bonfire)', url:'https://nspower.bonfirehub.ca/portal/', desc:'Nova Scotia Power procurement portal using Bonfire platform.' },
+  { name:'North East Chamber of Commerce', url:'https://members.neechamber.co.uk/', desc:'Member portal for North East England Chamber of Commerce.' },
+  { name:'EstimateOne', url:'https://estimateone.com/en-gb/tender-search/', desc:'UK and Ireland construction tender noticeboard. Main contractors advertise packages and subcontractor opportunities.' },
+  { name:'R&D Funding Opportunities (UKRI)', url:'https://cloud.email.comms.iuk.ukri.org/iuk-sign-up', desc:'Sign up for latest Innovate UK funding opportunities and UKRI Challenge Fund updates.' },
+  { name:'ISA (Morgan Sindall / Huddle)', url:'https://login.huddle.net/user/?subdomain=isa', desc:'Morgan Sindall procurement portal using the Huddle platform.' },
+];
+
+function renderPortals(data) {
+  const grid = document.getElementById('portalGrid');
+  grid.innerHTML = data.map(p => `
+    <div class="portal-card">
+      <div class="portal-name">${p.name}</div>
+      <div class="portal-desc">${p.desc}</div>
+      <a href="${p.url}" target="_blank" rel="noopener" class="portal-link">Access Portal ↗</a>
+    </div>`).join('');
+  document.getElementById('portalCount').textContent = `${data.length} portals`;
+}
+function filterPortals() {
+  const q = document.getElementById('portalSearch').value.toLowerCase();
+  const filtered = portalsData.filter(p => !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+  renderPortals(filtered);
+}
+renderPortals(portalsData);
+
+// ═══════════════════════════
+// SELLAFIELD DATA
+// ═══════════════════════════
+const sellafieldData = [
+  {
+    product: 'HFC (High Force Compaction)',
+    sub: '600 per annum',
+    note: 'New contract required from 2028',
+    demand: [
+      {year:'2023', lower:0,base:600,upper:600},
+      {year:'2024', lower:600,base:600,upper:600},
+      {year:'2025', lower:600,base:600,upper:600},
+      {year:'2026', lower:600,base:600,upper:600},
+      {year:'2027', lower:600,base:600,upper:800},
+      {year:'2028', lower:630,base:630,upper:800},
+      {year:'2029', lower:630,base:630,upper:800},
+      {year:'2030', lower:600,base:600,upper:800},
+      {year:'2031', lower:600,base:600,upper:800},
+      {year:'2032', lower:0,base:600,upper:800},
+    ]
+  },
+  {
+    product: '3m³ Boxes',
+    sub: '12–20 per week',
+    note: 'MPO NPI phases 2–6 through to 2030. Multiple tranche contract transitions.',
+    demand: [
+      {year:'2023', lower:42,base:100,upper:180},
+      {year:'2024', lower:144,base:172,upper:218},
+      {year:'2025', lower:153,base:157,upper:187},
+      {year:'2026', lower:198,base:221,upper:260},
+      {year:'2027', lower:123,base:355,upper:410},
+      {year:'2028', lower:154,base:355,upper:410},
+      {year:'2029', lower:314,base:378,upper:543},
+      {year:'2030', lower:375,base:456,upper:603},
+      {year:'2031', lower:475,base:580,upper:709},
+      {year:'2032', lower:538,base:657,upper:767},
+      {year:'2033', lower:595,base:721,upper:714},
+      {year:'2034', lower:654,base:733,upper:923},
+    ]
+  },
+  {
+    product: 'SSBs (Self Shielded Boxes)',
+    sub: 'Produced one at a time',
+    note: 'Strategic decision pending on SNM programme (additional 450 from 2038). Possible reuse vs grout.',
+    demand: [
+      {year:'2023', lower:25,base:36,upper:45},
+      {year:'2024', lower:60,base:72,upper:90},
+      {year:'2025', lower:70,base:89,upper:90},
+      {year:'2026', lower:70,base:90,upper:90},
+      {year:'2027', lower:50,base:61,upper:70},
+      {year:'2028', lower:7,base:11,upper:15},
+      {year:'2029', lower:8,base:12,upper:16},
+      {year:'2030', lower:3,base:6,upper:9},
+      {year:'2031', lower:3,base:6,upper:9},
+      {year:'2032', lower:6,base:9,upper:12},
+      {year:'2033', lower:65,base:75,upper:85},
+      {year:'2034', lower:35,base:39,upper:43},
+    ]
+  },
+  {
+    product: '200L Waste Containers',
+    sub: '800 per annum',
+    note: 'New contract required. Upper scenario includes significant programme uplift.',
+    demand: [
+      {year:'2023', lower:329,base:512,upper:732},
+      {year:'2024', lower:600,base:800,upper:1698},
+      {year:'2025', lower:600,base:800,upper:1937},
+      {year:'2026', lower:600,base:800,upper:2066},
+      {year:'2027', lower:600,base:800,upper:1973},
+      {year:'2028', lower:600,base:800,upper:1899},
+      {year:'2029', lower:600,base:800,upper:3078},
+      {year:'2030', lower:600,base:800,upper:4006},
+      {year:'2031', lower:600,base:800,upper:4010},
+      {year:'2032', lower:600,base:800,upper:4940},
+      {year:'2033', lower:600,base:800,upper:4838},
+      {year:'2034', lower:600,base:800,upper:4577},
+    ]
+  },
+  {
+    product: 'Hybrid 2 Can Racks',
+    sub: 'Produced to order',
+    note: 'Additional demand of 200 from 2028 dependent on strategic decisions within Sellafield Ltd.',
+    demand: [
+      {year:'2023', lower:40,base:40,upper:40},
+      {year:'2024', lower:40,base:40,upper:40},
+      {year:'2025', lower:40,base:40,upper:40},
+      {year:'2026', lower:40,base:40,upper:40},
+      {year:'2027', lower:0,base:20,upper:40},
+      {year:'2028', lower:0,base:0,upper:40},
+      {year:'2029', lower:0,base:0,upper:40},
+      {year:'2030', lower:0,base:0,upper:40},
+    ]
+  },
+  {
+    product: 'DCC (CHILW Container)',
+    sub: 'NPI phases 2–6',
+    note: 'NPI phase 6 start at 2033. Full production commences from mid-2030s.',
+    demand: [
+      {year:'2033', lower:30,base:175,upper:840},
+      {year:'2034', lower:30,base:175,upper:1090},
+      {year:'2035', lower:45,base:225,upper:1090},
+      {year:'2036', lower:45,base:225,upper:1090},
+      {year:'2037', lower:45,base:250,upper:1340},
+      {year:'2038', lower:30,base:200,upper:1000},
+      {year:'2039', lower:50,base:200,upper:1000},
+      {year:'2040', lower:100,base:250,upper:1250},
+    ]
+  },
+  {
+    product: 'Overpacks (Type 1)',
+    sub: 'Produced to order',
+    note: 'Contracts required from 2028 onwards.',
+    demand: [
+      {year:'2028', lower:300,base:300,upper:600},
+      {year:'2029', lower:300,base:300,upper:600},
+      {year:'2030', lower:300,base:300,upper:600},
+      {year:'2031', lower:0,base:300,upper:600},
+      {year:'2032', lower:0,base:300,upper:600},
+      {year:'2033', lower:0,base:300,upper:600},
+      {year:'2034', lower:0,base:300,upper:300},
+    ]
+  },
+];
+
+function renderSellafield() {
+  const grid = document.getElementById('sellafieldGrid');
+  grid.innerHTML = sellafieldData.map(item => {
+    const maxVal = Math.max(...item.demand.map(d => d.upper), 1);
+    const bars = item.demand.map(d => {
+      const baseW = Math.round((d.base / maxVal) * 100);
+      const upperW = Math.round((d.upper / maxVal) * 100);
+      return `<div class="demand-row">
+        <div class="demand-year">${d.year}</div>
+        <div class="demand-bar-wrap">
+          <div class="demand-bar bar-baseline" style="width:${baseW}%" title="Baseline: ${d.base}">${d.base > 0 ? d.base : ''}</div>
+          ${d.upper > d.base ? `<div class="demand-bar bar-upper" style="width:${Math.round(((d.upper-d.base)/maxVal)*100)}%" title="Upper: ${d.upper}">+${d.upper-d.base}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="demand-card">
+      <div class="demand-card-header">
+        <div class="demand-product">${item.product}</div>
+        <div class="demand-sub">${item.sub}</div>
+      </div>
+      <div class="demand-card-body">
+        ${bars}
+        <div class="demand-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(41,182,232,0.4)"></div>Baseline</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Upper uplift</div>
+        </div>
+        ${item.note ? `<div style="margin-top:12px;font-size:0.78rem;color:var(--grey);line-height:1.5;border-top:1px solid var(--border);padding-top:10px;">${item.note}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+renderSellafield();
+
+// ═══════════════════════════
+// FUNDING DATA
+// ═══════════════════════════
+const tipsData = [
+  { icon:'🏘️', tip:'Check Local Growth Hubs', body:'Many UKSPF grants are administered locally. Always check your regional Growth Hub for current opportunities specific to your area.' },
+  { icon:'🔁', tip:'Stack Funding Sources', body:'Grants and tax relief can often be combined. For example, an Innovate UK grant + R&D tax credits on the balance + Skills Bootcamps for workforce development.' },
+  { icon:'💡', tip:'R&D Tax Relief vs Grants', body:'Since April 2024, receiving a grant no longer prevents you from claiming R&D tax relief (RDEC/ERIS) on the subsidised portion of a project.' },
+  { icon:'⏱️', tip:'Made Smarter — Act Now', body:'The national roll-out to all English regions in 2025/26 is time-limited. Register early at madesmarter.uk as programmes have limited capacity.' },
+  { icon:'🎯', tip:'Innovate UK Smart Grants Paused', body:'Innovate UK\'s open-access Smart Grants have been paused for 2025/26. Focus on themed competitions through the Innovation Funding Service (IFS) portal.' },
+  { icon:'🤝', tip:'KTPs — High Success Rate', body:'Knowledge Transfer Partnerships have a strong track record and are less competitive than direct R&D grants — ideal for specific business challenges needing academic expertise.' },
+  { icon:'👀', tip:'UKSPF — Transitional Year', body:'2025/26 is a transitional year for UKSPF. Successor arrangements expected via the Spending Review for 2026/27 onwards. Keep a watching brief.' },
+  { icon:'🎓', tip:'Growth & Skills Levy Changes', body:'Major changes from April 2026 (apprenticeship units, foundation apprenticeships) and October 2026 (£2,000 incentive for under-25 starts) bring new SME opportunities.' },
+  { icon:'🔬', tip:'Catapults — Free Initial Engagement', body:'Most Catapult centres offer free initial scoping conversations for SMEs. Good first step before committing to a collaborative R&D project.' },
+];
+
+const fundingData = [
+  { org:'Innovate UK (UKRI)', value:'Typically £25k–£1m+ (up to ~70% costs)', summary:'Innovation grants — historically supported high-impact R&D across all sectors. Smart Grants paused 2025; new pilot schemes emerging. Requires UK-registered businesses delivering UK innovation.', url:'https://www.ukri.org/councils/innovate-uk/' },
+  { org:'Innovate UK Business Growth', value:'Fully/heavily subsidised advisory', summary:'Advisory and scale-up support (non-grant but critical funding enabler). Helps SMEs access funding, commercialise innovation, and scale. Rolling open support.', url:'https://iuk-business-connect.org.uk/' },
+  { org:'DESNZ', value:'Typically £5k–£500k+', summary:'Energy transition and net zero funding schemes (heat pumps, EV infrastructure, industrial decarbonisation). SMEs eligible where aligned to energy/clean growth.', url:'https://www.gov.uk/government/organisations/department-for-energy-security-and-net-zero' },
+  { org:'UK Shared Prosperity Fund (UKSPF)', value:'Typically £10k–£500k (region dependent)', summary:'Regional growth funding supporting SME investment, productivity, innovation, and place-based development. Criteria vary by region. Runs to ~2025/26 (extensions likely).', url:'https://www.gov.uk/government/publications/uk-shared-prosperity-fund-prospectus' },
+  { org:'Made Smarter', value:'Up to ~£20k–£100k match-funded', summary:'Digital transformation grants for manufacturing SMEs. Supports adoption of robotics, automation, AI etc. Eligibility: manufacturing SMEs. Rolling regional calls.', url:'https://www.madesmarter.uk/' },
+  { org:'Combined Authorities (WMCA, GMCA etc.)', value:'Typically £5k–£250k', summary:'Regional business support funds — capital grants, innovation vouchers, and skills programmes. SME must be in region and demonstrate economic impact. Time-limited calls.', url:'https://www.wmca.org.uk/' },
+  { org:'Catapult Network', value:'Typically £10k–£50k per SME + in-kind', summary:'Innovation accelerator programmes and testbeds — SMEs get funding and technical/commercial support to trial solutions. Often sector-specific (transport, cities, net zero).', url:'https://cp.catapult.org.uk/smes/' },
+  { org:'Knowledge Transfer Partnerships (KTPs)', value:'Up to 75% KTP associate costs funded', summary:'Links businesses to academic expertise via a KTP associate. Strong track record, less competitive than direct grants. Ideal for specific innovation challenges.', url:'https://www.ukri.org/our-work/innovate-uk/innovation-funding/knowledge-transfer-partnerships/' },
+  { org:'R&D Tax Relief (HMRC)', value:'Enhanced tax credit on qualifying spend', summary:'SMEs can claim enhanced relief on qualifying R&D expenditure. Since April 2024, can be combined with grant funding. Up to 33p per £1 spent for loss-making SMEs.', url:'https://www.gov.uk/guidance/corporation-tax-research-and-development-tax-relief-for-small-and-medium-sized-enterprises' },
+  { org:'Start Up Loans', value:'£500–£25,000 personal loan', summary:'Government-backed startup loans for new businesses or those trading under 3 years. Fixed 6% interest rate, free mentoring included.', url:'https://www.startuploans.co.uk/' },
+  { org:'Nuclear Sector Deal Programmes', value:'Varies by programme', summary:'Sector-specific support through Nuclear Sector Deal including workforce development, supply chain capability building, and collaborative R&D initiatives.', url:'https://www.gov.uk/government/publications/nuclear-sector-deal' },
+];
+
+function renderTips() {
+  const grid = document.getElementById('tipsGrid');
+  grid.innerHTML = tipsData.map(t => `
+    <div class="tip-card">
+      <div class="tip-icon">${t.icon}</div>
+      <div>
+        <div class="tip-title">${t.tip}</div>
+        <div class="tip-body">${t.body}</div>
+      </div>
+    </div>`).join('');
+}
+renderTips();
+
+function renderFunding(data) {
+  const grid = document.getElementById('fundingGrid');
+  grid.innerHTML = data.map(f => `
+    <div class="funding-card">
+      <div class="funding-org">${f.org}</div>
+      <div class="funding-value">💰 ${f.value}</div>
+      <div class="funding-summary">${f.summary}</div>
+      <a href="${f.url}" target="_blank" rel="noopener" class="funding-link">Find out more ↗</a>
+    </div>`).join('');
+  document.getElementById('fundingCount').textContent = `${data.length} programmes`;
+}
+function filterFunding() {
+  const q = document.getElementById('fundingSearch').value.toLowerCase();
+  const filtered = fundingData.filter(f => !q || f.org.toLowerCase().includes(q) || f.summary.toLowerCase().includes(q) || f.value.toLowerCase().includes(q));
+  renderFunding(filtered);
+}
+renderFunding(fundingData);
+
+// ═══════════════════════════
+// SKILLS DATA
+// ═══════════════════════════
+const skillsData = [
+  { name:'Nuclear Industry Association (NIA)', member:'Yes – based on turnover', url:'https://www.niauk.org/', what:'Trade association for the UK\'s civil nuclear industry. Supports over 280 member companies across the supply chain.', offers:'Industry representation, information sharing, networking, government consultations, events and conferences, business groups.' },
+  { name:'National Skills Academy Nuclear (NSAN)', member:'Yes – based on turnover and headcount', url:'https://www.nsan.co.uk/', what:'Skills-for-nuclear focused membership organisation led by nuclear sector employers. Provides valuable and practical skills solutions for organisations of all sizes.', offers:'EPA for nuclear apprenticeships, skills expertise, large training provider network, courses aimed at \'skills for nuclear\'.' },
+  { name:'Nuclear Skills Delivery Group', member:'Yes – by invite (fee to Cogent Skills)', url:'https://nuclearskillsdeliverygroup.com/', what:'Employer-led Nuclear Industry Skills lead. Provides \'one voice\' to government on skills issues. Runs enabling forums and task & finish groups across 11 priority areas.', offers:'Industry-wide expertise, strategic direction for civil nuclear skills, enabling forums, task & finish group leadership.' },
+  { name:'Destination Nuclear', member:'Funded by industry (staff seconded)', url:'https://www.destinationnuclear.com/', what:'Aimed at bringing new people to the nuclear sector by explaining the benefits and roles available in the industry.', offers:'Role descriptions, case studies, careers portal, job listings across the nuclear sector by category and location.' },
+  { name:'National College for Nuclear (NCfN)', member:'No – draws down apprenticeship funding', url:'https://www.ncfn.ac.uk/', what:'Develops and maintains scarce and specialist skills. Operates on a hub-and-spoke model with hubs in Cumbria and Somerset. Staff seconded from industry.', offers:'Short courses and apprenticeships from Level 2 to Level 5. Courses aimed at \'nuclear skills\'.' },
+  { name:'Nuclear Institute', member:'Yes – various levels based on experience', url:'https://www.nuclearinst.com/', what:'Only professional membership body dedicated to the nuclear sector. Facilitates CPD, recognition and accreditation of nuclear professionals, and routes to chartership.', offers:'Membership scales by career stage, training and CPD, chartered status support, 9 regional networks, Young Generation Network.' },
+  { name:'Cogent Skills', member:'Yes – company membership (parent of NSAN)', url:'https://cogentskills.com/', what:'Not-for-profit organisation supporting skills needs across UK science and technology sector. End Point Assessment Service for science-based apprenticeships.', offers:'EPA for science-based apprenticeships, graduate recruitment, apprenticeship programme development, short science-based courses.' },
+  { name:'ECITB', member:'No – funded by Industrial Training Levy', url:'https://www.ecitb.org.uk/', what:'Employer-led skills, standards and qualifications body for engineering construction workforce. Arms-length body of government. Invests ~£25m/year (£5m from nuclear sector).', offers:'Apprenticeships, approved provider network, Levy distribution, National Occupational Standards for engineering construction.' },
+  { name:'CITB', member:'No – funded by Industrial Training Levy', url:'https://www.citb.co.uk/', what:'Industry training board for construction sector in England, Scotland, and Wales. Supports the industry to have a skilled, competent and inclusive workforce.', offers:'Apprenticeships via approved providers, Levy distribution, short courses, National Occupational Standards for construction.' },
+];
+
+function renderSkills() {
+  const grid = document.getElementById('skillsGrid');
+  grid.innerHTML = skillsData.map(s => {
+    const isYes = s.member.toLowerCase().startsWith('yes');
+    return `<div class="skill-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+        <div class="skill-org">${s.name}</div>
+        <span class="skill-member ${isYes ? 'member-yes' : 'member-no'}">${isYes ? 'Membership' : 'Non-member'}</span>
+      </div>
+      <div class="skill-what">${s.what}</div>
+      <div class="skill-offers" style="color:rgba(232,238,246,0.6);font-size:0.78rem;"><strong style="color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;">Offers: </strong>${s.offers}</div>
+      <div style="font-size:0.72rem;color:var(--grey);font-style:italic;">${s.member}</div>
+      <a href="${s.url}" target="_blank" rel="noopener" class="skill-link">Visit website ↗</a>
+    </div>`;
+  }).join('');
+}
+renderSkills();
+
+// ═══════════════════════════
+// REGIONAL FUNDING DATA
+// ═══════════════════════════
+const regionalData = [
+  { region:'East Midlands', org:'East Midlands Combined County Authority (EMCCA)', opp:'£25m Regional Investment Fund', value:'Up to £25m total fund', summary:'Strategic fund supporting growth, infrastructure, and business-led projects. Focus on deliverable, job-creating investments. Competitive calls.', url:'https://www.eastmidlands-cca.gov.uk' },
+  { region:'East Midlands', org:'East Midlands Growth Hub', opp:'Business Support & Grant Access', value:'Advisory (high indirect value)', summary:'Central access point to all regional funding, diagnostics, and application support. Critical for pipeline visibility.', url:'https://growthhub.eastmidlands-cca.gov.uk' },
+  { region:'North East', org:'UK Government', opp:'Apprenticeship Levy / Skills Funding', value:'95–100% training cost covered', summary:'Workforce development funding for engineering, manufacturing, technical and leadership skills. SME access via levy transfer.', url:'https://www.gov.uk' },
+  { region:'North West', org:'GM Business Growth Hub', opp:'Business Support & Innovation Grants', value:'£5k–£100k equivalent support', summary:'SME support including R&D support, innovation vouchers, decarbonisation grants, leadership programmes, and scale-up support.', url:'https://www.businessgrowthhub.com' },
+  { region:'North West', org:'Cheshire & Warrington Growth Hub', opp:'Business Support & Funding Access', value:'Advisory + indirect funding', summary:'Central gateway for SMEs across Cheshire region. Provides grant brokerage, scale-up support, and investment readiness services.', url:'https://www.cheshireandwarringtongrowthhub.co.uk' },
+  { region:'North West', org:'Lancashire Enterprise Partnership', opp:'Business Support & Investment Readiness', value:'Advisory', summary:'Supports SMEs with finance access, grant navigation, and scale-up preparation. Now largely integrated into Growth Lancashire.', url:'https://www.growthlancashire.co.uk' },
+  { region:'South Yorkshire', org:'South Yorkshire Mayoral Combined Authority', opp:'Business Productivity & Digitisation Grant', value:'Typically £5k–£50k', summary:'Supports SME investment in digital tools, automation, productivity improvements. Periodic calls (currently paused but expected to reopen).', url:'https://enterprisingbarnsley.co.uk/programmes/business-productivity' },
+  { region:'West Midlands', org:'West Midlands Combined Authority', opp:'Regional Business Support Funds', value:'Typically £5k–£250k', summary:'Capital grants, innovation vouchers, and skills programmes. SME must be in region and demonstrate economic impact. Time-limited calls.', url:'https://www.wmca.org.uk/' },
+  { region:'West Midlands', org:'Black Country Growth Hub', opp:'Business Growth & Innovation Support', value:'£5k–£100k', summary:'SME advisory and grant access for Dudley, Sandwell, Walsall, Wolverhampton. Focus on manufacturing, digital adoption, and productivity uplift.', url:'https://www.blackcountrygrowthhub.co.uk' },
+  { region:'West Midlands', org:'Greater Birmingham Chambers / Growth Hub', opp:'Business Growth & Investment Support', value:'Advisory + £10k–£250k', summary:'SME advisory, access to finance, export support, and productivity programmes across Birmingham & Solihull region.', url:'https://www.gbslepgrowthhub.co.uk' },
+  { region:'West Midlands', org:'Worcestershire Growth Hub', opp:'Business Support & Innovation Grants', value:'£5k–£100k', summary:'SME support for manufacturing, agri-tech, digital, and green innovation. Includes scale-up and export readiness support.', url:'https://www.business-central.co.uk' },
+  { region:'South West', org:'Cornwall & Isles of Scilly Growth Hub', opp:'Business Grants & Innovation Support', value:'£5k–£250k', summary:'Focus on marine tech, renewable energy, digital, tourism, and SME productivity. UKSPF-delivered local grants.', url:'https://www.ciosgrowthhub.com' },
+  { region:'South West', org:'Heart of the South West Growth Hub', opp:'Business Growth & Innovation Support', value:'Advisory + £5k–£100k', summary:'Gateway to SME funding across Devon & Somerset. Provides grant access, advisory, decarbonisation support, and productivity programmes.', url:'https://www.heartofswgrowthhub.co.uk' },
+  { region:'South West', org:'West of England Growth Hub', opp:'Business Support & Finance Access', value:'Advisory + grant access', summary:'SME advisory and funding gateway for Bristol region including innovation vouchers, carbon reduction support, and growth finance access.', url:'https://www.wearegrowth.co.uk' },
+  { region:'South West', org:'South West Net Zero Hub', opp:'Community Energy & Net Zero Funding', value:'£10k–£250k+', summary:'Supports clean energy, feasibility studies, and decarbonisation projects for SMEs and community organisations.', url:'https://www.swnetzerohub.org.uk' },
+  { region:'East of England', org:'Cambridgeshire & Peterborough Combined Authority', opp:'Business Growth & Innovation Funding', value:'£10k–£250k', summary:'High-growth SME support focused on life sciences, AI, deep tech, and advanced manufacturing. Includes innovation vouchers and scale-up funding streams.', url:'https://cambridgeshirepeterborough-ca.gov.uk' },
+  { region:'East of England', org:'Essex Growth Hub', opp:'Business Growth & Innovation Support', value:'£5k–£150k', summary:'SME advisory and grant access across Essex, including digital adoption, productivity, net zero, and manufacturing competitiveness. Strong alignment with Freeport East.', url:'https://www.growthhub.essex.gov.uk' },
+  { region:'East of England', org:'New Anglia Growth Hub (Norfolk & Suffolk)', opp:'Business Support & Growth Programme', value:'Advisory + £5k–£100k', summary:'Central SME gateway for funding, grants, and advisory support. Strong focus on agri-tech, energy, logistics, ports, and manufacturing SMEs.', url:'https://www.newangliagrowthhub.co.uk' },
+  { region:'South East - Suffolk', org:'East Suffolk Council', opp:'Business Ambition Fund', value:'Typically £10k–£50k+', summary:'Direct grant for SMEs to grow, innovate, and invest. Open Jan–Feb 2026 round. Delivered via UKSPF.', url:'https://www.eastsuffolk.gov.uk' },
+  { region:'South East - Suffolk', org:'West Suffolk Council', opp:'Business Growth & Productivity Grants (UKSPF)', value:'£1k–£20k', summary:'Capital grants for equipment, facilities, and business improvements. Strong fit for manufacturing SMEs.', url:'https://www.westsuffolk.gov.uk' },
+  { region:'Lincolnshire', org:'South Kesteven DC / Lincolnshire Chamber', opp:'Business Growth Grant', value:'Typically £5k–£100k', summary:'UKSPF-funded SME grant supporting innovation, job creation, productivity, and market expansion across South Kesteven.', url:'https://www.lincs-chamber.co.uk' },
+  { region:'Lincolnshire', org:'Business Lincolnshire Growth Hub', opp:'Business Support & Grant Navigation', value:'Advisory + grant access', summary:'Centralised Growth Hub offering diagnostics, advisory support, and access to grant and finance schemes. Focus on manufacturing, agri-food, logistics, and SMEs.', url:'https://www.businesslincolnshire.com' },
+  { region:'Scotland', org:'Scottish Government', opp:'Business Growth Accelerator / Regional Grants', value:'£10k–£250k', summary:'Supports SME expansion, productivity investment, and scaling. Often delivered via local councils or enterprise agencies.', url:'https://www.findbusinesssupport.gov.scot' },
+  { region:'Scotland', org:'South of Scotland Enterprise (SOSE)', opp:'Business Support & Growth Funding', value:'£5k–£250k', summary:'Supports SMEs in Dumfries & Galloway / Scottish Borders. Focus on rural business growth, innovation, skills, and sustainability.', url:'https://www.southofscotlandenterprise.com' },
+  { region:'North Wales', org:'Development Bank of Wales', opp:'Business Finance (Loans & Investment)', value:'£25k–£10m+', summary:'Provides SME loans, equity investment, and growth capital across Wales. Often used alongside grant funding for match funding or scale-up capital.', url:'https://developmentbank.wales' },
+  { region:'North Wales', org:'Ambition North Wales', opp:'Clean Energy Fund & Decarbonisation Support', value:'£5k–£15k feasibility / higher capital', summary:'Supports SME and community-led clean energy, energy efficiency, and decarbonisation feasibility projects.', url:'https://ambitionnorth.wales' },
+  { region:'South Wales', org:'Business Wales', opp:'Advisory & Grant Gateway', value:'Advisory (high indirect value)', summary:'Central access point for all Welsh SME funding, diagnostics, and grant matchmaking. Critical for pipeline visibility.', url:'https://businesswales.gov.wales' },
+  { region:'South Wales', org:'UK Government', opp:'Apprenticeships / Skills Funding', value:'95–100% training funded', summary:'Workforce development funding for engineering, technical, and leadership skills. Accessible across Wales via training providers.', url:'https://www.gov.uk' },
+  { region:'National', org:'Innovate UK', opp:'Innovation Grants (IFS themed calls)', value:'£25k–£1m+ (up to 70% costs)', summary:'Post-Smart Grants: focus on IFS themed competitions. New pilot schemes emerging in 2025/26. All sectors eligible.', url:'https://apply-for-innovation-funding.service.gov.uk/competition/search' },
+  { region:'National', org:'Made Smarter (all English regions)', opp:'Digital Transformation for Manufacturers', value:'Up to £20k–£100k match-funded', summary:'Digital transformation grants for manufacturing SMEs. Robotics, automation, AI adoption. Rolling regional calls.', url:'https://www.madesmarter.uk/' },
+];
+
+// Populate region filter
+const regions = [...new Set(regionalData.map(r => r.region))].sort();
+const regionalSelect = document.getElementById('regionalRegion');
+regions.forEach(reg => {
+  const opt = document.createElement('option');
+  opt.value = reg;
+  opt.textContent = reg;
+  regionalSelect.appendChild(opt);
+});
+
+function renderRegional(data) {
+  const tbody = document.getElementById('regionalTbody');
+  tbody.innerHTML = data.map(r => `<tr>
+    <td><span class="region-badge">${r.region}</span></td>
+    <td style="font-weight:500;max-width:200px">${r.org}</td>
+    <td style="font-weight:600;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.02em;">${r.opp}</td>
+    <td><span class="fund-val">${r.value}</span></td>
+    <td style="color:var(--grey);max-width:300px;font-size:0.8rem;">${r.summary}</td>
+    <td><a href="${r.url}" target="_blank" rel="noopener">Visit ↗</a></td>
+  </tr>`).join('');
+  document.getElementById('regionalCount').textContent = `${data.length} programmes`;
+}
+function filterRegional() {
+  const q = document.getElementById('regionalSearch').value.toLowerCase();
+  const reg = document.getElementById('regionalRegion').value;
+  const filtered = regionalData.filter(r => {
+    const matchQ = !q || r.region.toLowerCase().includes(q) || r.org.toLowerCase().includes(q) || r.opp.toLowerCase().includes(q) || r.summary.toLowerCase().includes(q);
+    const matchReg = !reg || r.region === reg;
+    return matchQ && matchReg;
+  });
+  renderRegional(filtered);
+}
+renderRegional(regionalData);
+</script>
+</div><!-- /page-content -->
+
+<script>
+const { createClient } = supabase;
+const db = createClient('https://qkyvmtouwrzrcyagkheo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4');
+
+async function gateSignIn(){
+  const email = document.getElementById('gate-email').value.trim();
+  const pass  = document.getElementById('gate-pass').value;
+  const btn   = document.getElementById('gate-btn');
+  const msg   = document.getElementById('gate-msg');
+  if(!email||!pass){ msg.textContent='Please enter your email and password.'; msg.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='Signing in…';
+  const {error} = await db.auth.signInWithPassword({email, password:pass});
+  if(error){ msg.textContent=error.message||'Sign in failed.'; msg.style.display='block'; btn.disabled=false; btn.textContent='Sign In'; }
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter'&&(e.target.id==='gate-email'||e.target.id==='gate-pass')) gateSignIn();
+});
+
+(async()=>{
+  const {data:{session}} = await db.auth.getSession();
+  if(session){
+    document.getElementById('auth-gate').style.display='none';
+    document.getElementById('page-content').style.display='block';
+  } else {
+    document.getElementById('auth-gate').style.display='flex';
+    document.getElementById('page-content').style.display='none';
+  }
+})();
+
+db.auth.onAuthStateChange((event, session)=>{
+  if(event==='SIGNED_IN'&&session){
+    document.getElementById('auth-gate').style.display='none';
+    document.getElementById('page-content').style.display='block';
+  }
+  if(event==='SIGNED_OUT'){
+    document.getElementById('auth-gate').style.display='flex';
+    document.getElementById('page-content').style.display='none';
+  }
+});
+</script>
+
+</body>
+</html>

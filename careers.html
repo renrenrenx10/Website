@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Careers – NucCol</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:  #0a1628; --navy2: #0e2040;
+      --cyan:  #29b6e8; --cyan2: #1a96c8;
+      --light: #e8eef6; --white: #ffffff;
+      --grey:  #8a9bb0; --border: rgba(41,182,232,0.18);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Barlow', sans-serif; background: var(--white); color: #1a1a2e; overflow-x: hidden; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 72px;
+      background: rgba(10,22,40,0.97); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display:flex; align-items:center; height:52px; flex-shrink:0; text-decoration:none; }
+    .nav-logo img { height:48px; width:48px; object-fit:contain; border-radius:4px; display:block; }
+    .nav-links { display:flex; gap:4px; align-items:center; list-style:none; }
+    .nav-links a { color:var(--light); text-decoration:none; font-size:0.85rem; font-weight:500;
+      letter-spacing:0.04em; padding:8px 14px; border-radius:4px;
+      transition:color 0.2s, background 0.2s; white-space:nowrap; }
+    .nav-links a:hover { color:var(--cyan); background:rgba(41,182,232,0.08); }
+    .nav-links a.active { color:var(--cyan); }
+    .nav-cta { background:var(--cyan) !important; color:var(--navy) !important;
+      font-weight:700 !important; padding:8px 20px !important; border-radius:4px; }
+    .nav-cta:hover { background:var(--cyan2) !important; }
+    .page-header { padding:140px 48px 80px; background:var(--navy);
+      border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+    .page-header-grid { position:absolute; inset:0;
+      background-image:linear-gradient(rgba(41,182,232,0.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(41,182,232,0.04) 1px,transparent 1px);
+      background-size:60px 60px; }
+    .page-header-glow { position:absolute; top:-100px; right:10%; width:500px; height:500px;
+      background:radial-gradient(circle,rgba(41,182,232,0.1) 0%,transparent 70%); }
+    .page-header-content { position:relative; max-width:1200px; margin:0 auto; }
+    .eyebrow { display:inline-flex; align-items:center; gap:10px;
+      font-family:'Barlow Condensed',sans-serif; font-size:0.78rem; font-weight:700;
+      letter-spacing:0.16em; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+    .eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--cyan); }
+    h1 { font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(2.8rem,6vw,5rem); font-weight:800;
+      line-height:0.95; letter-spacing:-0.02em; text-transform:uppercase;
+      color:var(--white); margin-bottom:20px; }
+    h1 span, h2 span { color:var(--cyan); }
+    .page-header p { font-size:1.05rem; font-weight:300; line-height:1.75;
+      color:rgba(232,238,246,0.82); max-width:600px; }
+    section { padding:80px 48px; }
+    section.alt { background:#f4f7fb; }
+    .section-wrap { max-width:1200px; margin:0 auto; }
+    h2 { font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(1.9rem,3.5vw,2.8rem); font-weight:800;
+      text-transform:uppercase; letter-spacing:-0.01em; line-height:1.05;
+      margin-bottom:14px; color:var(--navy); }
+    .section-eyebrow { font-family:'Barlow Condensed',sans-serif; font-size:0.76rem;
+      font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--cyan);
+      display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .section-eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--cyan); }
+    .section-intro { font-size:1rem; font-weight:300; line-height:1.75;
+      color:#4a5568; max-width:680px; margin-bottom:48px; }
+    .btn-primary { display:inline-block; background:var(--cyan); color:var(--navy);
+      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
+      text-decoration:none; border-radius:3px; transition:background 0.2s,transform 0.2s; }
+    .btn-primary:hover { background:var(--cyan2); transform:translateY(-2px); }
+    .btn-ghost { display:inline-block; border:1px solid rgba(41,182,232,0.45); color:var(--cyan);
+      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:600;
+      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
+      text-decoration:none; border-radius:3px; transition:border-color 0.2s,color 0.2s,transform 0.2s; }
+    .btn-ghost:hover { border-color:var(--cyan2); color:var(--cyan2); transform:translateY(-2px); }
+    .btn-ghost-light { display:inline-block; border:1px solid rgba(232,238,246,0.4); color:var(--light);
+      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:600;
+      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
+      text-decoration:none; border-radius:3px; transition:border-color 0.2s,color 0.2s; }
+    .btn-ghost-light:hover { border-color:var(--cyan); color:var(--cyan); }
+    footer { background:#060f1c; padding:64px 48px 32px; border-top:1px solid var(--border); }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
+    .footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .footer-logo img { height:44px; width:44px; object-fit:contain; border-radius:4px; display:block; }
+    .footer-logo-text { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem;
+      font-weight:800; color:var(--white); letter-spacing:0.06em; text-transform:uppercase; }
+    .footer-about { font-size:0.85rem; color:var(--grey); line-height:1.7; margin-bottom:16px; }
+    .footer-address { font-size:0.8rem; color:var(--grey); line-height:1.8; }
+    .footer-col h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.76rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+    .footer-col ul { list-style:none; }
+    .footer-col li { margin-bottom:9px; }
+    .footer-col a { font-size:0.84rem; color:var(--grey); text-decoration:none; transition:color 0.2s; }
+    .footer-col a:hover { color:var(--white); }
+    .footer-download { display:inline-flex; align-items:center; gap:8px; margin-top:8px;
+      padding:9px 18px; border:1px solid rgba(41,182,232,0.35); border-radius:4px;
+      font-size:0.82rem; font-weight:600; color:var(--cyan); text-decoration:none;
+      transition:border-color 0.2s,background 0.2s; }
+    .footer-download:hover { border-color:var(--cyan); background:rgba(41,182,232,0.08); }
+    .footer-download svg { width:14px; height:14px; fill:currentColor; flex-shrink:0; }
+    .footer-bottom { border-top:1px solid var(--border); padding-top:24px;
+      display:flex; align-items:center; justify-content:space-between;
+      font-size:0.78rem; color:var(--grey); }
+    .footer-bottom a { color:var(--grey); text-decoration:none; }
+    .footer-bottom a:hover { color:var(--white); }
+    @media(max-width:1024px) {
+      nav { padding:0 24px; } .nav-links { display:none; }
+      .page-header { padding:120px 24px 64px; }
+      section { padding:64px 24px; }
+      .footer-grid { grid-template-columns:1fr 1fr; gap:32px; }
+      footer { padding:48px 24px 24px; }
+    }
+    @media(max-width:640px) { .footer-grid { grid-template-columns:1fr; } }
+    /* TWO-COL LAYOUT */
+    .careers-layout { display:grid; grid-template-columns:3fr 2fr; gap:64px; max-width:1200px; margin:0 auto; }
+
+    /* VACANCIES */
+    .vacancy-card { border:1px solid #dde4ee; border-radius:6px; padding:32px 36px;
+      margin-bottom:20px; background:var(--white); transition:box-shadow 0.2s,border-color 0.2s; }
+    .vacancy-card:hover { box-shadow:0 4px 24px rgba(41,182,232,0.1); border-color:var(--cyan); }
+    .vacancy-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+    .vacancy-tag { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700;
+      letter-spacing:0.12em; text-transform:uppercase; padding:4px 10px;
+      border:1px solid #dde4ee; border-radius:2px; color:#5a6a80; }
+    .vacancy-tag.type { border-color:rgba(41,182,232,0.35); color:var(--cyan); }
+    .vacancy-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.3rem; font-weight:700;
+      text-transform:uppercase; color:var(--navy); margin-bottom:10px; }
+    .vacancy-card p { font-size:0.92rem; line-height:1.7; color:#4a5568; margin-bottom:20px; }
+    .no-vacancies { background:#f4f7fb; border:1px dashed #dde4ee; border-radius:6px;
+      padding:48px 36px; text-align:center; margin-bottom:20px; }
+    .no-vacancies p { font-size:0.95rem; color:#5a6a80; line-height:1.7; }
+    .no-vacancies strong { display:block; font-family:'Barlow Condensed',sans-serif; font-size:1.3rem;
+      font-weight:700; text-transform:uppercase; color:var(--navy); margin-bottom:10px; }
+
+    /* SIDEBAR */
+    .careers-sidebar { display:flex; flex-direction:column; gap:24px; }
+    .sidebar-card { background:#f4f7fb; border:1px solid #dde4ee; border-radius:6px; padding:32px 28px; }
+    .sidebar-card h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.88rem; font-weight:700;
+      text-transform:uppercase; letter-spacing:0.1em; color:var(--cyan); margin-bottom:12px; }
+    .sidebar-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700;
+      text-transform:uppercase; color:var(--navy); margin-bottom:12px; }
+    .sidebar-card p { font-size:0.88rem; line-height:1.7; color:#4a5568; margin-bottom:16px; }
+    .sidebar-card a.email-link { color:var(--cyan); text-decoration:none; font-size:0.9rem;
+      font-weight:600; transition:color 0.2s; display:block; margin-top:4px; }
+    .sidebar-card a.email-link:hover { color:var(--cyan2); }
+
+    /* ASSOCIATES SECTION */
+    .associates-section { background:var(--navy); padding:88px 48px; }
+    .associates-inner { max-width:1200px; margin:0 auto;
+      display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+    .associates-body h2 { color:var(--white); margin-bottom:16px; }
+    .associates-body p { font-size:1rem; line-height:1.8; color:rgba(232,238,246,0.82); margin-bottom:20px; }
+    .associates-pillars { display:flex; flex-direction:column; gap:16px; }
+    .associates-pillar { display:flex; align-items:flex-start; gap:16px; padding:20px 24px;
+      background:rgba(41,182,232,0.06); border:1px solid var(--border); border-radius:4px; }
+    .pillar-icon { font-size:1.5rem; flex-shrink:0; margin-top:2px; }
+    .pillar-text h4 { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700;
+      text-transform:uppercase; color:var(--cyan); margin-bottom:4px; }
+    .pillar-text p { font-size:0.85rem; line-height:1.6; color:rgba(232,238,246,0.7); margin:0; }
+
+    /* PHOTO GALLERY */
+    .life-gallery { display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:200px; gap:8px;
+      max-width:1200px; margin:0 auto; }
+    .life-gallery .g-wide { grid-column:span 2; }
+    .g-img { overflow:hidden; border-radius:4px; background:#dde4ee; }
+    .g-img img { width:100%; height:100%; object-fit:cover; display:block;
+      filter:saturate(0.85); transition:transform 0.4s,filter 0.4s; }
+    .g-img:hover img { transform:scale(1.04); filter:saturate(1); }
+
+    @media(max-width:1024px) {
+      .careers-layout { grid-template-columns:1fr; }
+      .careers-sidebar { position:static; }
+      .associates-inner { grid-template-columns:1fr; gap:40px; }
+      .associates-section { padding:64px 24px; }
+      .life-gallery { grid-template-columns:1fr 1fr; }
+      .life-gallery .g-wide { grid-column:span 1; }
+    }
+    @media(max-width:640px) {
+      .life-gallery { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"></a>
+    <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">Who We Are</a></li>
+    <li><a href="markets.html">Markets</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="who-we-work-with.html">Who We Work With</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="careers.html" class="active">Careers</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="members.html" class="nav-cta">Members Login</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER with photo background -->
+<div class="page-header" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1800&q=80'); background-size:cover; background-position:center;">
+  <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(10,22,40,0.92) 0%,rgba(10,22,40,0.7) 60%,rgba(10,22,40,0.4) 100%);"></div>
+  <div class="page-header-glow"></div>
+  <div class="page-header-content" style="position:relative;">
+    <div class="eyebrow">Join the Team</div>
+    <h1>Careers at <span>NucCol</span></h1>
+    <p>We're a growing team of specialists passionate about transforming the UK's nuclear and regulated industries supply chain. If that sounds like your kind of challenge, we'd love to hear from you.</p>
+  </div>
+</div>
+
+<!-- VACANCIES + SIDEBAR -->
+<section>
+  <div class="careers-layout">
+    <div>
+      <div class="section-eyebrow">Current Openings</div>
+      <h2 style="color:var(--navy);margin-bottom:32px">Open <span>Positions</span></h2>
+
+      <!-- No current vacancies state — swap this block when roles become available -->
+      <div class="no-vacancies">
+        <strong>No Current Vacancies</strong>
+        <p>We don't have any open positions right now, but we're always growing. Register your interest and we'll be in touch when suitable roles arise.</p>
+        <br>
+        <a href="mailto:enquiries@nuccol.co.uk?subject=Career Interest – NucCol" class="btn-primary">Register Your Interest</a>
+      </div>
+
+      <!-- EXAMPLE vacancy card — uncomment and populate when roles exist
+      <div class="vacancy-card">
+        <div class="vacancy-meta">
+          <span class="vacancy-tag type">Full Time</span>
+          <span class="vacancy-tag">Derby</span>
+          <span class="vacancy-tag">Supply Chain</span>
+        </div>
+        <h3>Supply Chain Analyst</h3>
+        <p>Working within our supply chain team to support client engagements across the UK nuclear sector. You'll be conducting supplier assessments, demand modelling, and delivering insights to tier 1 and government clients.</p>
+        <a href="mailto:enquiries@nuccol.co.uk?subject=Application – Supply Chain Analyst" class="btn-primary">Apply Now</a>
+      </div>
+      -->
+
+      <div style="margin-top:40px; padding:28px 32px; border:1px solid #dde4ee; border-radius:6px; background:#f8faff;">
+        <div class="section-eyebrow" style="margin-bottom:10px">Stay in the Loop</div>
+        <p style="font-size:0.92rem;line-height:1.7;color:#4a5568;margin-bottom:16px">Roles at NucCol move quickly. Drop us a line with your CV and areas of interest and we'll reach out when something relevant comes up.</p>
+        <a href="mailto:enquiries@nuccol.co.uk?subject=Career Enquiry" class="btn-primary">Send Your CV</a>
+      </div>
+    </div>
+
+    <div class="careers-sidebar">
+      <div class="sidebar-card">
+        <h4>Why NucCol</h4>
+        <h3>A Place to Make a Difference</h3>
+        <p>We're a lean, expert team working on genuinely important challenges — helping the UK build the supply chain capacity it needs for its nuclear future.</p>
+        <p>You'll work directly with government bodies, nuclear primes, and hundreds of UK manufacturers — no two weeks are the same.</p>
+      </div>
+      <div class="sidebar-card">
+        <h4>General Enquiries</h4>
+        <p>Interested in joining NucCol but don't see a suitable role? Get in touch and tell us about yourself.</p>
+        <a href="mailto:enquiries@nuccol.co.uk?subject=Career Interest" class="email-link">enquiries@nuccol.co.uk</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ASSOCIATES SECTION -->
+<div class="associates-section">
+  <div class="associates-inner">
+    <div class="associates-body">
+      <div class="section-eyebrow" style="color:var(--cyan)">Flexible Expertise</div>
+      <h2>NucCol <span>Associates</span></h2>
+      <p>NucCol offer an extensive associate programme — we are constantly looking for skilled individuals to support our diverse client base. Our trusted associates operate at the highest level of quality, technical ability, and integrity.</p>
+      <p>If you are an experienced specialist in supply chain, nuclear engineering, manufacturing, policy, or commercial management, we want to hear from you.</p>
+      <a href="mailto:enquiries@nuccol.co.uk?subject=Associate Programme Enquiry" class="btn-primary">Enquire About Associates</a>
+    </div>
+    <div class="associates-pillars">
+      <div class="associates-pillar">
+        <div class="pillar-icon">🎯</div>
+        <div class="pillar-text">
+          <h4>Technical Excellence</h4>
+          <p>Associates bring deep sector knowledge and operate to the highest standards of technical rigour and professional judgement.</p>
+        </div>
+      </div>
+      <div class="associates-pillar">
+        <div class="pillar-icon">🤝</div>
+        <div class="pillar-text">
+          <h4>Trusted &amp; Independent</h4>
+          <p>Like NucCol itself, our associates act as independent critical friends — objective, credible, and free from commercial bias.</p>
+        </div>
+      </div>
+      <div class="associates-pillar">
+        <div class="pillar-icon">⚡</div>
+        <div class="pillar-text">
+          <h4>Deployed at Pace</h4>
+          <p>Our associate network lets us scale rapidly to meet client needs — bringing the right expertise to bear exactly when it's needed.</p>
+        </div>
+      </div>
+      <div class="associates-pillar">
+        <div class="pillar-icon">🌐</div>
+        <div class="pillar-text">
+          <h4>Sector Agnostic</h4>
+          <p>Associates span nuclear, defence, rail, renewables, and advanced manufacturing — reflecting NucCol's cross-sector reach.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"><span class="footer-logo-text">NucCol</span></div>
+      <p class="footer-about">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+      <p class="footer-address">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</p>
+      <br><a href="#" class="footer-download"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 0 1 1 1v8.586l2.293-2.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 1 1 1.414-1.414L9 11.586V3a1 1 0 0 1 1-1zM3 15a1 1 0 1 0 0 2h14a1 1 0 1 0 0-2H3z"/></svg>Download Capability Brochure</a>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul>
+      <li><a href="services.html">Supply Chain Development</a></li><li><a href="services.html">Manufacturing Innovation</a></li>
+      <li><a href="services.html">IT Services</a></li><li><a href="services.html">Networking &amp; Events</a></li><li><a href="services.html">People Services</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Company</h4><ul>
+      <li><a href="about.html">Who We Are</a></li><li><a href="who-we-work-with.html">Who We Work With</a></li><li><a href="projects.html">Projects</a></li>
+      <li><a href="events.html">Events</a></li><li><a href="f4n.html">F4N Programme</a></li>
+      <li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Connect</h4><ul>
+      <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+      <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
+      <li><a href="members.html">Members Login</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2025 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
+    <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+  </div>
+</footer>
+</body></html>
