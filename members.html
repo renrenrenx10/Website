@@ -1407,12 +1407,13 @@ document.addEventListener('keydown',e=>{
 })();
 
 db.auth.onAuthStateChange((event,session)=>{
+  if(event==='INITIAL_SESSION') return;
   if(event==='SIGNED_IN'&&session){
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('shell').style.display='flex';
     loadLiveBadges();
   }
-  if(event==='SIGNED_OUT'){
+  if(event==='SIGNED_OUT'||event==='USER_DELETED'){
     document.getElementById('auth-gate').style.display='flex';
     document.getElementById('shell').style.display='none';
   }
