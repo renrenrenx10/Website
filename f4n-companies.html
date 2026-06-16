@@ -14,7 +14,7 @@
     nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
     .nav-logo{display:flex;align-items:center;height:52px;flex-shrink:0;text-decoration:none}
     .nav-logo img{height:48px;width:48px;object-fit:contain;border-radius:4px;display:block}
-    .nav-links{display:flex;gap:1px;align-items:center;list-style:none;flex-wrap:wrap}
+    .nav-links{display:flex;gap:2px;align-items:center;list-style:none;flex-wrap:wrap}
     .nav-links a{color:var(--light);text-decoration:none;font-size:0.72rem;font-weight:500;letter-spacing:0.02em;padding:6px 8px;border-radius:4px;transition:color 0.2s,background 0.2s;white-space:nowrap}
     .nav-links a:hover{color:var(--cyan);background:rgba(41,182,232,0.08)}
     .nav-links a.active{color:var(--cyan)}
@@ -158,7 +158,7 @@
     <h2>F4N <span>Granted</span> Companies</h2>
     <div class="status-badge"><span class="status-dot"></span>Fit For Nuclear Granted</div>
     <p class="intro">These companies have successfully achieved Fit For Nuclear granted status — demonstrating that their people, processes, and performance meet the exacting requirements of the UK nuclear sector.</p>
-    <div class="company-grid">
+    <div class="company-grid" id="f4n-granted-grid">
 <a class="company-card" href="https://www.amazonfilters.com/" target="_blank" rel="noopener">
       <div class="company-logo-wrap">
         <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/11/3515f-amazon-filters.png?resize=450%2C200&ssl=1" alt="Amazon Filters" />
@@ -464,7 +464,7 @@
     <h2>Companies On Their <span>F4N Journey</span></h2>
     <div class="status-badge journey"><span class="status-dot"></span>F4N In Progress</div>
     <p class="intro">These organisations are actively progressing through the F4N programme — working closely with their Supply Chain Consultants to identify strengths, close gaps, and embed best practice across their operations.</p>
-    <div class="company-grid">
+    <div class="company-grid" id="f4n-journey-grid">
 <a class="company-card" href="https://agemaspark.com/" target="_blank" rel="noopener">
       <div class="company-logo-wrap">
         <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2025/10/agema.jpg?resize=450%2C200&ssl=1" alt="Agemaspark" />
@@ -646,4 +646,27 @@
     <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
   </div>
 </footer>
+<script>
+(async()=>{
+  const BLOB='https://nuccolmedia.blob.core.windows.net/content';
+  const SAS='sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
+  try{
+    const r=await fetch(`${BLOB}/site-pages/f4n-companies.json?${SAS}`);
+    if(!r.ok)return;
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length)return;
+    const granted=rows.filter(c=>c.section==='Granted').sort((a,b)=>(a.sort||0)-(b.sort||0));
+    const journey=rows.filter(c=>c.section==='Journey').sort((a,b)=>(a.sort||0)-(b.sort||0));
+    function renderCard(c){
+      const inner=`<div class="company-logo-wrap"><img src="${c.imageUrl||''}" alt="${c.title||''}" onerror="this.style.display='none'"></div><div class="company-body"><div class="company-name">${c.title||''}</div><p class="company-desc">${c.body||''}</p>${c.linkUrl?'<span class="company-link-indicator">Visit Website</span>':''}</div>`;
+      if(c.linkUrl)return`<a class="company-card" href="${c.linkUrl}" target="_blank" rel="noopener">${inner}</a>`;
+      return`<div class="company-card company-card-nolink">${inner}</div>`;
+    }
+    const gGrid=document.getElementById('f4n-granted-grid');
+    const jGrid=document.getElementById('f4n-journey-grid');
+    if(gGrid&&granted.length)gGrid.innerHTML=granted.map(renderCard).join('');
+    if(jGrid&&journey.length)jGrid.innerHTML=journey.map(renderCard).join('');
+  }catch(e){console.warn('F4N companies blob fetch failed:',e);}
+})();
+</script>
 </body></html>
