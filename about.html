@@ -73,7 +73,7 @@
     }
     .nav-logo { display: flex; align-items: center; height: 44px; flex-shrink: 0; }
     .nav-logo img { height: 40px; width: auto; object-fit: contain;  display: block; }
-    .nav-links { display: flex; gap: 4px; align-items: center; list-style: none; }
+    .nav-links { display:flex; gap:2px; align-items: center; list-style: none; }
     .nav-links a {
       color: var(--light); text-decoration: none; font-size: 0.78rem;
       font-weight: 500; letter-spacing: 0.04em; padding: 7px 10px;
@@ -418,8 +418,8 @@
   <div class="page-header-glow"></div>
   <div class="page-header-content">
     <div class="eyebrow">Nuclear Collaboration Ltd</div>
-    <h1>Who We <span>Are</span></h1>
-    <p>We exist to foster closer, more efficient collaboration across the supply chain.</p>
+    <h1 id="we-hero_title">Who We <span>Are</span></h1>
+    <p id="we-hero_sub">We exist to foster closer, more efficient collaboration across the supply chain.</p>
   </div>
 </div>
 
@@ -429,9 +429,9 @@
     <div class="origin-body">
       <div class="section-eyebrow">Our Story</div>
       <h2>Built for <span>Collaboration</span></h2>
-      <p>NucCol was established two years ago as a spin-out from the Nuclear Advanced Manufacturing Research Centre (NAMRC). The company was created in response to a growing need within the nuclear industry for closer, more efficient collaboration — reducing duplication and enabling organisations to work together more effectively.</p>
-      <p>Our mission is to foster collaboration at both company and individual levels. Although our origins are in the nuclear sector, we are sector- and technology-agnostic. We work across multiple industries, allowing us to draw on a broad range of capabilities and insights.</p>
-      <p>We act as a "critical friend" to the supply chain, providing independent, informed assessment, analysis, and development support to help organisations strengthen performance and deliver better outcomes.</p>
+      <p id="we-story_p1">NucCol was established two years ago as a spin-out from the Nuclear Advanced Manufacturing Research Centre (NAMRC). The company was created in response to a growing need within the nuclear industry for closer, more efficient collaboration — reducing duplication and enabling organisations to work together more effectively.</p>
+      <p id="we-story_p2">Our mission is to foster collaboration at both company and individual levels. Although our origins are in the nuclear sector, we are sector- and technology-agnostic. We work across multiple industries, allowing us to draw on a broad range of capabilities and insights.</p>
+      <p id="we-story_p3">We act as a "critical friend" to the supply chain, providing independent, informed assessment, analysis, and development support to help organisations strengthen performance and deliver better outcomes.</p>
     </div>
     <div>
       <div class="origin-aside">
@@ -502,7 +502,7 @@
   <div class="section-wrap">
     <div class="section-eyebrow">The Team</div>
     <h2>The People <span>Behind NucCol</span></h2>
-    <p class="section-intro">A dedicated team of specialists with deep expertise across supply chain, engineering, finance, programme management, and commercial strategy.</p>
+    <p class="section-intro" id="we-team_intro">A dedicated team of specialists with deep expertise across supply chain, engineering, finance, programme management, and commercial strategy.</p>
 
     <div class="team-grid-overlay">
       <div class="toc toc-clickable" data-person="andrew-storer" onclick="openModal('andrew-storer')" role="button" tabindex="0">
@@ -742,6 +742,26 @@ document.getElementById('modal-overlay').addEventListener('click',function(e){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape') closeModal();
 });
+</script>
+
+<script>
+(async()=>{
+  const BLOB='https://nuccolmedia.blob.core.windows.net/content';
+  const SAS='sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
+  try{
+    const r=await fetch(`${BLOB}/site-pages/about.json?${SAS}`);
+    if(!r.ok)return;
+    const d=await r.json();
+    Object.entries(d).forEach(([k,v])=>{
+      const el=document.getElementById('we-'+k);
+      if(el)el.textContent=v;
+    });
+    if(d.hero_img){
+      const el=document.getElementById('we-img-hero_img');
+      if(el)el.src=d.hero_img;
+    }
+  }catch(e){}
+})();
 </script>
 
 </body>

@@ -1121,7 +1121,8 @@ async function loadContentFromBlob() {
 }
 
 function renderNews(filter){
-  const items=filter==='All'?NEWS_DATA:NEWS_DATA.filter(n=>n.category===filter);
+  const visible=NEWS_DATA.filter(n=>n.members!==false);
+  const items=filter==='All'?visible:visible.filter(n=>n.category===filter);
   const list=document.getElementById('news-list');if(!list)return;
   list.innerHTML=items.map(n=>{
     const d=fmtDate(n.date);
@@ -1138,7 +1139,8 @@ function filterNews(cat,btn){
 }
 
 function renderEvents(filter){
-  const items=filter==='All'?EVENTS_DATA:EVENTS_DATA.filter(e=>e.category===filter);
+  const visible=EVENTS_DATA.filter(e=>e.members!==false);
+  const items=filter==='All'?visible:visible.filter(e=>e.category===filter);
   const list=document.getElementById('events-list');if(!list)return;
   list.innerHTML=items.map(e=>{
     const d=fmtDate(e.date);
@@ -1160,7 +1162,8 @@ function filterEvents(cat,btn){
 }
 
 function renderTenders(filter){
-  const items=filter==='All'?CONTRACTS_DATA:CONTRACTS_DATA.filter(c=>c.sector===filter);
+  const visible=CONTRACTS_DATA.filter(c=>c.members!==false);
+  const items=filter==='All'?visible:visible.filter(c=>c.sector===filter);
   const list=document.getElementById('tenders-list');if(!list)return;
   list.innerHTML=items.map(c=>{
     const pub=fmtDate(c.publishedDate);

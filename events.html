@@ -182,14 +182,13 @@
       <div class="event-card">
         <div class="event-card-header">
           <div>
-            <div class="event-date">6th &amp; 7th October 2026 &middot; Reach Conference Centre, Derby</div>
-            <h3>Nuclear Supply Chain Summit 2026</h3>
+            <div class="event-date" id="we-summit_date">6th &amp; 7th October 2026 &middot; Reach Conference Centre, Derby</div>
+            <h3 id="we-summit_title">Nuclear Supply Chain Summit 2026</h3>
           </div>
           <span class="event-type">Summit</span>
         </div>
         <div class="event-card-body">
-          <p><strong>📅 Save the dates – 6th and 7th October 2026!</strong></p>
-          <p>We're delighted to announce our second Nuclear Supply Chain Summit, taking place at <strong>Reach Conference Centre, Derby</strong>. The event is designed for everyone involved in the nuclear supply chain.</p>
+          <p id="we-summit_body"><strong>📅 Save the dates – 6th and 7th October 2026!</strong> We're delighted to announce our second Nuclear Supply Chain Summit, taking place at <strong>Reach Conference Centre, Derby</strong>. The event is designed for everyone involved in the nuclear supply chain.</p>
           <p>With major opportunities emerging across new nuclear build, decommissioning, defence, fusion and space, there's never been a better time to <em>'get ready to deliver...'</em></p>
           <p>What can you expect?</p>
           <ul>
@@ -219,13 +218,13 @@
       <div class="event-card">
         <div class="event-card-header">
           <div>
-            <div class="event-date">9 September 2025 &middot; 10:30–11:30</div>
-            <h3>Current Nuclear Landscape</h3>
+            <div class="event-date" id="we-webinar_date">9 September 2025 &middot; 10:30–11:30</div>
+            <h3 id="we-webinar_title">Current Nuclear Landscape</h3>
           </div>
           <span class="event-type">Webinar</span>
         </div>
         <div class="event-card-body">
-          <p>We're bringing our F4N community together for the very first time — led by Andrew Storer, CEO &amp; Founder of NucCol. Andy will share the latest updates from across the UK nuclear sector, including programme updates, key takeaways from major industry events, and insider knowledge you won't find in the headlines.</p>
+          <p id="we-webinar_body">We're bringing our F4N community together for the very first time — led by Andrew Storer, CEO &amp; Founder of NucCol. Andy will share the latest updates from across the UK nuclear sector, including programme updates, key takeaways from major industry events, and insider knowledge you won't find in the headlines.</p>
           <ul>
             <li>Latest updates from across the UK nuclear sector</li>
             <li>Updates on our programmes of work and how we may link you into opportunities</li>
@@ -293,4 +292,26 @@
     <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
   </div>
 </footer>
+<script>
+(async()=>{
+  const BLOB='https://nuccolmedia.blob.core.windows.net/content';
+  const SAS='sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
+  try{
+    const r=await fetch(`${BLOB}/site-pages/events.json?${SAS}`);
+    if(!r.ok)return;
+    const d=await r.json();
+    Object.entries(d).forEach(([k,v])=>{
+      const el=document.getElementById('we-'+k);
+      if(el)el.textContent=v;
+    });
+    // Images
+    ['summit_img','webinar_img'].forEach(k=>{
+      if(d[k]){
+        const el=document.getElementById('we-img-'+k);
+        if(el)el.src=d[k];
+      }
+    });
+  }catch(e){}
+})();
+</script>
 </body></html>
