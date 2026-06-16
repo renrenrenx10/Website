@@ -751,15 +751,36 @@ document.addEventListener('keydown',function(e){
   try{
     const r=await fetch(`${BLOB}/site-pages/about.json?${SAS}`);
     if(!r.ok)return;
-    const d=await r.json();
-    Object.entries(d).forEach(([k,v])=>{
-      const el=document.getElementById('we-'+k);
-      if(el)el.textContent=v;
+    const rows=await r.json();
+    if(!Array.isArray(rows))return;
+    // Map section names to page element IDs
+    const sectionMap={
+      'Hero':       { title:'we-hero_title', body:'we-hero_sub' },
+      'Our Story':  { body:'we-story_p1' },
+      'Team':       { body:'we-team_intro' },
+    };
+    const sectionCounts={};
+    rows.sort((a,b)=>(a.sort||0)-(b.sort||0)).forEach(row=>{
+      const map=sectionMap[row.section];
+      if(!map) return;
+      sectionCounts[row.section]=(sectionCounts[row.section]||0)+1;
+      const n=sectionCounts[row.section];
+      // title
+      const titleId = n===1 ? map.title : map.title ? map.title.replace(/(\d*)$/,n) : null;
+      if(titleId && row.title){ const el=document.getElementById(titleId); if(el) el.textContent=row.title; }
+      // body — for Our Story use p1/p2/p3 slots
+      if(row.section==='Our Story'){
+        const pid=['we-story_p1','we-story_p2','we-story_p3'][n-1];
+        if(pid && row.body){ const el=document.getElementById(pid); if(el) el.textContent=row.body; }
+      } else if(map.body && row.body){
+        const el=document.getElementById(map.body); if(el) el.textContent=row.body;
+      }
+      // image
+      if(row.imageUrl){
+        const imgEl=document.getElementById('we-img-'+(row.section.toLowerCase().replace(/\s+/g,'-')));
+        if(imgEl) imgEl.src=row.imageUrl;
+      }
     });
-    if(d.hero_img){
-      const el=document.getElementById('we-img-hero_img');
-      if(el)el.src=d.hero_img;
-    }
   }catch(e){}
 })();
 </script>

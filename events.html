@@ -299,17 +299,18 @@
   try{
     const r=await fetch(`${BLOB}/site-pages/events.json?${SAS}`);
     if(!r.ok)return;
-    const d=await r.json();
-    Object.entries(d).forEach(([k,v])=>{
-      const el=document.getElementById('we-'+k);
-      if(el)el.textContent=v;
-    });
-    // Images
-    ['summit_img','webinar_img'].forEach(k=>{
-      if(d[k]){
-        const el=document.getElementById('we-img-'+k);
-        if(el)el.src=d[k];
-      }
+    const rows=await r.json();
+    if(!Array.isArray(rows))return;
+    const sectionMap={
+      'Summit 2026':{ title:'we-summit_title', date:'we-summit_date', body:'we-summit_body' },
+      'Webinars':   { title:'we-webinar_title', date:'we-webinar_date', body:'we-webinar_body' },
+    };
+    rows.sort((a,b)=>(a.sort||0)-(b.sort||0)).forEach(row=>{
+      const map=sectionMap[row.section]; if(!map) return;
+      if(row.title   && map.title){ const el=document.getElementById(map.title); if(el) el.textContent=row.title; }
+      if(row.body    && map.body) { const el=document.getElementById(map.body);  if(el) el.textContent=row.body;  }
+      if(row.linkUrl && map.date) { const el=document.getElementById(map.date);  if(el) el.textContent=row.linkUrl; }
+      if(row.imageUrl){ const s=row.section.toLowerCase().replace(/\s+/g,'-'); const el=document.getElementById('we-img-'+s); if(el) el.src=row.imageUrl; }
     });
   }catch(e){}
 })();
