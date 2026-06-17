@@ -130,16 +130,18 @@
         if (grid) {
           const sorted = teamRows.sort((a, b) => (a.sort || 0) - (b.sort || 0));
           grid.innerHTML = sorted.map(p => {
-            const tags = (p.tags || '').split(',').map(t => t.trim()).filter(Boolean);
             const initials = (p.title || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-            const photoHtml = p.imageUrl
-              ? `<img class="toc-img" src="${escAttr(p.imageUrl)}" alt="${escAttr(p.title || '')}" loading="lazy">`
-              : `<div class="toc-initials">${escHtml(initials)}</div>`;
             const personId = (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            return `<div class="team-card" data-person="${escAttr(personId)}" onclick="openModal('${escAttr(personId)}')">
-              <div class="toc-photo">${photoHtml}</div>
-              <div class="toc-name">${escHtml(p.title || '')}</div>
-              <div class="toc-role">${escHtml(p.role || '')}</div>
+            const imgHtml = p.imageUrl
+              ? `<img src="${escAttr(p.imageUrl)}" alt="${escAttr(p.title || '')}" class="toc-img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                 <div class="toc-initials" style="position:absolute;inset:0;display:none">${escHtml(initials)}</div>`
+              : `<div class="toc-initials" style="position:absolute;inset:0;display:flex">${escHtml(initials)}</div>`;
+            return `<div class="toc toc-clickable" data-person="${escAttr(personId)}" onclick="openModal('${escAttr(personId)}')" role="button" tabindex="0">
+              ${imgHtml}
+              <div class="toc-label">
+                <div class="toc-name">${escHtml(p.title || '')}</div>
+                <div class="toc-role">${escHtml(p.role || '')}</div>
+              </div>
             </div>`;
           }).join('');
 
