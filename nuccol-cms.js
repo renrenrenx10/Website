@@ -294,14 +294,16 @@
 
     // -- WHO WE WORK WITH --------------------------------------------------
     'who-we-work-with': async () => {
-      const rows = await loadBlob('who-we-work-with');
-      if (!rows.length) return;
-
-      const collabs = rows.filter(r => r.section === 'Collaboration').sort((a, b) => (a.sort || 0) - (b.sort || 0));
-      if (!collabs.length) return;
-
       const track = document.getElementById('we-collaborations-track');
       if (!track) return;
+
+      const rows = await loadBlob('who-we-work-with');
+      const collabs = rows.filter(r => r.section === 'Collaboration').sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+      // Always clear the static fallback once blob has been fetched
+      track.innerHTML = '';
+
+      if (!collabs.length) return;
 
       const cards = collabs.map(c => {
         const logoHtml = c.imageUrl
