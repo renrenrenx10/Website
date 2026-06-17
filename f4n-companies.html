@@ -632,41 +632,5 @@
     </ul></div>
     <div class="fc"><h4>Company</h4><ul>
       <li><a href="about.html">Who We Are</a></li><li><a href="markets.html">Markets</a></li>
-      <li><a href="projects.html">Projects</a></li><li><a href="f4n.html">F4N Programme</a></li>
-      <li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li>
-    </ul></div>
-    <div class="fc"><h4>Connect</h4><ul>
-      <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
-      <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
-      <li><a href="members.html">Members Login</a></li>
-    </ul></div>
-  </div>
-  <div class="fb">
-    <span>© 2025 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
-    <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
-  </div>
-</footer>
-<script>
-(async()=>{
-  const BLOB='https://nuccolmedia.blob.core.windows.net/content';
-  const SAS='sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
-  try{
-    const r=await fetch(`${BLOB}/site-pages/f4n-companies.json?${SAS}`);
-    if(!r.ok)return;
-    const rows=await r.json();
-    if(!Array.isArray(rows)||!rows.length)return;
-    const granted=rows.filter(c=>c.section==='Granted').sort((a,b)=>(a.sort||0)-(b.sort||0));
-    const journey=rows.filter(c=>c.section==='Journey').sort((a,b)=>(a.sort||0)-(b.sort||0));
-    function renderCard(c){
-      const inner=`<div class="company-logo-wrap"><img src="${c.imageUrl||''}" alt="${c.title||''}" onerror="this.style.display='none'"></div><div class="company-body"><div class="company-name">${c.title||''}</div><p class="company-desc">${c.body||''}</p>${c.linkUrl?'<span class="company-link-indicator">Visit Website</span>':''}</div>`;
-      if(c.linkUrl)return`<a class="company-card" href="${c.linkUrl}" target="_blank" rel="noopener">${inner}</a>`;
-      return`<div class="company-card company-card-nolink">${inner}</div>`;
-    }
-    const gGrid=document.getElementById('f4n-granted-grid');
-    const jGrid=document.getElementById('f4n-journey-grid');
-    if(gGrid&&granted.length)gGrid.innerHTML=granted.map(renderCard).join('');
-    if(jGrid&&journey.length)jGrid.innerHTML=journey.map(renderCard).join('');
-  }catch(e){console.warn('F4N companies blob fetch failed:',e);}
-})();
-</script>
-</body></html>
+      <li><a href="projects.html">Projects</a></li><li><a href="f4n.html">F4N Program
+<script src="nuccol-cms.js" data-page="f4n-companies"></script>

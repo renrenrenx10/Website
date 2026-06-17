@@ -289,30 +289,5 @@
   </div>
   <div class="footer-bottom">
     <span>&copy; 2025 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
-    <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
-  </div>
-</footer>
-<script>
-(async()=>{
-  const BLOB='https://nuccolmedia.blob.core.windows.net/content';
-  const SAS='sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
-  try{
-    const r=await fetch(`${BLOB}/site-pages/events.json?${SAS}`);
-    if(!r.ok)return;
-    const rows=await r.json();
-    if(!Array.isArray(rows))return;
-    const sectionMap={
-      'Summit 2026':{ title:'we-summit_title', date:'we-summit_date', body:'we-summit_body' },
-      'Webinars':   { title:'we-webinar_title', date:'we-webinar_date', body:'we-webinar_body' },
-    };
-    rows.sort((a,b)=>(a.sort||0)-(b.sort||0)).forEach(row=>{
-      const map=sectionMap[row.section]; if(!map) return;
-      if(row.title   && map.title){ const el=document.getElementById(map.title); if(el) el.textContent=row.title; }
-      if(row.body    && map.body) { const el=document.getElementById(map.body);  if(el) el.textContent=row.body;  }
-      if(row.linkUrl && map.date) { const el=document.getElementById(map.date);  if(el) el.textContent=row.linkUrl; }
-      if(row.imageUrl){ const s=row.section.toLowerCase().replace(/\s+/g,'-'); const el=document.getElementById('we-img-'+s); if(el) el.src=row.imageUrl; }
-    });
-  }catch(e){}
-})();
-</script>
-</body></html>
+    <div style="display:flex;g
+<script src="nuccol-cms.js" data-page="events"></script>
