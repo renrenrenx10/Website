@@ -5,7 +5,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <title>Careers – NucCol</title>
+  <title>Work With Us – NucCol</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -36,10 +36,6 @@
     .nav-cta:hover { background:var(--cyan2) !important; }
     .page-header { padding:140px 48px 80px; background:var(--navy);
       border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
-    .page-header-grid { position:absolute; inset:0;
-      background-image:linear-gradient(rgba(41,182,232,0.04) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(41,182,232,0.04) 1px,transparent 1px);
-      background-size:60px 60px; }
     .page-header-glow { position:absolute; top:-100px; right:10%; width:500px; height:500px;
       background:radial-gradient(circle,rgba(41,182,232,0.1) 0%,transparent 70%); }
     .page-header-content { position:relative; max-width:1200px; margin:0 auto; }
@@ -70,80 +66,51 @@
     .btn-primary { display:inline-block; background:var(--cyan); color:var(--navy);
       font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700;
       letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
-      text-decoration:none; border-radius:3px; transition:background 0.2s,transform 0.2s; }
+      text-decoration:none; border-radius:3px; border:none; cursor:pointer;
+      transition:background 0.2s,transform 0.2s; }
     .btn-primary:hover { background:var(--cyan2); transform:translateY(-2px); }
-    .btn-ghost { display:inline-block; border:1px solid rgba(41,182,232,0.45); color:var(--cyan);
-      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:600;
-      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
-      text-decoration:none; border-radius:3px; transition:border-color 0.2s,color 0.2s,transform 0.2s; }
-    .btn-ghost:hover { border-color:var(--cyan2); color:var(--cyan2); transform:translateY(-2px); }
-    .btn-ghost-light { display:inline-block; border:1px solid rgba(232,238,246,0.4); color:var(--light);
-      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:600;
-      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
-      text-decoration:none; border-radius:3px; transition:border-color 0.2s,color 0.2s; }
-    .btn-ghost-light:hover { border-color:var(--cyan); color:var(--cyan); }
-    footer { background:#060f1c; padding:64px 48px 32px; border-top:1px solid var(--border); }
-    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
-    .footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-    .footer-logo img { height:44px; width:44px; object-fit:contain; border-radius:4px; display:block; }
-    .footer-logo-text { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem;
-      font-weight:800; color:var(--white); letter-spacing:0.06em; text-transform:uppercase; }
-    .footer-about { font-size:0.85rem; color:var(--grey); line-height:1.7; margin-bottom:16px; }
-    .footer-address { font-size:0.8rem; color:var(--grey); line-height:1.8; }
-    .footer-col h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.76rem; font-weight:700;
-      letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
-    .footer-col ul { list-style:none; }
-    .footer-col li { margin-bottom:9px; }
-    .footer-col a { font-size:0.84rem; color:var(--grey); text-decoration:none; transition:color 0.2s; }
-    .footer-col a:hover { color:var(--white); }
-    .footer-download { display:inline-flex; align-items:center; gap:8px; margin-top:8px;
-      padding:9px 18px; border:1px solid rgba(41,182,232,0.35); border-radius:4px;
-      font-size:0.82rem; font-weight:600; color:var(--cyan); text-decoration:none;
-      transition:border-color 0.2s,background 0.2s; }
-    .footer-download:hover { border-color:var(--cyan); background:rgba(41,182,232,0.08); }
-    .footer-download svg { width:14px; height:14px; fill:currentColor; flex-shrink:0; }
-    .footer-bottom { border-top:1px solid var(--border); padding-top:24px;
-      display:flex; align-items:center; justify-content:space-between;
-      font-size:0.78rem; color:var(--grey); }
-    .footer-bottom a { color:var(--grey); text-decoration:none; }
-    .footer-bottom a:hover { color:var(--white); }
-    @media(max-width:1024px) {
-      nav { padding:0 24px; } .nav-links { display:none; }
-      .page-header { padding:120px 24px 64px; }
-      section { padding:64px 24px; }
-      .footer-grid { grid-template-columns:1fr 1fr; gap:32px; }
-      footer { padding:48px 24px 24px; }
-    }
-    @media(max-width:640px) { .footer-grid { grid-template-columns:1fr; } }
-    /* TWO-COL LAYOUT */
-    .careers-layout { display:grid; grid-template-columns:3fr 2fr; gap:64px; max-width:1200px; margin:0 auto; }
 
-    /* VACANCIES */
-    .vacancy-card { border:1px solid #dde4ee; border-radius:6px; padding:32px 36px;
-      margin-bottom:20px; background:var(--white); transition:box-shadow 0.2s,border-color 0.2s; }
-    .vacancy-card:hover { box-shadow:0 4px 24px rgba(41,182,232,0.1); border-color:var(--cyan); }
-    .vacancy-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
-    .vacancy-tag { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700;
-      letter-spacing:0.12em; text-transform:uppercase; padding:4px 10px;
-      border:1px solid #dde4ee; border-radius:2px; color:#5a6a80; }
-    .vacancy-tag.type { border-color:rgba(41,182,232,0.35); color:var(--cyan); }
-    .vacancy-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.3rem; font-weight:700;
-      text-transform:uppercase; color:var(--navy); margin-bottom:10px; }
-    .vacancy-card p { font-size:0.92rem; line-height:1.7; color:#4a5568; margin-bottom:20px; }
+    /* TWO-COL LAYOUT */
+    .wwu-layout { display:grid; grid-template-columns:3fr 2fr; gap:64px; max-width:1200px; margin:0 auto; }
+
+    /* NO VACANCIES */
     .no-vacancies { background:#f4f7fb; border:1px dashed #dde4ee; border-radius:6px;
-      padding:48px 36px; text-align:center; margin-bottom:20px; }
-    .no-vacancies p { font-size:0.95rem; color:#5a6a80; line-height:1.7; }
+      padding:48px 36px; text-align:center; margin-bottom:32px; }
     .no-vacancies strong { display:block; font-family:'Barlow Condensed',sans-serif; font-size:1.3rem;
       font-weight:700; text-transform:uppercase; color:var(--navy); margin-bottom:10px; }
+    .no-vacancies p { font-size:0.95rem; color:#5a6a80; line-height:1.7; }
+
+    /* REGISTER INTEREST FORM */
+    .interest-form { background:#fff; border:1px solid #dde4ee; border-radius:6px; padding:40px 36px; }
+    .interest-form h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:700;
+      text-transform:uppercase; color:var(--navy); margin-bottom:6px; }
+    .interest-form p { font-size:0.9rem; line-height:1.7; color:#4a5568; margin-bottom:28px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+    .form-group.full { grid-column:1/-1; }
+    label { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700;
+      letter-spacing:0.12em; text-transform:uppercase; color:var(--navy); }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+      padding:11px 14px; border:1px solid #dde4ee; border-radius:3px;
+      font-family:'Barlow',sans-serif; font-size:0.9rem; color:var(--navy);
+      background:#fff; outline:none; transition:border-color 0.2s; width:100%;
+    }
+    input:focus, select:focus, textarea:focus { border-color:var(--cyan); }
+    textarea { min-height:100px; resize:vertical; }
+    select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9bb0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+    .form-submit { margin-top:24px; }
+    #form-success { display:none; background:rgba(41,182,232,0.08); border:1px solid rgba(41,182,232,0.3);
+      border-radius:4px; padding:20px 24px; margin-top:20px; }
+    #form-success p { font-size:0.95rem; color:var(--navy); line-height:1.6; margin:0; }
 
     /* SIDEBAR */
-    .careers-sidebar { display:flex; flex-direction:column; gap:24px; }
+    .wwu-sidebar { display:flex; flex-direction:column; gap:24px; }
     .sidebar-card { background:#f4f7fb; border:1px solid #dde4ee; border-radius:6px; padding:32px 28px; }
     .sidebar-card h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.88rem; font-weight:700;
       text-transform:uppercase; letter-spacing:0.1em; color:var(--cyan); margin-bottom:12px; }
     .sidebar-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700;
       text-transform:uppercase; color:var(--navy); margin-bottom:12px; }
-    .sidebar-card p { font-size:0.88rem; line-height:1.7; color:#4a5568; margin-bottom:16px; }
+    .sidebar-card p { font-size:0.88rem; line-height:1.7; color:#4a5568; margin-bottom:12px; }
     .sidebar-card a.email-link { color:var(--cyan); text-decoration:none; font-size:0.9rem;
       font-weight:600; transition:color 0.2s; display:block; margin-top:4px; }
     .sidebar-card a.email-link:hover { color:var(--cyan2); }
@@ -162,33 +129,44 @@
       text-transform:uppercase; color:var(--cyan); margin-bottom:4px; }
     .pillar-text p { font-size:0.85rem; line-height:1.6; color:rgba(232,238,246,0.7); margin:0; }
 
-    /* PHOTO GALLERY */
-    .life-gallery { display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:200px; gap:8px;
-      max-width:1200px; margin:0 auto; }
-    .life-gallery .g-wide { grid-column:span 2; }
-    .g-img { overflow:hidden; border-radius:4px; background:#dde4ee; }
-    .g-img img { width:100%; height:100%; object-fit:cover; display:block;
-      filter:saturate(0.85); transition:transform 0.4s,filter 0.4s; }
-    .g-img:hover img { transform:scale(1.04); filter:saturate(1); }
-
+    footer { background:#060f1c; padding:64px 48px 32px; border-top:1px solid var(--border); }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
+    .footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .footer-logo img { height:44px; width:44px; object-fit:contain; border-radius:4px; display:block; }
+    .footer-logo-text { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem;
+      font-weight:800; color:var(--white); letter-spacing:0.06em; text-transform:uppercase; }
+    .footer-about { font-size:0.85rem; color:var(--grey); line-height:1.7; margin-bottom:16px; }
+    .footer-address { font-size:0.8rem; color:var(--grey); line-height:1.8; }
+    .footer-col h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.76rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:16px; }
+    .footer-col ul { list-style:none; }
+    .footer-col li { margin-bottom:9px; }
+    .footer-col a { font-size:0.84rem; color:var(--grey); text-decoration:none; transition:color 0.2s; }
+    .footer-col a:hover { color:var(--white); }
+    .footer-bottom { border-top:1px solid var(--border); padding-top:24px;
+      display:flex; align-items:center; justify-content:space-between;
+      font-size:0.78rem; color:var(--grey); }
+    .footer-bottom a { color:var(--grey); text-decoration:none; }
+    .footer-bottom a:hover { color:var(--white); }
     @media(max-width:1024px) {
-      .careers-layout { grid-template-columns:1fr; }
-      .careers-sidebar { position:static; }
+      nav { padding:0 24px; } .nav-links { display:none; }
+      .page-header { padding:120px 24px 64px; }
+      section { padding:64px 24px; }
+      .wwu-layout { grid-template-columns:1fr; }
+      .form-row { grid-template-columns:1fr; }
       .associates-inner { grid-template-columns:1fr; gap:40px; }
       .associates-section { padding:64px 24px; }
-      .life-gallery { grid-template-columns:1fr 1fr; }
-      .life-gallery .g-wide { grid-column:span 1; }
+      .footer-grid { grid-template-columns:1fr 1fr; gap:32px; }
+      footer { padding:48px 24px 24px; }
     }
-    @media(max-width:640px) {
-      .life-gallery { grid-template-columns:1fr; }
-    }
+    @media(max-width:640px) { .footer-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
 
 <nav>
   <a href="index.html" class="nav-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"></a>
-    <ul class="nav-links">
+  <ul class="nav-links">
     <li><a href="index.html">Home</a></li>
     <li><a href="about.html">Who We Are</a></li>
     <li><a href="markets.html">Markets</a></li>
@@ -203,53 +181,90 @@
   </ul>
 </nav>
 
-<!-- PAGE HEADER with photo background -->
 <div class="page-header" style="background-image:url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1800&q=80'); background-size:cover; background-position:center;">
   <div style="position:absolute;inset:0;background:linear-gradient(105deg,rgba(10,22,40,0.92) 0%,rgba(10,22,40,0.7) 60%,rgba(10,22,40,0.4) 100%);"></div>
   <div class="page-header-glow"></div>
   <div class="page-header-content" style="position:relative;">
-    <div class="eyebrow">Join the Team</div>
-    <h1>Careers at <span>NucCol</span></h1>
-    <p>We're a growing team of specialists passionate about transforming the UK's nuclear and regulated industries supply chain. If that sounds like your kind of challenge, we'd love to hear from you.</p>
+    <div class="eyebrow">Join or Partner with Us</div>
+    <h1>Work <span>With Us</span></h1>
+    <p>Whether you're looking to join the NucCol team or bring your expertise as an associate, we'd love to hear from you.</p>
   </div>
 </div>
 
-<!-- VACANCIES + SIDEBAR -->
+<!-- VACANCIES + REGISTER INTEREST -->
 <section>
-  <div class="careers-layout">
+  <div class="wwu-layout">
     <div>
       <div class="section-eyebrow">Current Openings</div>
       <h2 style="color:var(--navy);margin-bottom:32px">Open <span>Positions</span></h2>
 
-      <!-- No current vacancies state — swap this block when roles become available -->
       <div class="no-vacancies">
         <strong>No Current Vacancies</strong>
-        <p>We don't have any open positions right now, but we're always growing. Register your interest and we'll be in touch when suitable roles arise.</p>
-        <br>
-        <a href="mailto:enquiries@nuccol.co.uk?subject=Career Interest – NucCol" class="btn-primary">Register Your Interest</a>
+        <p>We don't have any open positions right now, but we're always growing. Register your interest below and we'll be in touch when suitable roles arise.</p>
       </div>
 
-      <!-- EXAMPLE vacancy card — uncomment and populate when roles exist
-      <div class="vacancy-card">
-        <div class="vacancy-meta">
-          <span class="vacancy-tag type">Full Time</span>
-          <span class="vacancy-tag">Derby</span>
-          <span class="vacancy-tag">Supply Chain</span>
+      <!-- Register Interest Form -->
+      <div class="interest-form">
+        <div class="section-eyebrow" style="margin-bottom:10px">Register Your Interest</div>
+        <h3>Stay on Our Radar</h3>
+        <p>Tell us a bit about yourself and what you're looking for. We'll reach out when something relevant comes up — whether that's a full-time role, a project, or an associate engagement.</p>
+        <form id="interest-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fi-name">Full Name *</label>
+              <input type="text" id="fi-name" name="name" required placeholder="Jane Smith">
+            </div>
+            <div class="form-group">
+              <label for="fi-email">Email Address *</label>
+              <input type="email" id="fi-email" name="email" required placeholder="jane@example.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fi-phone">Phone Number</label>
+              <input type="tel" id="fi-phone" name="phone" placeholder="+44 7000 000000">
+            </div>
+            <div class="form-group">
+              <label for="fi-type">I am interested in</label>
+              <select id="fi-type" name="interest_type">
+                <option value="">Select one…</option>
+                <option value="permanent">Permanent Role</option>
+                <option value="associate">Associate / Freelance</option>
+                <option value="both">Either / Both</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="fi-area">Area of Expertise *</label>
+            <select id="fi-area" name="area" required>
+              <option value="">Select one…</option>
+              <option>Supply Chain</option>
+              <option>Nuclear Engineering</option>
+              <option>Manufacturing</option>
+              <option>Demand Modelling</option>
+              <option>Business Development</option>
+              <option>IT Services</option>
+              <option>Policy &amp; Strategy</option>
+              <option>Commercial / Procurement</option>
+              <option>Project Management</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fi-message">A bit about you</label>
+            <textarea id="fi-message" name="message" placeholder="Tell us about your background, what you're looking for, and any relevant experience…"></textarea>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="btn-primary">Register Interest</button>
+          </div>
+        </form>
+        <div id="form-success">
+          <p><strong>Thank you — we've received your details.</strong><br>We'll be in touch when a suitable opportunity arises. In the meantime, feel free to email us at <a href="mailto:enquiries@nuccol.co.uk" style="color:var(--cyan)">enquiries@nuccol.co.uk</a>.</p>
         </div>
-        <h3>Supply Chain Analyst</h3>
-        <p>Working within our supply chain team to support client engagements across the UK nuclear sector. You'll be conducting supplier assessments, demand modelling, and delivering insights to tier 1 and government clients.</p>
-        <a href="mailto:enquiries@nuccol.co.uk?subject=Application – Supply Chain Analyst" class="btn-primary">Apply Now</a>
-      </div>
-      -->
-
-      <div style="margin-top:40px; padding:28px 32px; border:1px solid #dde4ee; border-radius:6px; background:#f8faff;">
-        <div class="section-eyebrow" style="margin-bottom:10px">Stay in the Loop</div>
-        <p style="font-size:0.92rem;line-height:1.7;color:#4a5568;margin-bottom:16px">Roles at NucCol move quickly. Drop us a line with your CV and areas of interest and we'll reach out when something relevant comes up.</p>
-        <a href="mailto:enquiries@nuccol.co.uk?subject=Career Enquiry" class="btn-primary">Send Your CV</a>
       </div>
     </div>
 
-    <div class="careers-sidebar">
+    <div class="wwu-sidebar">
       <div class="sidebar-card">
         <h4>Why NucCol</h4>
         <h3>A Place to Make a Difference</h3>
@@ -258,15 +273,13 @@
       </div>
       <div class="sidebar-card">
         <h4>General Enquiries</h4>
-        <p>Interested in joining NucCol but don't see a suitable role? Get in touch and tell us about yourself.</p>
-        <a href="mailto:enquiries@nuccol.co.uk?subject=Career Interest" class="email-link">enquiries@nuccol.co.uk</a>
+        <h3>Get in Touch</h3>
+        <p>Prefer to reach out directly? We're always happy to have a conversation.</p>
+        <a href="mailto:enquiries@nuccol.co.uk?subject=Work With Us Enquiry" class="email-link">enquiries@nuccol.co.uk</a>
       </div>
-
     </div>
   </div>
 </section>
-
-
 
 <!-- ASSOCIATES SECTION -->
 <div class="associates-section">
@@ -311,26 +324,48 @@
   </div>
 </div>
 
-
 <footer>
   <div class="footer-grid">
     <div>
       <div class="footer-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"><span class="footer-logo-text">NucCol</span></div>
       <p class="footer-about">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
       <p class="footer-address">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</p>
-      <br>
     </div>
     <div class="footer-col"><h4>Services</h4><ul>
-      <li><a href="services.html">Supply Chain Development</a></li><li><a href="services.html">Manufacturing Innovation</a></li>
-      <li><a href="services.html">IT Services</a></li><li><a href="services.html">Networking &amp; Events</a></li><li><a href="services.html">People Services</a></li>
+      <li><a href="services.html">Supply Chain Development</a></li>
+      <li><a href="services.html">Manufacturing Innovation</a></li>
+      <li><a href="services.html">IT Services</a></li>
+      <li><a href="services.html">Networking &amp; Events</a></li>
+      <li><a href="services.html">People Services</a></li>
     </ul></div>
     <div class="footer-col"><h4>Company</h4><ul>
-      <li><a href="about.html">Who We Are</a></li><li><a href="who-we-work-with.html">Who We Work With</a></li><li><a href="projects.html">Projects</a></li>
-      <li><a href="events.html">Events</a></li><li><a href="f4n.html">F4N Programme</a></li>
+      <li><a href="about.html">Who We Are</a></li>
+      <li><a href="who-we-work-with.html">Who We Work With</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="f4n.html">F4N Programme</a></li>
       <li><a href="our-thoughts.html">Our Thoughts</a></li>
-      <li><a href="work-with-us.html">Work With Us</a></li><li><a href="contact.html">Contact</a></li>
+      <li><a href="work-with-us.html">Work With Us</a></li>
+      <li><a href="contact.html">Contact</a></li>
     </ul></div>
     <div class="footer-col"><h4>Connect</h4><ul>
       <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
       <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
-    
+      <li><a href="members.html">Members Login</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
+    <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
+  </div>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  // In production wire this to a backend/email service
+  document.getElementById('interest-form').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+}
+</script>
+</body>
+</html>
