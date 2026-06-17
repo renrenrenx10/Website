@@ -128,12 +128,24 @@
       if (teamRows.length) {
         const grid = document.getElementById('we-team-grid');
         if (grid) {
+          // Local photo fallback when blob imageUrl is empty
+          const STAFF_PHOTOS = {
+            'andy-storer':          'images/staff/Andy_Storer.jpg',
+            'liz-gregory':          'images/staff/Liz_Gregory.jpg',
+            'stephen-kinsey':       'images/staff/Stephen_Kinsey.jpg',
+            'john-hilton-brammer':  'images/staff/john_hilton_brammer.jpg',
+            'rene-dorset':          'images/staff/Rene_Dorset.jpg',
+            'dug-harrison':         'images/staff/dug_harrison.jpg',
+            'dr-gareth-peel':       'images/staff/Gareth_Peel.jpg',
+            'brian-donaldson':      'images/staff/Brian_Donaldson.jpg',
+          };
           const sorted = teamRows.sort((a, b) => (a.sort || 0) - (b.sort || 0));
           grid.innerHTML = sorted.map(p => {
             const initials = (p.title || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
             const personId = (p.title || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-            const imgHtml = p.imageUrl
-              ? `<img src="${escAttr(p.imageUrl)}" alt="${escAttr(p.title || '')}" class="toc-img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            const photoSrc = p.imageUrl || STAFF_PHOTOS[personId] || '';
+            const imgHtml = photoSrc
+              ? `<img src="${escAttr(photoSrc)}" alt="${escAttr(p.title || '')}" class="toc-img" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                  <div class="toc-initials" style="position:absolute;inset:0;display:none">${escHtml(initials)}</div>`
               : `<div class="toc-initials" style="position:absolute;inset:0;display:flex">${escHtml(initials)}</div>`;
             return `<div class="toc toc-clickable" data-person="${escAttr(personId)}" onclick="openModal('${escAttr(personId)}')" role="button" tabindex="0">

@@ -732,13 +732,13 @@ function openModal(id){
     '<div class="modal-bio">'+p.bio+'</div>'+
     (p.tags ? '<div class="modal-tags">'+p.tags+'</div>' : '')+
     '</div></div>';
-  document.getElementById('modal-overlay').classList.add('active');
+  document.getElementById('modal-overlay').classList.add('open');
 }
 document.getElementById('modal-overlay').addEventListener('click', function(e){
-  if(e.target===this) this.classList.remove('active');
+  if(e.target===this) this.classList.remove('open');
 });
 document.addEventListener('keydown', function(e){
-  if(e.key==='Escape') document.getElementById('modal-overlay').classList.remove('active');
+  if(e.key==='Escape') document.getElementById('modal-overlay').classList.remove('open');
 });
 </script>
 <script src="nuccol-cms.js" data-page="about"></script>
