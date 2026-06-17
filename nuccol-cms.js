@@ -290,9 +290,34 @@
         }
       });
     },
+
+
+    // -- WHO WE WORK WITH --------------------------------------------------
+    'who-we-work-with': async () => {
+      const rows = await loadBlob('who-we-work-with');
+      if (!rows.length) return;
+
+      const collabs = rows.filter(r => r.section === 'Collaboration').sort((a, b) => (a.sort || 0) - (b.sort || 0));
+      if (!collabs.length) return;
+
+      const track = document.getElementById('we-collaborations-track');
+      if (!track) return;
+
+      const cards = collabs.map(c => {
+        const logoHtml = c.imageUrl
+          ? '<img src="' + escAttr(c.imageUrl) + '" alt="' + escAttr(c.title || '') + '" loading="lazy" onerror="this.parentElement.style.display=\'none\'">'
+          : '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.88rem;font-weight:700;text-transform:uppercase;color:var(--navy);text-align:center">' + escHtml(c.title || '') + '</div>';
+        return c.linkUrl
+          ? '<a href="' + escAttr(c.linkUrl) + '" target="_blank" rel="noopener" class="cust-logo" title="' + escAttr(c.title || '') + '">' + logoHtml + '</a>'
+          : '<div class="cust-logo" title="' + escAttr(c.title || '') + '">' + logoHtml + '</div>';
+      }).join('');
+
+      track.innerHTML = cards + cards;
+    },
+
   };
 
-  // ─── HELPERS ──────────────────────────────────────────────────────────────
+  // ─── HELPERS ─────────────────────────────────────────────────────────────
   function escHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
