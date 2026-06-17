@@ -27,7 +27,7 @@
       border-bottom: 1px solid var(--blue2);
     }
     .nav-logo img { height: 44px; width: auto; }
-    .nav-links { display: flex; gap: 8px; align-items: center; list-style: none; }
+    .nav-links { display:flex; gap:2px; align-items: center; list-style: none; }
     .nav-links a {
       color: var(--light); text-decoration: none; font-size: 0.78rem;
       font-weight: 500; letter-spacing: 0.04em; padding: 7px 10px;
@@ -476,7 +476,7 @@
     <li><a href="services.html">Services</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="events.html">Events</a></li>
-    <li><a href="projects.html">Projects</a></li>
+    <li><a href="who-we-work-with.html">Who We Work With</a></li>
     <li class="nav-members">
       <a href="#">Members</a>
       <div class="nav-dropdown">
@@ -825,17 +825,17 @@
       <h4>Services</h4>
       <ul>
         <li><a href="services.html">Supply Chain Development</a></li>
-        <li><a href="services.html">Demand Modelling</a></li>
-        <li><a href="services.html">Business Strategy</a></li>
-        <li><a href="services.html">Government Policy</a></li>
-        <li><a href="services.html">Manufacturing Integration</a></li>
+        <li><a href="services.html">Manufacturing Innovation</a></li>
+        <li><a href="services.html">IT Services</a></li>
+        <li><a href="services.html">Networking &amp; Events</a></li>
+        <li><a href="services.html">People Services</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
       <ul>
         <li><a href="about.html">About NucCol</a></li>
-        <li><a href="projects.html">Projects</a></li>
+        <li><a href="who-we-work-with.html">Who We Work With</a></li>
         <li><a href="events.html">Events</a></li>
         <li><a href="f4n.html">Fit For Nuclear</a></li>
         <li><a href="contact.html">Contact</a></li>
@@ -1464,41 +1464,4 @@ const { createClient } = supabase;
 const db = createClient('https://qkyvmtouwrzrcyagkheo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4');
 
 async function gateSignIn(){
-  const email = document.getElementById('gate-email').value.trim();
-  const pass  = document.getElementById('gate-pass').value;
-  const btn   = document.getElementById('gate-btn');
-  const msg   = document.getElementById('gate-msg');
-  if(!email||!pass){ msg.textContent='Please enter your email and password.'; msg.style.display='block'; return; }
-  btn.disabled=true; btn.textContent='Signing in…';
-  const {error} = await db.auth.signInWithPassword({email, password:pass});
-  if(error){ msg.textContent=error.message||'Sign in failed.'; msg.style.display='block'; btn.disabled=false; btn.textContent='Sign In'; }
-}
-document.addEventListener('keydown', e=>{
-  if(e.key==='Enter'&&(e.target.id==='gate-email'||e.target.id==='gate-pass')) gateSignIn();
-});
-
-(async()=>{
-  const {data:{session}} = await db.auth.getSession();
-  if(session){
-    document.getElementById('auth-gate').style.display='none';
-    document.getElementById('page-content').style.display='block';
-  } else {
-    document.getElementById('auth-gate').style.display='flex';
-    document.getElementById('page-content').style.display='none';
-  }
-})();
-
-db.auth.onAuthStateChange((event, session)=>{
-  if(event==='SIGNED_IN'&&session){
-    document.getElementById('auth-gate').style.display='none';
-    document.getElementById('page-content').style.display='block';
-  }
-  if(event==='SIGNED_OUT'){
-    document.getElementById('auth-gate').style.display='flex';
-    document.getElementById('page-content').style.display='none';
-  }
-});
-</script>
-
-</body>
-</html>
+  const email = document.getElementById('gate-email').value.trim(
