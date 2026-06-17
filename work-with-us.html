@@ -34,7 +34,9 @@
     .nav-cta { background:var(--cyan) !important; color:var(--navy) !important;
       font-weight:700 !important; padding:8px 20px !important; border-radius:4px; }
     .nav-cta:hover { background:var(--cyan2) !important; }
-    .page-header { padding:140px 48px 80px; background:var(--navy);
+
+    /* PAGE HEADER */
+    .page-header { padding:140px 48px 80px;
       border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
     .page-header-glow { position:absolute; top:-100px; right:10%; width:500px; height:500px;
       background:radial-gradient(circle,rgba(41,182,232,0.1) 0%,transparent 70%); }
@@ -50,44 +52,41 @@
     h1 span, h2 span { color:var(--cyan); }
     .page-header p { font-size:1.05rem; font-weight:300; line-height:1.75;
       color:rgba(232,238,246,0.82); max-width:600px; }
-    section { padding:80px 48px; }
-    section.alt { background:#f4f7fb; }
-    .section-wrap { max-width:1200px; margin:0 auto; }
-    h2 { font-family:'Barlow Condensed',sans-serif;
-      font-size:clamp(1.9rem,3.5vw,2.8rem); font-weight:800;
-      text-transform:uppercase; letter-spacing:-0.01em; line-height:1.05;
-      margin-bottom:14px; color:var(--navy); }
+
+    /* MAIN SECTION */
+    section { padding:88px 48px; }
     .section-eyebrow { font-family:'Barlow Condensed',sans-serif; font-size:0.76rem;
       font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--cyan);
       display:flex; align-items:center; gap:10px; margin-bottom:14px; }
     .section-eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--cyan); }
-    .section-intro { font-size:1rem; font-weight:300; line-height:1.75;
-      color:#4a5568; max-width:680px; margin-bottom:48px; }
-    .btn-primary { display:inline-block; background:var(--cyan); color:var(--navy);
-      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700;
-      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
-      text-decoration:none; border-radius:3px; border:none; cursor:pointer;
-      transition:background 0.2s,transform 0.2s; }
-    .btn-primary:hover { background:var(--cyan2); transform:translateY(-2px); }
+    h2 { font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(1.9rem,3.5vw,2.8rem); font-weight:800;
+      text-transform:uppercase; letter-spacing:-0.01em; line-height:1.05;
+      margin-bottom:20px; color:var(--navy); }
 
-    /* TWO-COL LAYOUT */
-    .wwu-layout { display:grid; grid-template-columns:3fr 2fr; gap:64px; max-width:1200px; margin:0 auto; }
+    /* TWO-COL */
+    .wwu-layout { display:grid; grid-template-columns:1fr 1fr; gap:80px; max-width:1200px; margin:0 auto; }
 
-    /* NO VACANCIES */
-    .no-vacancies { background:#f4f7fb; border:1px dashed #dde4ee; border-radius:6px;
-      padding:48px 36px; text-align:center; margin-bottom:32px; }
-    .no-vacancies strong { display:block; font-family:'Barlow Condensed',sans-serif; font-size:1.3rem;
-      font-weight:700; text-transform:uppercase; color:var(--navy); margin-bottom:10px; }
-    .no-vacancies p { font-size:0.95rem; color:#5a6a80; line-height:1.7; }
+    /* LEFT — content */
+    .wwu-content p { font-size:1rem; font-weight:300; line-height:1.8; color:#4a5568; margin-bottom:16px; }
+    .divider { width:48px; height:3px; background:var(--cyan); margin:32px 0; }
 
-    /* REGISTER INTEREST FORM */
-    .interest-form { background:#fff; border:1px solid #dde4ee; border-radius:6px; padding:40px 36px; }
-    .interest-form h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:700;
+    .pillars { display:flex; flex-direction:column; gap:14px; margin-top:8px; }
+    .pillar { display:flex; align-items:flex-start; gap:16px; padding:18px 20px;
+      background:#f4f7fb; border:1px solid #dde4ee; border-radius:4px; }
+    .pillar-icon { font-size:1.3rem; flex-shrink:0; margin-top:2px; }
+    .pillar-text h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700;
+      text-transform:uppercase; color:var(--navy); margin-bottom:3px; }
+    .pillar-text p { font-size:0.84rem; line-height:1.6; color:#5a6a80; margin:0; }
+
+    /* RIGHT — form */
+    .interest-form { background:#fff; border:1px solid #dde4ee; border-radius:6px;
+      padding:40px 36px; position:sticky; top:96px; }
+    .interest-form h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.5rem; font-weight:700;
       text-transform:uppercase; color:var(--navy); margin-bottom:6px; }
-    .interest-form p { font-size:0.9rem; line-height:1.7; color:#4a5568; margin-bottom:28px; }
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+    .interest-form > p { font-size:0.9rem; line-height:1.7; color:#4a5568; margin-bottom:28px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
-    .form-group.full { grid-column:1/-1; }
     label { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700;
       letter-spacing:0.12em; text-transform:uppercase; color:var(--navy); }
     input[type="text"], input[type="email"], input[type="tel"], select, textarea {
@@ -97,38 +96,25 @@
     }
     input:focus, select:focus, textarea:focus { border-color:var(--cyan); }
     textarea { min-height:100px; resize:vertical; }
-    select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9bb0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
-    .form-submit { margin-top:24px; }
-    #form-success { display:none; background:rgba(41,182,232,0.08); border:1px solid rgba(41,182,232,0.3);
-      border-radius:4px; padding:20px 24px; margin-top:20px; }
+    select { appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a9bb0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+    .btn-primary { display:inline-block; background:var(--cyan); color:var(--navy);
+      font-family:'Barlow Condensed',sans-serif; font-size:0.95rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase; padding:13px 32px;
+      border:none; cursor:pointer; border-radius:3px;
+      transition:background 0.2s,transform 0.2s; width:100%; text-align:center; }
+    .btn-primary:hover { background:var(--cyan2); transform:translateY(-2px); }
+    #form-success { display:none; background:rgba(41,182,232,0.08);
+      border:1px solid rgba(41,182,232,0.3); border-radius:4px; padding:24px;
+      text-align:center; }
     #form-success p { font-size:0.95rem; color:var(--navy); line-height:1.6; margin:0; }
+    .direct-contact { margin-top:20px; padding-top:20px; border-top:1px solid #dde4ee;
+      text-align:center; font-size:0.84rem; color:#8a9bb0; }
+    .direct-contact a { color:var(--cyan); text-decoration:none; font-weight:600; }
+    .direct-contact a:hover { color:var(--cyan2); }
 
-    /* SIDEBAR */
-    .wwu-sidebar { display:flex; flex-direction:column; gap:24px; }
-    .sidebar-card { background:#f4f7fb; border:1px solid #dde4ee; border-radius:6px; padding:32px 28px; }
-    .sidebar-card h4 { font-family:'Barlow Condensed',sans-serif; font-size:0.88rem; font-weight:700;
-      text-transform:uppercase; letter-spacing:0.1em; color:var(--cyan); margin-bottom:12px; }
-    .sidebar-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700;
-      text-transform:uppercase; color:var(--navy); margin-bottom:12px; }
-    .sidebar-card p { font-size:0.88rem; line-height:1.7; color:#4a5568; margin-bottom:12px; }
-    .sidebar-card a.email-link { color:var(--cyan); text-decoration:none; font-size:0.9rem;
-      font-weight:600; transition:color 0.2s; display:block; margin-top:4px; }
-    .sidebar-card a.email-link:hover { color:var(--cyan2); }
-
-    /* ASSOCIATES SECTION */
-    .associates-section { background:var(--navy); padding:88px 48px; }
-    .associates-inner { max-width:1200px; margin:0 auto;
-      display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
-    .associates-body h2 { color:var(--white); margin-bottom:16px; }
-    .associates-body p { font-size:1rem; line-height:1.8; color:rgba(232,238,246,0.82); margin-bottom:20px; }
-    .associates-pillars { display:flex; flex-direction:column; gap:16px; }
-    .associates-pillar { display:flex; align-items:flex-start; gap:16px; padding:20px 24px;
-      background:rgba(41,182,232,0.06); border:1px solid var(--border); border-radius:4px; }
-    .pillar-icon { font-size:1.5rem; flex-shrink:0; margin-top:2px; }
-    .pillar-text h4 { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700;
-      text-transform:uppercase; color:var(--cyan); margin-bottom:4px; }
-    .pillar-text p { font-size:0.85rem; line-height:1.6; color:rgba(232,238,246,0.7); margin:0; }
-
+    /* FOOTER */
     footer { background:#060f1c; padding:64px 48px 32px; border-top:1px solid var(--border); }
     .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
     .footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
@@ -148,14 +134,14 @@
       font-size:0.78rem; color:var(--grey); }
     .footer-bottom a { color:var(--grey); text-decoration:none; }
     .footer-bottom a:hover { color:var(--white); }
+
     @media(max-width:1024px) {
       nav { padding:0 24px; } .nav-links { display:none; }
       .page-header { padding:120px 24px 64px; }
       section { padding:64px 24px; }
-      .wwu-layout { grid-template-columns:1fr; }
+      .wwu-layout { grid-template-columns:1fr; gap:48px; }
+      .interest-form { position:static; }
       .form-row { grid-template-columns:1fr; }
-      .associates-inner { grid-template-columns:1fr; gap:40px; }
-      .associates-section { padding:64px 24px; }
       .footer-grid { grid-template-columns:1fr 1fr; gap:32px; }
       footer { padding:48px 24px 24px; }
     }
@@ -191,23 +177,61 @@
   </div>
 </div>
 
-<!-- VACANCIES + REGISTER INTEREST -->
 <section>
   <div class="wwu-layout">
-    <div>
-      <div class="section-eyebrow">Current Openings</div>
-      <h2 style="color:var(--navy);margin-bottom:32px">Open <span>Positions</span></h2>
 
-      <div class="no-vacancies">
-        <strong>No Current Vacancies</strong>
-        <p>We don't have any open positions right now, but we're always growing. Register your interest below and we'll be in touch when suitable roles arise.</p>
+    <!-- LEFT: Why NucCol + Associates -->
+    <div class="wwu-content">
+      <div class="section-eyebrow">Why NucCol</div>
+      <h2>A Place to Make a <span>Difference</span></h2>
+      <p>We're a lean, expert team working on genuinely important challenges — helping the UK build the supply chain capacity it needs for its nuclear future. You'll work directly with government bodies, nuclear primes, and hundreds of UK manufacturers. No two weeks are the same.</p>
+      <p>Whether you join us as a core team member or as one of our trusted associates, you'll be operating at the heart of a sector that matters.</p>
+
+      <div class="divider"></div>
+
+      <div class="section-eyebrow">Associates</div>
+      <h2>NucCol <span>Associates</span></h2>
+      <p>We run an extensive associate programme and are constantly looking for skilled individuals to support our diverse client base. Our associates operate at the highest level of quality, technical ability, and integrity — acting as independent critical friends, free from commercial bias.</p>
+      <p>If you're an experienced specialist in any of the areas below, we want to hear from you.</p>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon">🎯</div>
+          <div class="pillar-text">
+            <h4>Technical Excellence</h4>
+            <p>Associates bring deep sector knowledge and operate to the highest standards of technical rigour and professional judgement.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🤝</div>
+          <div class="pillar-text">
+            <h4>Trusted &amp; Independent</h4>
+            <p>Like NucCol itself, our associates act as objective, credible critical friends — free from commercial bias.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">⚡</div>
+          <div class="pillar-text">
+            <h4>Deployed at Pace</h4>
+            <p>Our associate network lets us scale rapidly to meet client needs — bringing the right expertise exactly when it's needed.</p>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🌐</div>
+          <div class="pillar-text">
+            <h4>Sector Agnostic</h4>
+            <p>Associates span nuclear, defence, rail, renewables, and advanced manufacturing — reflecting NucCol's cross-sector reach.</p>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <!-- Register Interest Form -->
+    <!-- RIGHT: Single form -->
+    <div>
       <div class="interest-form">
-        <div class="section-eyebrow" style="margin-bottom:10px">Register Your Interest</div>
-        <h3>Stay on Our Radar</h3>
-        <p>Tell us a bit about yourself and what you're looking for. We'll reach out when something relevant comes up — whether that's a full-time role, a project, or an associate engagement.</p>
+        <div class="section-eyebrow" style="margin-bottom:12px">Get in Touch</div>
+        <h3>Register Your Interest</h3>
+        <p>Tell us a bit about yourself and what you're looking for — whether that's a full-time role, a project, or an associate engagement. We'll be in touch.</p>
         <form id="interest-form" onsubmit="handleSubmit(event)">
           <div class="form-row">
             <div class="form-group">
@@ -254,75 +278,21 @@
             <label for="fi-message">A bit about you</label>
             <textarea id="fi-message" name="message" placeholder="Tell us about your background, what you're looking for, and any relevant experience…"></textarea>
           </div>
-          <div class="form-submit">
-            <button type="submit" class="btn-primary">Register Interest</button>
+          <div style="margin-top:8px">
+            <button type="submit" class="btn-primary">Send Enquiry</button>
           </div>
         </form>
         <div id="form-success">
-          <p><strong>Thank you — we've received your details.</strong><br>We'll be in touch when a suitable opportunity arises. In the meantime, feel free to email us at <a href="mailto:enquiries@nuccol.co.uk" style="color:var(--cyan)">enquiries@nuccol.co.uk</a>.</p>
+          <p><strong>Thank you — we've received your details.</strong><br>We'll be in touch when a suitable opportunity arises.</p>
+        </div>
+        <div class="direct-contact">
+          Prefer email? <a href="mailto:enquiries@nuccol.co.uk?subject=Work With Us">enquiries@nuccol.co.uk</a>
         </div>
       </div>
     </div>
 
-    <div class="wwu-sidebar">
-      <div class="sidebar-card">
-        <h4>Why NucCol</h4>
-        <h3>A Place to Make a Difference</h3>
-        <p>We're a lean, expert team working on genuinely important challenges — helping the UK build the supply chain capacity it needs for its nuclear future.</p>
-        <p>You'll work directly with government bodies, nuclear primes, and hundreds of UK manufacturers — no two weeks are the same.</p>
-      </div>
-      <div class="sidebar-card">
-        <h4>General Enquiries</h4>
-        <h3>Get in Touch</h3>
-        <p>Prefer to reach out directly? We're always happy to have a conversation.</p>
-        <a href="mailto:enquiries@nuccol.co.uk?subject=Work With Us Enquiry" class="email-link">enquiries@nuccol.co.uk</a>
-      </div>
-    </div>
   </div>
 </section>
-
-<!-- ASSOCIATES SECTION -->
-<div class="associates-section">
-  <div class="associates-inner">
-    <div class="associates-body">
-      <div class="section-eyebrow" style="color:var(--cyan)">Flexible Expertise</div>
-      <h2>NucCol <span>Associates</span></h2>
-      <p>NucCol offer an extensive associate programme — we are constantly looking for skilled individuals to support our diverse client base. Our trusted associates operate at the highest level of quality, technical ability, and integrity.</p>
-      <p>If you are an experienced specialist in supply chain, nuclear engineering, manufacturing, policy, or commercial management, we want to hear from you.</p>
-      <a href="mailto:enquiries@nuccol.co.uk?subject=Associate Programme Enquiry" class="btn-primary">Enquire About Associates</a>
-    </div>
-    <div class="associates-pillars">
-      <div class="associates-pillar">
-        <div class="pillar-icon">🎯</div>
-        <div class="pillar-text">
-          <h4>Technical Excellence</h4>
-          <p>Associates bring deep sector knowledge and operate to the highest standards of technical rigour and professional judgement.</p>
-        </div>
-      </div>
-      <div class="associates-pillar">
-        <div class="pillar-icon">🤝</div>
-        <div class="pillar-text">
-          <h4>Trusted &amp; Independent</h4>
-          <p>Like NucCol itself, our associates act as independent critical friends — objective, credible, and free from commercial bias.</p>
-        </div>
-      </div>
-      <div class="associates-pillar">
-        <div class="pillar-icon">⚡</div>
-        <div class="pillar-text">
-          <h4>Deployed at Pace</h4>
-          <p>Our associate network lets us scale rapidly to meet client needs — bringing the right expertise to bear exactly when it's needed.</p>
-        </div>
-      </div>
-      <div class="associates-pillar">
-        <div class="pillar-icon">🌐</div>
-        <div class="pillar-text">
-          <h4>Sector Agnostic</h4>
-          <p>Associates span nuclear, defence, rail, renewables, and advanced manufacturing — reflecting NucCol's cross-sector reach.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <footer>
   <div class="footer-grid">
@@ -362,7 +332,6 @@
 <script>
 function handleSubmit(e) {
   e.preventDefault();
-  // In production wire this to a backend/email service
   document.getElementById('interest-form').style.display = 'none';
   document.getElementById('form-success').style.display = 'block';
 }
