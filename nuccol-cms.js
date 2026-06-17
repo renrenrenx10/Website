@@ -93,10 +93,10 @@
                 <div class="sector-label">${escHtml(c.label || '')}</div>
               </div>
             </a>`).join('') +
-            `<div class="sector-card" style="background:var(--navy2);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:28px;">
+            `<a href="markets.html" style="text-decoration:none;display:block;"><div class="sector-card" style="background:var(--navy2);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:28px;cursor:pointer;">
               <div style="font-family:'Barlow Condensed',sans-serif;font-size:3rem;font-weight:800;color:var(--cyan);opacity:.4;line-height:1;">+</div>
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);text-align:center;">More Sectors</div>
-              <a href="services.html" style="font-size:.78rem;color:var(--cyan);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase;">View All →</a>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);text-align:center;">More information about our markets</div>
+              <span style="font-size:.78rem;color:var(--cyan);font-weight:600;letter-spacing:.06em;text-transform:uppercase;">View All →</span>
             </div>`;
         }
       }
