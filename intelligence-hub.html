@@ -19,20 +19,10 @@
     body { font-family: 'Barlow', sans-serif; background: #f4f7fb; color: var(--navy); overflow-x: hidden; }
 
     /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 48px; height: 72px;
-      background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--blue2);
-    }
-    .nav-logo img { height: 44px; width: auto; }
-    .nav-links { display:flex; gap:2px; align-items: center; list-style: none; }
-    .nav-links a {
-      color: var(--light); text-decoration: none; font-size: 0.78rem;
-      font-weight: 500; letter-spacing: 0.04em; padding: 7px 10px;
-      border-radius: 4px; transition: color 0.2s, background 0.2s;
-    }
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-logo img{height:48px;width:48px;object-fit:contain;border-radius:4px;display:block}
+    .nav-links{display:flex;gap:2px;align-items:center;list-style:none;flex-wrap:wrap}
+    .nav-links a{color:var(--light);text-decoration:none;font-size:0.78rem;font-weight:500;letter-spacing:0.04em;padding:7px 10px;border-radius:4px;transition:color 0.2s,background 0.2s;white-space:nowrap}
     .nav-links a:hover { color: var(--cyan); background: var(--cyan3); }
     .nav-links a.active { color: var(--cyan); }
     .nav-cta { background: var(--cyan) !important; color: var(--navy) !important; font-weight: 600 !important; padding: 8px 20px !important; border-radius: 4px; }
@@ -430,7 +420,7 @@
 
     @media (max-width: 1024px) {
       nav { padding: 0 24px; }
-      .nav-links { display: none; }
+      .nav-links{display:flex;gap:2px;align-items:center;list-style:none;flex-wrap:wrap}
       .page-header, .hub-section { padding-left: 24px; padding-right: 24px; }
       .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
       footer { padding: 48px 24px 24px; }
@@ -468,24 +458,19 @@
 <div id="page-content" style="display:none">
 
 <nav>
-  <a href="index.html" class="nav-logo">
-    <img src="https://nuccol.co.uk/wp-content/uploads/2024/09/nuccol-png.png" alt="NucCol" />
-  </a>
+  <a href="index.html" class="nav-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"></a>
   <ul class="nav-links">
-    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">Who We Are</a></li>
+    <li><a href="markets.html">Markets</a></li>
     <li><a href="services.html">Services</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="events.html">Events</a></li>
     <li><a href="who-we-work-with.html">Who We Work With</a></li>
-    <li class="nav-members">
-      <a href="#">Members</a>
-      <div class="nav-dropdown">
-        <a href="members.html" class="nav-cta">Members Login</a>
-        <a href="https://nuccol.co.uk/membershomev2/">Members Home</a>
-        <a href="https://nuccol.co.uk/groups">Community</a>
-      </div>
-    </li>
-    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+    <li><a href="events.html">Events</a></li>
+    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="our-thoughts.html">Our Thoughts</a></li>
+    <li><a href="work-with-us.html">Work With Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="members.html" class="nav-cta">Members Login</a></li>
   </ul>
 </nav>
 
@@ -817,7 +802,7 @@
 <footer>
   <div class="footer-grid">
     <div>
-      <div class="footer-logo"><img src="https://nuccol.co.uk/wp-content/uploads/2024/09/nuccol-png.png" alt="NucCol" /></div>
+      <div class="footer-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol" /></div>
       <p class="footer-about">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
       <p class="footer-address">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</p>
     </div>

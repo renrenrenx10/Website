@@ -27,7 +27,7 @@
     .nav-logo img { height:48px; width:48px; object-fit:contain; border-radius:4px; display:block; }
     .nav-links { display:flex; gap:2px; align-items:center; list-style:none; }
     .nav-links a { color:var(--light); text-decoration:none; font-size:0.78rem; font-weight:500;
-      letter-spacing:0.02em; padding:7px 10px; border-radius:4px;
+      letter-spacing:0.04em; padding:7px 10px; border-radius:4px;
       transition:color 0.2s, background 0.2s; white-space:nowrap; }
     .nav-links a:hover { color:var(--cyan); background:rgba(41,182,232,0.08); }
     .nav-links a.active { color:var(--cyan); }
@@ -151,8 +151,9 @@
     <li><a href="about.html">Who We Are</a></li>
     <li><a href="markets.html">Markets</a></li>
     <li><a href="services.html">Services</a></li>
+    <li><a href="who-we-work-with.html">Who We Work With</a></li>
     <li><a href="events.html">Events</a></li>
-    <li><a href="f4n-companies.html">F4 Community</a></li>
+    
     <li><a href="f4n.html">F4N</a></li>
     <li><a href="our-thoughts.html">Our Thoughts</a></li>
     <li><a href="work-with-us.html">Work With Us</a></li>
@@ -198,7 +199,7 @@
         </select>
       </div>
       <div class="form-group"><label>Message *</label><textarea placeholder="Tell us about your requirements or questions..."></textarea></div>
-      <button type="button" class="btn-primary" style="width:100%;border:none;cursor:pointer;font-size:1rem;padding:15px">Send Message</button>
+      <button type="button" class="btn-primary" onclick="sendContactForm()" style="width:100%;border:none;cursor:pointer;font-size:1rem;padding:15px">Send Message</button>
       <p style="font-size:0.78rem;color:#8a9bb0;margin-top:12px;text-align:center">We aim to respond within 2 working days.</p>
     </div>
 
@@ -248,7 +249,8 @@
       <li><a href="about.html">Who We Are</a></li>
       <li><a href="markets.html">Markets</a></li>
       <li><a href="who-we-work-with.html">Who We Work With</a></li>
-      <li><a href="events.html">Events</a></li>
+      <li><a href="who-we-work-with.html">Who We Work With</a></li>
+    <li><a href="events.html">Events</a></li>
       <li><a href="f4n.html">F4N Programme</a></li>
       <li><a href="our-thoughts.html">Our Thoughts</a></li>
       <li><a href="work-with-us.html">Work With Us</a></li>
@@ -265,5 +267,36 @@
     <div style="display:flex;gap:24px"><a href="#">Privacy Policy</a><a href="#">Terms of Use</a></div>
   </div>
 </footer>
+
+<script>
+function sendContactForm() {
+  const form = document.querySelector('.contact-form-wrap');
+  const firstName = form.querySelector('input[type="text"]').value.trim();
+  const emailEl = form.querySelector('input[type="email"]');
+  const email = emailEl ? emailEl.value.trim() : '';
+  const service = form.querySelector('select') ? form.querySelector('select').value : '';
+  const message = form.querySelector('textarea') ? form.querySelector('textarea').value.trim() : '';
+
+  if (!firstName || !email || !message) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  const isF4N = service.toLowerCase().includes('f4n') || service.toLowerCase().includes('fit for nuclear');
+  const to = isF4N ? 'fit4@nuccol.co.uk' : 'enquiries@nuccol.co.uk';
+  const subject = encodeURIComponent('Website Enquiry' + (service ? ' – ' + service : ''));
+  const body = encodeURIComponent(
+    'Name: ' + firstName + '
+' +
+    'Email: ' + email + '
+' +
+    'Interest: ' + (service || 'Not specified') + '
+
+' +
+    message
+  );
+  window.location.href = 'mailto:' + to + '?subject=' + subject + '&body=' + body;
+}
+</script>
 </body></html>
                                                   
