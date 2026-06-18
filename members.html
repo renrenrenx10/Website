@@ -962,6 +962,7 @@ function nav(id){
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('bc').innerHTML=`<span>${labels[id]||id}</span>`;
   if(id==='handbook'&&!window.hbInit){loadSection('strategy');window.hbInit=true}
+  if(id==='community'&&!commUser){(async()=>{const {data:{session}}=await db.auth.getSession();if(session)await commInit(session.user);})();}
   if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
   if(window.innerWidth<=900){document.getElementById('sidebar').classList.remove('open');}
   window.scrollTo(0,0);
@@ -1234,6 +1235,15 @@ function switchVTab(tab){
   document.getElementById('vcat-'+tab).style.display='block';
 }
 
+function switchKTTab(tab){
+  document.querySelectorAll('.vtab[id^="ktvtab-"]').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.ktvcat').forEach(c=>c.style.display='none');
+  const tabEl = document.getElementById('ktvtab-'+tab);
+  const catEl = document.getElementById('ktvcat-'+tab);
+  if(tabEl) tabEl.classList.add('active');
+  if(catEl) catEl.style.display='block';
+}
+
 function openVP(vpId, title){
   if(!vpId){return;}
   document.getElementById('vid-modal-title').textContent=title;
@@ -1471,10 +1481,12 @@ async function commSignIn(){
   const msg=document.getElementById('comm-signin-msg');
   if(!email||!pass){commShowMsg(msg,'Please enter your email and password.','error');return;}
   btn.disabled=true;btn.textContent='Signing in...';
-  const {error}=await db.auth.signInWithPassword({email,password:pass});
+  const {data:{user},error}=await db.auth.signInWithPassword({email,password:pass});
   if(error){
     commShowMsg(msg,error.message==='Invalid login credentials'?'Incorrect email or password.':error.message,'error');
     btn.disabled=false;btn.textContent='Sign In';
+  } else {
+    await commInit(user);
   }
 }
 
@@ -1484,7 +1496,7 @@ function commShowMsg(el,text,type){
 }
 
 // ── SIGN OUT ──
-async function commSignOut(){
+async async function commSignOut(){
   if(commRealtimeSub) db.removeChannel(commRealtimeSub);
   await db.auth.signOut();
   commUser=null;commProfile=null;commPosts=[];
