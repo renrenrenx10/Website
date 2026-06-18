@@ -650,8 +650,8 @@
     const journey = rows.filter(x => x.section === 'Journey').length;
     const gc = document.getElementById('f4n-page-granted-count');
     const jc = document.getElementById('f4n-page-journey-count');
-    if (gc) gc.textContent = granted;
-    if (jc) jc.textContent = journey;
+    if (gc) gc.textContent = '- ' + granted;
+    if (jc) jc.textContent = '- ' + journey;
   } catch(e) {}
 })();
 </script>
