@@ -527,7 +527,7 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     </button>
   </nav>
   <div class="sb-footer">
-    <a href="index.html">
+    <a href="../index.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       Back to main site
     </a>
@@ -546,10 +546,6 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       <button class="tb-btn primary" onclick="nav('handbook')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
         <span>Handbook</span>
-      </button>
-      <button class="tb-btn" onclick="portalSignOut()" title="Sign Out" style="color:#8a9bb0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <span>Sign Out</span>
       </button>
     </div>
   </div>
@@ -699,54 +695,6 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
         <span class="live-label">Updated regularly</span>
       </div>
             <div id="wbn-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
-        <div class="wbn-card" onclick="openVideo('https://www.youtube.com/watch?v=YwFUGeuZspg','CFSI - What it means for the supply chain')" style=" cursor:pointer">
-          <div class="wbn-date">27 Mar 2026</div>
-          <div class="wbn-title">CFSI - What it means for the supply chain</div>
-          <div class="wbn-meta">
-            <span class="tag t-nuclear">Nuclear</span>
-            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><a href="https://www.youtube.com/watch?v=YwFUGeuZspg" target="_blank" class="wbn-link" onclick="event.stopPropagation()">Watch Again</a><a href="https://nuccol.co.uk/wp-content/uploads/2026/03/SZC-CFSI-Handbook.pdf" target="_blank" class="wbn-link" onclick="event.stopPropagation()">SZC CFSI Handbook</a></div>
-          </div>
-        </div>
-        <div class="wbn-card" style="">
-          <div class="wbn-date">27 Feb 2026</div>
-          <div class="wbn-title">The Trent Supercluster</div>
-          <div class="wbn-meta">
-            <span class="tag t-supply">Supply Chain</span>
-            <div style="margin-top:8px;color:var(--grey);font-size:.85rem">Recording coming soon</div>
-          </div>
-        </div>
-        <div class="wbn-card" onclick="openVideo('https://nuccol.co.uk/wp-content/uploads/2026/01/NucCol-Webinar-Supply-Chain-Skills-Readiness-for-2026-20260130_090045UTC-Meeting-Recording.mp4','Supply Chain &amp; Skills Readiness for 2026')" style=" cursor:pointer">
-          <div class="wbn-date">30 Jan 2026</div>
-          <div class="wbn-title">Supply Chain &amp; Skills Readiness for 2026</div>
-          <div class="wbn-meta">
-            <span class="tag t-supply">Supply Chain</span>
-            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><a href="https://nuccol.co.uk/wp-content/uploads/2026/01/NucCol-Webinar-Supply-Chain-Skills-Readiness-for-2026-20260130_090045UTC-Meeting-Recording.mp4" target="_blank" class="wbn-link" onclick="event.stopPropagation()">Watch Again</a></div>
-          </div>
-        </div>
-        <div class="wbn-card" onclick="openVideo('https://nuccol.co.uk/wp-content/uploads/2026/01/Nuclear-A-Year-in-Review-20251218_105640UTC-Meeting-Recording.mp4','Nuclear - A Year in Review')" style=" cursor:pointer">
-          <div class="wbn-date">18 Dec 2025</div>
-          <div class="wbn-title">Nuclear - A Year in Review</div>
-          <div class="wbn-meta">
-            <span class="tag t-nuclear">Nuclear</span>
-            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><a href="https://nuccol.co.uk/wp-content/uploads/2026/01/Nuclear-A-Year-in-Review-20251218_105640UTC-Meeting-Recording.mp4" target="_blank" class="wbn-link" onclick="event.stopPropagation()">Watch Again</a></div>
-          </div>
-        </div>
-        <div class="wbn-card" style="">
-          <div class="wbn-date">09 Sep 2025</div>
-          <div class="wbn-title">Current Nuclear Landscape</div>
-          <div class="wbn-meta">
-            <span class="tag t-nuclear">Nuclear</span>
-            <div style="margin-top:8px;color:var(--grey);font-size:.85rem">Recording coming soon</div>
-          </div>
-        </div>
-        <div class="wbn-card" onclick="openVideo('https://nuccol.co.uk/wp-content/uploads/Support-for-manufacturers-and-businesses-through-Chamber-networks.mp4','Support For Manufacturers and Businesses Through Chamber Networks')" style=" cursor:pointer">
-          <div class="wbn-date">15 May 2026</div>
-          <div class="wbn-title">Support For Manufacturers and Businesses Through Chamber Networks</div>
-          <div class="wbn-meta">
-            <span class="tag t-nuclear">Nuclear</span>
-            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><a href="https://nuccol.co.uk/wp-content/uploads/Support-for-manufacturers-and-businesses-through-Chamber-networks.mp4" target="_blank" class="wbn-link" onclick="event.stopPropagation()">Watch Again</a></div>
-          </div>
-        </div>
       </div>
     </div>
     <!-- VIDEO MODAL -->    <!-- VIDEO MODAL -->
@@ -1105,23 +1053,56 @@ const BLOB_SAS  = 'sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&s
 let NEWS_DATA = [];
 let EVENTS_DATA = [];
 let CONTRACTS_DATA = [];
+let WEBINARS_DATA = [];
 
 async function loadContentFromBlob() {
   try {
-    const [news, events, tenders] = await Promise.all([
+    const [news, events, tenders, webinars] = await Promise.all([
       fetch(`${BLOB_BASE}/news.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : []),
       fetch(`${BLOB_BASE}/events.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : []),
-      fetch(`${BLOB_BASE}/tenders.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : [])
+      fetch(`${BLOB_BASE}/tenders.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : []),
+      fetch(`${BLOB_BASE}/site-pages/members-webinars.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : [])
     ]);
     NEWS_DATA = news;
     EVENTS_DATA = events;
     CONTRACTS_DATA = tenders;
+    WEBINARS_DATA = Array.isArray(webinars) ? webinars : [];
   } catch(e) {
     console.warn('Blob fetch failed, content may be empty:', e);
   }
   renderNews('All');
   renderEvents('All');
   renderTenders('All');
+  renderWebinars();
+}
+
+function renderWebinars() {
+  const grid = document.getElementById('wbn-grid');
+  if (!grid) return;
+  if (!WEBINARS_DATA.length) return; // keep static fallback if blob empty
+  const sorted = [...WEBINARS_DATA].sort((a,b) => (a.sort||0)-(b.sort||0));
+  grid.innerHTML = sorted.map(w => {
+    const tagClass = (w.tag||'Nuclear') === 'Supply Chain' ? 't-supply' : 't-nuclear';
+    const hasVideo = w.videoUrl && w.videoUrl.trim();
+    // Extra links: "Label|url" one per line
+    const extraLinks = (w.links||'').split('\n').filter(l => l.includes('|')).map(l => {
+      const [label, url] = l.split('|');
+      return `<a href="${esc(url.trim())}" target="_blank" class="wbn-link" onclick="event.stopPropagation()">${esc(label.trim())}</a>`;
+    }).join('');
+    const clickAttr = hasVideo ? `onclick="openVideo('${esc(w.videoUrl)}','${esc(w.title)}')" style="cursor:pointer"` : `style=""`;
+    const watchLink = hasVideo ? `<a href="${esc(w.videoUrl)}" target="_blank" class="wbn-link" onclick="event.stopPropagation()">Watch Again</a>` : '';
+    const linksHtml = (watchLink || extraLinks)
+      ? `<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">${watchLink}${extraLinks}</div>`
+      : `<div style="margin-top:8px;color:var(--grey);font-size:.85rem">Recording coming soon</div>`;
+    return `<div class="wbn-card" ${clickAttr}>
+          <div class="wbn-date">${esc(w.date||'')}</div>
+          <div class="wbn-title">${esc(w.title||'')}</div>
+          <div class="wbn-meta">
+            <span class="tag ${tagClass}">${esc(w.tag||'Nuclear')}</span>
+            ${linksHtml}
+          </div>
+        </div>`;
+  }).join('');
 }
 
 function renderNews(filter){
@@ -1444,11 +1425,6 @@ db.auth.onAuthStateChange((event,session)=>{
 
 
 
-
-// PORTAL SIGN OUT
-async function portalSignOut(){
-  await db.auth.signOut();
-}
 let commUser = null;
 let commProfile = null;
 let commPosts = [];
@@ -1723,11 +1699,7 @@ async function commLoadMembers(){
       <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;color:var(--navy);flex-shrink:0">${commInitials(m.full_name)}</div>
       <div>
         <div style="font-size:.76rem;font-weight:600">${commEsc(m.full_name)}</div>
-        <div style="font-size:.72rem;color:var(--grey)">${commEsc(m.company||'')}</div>
-      </div>
-    </div>
-`).join('');
-}
+    
+<script src="<script src="nuccol-cms.ms.js" data-page="members"></script>
 
-</script>
 <script src="nuccol-cms.js" data-page="members"></script>
