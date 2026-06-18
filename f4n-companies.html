@@ -156,7 +156,7 @@
 <section>
   <div class="sw">
     <div class="sey">F4N Status</div>
-    <h2>F4N <span>Granted</span> Companies <span id="f4n-page-granted-count" style="font-size:1rem;font-weight:600;color:var(--cyan);vertical-align:middle;margin-left:12px"></span></h2>
+    <h2>F4N <span>Granted</span> Companies <span id="f4n-page-granted-count" style="color:var(--cyan);"></span></h2>
     <div class="status-badge"><span class="status-dot"></span>Fit For Nuclear Granted</div>
     <p class="intro">These companies have successfully achieved Fit For Nuclear granted status — demonstrating that their people, processes, and performance meet the exacting requirements of the UK nuclear sector.</p>
     <div class="company-grid" id="f4n-granted-grid">
@@ -462,7 +462,7 @@
 <section class="alt">
   <div class="sw">
     <div class="sey">In Progress</div>
-    <h2>Companies On Their <span>F4N Journey</span> <span id="f4n-page-journey-count" style="font-size:1rem;font-weight:600;color:var(--amber);vertical-align:middle;margin-left:12px"></span></h2>
+    <h2>Companies On Their <span>F4N Journey</span> <span id="f4n-page-journey-count" style="color:var(--amber);"></span></h2>
     <div class="status-badge journey"><span class="status-dot"></span>F4N In Progress</div>
     <p class="intro">These organisations are actively progressing through the F4N programme — working closely with their Supply Chain Consultants to identify strengths, close gaps, and embed best practice across their operations.</p>
     <div class="company-grid" id="f4n-journey-grid">
@@ -650,8 +650,8 @@
     const journey = rows.filter(x => x.section === 'Journey').length;
     const gc = document.getElementById('f4n-page-granted-count');
     const jc = document.getElementById('f4n-page-journey-count');
-    if (gc) gc.textContent = '(' + granted + ')';
-    if (jc) jc.textContent = '(' + journey + ')';
+    if (gc) gc.textContent = granted;
+    if (jc) jc.textContent = journey;
   } catch(e) {}
 })();
 </script>
