@@ -1723,5 +1723,11 @@ async function commLoadMembers(){
       <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;color:var(--navy);flex-shrink:0">${commInitials(m.full_name)}</div>
       <div>
         <div style="font-size:.76rem;font-weight:600">${commEsc(m.full_name)}</div>
-    
+        <div style="font-size:.72rem;color:var(--grey)">${commEsc(m.company||'')}</div>
+      </div>
+    </div>
+`).join('');
+}
+
+</script>
 <script src="nuccol-cms.js" data-page="members"></script>
