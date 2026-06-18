@@ -1496,7 +1496,7 @@ function commShowMsg(el,text,type){
 }
 
 // ── SIGN OUT ──
-async async function commSignOut(){
+async function commSignOut(){
   if(commRealtimeSub) db.removeChannel(commRealtimeSub);
   await db.auth.signOut();
   commUser=null;commProfile=null;commPosts=[];
