@@ -527,7 +527,7 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     </button>
   </nav>
   <div class="sb-footer">
-    <a href="../index.html">
+    <a href="index.html">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       Back to main site
     </a>
@@ -1699,7 +1699,16 @@ async function commLoadMembers(){
       <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;color:var(--navy);flex-shrink:0">${commInitials(m.full_name)}</div>
       <div>
         <div style="font-size:.76rem;font-weight:600">${commEsc(m.full_name)}</div>
-    
-<script src="<script src="nuccol-cms.ms.js" data-page="members"></script>
+        <div style="font-size:.7rem;color:var(--grey)">${commEsc(m.company||'')}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+</script>
+
 
 <script src="nuccol-cms.js" data-page="members"></script>
+</body>
+</html>
+
