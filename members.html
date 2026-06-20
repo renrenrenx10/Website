@@ -1428,10 +1428,17 @@ db.auth.onAuthStateChange((event,session)=>{
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('shell').style.display='flex';
     loadLiveBadges();
+    // Pass identity to Frankie tools (Evidence Vault etc.)
+    localStorage.setItem('frankieUserId', session.user.id);
+    localStorage.setItem('frankieUserToken', session.access_token);
+    localStorage.setItem('frankieCompanyName', session.user.user_metadata?.company || '');
   }
   if(event==='SIGNED_OUT'){
     document.getElementById('auth-gate').style.display='flex';
     document.getElementById('shell').style.display='none';
+    localStorage.removeItem('frankieUserId');
+    localStorage.removeItem('frankieUserToken');
+    localStorage.removeItem('frankieCompanyName');
   }
 });
 
