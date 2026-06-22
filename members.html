@@ -1431,24 +1431,27 @@ document.addEventListener('keydown',e=>{
 });
 
 // Check session on load — show gate or portal
-// Recovery links: show password reset screen immediately, skip auto-login
-if(_isRecoveryLink){
-  document.getElementById('set-password-gate').style.display='flex';
-  document.getElementById('auth-gate').style.display='none';
-  document.getElementById('shell').style.display='none';
-} else {
-  (async()=>{
-    const {data:{session}} = await db.auth.getSession();
-    if(session){
-      document.getElementById('auth-gate').style.display='none';
-      document.getElementById('shell').style.display='flex';
-      loadLiveBadges();
-    } else {
-      document.getElementById('auth-gate').style.display='flex';
-      document.getElementById('shell').style.display='none';
-    }
-  })();
-}
+(async()=>{
+  const {data:{session}} = await db.auth.getSession();
+  if(session){
+    try {
+      const payload = JSON.parse(atob(session.access_token.split('.')[1]));
+      const usedOtp = payload.amr && payload.amr.some(a => a.method === 'otp');
+      if(usedOtp){
+        document.getElementById('set-password-gate').style.display='flex';
+        document.getElementById('auth-gate').style.display='none';
+        document.getElementById('shell').style.display='none';
+        return;
+      }
+    } catch(e){}
+    document.getElementById('auth-gate').style.display='none';
+    document.getElementById('shell').style.display='flex';
+    loadLiveBadges();
+  } else {
+    document.getElementById('auth-gate').style.display='flex';
+    document.getElementById('shell').style.display='none';
+  }
+})();
 
 
 async function doSetPassword(){
@@ -1478,7 +1481,17 @@ db.auth.onAuthStateChange((event,session)=>{
   if(event==='INITIAL_SESSION') return;
   if(event==='PASSWORD_RECOVERY') return;
   if(event==='SIGNED_IN'&&session){
-    if(_isRecoveryLink) return;
+    // Detect magic link / recovery login via JWT amr claim
+    try {
+      const payload = JSON.parse(atob(session.access_token.split('.')[1]));
+      const usedOtp = payload.amr && payload.amr.some(a => a.method === 'otp');
+      if(usedOtp){
+        document.getElementById('set-password-gate').style.display='flex';
+        document.getElementById('auth-gate').style.display='none';
+        document.getElementById('shell').style.display='none';
+        return;
+      }
+    } catch(e){}
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('shell').style.display='flex';
     loadLiveBadges();
