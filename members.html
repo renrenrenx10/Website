@@ -1429,17 +1429,22 @@ document.addEventListener('keydown',e=>{
 });
 
 // Check session on load — show gate or portal
-(async()=>{
-  const {data:{session}} = await db.auth.getSession();
-  if(session){
-    document.getElementById('auth-gate').style.display='none';
-    document.getElementById('shell').style.display='flex';
-    loadLiveBadges();
-  } else {
-    document.getElementById('auth-gate').style.display='flex';
-    document.getElementById('shell').style.display='none';
-  }
-})();
+// If this is a recovery link, skip the IIFE and let PASSWORD_RECOVERY event handle it
+const _hashParams = new URLSearchParams(window.location.hash.slice(1));
+const _isRecovery = _hashParams.get('type') === 'recovery';
+if(!_isRecovery){
+  (async()=>{
+    const {data:{session}} = await db.auth.getSession();
+    if(session){
+      document.getElementById('auth-gate').style.display='none';
+      document.getElementById('shell').style.display='flex';
+      loadLiveBadges();
+    } else {
+      document.getElementById('auth-gate').style.display='flex';
+      document.getElementById('shell').style.display='none';
+    }
+  })();
+}
 
 
 async function doSetPassword(){
