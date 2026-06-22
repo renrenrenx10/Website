@@ -1759,4 +1759,13 @@ async function commLoadMembers(){
   if(!data||data.length===0){el.innerHTML='<div style="font-size:.76rem;color:var(--grey)">No members yet</div>';return;}
   el.innerHTML=data.map(m=>`
     <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2)">
-      <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed'
+      <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;color:#fff">${commInitials(m.full_name)}</div>
+      <div>
+        <div style="font-size:.78rem;font-weight:600;color:var(--text)">${commEsc(m.full_name)}</div>
+        <div style="font-size:.72rem;color:var(--grey)">${commEsc(m.company||'')}</div>
+      </div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>
