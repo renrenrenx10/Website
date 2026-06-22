@@ -437,6 +437,25 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 <body>
 
 <!-- ── MEMBERS LOGIN GATE ── -->
+<div id="set-password-gate" style="display:none;position:fixed;inset:0;background:#0a1628;z-index:10000;align-items:center;justify-content:center;font-family:'Barlow',sans-serif">
+  <div style="background:#111e35;border:1px solid #1e3a5f;border-radius:12px;padding:40px 48px;width:100%;max-width:400px;text-align:center">
+    <svg viewBox="0 0 24 24" style="width:36px;height:36px;margin-bottom:16px;stroke:#00c8d4;fill:none;stroke-width:2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#00c8d4;margin-bottom:8px">NucCol</div>
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;text-transform:uppercase;color:#e8eef6;margin-bottom:6px">Set Your Password</h2>
+    <p style="font-size:.85rem;color:#6a7a90;margin-bottom:28px;line-height:1.6">Choose a password for your NucCol account.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+      <input id="new-pass" type="password" placeholder="New password" autocomplete="new-password"
+        style="background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:12px 16px;color:#e8eef6;font-family:'Barlow',sans-serif;font-size:.9rem;outline:none;width:100%;box-sizing:border-box"/>
+      <input id="new-pass-confirm" type="password" placeholder="Confirm password" autocomplete="new-password"
+        style="background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:12px 16px;color:#e8eef6;font-family:'Barlow',sans-serif;font-size:.9rem;outline:none;width:100%;box-sizing:border-box"/>
+      <button id="set-pass-btn" onclick="doSetPassword()"
+        style="background:#00c8d4;color:#0a1628;border:none;border-radius:6px;padding:13px;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s">
+        Set Password
+      </button>
+    </div>
+    <div id="set-pass-msg" style="display:none;color:#f87171;font-size:.82rem;margin-top:8px"></div>
+  </div>
+</div>
 <div id="auth-gate" style="position:fixed;inset:0;background:#0a1628;z-index:9999;display:flex;align-items:center;justify-content:center;font-family:'Barlow',sans-serif">
   <div style="background:#111e35;border:1px solid #1e3a5f;border-radius:12px;padding:40px 48px;width:100%;max-width:400px;text-align:center">
     <svg viewBox="0 0 24 24" style="width:36px;height:36px;margin-bottom:16px;stroke:#00c8d4;fill:none;stroke-width:2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -1422,8 +1441,31 @@ document.addEventListener('keydown',e=>{
   }
 })();
 
+
+async function doSetPassword(){
+  const p1 = document.getElementById('new-pass').value;
+  const p2 = document.getElementById('new-pass-confirm').value;
+  const msg = document.getElementById('set-pass-msg');
+  const btn = document.getElementById('set-pass-btn');
+  if(!p1||p1.length<6){msg.textContent='Password must be at least 6 characters.';msg.style.display='block';return;}
+  if(p1!==p2){msg.textContent='Passwords do not match.';msg.style.display='block';return;}
+  btn.disabled=true;btn.textContent='Saving…';
+  const {error} = await db.auth.updateUser({password:p1});
+  if(error){msg.textContent=error.message||'Error setting password.';msg.style.display='block';btn.disabled=false;btn.textContent='Set Password';return;}
+  document.getElementById('set-password-gate').style.display='none';
+  document.getElementById('auth-gate').style.display='none';
+  document.getElementById('shell').style.display='flex';
+  loadLiveBadges();
+}
+
 db.auth.onAuthStateChange((event,session)=>{
   if(event==='INITIAL_SESSION') return;
+  if(event==='PASSWORD_RECOVERY'){
+    document.getElementById('set-password-gate').style.display='flex';
+    document.getElementById('auth-gate').style.display='none';
+    document.getElementById('shell').style.display='none';
+    return;
+  }
   if(event==='SIGNED_IN'&&session){
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('shell').style.display='flex';
@@ -1717,19 +1759,4 @@ async function commLoadMembers(){
   if(!data||data.length===0){el.innerHTML='<div style="font-size:.76rem;color:var(--grey)">No members yet</div>';return;}
   el.innerHTML=data.map(m=>`
     <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2)">
-      <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.68rem;color:var(--navy);flex-shrink:0">${commInitials(m.full_name)}</div>
-      <div>
-        <div style="font-size:.76rem;font-weight:600">${commEsc(m.full_name)}</div>
-        <div style="font-size:.7rem;color:var(--grey)">${commEsc(m.company||'')}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-</script>
-
-
-<script src="nuccol-cms.js" data-page="members"></script>
-</body>
-</html>
-
+      <div class="${commAvc(m.full_name)}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed'
