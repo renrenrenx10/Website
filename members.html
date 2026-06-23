@@ -1005,6 +1005,22 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 <script>
 // Capture recovery type before Supabase clears the hash
 const _isRecoveryLink = window.location.hash.includes('type=recovery');
+// Check for auth errors in hash (e.g. expired OTP link)
+(()=>{
+  const h = window.location.hash;
+  if(h.includes('error=access_denied') || h.includes('error_code=otp_exp')){
+    const gate = document.getElementById('auth-gate');
+    if(gate){
+      const msg = document.getElementById('gate-msg');
+      if(msg){
+        msg.textContent = 'Your sign-in link has expired. Please contact NucCol to get a new one sent.';
+        msg.style.display = 'block';
+        msg.style.color = '#f59e0b';
+      }
+    }
+    history.replaceState(null,'',window.location.pathname);
+  }
+})();
 // ═══════════════════════════════════════════════════════════
 // HANDBOOK DATA LOADER
 // Fetches from BeHandbook and NucHandbook SharePoint/JSON lists
