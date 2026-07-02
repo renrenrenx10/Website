@@ -1190,10 +1190,14 @@ async function loadContentFromBlob() {
       fetch(`${BLOB_BASE}/tenders.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : []),
       fetch(`${BLOB_BASE}/site-pages/members-webinars.json?${BLOB_SAS}&t=${Date.now()}`).then(r => r.ok ? r.json() : [])
     ]);
-    NEWS_DATA = news;
-    EVENTS_DATA = events;
-    CONTRACTS_DATA = tenders;
-    WEBINARS_DATA = Array.isArray(webinars) ? webinars : [];
+    NEWS_DATA      = (Array.isArray(news)    ? news    : []).filter(i => i.members);
+    EVENTS_DATA    = (Array.isArray(events)  ? events  : []).filter(i => i.members).map(e => ({
+      ...e,
+      date:      e.date      || e.event_date  || '',
+      eventType: e.eventType || e.event_type  || '',
+    }));
+    CONTRACTS_DATA = (Array.isArray(tenders) ? tenders : []).filter(i => i.members);
+    WEBINARS_DATA  = Array.isArray(webinars) ? webinars : [];
   } catch(e) {
     console.warn('Blob fetch failed, content may be empty:', e);
   }
