@@ -259,6 +259,33 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 .vid-body{padding:12px}
 .vid-body h4{font-size:.82rem;font-weight:600;line-height:1.4;margin-top:6px;color:var(--navy)}
 
+/* TOOLBOX */
+.tb-cats{display:flex;flex-direction:column;gap:10px}
+.tb-cat-group{background:var(--white);border:1px solid #dde4ee;border-radius:8px;overflow:hidden}
+.tb-cat-header{display:flex;align-items:center;gap:10px;padding:14px 20px;cursor:pointer;background:none;border:none;width:100%;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);transition:.15s}
+.tb-cat-header:hover{background:var(--border2)}
+.tb-cat-header .tb-arrow{margin-left:auto;width:12px;height:12px;transition:transform .25s;opacity:.5;flex-shrink:0}
+.tb-cat-header.open .tb-arrow{transform:rotate(90deg)}
+.tb-cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tb-cat-count{margin-left:6px;font-size:.7rem;opacity:.5;font-weight:400}
+.tb-files{display:none;padding:4px 16px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.tb-cat-group.collapsed .tb-files{display:none}
+.tb-cat-group.expanded .tb-files{display:grid}
+.tb-file{background:#f4f7fb;border:1px solid #e8eef6;border-radius:6px;padding:12px 14px;display:flex;align-items:center;gap:10px;transition:.15s}
+.tb-file:hover{border-color:var(--cyan);background:#f0f6ff}
+.tb-file-icon{width:32px;height:32px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.04em;flex-shrink:0;color:#fff}
+.tb-icon-docx{background:#2b579a}
+.tb-icon-xlsx{background:#217346}
+.tb-icon-pptx{background:#b7472a}
+.tb-file-info{flex:1;min-width:0}
+.tb-file-code{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-bottom:2px}
+.tb-file-name{font-size:.8rem;font-weight:500;color:var(--navy);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-dl-btn{flex-shrink:0;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:5px;background:var(--cyan3);border:1px solid var(--border);color:var(--cyan);transition:.15s;text-decoration:none}
+.tb-dl-btn:hover{background:var(--cyan);color:var(--navy)}
+.tb-dl-btn svg{width:14px;height:14px;flex-shrink:0}
+.tb-search-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.tb-search-row input{max-width:360px}
+.tb-no-results{text-align:center;padding:40px;color:var(--grey);font-size:.9rem}
 /* MOBILE */
 #mob-btn{display:none;position:fixed;bottom:24px;right:24px;z-index:300;width:52px;height:52px;border-radius:50%;background:var(--cyan);border:none;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,200,212,.4)}
 #mob-btn svg{width:22px;height:22px;fill:none;stroke:var(--navy);stroke-width:2}
@@ -521,6 +548,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     <button class="sb-item" onclick="nav('nhandbook')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       Nuclear Excellence Handbook
+    </button>
+    <button class="sb-item" onclick="nav('toolbox')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/><path d="M8 7V5a2 2 0 00-4 0v2"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/></svg>
+      Member Toolbox
     </button>
     <!-- INTELLIGENCE HUB LINK - launching later
     <a class="sb-item" href="intelligence-hub.html">
@@ -967,6 +998,24 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 
 
   
+  <!-- TOOLBOX SECTION -->
+  <div id="sec-toolbox" class="section">
+    <div class="sec-header">
+      <div class="eyebrow">Member Resources</div>
+      <h2>Member <span>Toolbox</span></h2>
+      <p>Ready-to-use templates, trackers, training guides and toolbox talks — download and deploy directly in your business.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto">
+      <button type="button" class="vtab active" id="tbtab-be" onclick="tbTab('be')">Business Excellence <span id="tb-be-cnt" style="font-size:.7rem;opacity:.55;margin-left:3px"></span></button>
+      <button type="button" class="vtab" id="tbtab-nss" onclick="tbTab('nss')">Nuclear Sector Specific <span id="tb-nss-cnt" style="font-size:.7rem;opacity:.55;margin-left:3px"></span></button>
+      <button type="button" class="vtab" id="tbtab-tbt" onclick="tbTab('tbt')">Toolbox Talks <span id="tb-tbt-cnt" style="font-size:.7rem;opacity:.55;margin-left:3px"></span></button>
+    </div>
+    <div class="tb-search-row">
+      <input type="text" class="comm-input" placeholder="&#128269; Search files..." oninput="tbSearch(this.value)" id="tb-search-input"/>
+    </div>
+    <div id="tb-content"></div>
+  </div>
+
   <!-- ACCOUNT SECTION -->
   <div class="section" id="sec-account" style="padding:32px">
     <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;text-transform:uppercase;color:var(--text);margin-bottom:24px">My Account</h2>
@@ -1029,7 +1078,7 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 
 
 // NAV
-const labels={home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community'};
+const labels={home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox'};
 function nav(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById('sec-'+id);
@@ -1038,6 +1087,7 @@ function nav(id){
   document.getElementById('bc').innerHTML=`<span>${labels[id]||id}</span>`;
   if(id==='handbook'&&!window.hbInit){loadSection('strategy');window.hbInit=true}
   if(id==='account'){loadAccountSection();}
+  if(id==='toolbox'){loadToolboxSection();}
   if(id==='community'&&!commUser){(async()=>{const {data:{session}}=await db.auth.getSession();if(session)await commInit(session.user);})();}
   if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
   if(window.innerWidth<=900){document.getElementById('sidebar').classList.remove('open');}
@@ -1823,16 +1873,6 @@ async function commToggleComments(postId){
     <button type="button" class="btn-reply" onclick="commSubmitComment('${postId}')">Reply</button>
   </div>`;
   const inp=document.getElementById('lcin-'+postId);
-  if(inp) inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();commSubmitComment(postId);}});
-}
-
-// ── SUBMIT COMMENT ──
-async function commSubmitComment(postId){
-  const inp=document.getElementById('lcin-'+postId);
-  const text=inp.value.trim();
-  if(!text) return;
-  inp.value='';inp.disabled=true;
-  const {error}=await db.from('comments').insert({post_id:postId,user_id:commUser.id,content:text});
   inp.disabled=false;
   if(error){commToast('Failed to comment.','err');return;}
   await commToggleComments(postId);
@@ -1890,6 +1930,378 @@ async function savePassword(){
   else{msg.textContent='Password updated!';msg.style.color='#4ade80';document.getElementById('acc-pass1').value='';document.getElementById('acc-pass2').value='';}
   msg.style.display='block';
 }
+
+// ═══════════════════════════════════════════
+// TOOLBOX
+// ═══════════════════════════════════════════
+const TB_DATA={
+  be:{label:'Business Excellence',color:'#1a4a8a',cats:[
+    {name:'Strategy & Leadership',path:'toolbox/Business%20Excellence/Strategy%20%26%20Leadership/',files:[
+      {c:'SL-01',n:'Business Strategy Template',e:'docx',f:'SL%2001%20Business%20Strategy%20Template.docx'},
+      {c:'SL-01',n:'Business Strategy Template (Presentation)',e:'pptx',f:'SL%2001%20Business%20Strategy%20Template.pptx'},
+      {c:'SL-02',n:'Mission Vision Values',e:'pptx',f:'SL%2002%20Mission%20Vision%20Values.pptx'},
+      {c:'SL-03',n:'SWOT PESTLE Template',e:'pptx',f:'SL%2003%20SWOT%20PESTLE%20Template.pptx'},
+      {c:'SL-04',n:'X-Matrix Hoshin Template',e:'xlsx',f:'SL%2004%20X-Matrix%20Hoshin%20Template.xlsx'},
+      {c:'SL-05',n:'Orbit Chart Template',e:'pptx',f:'SL%2005%20Orbit%20Chart%20Template.pptx'},
+      {c:'SL-06',n:'Strategic KPI Dashboard',e:'pptx',f:'SL%2006%20Strategic%20KPI%20Dashboard.pptx'},
+      {c:'SL-07',n:'Communications Plan Template',e:'docx',f:'SL%2007%20Communications%20Plan%20Template.docx'},
+      {c:'SL-08',n:'Leadership Behaviour Framework',e:'pptx',f:'SL%2008%20Leadership%20Behaviour%20Framework.pptx'},
+    ]},
+    {name:'Design & Project Management',path:'toolbox/Business%20Excellence/Design%20%26%20PM/',files:[
+      {c:'DPM-01',n:'Design Capability Statement',e:'docx',f:'DPM-01%20Design%20Capability%20Statement.docx'},
+      {c:'DPM-02',n:'Design Control Register',e:'xlsx',f:'DPM-02%20Design%20Control%20Register.xlsx'},
+      {c:'DPM-03',n:'Design FMEA Template',e:'xlsx',f:'DPM-03%20Design%20Failure%20Mode%20and%20Effects%20Analysis%20Template.xlsx'},
+      {c:'DPM-04',n:'Design for Manufacturability Review Record',e:'docx',f:'DPM-04%20Design%20for%20Manufacturability%20Review%20Record.docx'},
+      {c:'DPM-05',n:'Project Initiation Document',e:'docx',f:'DPM-05%20Project%20Initiation%20Document.docx'},
+      {c:'DPM-06',n:'Project Plan OTIF Tracker',e:'xlsx',f:'DPM-06%20Project%20Plan%20On%20Time%20In%20Full%20Tracker.xlsx'},
+      {c:'DPM-07',n:'Project Risk Register',e:'xlsx',f:'DPM-07%20Project%20Risk%20Register.xlsx'},
+      {c:'DPM-08',n:'Project Closure Lessons Learned',e:'docx',f:'DPM-08%20Project%20Closure%20Lessons%20Learned.docx'},
+      {c:'DPM-09',n:'Design Review Presentation',e:'pptx',f:'DPM-09%20Design%20Review%20Presentation.pptx'},
+      {c:'DPM-10',n:'Project Status Dashboard',e:'pptx',f:'DPM-10%20Project%20Status%20Dashboard.pptx'},
+    ]},
+    {name:'People Excellence',path:'toolbox/Business%20Excellence/People%20Excellence/',files:[
+      {c:'PEOP-01',n:'Appraisal Personal Development Plan',e:'docx',f:'PEOP-01%20Appraisal%20Personal%20Development%20Plan.docx'},
+      {c:'PEOP-02',n:'Skills Matrix',e:'xlsx',f:'PEOP-02%20Skills%20Matrix.xlsx'},
+      {c:'PEOP-03',n:'Training HR Register',e:'xlsx',f:'PEOP-03%20Training%20HR%20Register.xlsx'},
+      {c:'PEOP-04',n:'Employee Engagement Survey',e:'docx',f:'PEOP-04%20Employee%20Engagement%20Survey.docx'},
+      {c:'PEOP-05',n:'Resource Succession Plan',e:'xlsx',f:'PEOP-05%20Resource%20Succession%20Plan.xlsx'},
+      {c:'PEOP-06',n:'People Excellence Training Guide',e:'pptx',f:'PEOP-06%20People%20Excellence%20Training%20Guide.pptx'},
+      {c:'PEOP-07',n:'Nuclear Sector Awareness Guide',e:'docx',f:'PEOP-07%20Nuclear%20Sector%20Awareness%20Guide.docx'},
+      {c:'PEOP-08',n:'Wellbeing Framework',e:'xlsx',f:'PEOP-08%20Wellbeing%20Framework.xlsx'},
+      {c:'PEOP-09',n:'Survey Results Analysis',e:'xlsx',f:'PEOP-09%20Survey%20Results%20Analysis.xlsx'},
+      {c:'PEOP-10',n:'Appraisal Outcomes Summary',e:'xlsx',f:'PEOP-10%20Appraisal%20Outcomes%20Summary.xlsx'},
+      {c:'PEOP-11',n:'Ideas Cards Board',e:'pptx',f:'PEOP-11%20Ideas%20Cards%20Board.pptx'},
+      {c:'PEOP-12',n:'Resource Planning Visuals',e:'pptx',f:'PEOP-12%20Resource%20Planning%20Visuals.pptx'},
+      {c:'PEOP-13',n:'Mental Health Awareness',e:'pptx',f:'PEOP-13%20Mental%20Health%20Awareness.pptx'},
+      {c:'PEOP-14',n:'Display Board Posters',e:'pptx',f:'PEOP-14%20Display%20Board%20Posters.pptx'},
+      {c:'PEOP-15',n:'Wellbeing Signposting',e:'pptx',f:'PEOP-15%20Wellbeing%20Signposting.pptx'},
+      {c:'PEOP-16',n:'Job Description Template',e:'docx',f:'PEOP-16%20Job%20Description%20Template.docx'},
+      {c:'PEOP-17',n:'New Starter Induction Checklist',e:'docx',f:'PEOP-17%20New%20Starter%20Induction%20Checklist.docx'},
+    ]},
+    {name:'Process Excellence — 5S',path:'toolbox/Business%20Excellence/Process%20Excellence/5S/',files:[
+      {c:'PE-05a',n:'5S Audit Sheet and Tracker',e:'xlsx',f:'PE-05a%205S%20Audit%20Sheet%20and%20Tracker.xlsx'},
+      {c:'PE-05b',n:'Training Guide — 5S Workplace Organisation',e:'pptx',f:'PE-05b%20Training%20Guide%205S%20Workplace%20Organisation.pptx'},
+      {c:'PE-05c',n:'5S Red Tags',e:'docx',f:'PE-05c%205S%20Red%20Tags.docx'},
+      {c:'PE-05d',n:'5S Area Responsibility Board',e:'pptx',f:'PE-05d%205S%20Area%20Responsibility%20Board.pptx'},
+      {c:'PE-05e',n:'5S Implementation Roadmap',e:'docx',f:'PE-05e%205S%20Implementation%20Roadmap.docx'},
+    ]},
+    {name:'Process Excellence — Value & Waste',path:'toolbox/Business%20Excellence/Process%20Excellence/Managing%20value%20%26%20waste/',files:[
+      {c:'PE-02d',n:'Value Stream Map Worked Example',e:'pptx',f:'PE-02d%20Value%20Stream%20Map%20Worked%20Example%20Before%20After%202.pptx'},
+      {c:'PE-02e',n:'How to Complete a Value Stream Map',e:'pptx',f:'PE-02e%20How%20to%20Complete%20a%20Value%20Stream%20Map.pptx'},
+    ]},
+    {name:'Process Excellence — Operational Communication',path:'toolbox/Business%20Excellence/Process%20Excellence/Operational%20communication/',files:[
+      {c:'PE-08a',n:'Daily Briefing Shift Handover Record',e:'docx',f:'PE-08a%20Daily%20Briefing%20Shift%20Handover%20Working%20Record.docx'},
+      {c:'PE-08b',n:'Visual Communication Board Template',e:'pptx',f:'PE-08b%20Visual%20Communication%20Board%20Template.pptx'},
+      {c:'PE-08c',n:'Training Guide — Operational Communication',e:'docx',f:'PE-08c%20Training%20Guide%20Operational%20Communication.docx'},
+    ]},
+    {name:'Process Excellence — Performance Measurement',path:'toolbox/Business%20Excellence/Process%20Excellence/Performance%20measurement/',files:[
+      {c:'PE-03a',n:'KPI Dashboard Performance Tracker',e:'xlsx',f:'PE-03a%20KPI%20Dashboard%20Performance%20Tracker.xlsx'},
+      {c:'PE-03b',n:'Shop Floor Visual Performance Board',e:'pptx',f:'PE-03b%20Shop%20Floor%20Visual%20Performance%20Board.pptx'},
+      {c:'PE-03c',n:'Training Guide — Performance Measurement',e:'docx',f:'PE-03c%20Training%20Guide%20Performance%20Measurement.docx'},
+    ]},
+    {name:'Process Excellence — Planned Maintenance',path:'toolbox/Business%20Excellence/Process%20Excellence/Planned%20Maintenance/',files:[
+      {c:'PE-04a',n:'Planned Maintenance Policy & Procedure',e:'docx',f:'PE-04a%20Planned%20Maintenance%20Policy%20Procedure.docx'},
+      {c:'PE-04b',n:'Maintenance Schedule Asset Register',e:'xlsx',f:'PE-04b%20Maintenance%20Schedule%20Asset%20Register.xlsx'},
+      {c:'PE-04c',n:'Maintenance KPI Trend Dashboard',e:'xlsx',f:'PE-04c%20Maintenance%20KPI%20Trend%20Dashboard.xlsx'},
+      {c:'PE-04d',n:'Autonomous Maintenance Operator Checks Toolkit',e:'docx',f:'PE-04d%20Autonomous%20Maintenance%20Operator%20Checks%20Toolkit.docx'},
+      {c:'PE-04e',n:'TPM Implementation Guide',e:'pptx',f:'PE-04e%20Planned%20Maintenance%20Total%20Productive%20Maintenance%20Implementation%20Guide.pptx'},
+    ]},
+    {name:'Process Excellence — Process Control',path:'toolbox/Business%20Excellence/Process%20Excellence/Process%20Control/',files:[
+      {c:'PE-09a',n:'Process Control Plan',e:'xlsx',f:'PE-09a%20Process%20Control%20Plan.xlsx'},
+      {c:'PE-09b',n:'In-Process Inspection Record',e:'xlsx',f:'PE-09b%20In-Process%20Inspection%20Record.xlsx'},
+      {c:'PE-09c',n:'Training Guide — Process Control Right First Time',e:'docx',f:'PE-09c%20Training%20Guide%20Process%20Control%20Right%20First%20Time.docx'},
+    ]},
+    {name:'Process Excellence — Problem Solving & RCA',path:'toolbox/Business%20Excellence/Process%20Excellence/Process%20improvement%2C%20problem%20solving%20%26%20RCA/',files:[
+      {c:'PE-07a',n:'Root Cause Analysis Problem Solving Log',e:'xlsx',f:'PE-07a%20Root%20Cause%20Analysis%20Problem%20Solving%20Log.xlsx'},
+      {c:'PE-07b',n:'A3 Problem Solving Template',e:'pptx',f:'PE-07b%20A3%20Problem%20Solving%20Template.pptx'},
+      {c:'PE-07c',n:'Training Guide — Root Cause Analysis Methods',e:'pptx',f:'PE-07c%20Training%20Guide%20Root%20Cause%20Analysis%20Methods.pptx'},
+    ]},
+    {name:'Process Excellence — Product & Service Strategy',path:"toolbox/Business%20Excellence/Process%20Excellence/Product%20%26%20Service%20Strategy/",files:[
+      {c:'PE-01a',n:'Products & Services Strategy Template',e:'docx',f:'PE-01a%20Products%20Services%20Strategy%20Template.docx'},
+      {c:'PE-01b',n:'Continuous Improvement Plan Template',e:'docx',f:'PE-01b%20Continuous%20Improvement%20Plan%20Template.docx'},
+      {c:'PE-01c',n:'Training Guide — Process Improvement Strategy',e:'docx',f:'PE-01c%20Training%20Guide%20Process%20Improvement%20Strategy.docx'},
+    ]},
+    {name:'Process Excellence — Product Specification Control',path:'toolbox/Business%20Excellence/Process%20Excellence/Product%20specification%20control/',files:[
+      {c:'PE-10a',n:'Drawing Specification Register',e:'xlsx',f:'PE-10a%20Drawing%20Specification%20Register.xlsx'},
+      {c:'PE-10b',n:'Specification Change Request',e:'docx',f:'PE-10b%20Specification%20Change%20Request.docx'},
+      {c:'PE-10c',n:'Training Guide — Product Specification Control',e:'docx',f:'PE-10c%20Training%20Guide%20Product%20Specification%20Control.docx'},
+    ]},
+    {name:"Process Excellence — SOPs",path:"toolbox/Business%20Excellence/Process%20Excellence/SOP's/",files:[
+      {c:'PE-06a',n:'Standard Operating Procedure Template',e:'docx',f:'PE-06a%20Standard%20Operating%20Procedure%20Template.docx'},
+      {c:'PE-06b',n:'SOP Register and Version Control Log',e:'xlsx',f:'PE-06b%20Standard%20Operating%20Procedure%20Register%20and%20Version%20Control%20Log.xlsx'},
+      {c:'PE-06c',n:'Training Guide — Writing and Using SOPs',e:'docx',f:'PE-06c%20Training%20Guide%20Writing%20and%20Using%20Standard%20Operating%20Procedures.docx'},
+    ]},
+    {name:'QHSE — Business Continuity & Incident Planning',path:'toolbox/Business%20Excellence/QHSE/Business%20Continuity%20%26%20Incident%20Planning/',files:[
+      {c:'QHSE-BC-01',n:'Business Continuity Policy',e:'docx',f:'QHSE-BC-01%20Business%20Continuity%20Policy.docx'},
+      {c:'QHSE-BC-02',n:'Business Impact Analysis Workbook',e:'xlsx',f:'QHSE-BC-02%20Business%20Impact%20Analysis%20Workbook.xlsx'},
+      {c:'QHSE-BC-03',n:'Major Incident Response Plan',e:'docx',f:'QHSE-BC-03%20Major%20Incident%20Response%20Plan.docx'},
+      {c:'QHSE-BC-04',n:'Tabletop Exercise Pack',e:'pptx',f:'QHSE-BC-04%20Tabletop%20Exercise%20Pack.pptx'},
+      {c:'QHSE-BC-05',n:'Business Continuity Register and Test Log',e:'xlsx',f:'QHSE-BC-05%20Business%20Continuity%20Register%20and%20Test%20Log%201.xlsx'},
+    ]},
+    {name:'QHSE — Continuous Improvement',path:'toolbox/Business%20Excellence/QHSE/Continuous%20Improvement/',files:[
+      {c:'QHSE-CI-01',n:'Continuous Improvement Plan',e:'xlsx',f:'QHSE-CI-01%20Continuous%20Improvement%20Plan.xlsx'},
+      {c:'QHSE-CI-02',n:'A3 Project Template',e:'docx',f:'QHSE-CI-02%20A3%20Project%20Template.docx'},
+      {c:'QHSE-CI-03',n:'Problem Solving Toolkit',e:'docx',f:'QHSE-CI-03%20Problem%20Solving%20Toolkit.docx'},
+      {c:'QHSE-CI-04',n:'Ideas & Suggestions Log',e:'xlsx',f:'QHSE-CI-04%20Ideas%20Suggestions%20Log.xlsx'},
+      {c:'QHSE-CI-05',n:'Continuous Improvement Training Guide',e:'pptx',f:'QHSE-CI-05%20Continuous%20Improvement%20Training%20Guide.pptx'},
+    ]},
+    {name:'QHSE — HSE Risk Management',path:'toolbox/Business%20Excellence/QHSE/HSE%20Risk%20Management%20(Docs%2C%20Audits%2C%20SSOW)/',files:[
+      {c:'QHSE-HSE-01',n:'Risk Assessment Method Statement',e:'docx',f:'QHSE-HSE-01%20Risk%20Assessment%20Method%20Statement.docx'},
+      {c:'QHSE-HSE-02',n:'Risk Assessment Register',e:'xlsx',f:'QHSE-HSE-02%20Risk%20Assessment%20Register.xlsx'},
+      {c:'QHSE-HSE-03',n:'Safe System of Work / Permit to Work',e:'docx',f:'QHSE-HSE-03%20Safe%20System%20of%20Work%20Permit%20to%20Work.docx'},
+      {c:'QHSE-HSE-04',n:'Internal HSE Audit Schedule & Report',e:'xlsx',f:'QHSE-HSE-04%20Internal%20HSE%20Audit%20Schedule%20Report.xlsx'},
+      {c:'QHSE-HSE-05',n:'HSE Document Records Register',e:'xlsx',f:'QHSE-HSE-05%20HSE%20Document%20Records%20Register.xlsx'},
+      {c:'QHSE-HSE-06',n:'HSE Risk Management Training Guide',e:'pptx',f:'QHSE-HSE-06%20HSE%20Risk%20Management%20Training%20Guide.pptx'},
+      {c:'QHSE-HSE-07',n:'Environmental Aspects and Impacts Register',e:'xlsx',f:'QHSE-HSE-07%20Environmental%20Aspects%20and%20Impacts%20Register.xlsx'},
+      {c:'QHSE-HSE-08',n:'Legal and Regulatory Compliance Register',e:'xlsx',f:'QHSE-HSE-08%20Legal%20and%20Regulatory%20Compliance%20Register.xlsx'},
+    ]},
+    {name:'QHSE — Management Commitment',path:'toolbox/Business%20Excellence/QHSE/Management%20Commitment/',files:[
+      {c:'QHSE-02a',n:'Engagement Tracker',e:'xlsx',f:'QHSE-02a%20Engagement%20Tracker.xlsx'},
+      {c:'QHSE-02b',n:'Management Commitment Toolkit 1',e:'docx',f:'QHSE-02b%20Management%20Commitment%20Toolkit%201.docx'},
+      {c:'QHSE-02c',n:'Management Commitment Toolkit 2',e:'docx',f:'QHSE-02c%20Management%20Commitment%20Toolkit%202.docx'},
+    ]},
+    {name:'QHSE — Policy & Strategy',path:'toolbox/Business%20Excellence/QHSE/QHSE%20Policy%20and%20Strategy/',files:[
+      {c:'QHSE-01a',n:'QHSE Policy and Objectives Pack',e:'docx',f:'QHSE-01a%20QHSE%20Policy%20and%20Objectives%20Pack.docx'},
+      {c:'QHSE-01b',n:'QHSE Policy and Strategy Pack 1',e:'docx',f:'QHSE-01b%20QHSE%20Policy%20and%20Strategy%20Pack%201.docx'},
+      {c:'QHSE-01c',n:'QHSE Policy and Strategy Pack 3',e:'docx',f:'QHSE-01c%20QHSE%20Policy%20and%20Strategy%20Pack%203.docx'},
+      {c:'QHSE-02d',n:'Senior Leadership Team QHSE Engagement Tracker',e:'xlsx',f:'QHSE-02d%20Senior%20Leadership%20Team%20QHSE%20Engagement%20Tracker.xlsx'},
+    ]},
+    {name:'QHSE — Competence',path:'toolbox/Business%20Excellence/QHSE/QHSE%20Competence/',files:[
+      {c:'QHSE-CO-01',n:'Nuclear Competence Matrix and Training Register',e:'xlsx',f:'QHSE-CO-01%20Nuclear%20Competence%20Matrix%20and%20Training%20Register.xlsx'},
+      {c:'QHSE-CO-02',n:'Nuclear QHSE Competence Framework',e:'docx',f:'QHSE-CO-02%20Nuclear%20QHSE%20Competence%20Framework.docx'},
+      {c:'QHSE-CO-03',n:'Nuclear Training Plan Template',e:'docx',f:'QHSE-CO-03%20Nuclear%20Training%20Plan%20Template.docx'},
+    ]},
+    {name:'QHSE — Quality Plans',path:'toolbox/Business%20Excellence/QHSE/Quality%20Plans/',files:[
+      {c:'QHSE-QP-01',n:'Contract Quality Plan',e:'docx',f:'QHSE-QP-01%20Contract%20Quality%20Plan.docx'},
+      {c:'QHSE-QP-02',n:'Inspection Test Plan',e:'xlsx',f:'QHSE-QP-02%20Inspection%20Test%20Plan.xlsx'},
+      {c:'QHSE-QP-03',n:'Quality Plan Register',e:'xlsx',f:'QHSE-QP-03%20Quality%20Plan%20Register.xlsx'},
+      {c:'QHSE-QP-04',n:'Quality Planning Process Guide',e:'docx',f:'QHSE-QP-04%20Quality%20Planning%20Process%20Guide.docx'},
+      {c:'QHSE-QP-05',n:'Quality Plans Training Guide',e:'pptx',f:'QHSE-QP-05%20Quality%20Plans%20Training%20Guide.pptx'},
+      {c:'QHSE-QP-06',n:'Change Control Procedure',e:'docx',f:'QHSE-QP-06%20Change%20Control%20Procedure.docx'},
+      {c:'QHSE-QP-07',n:'Calibration and Measurement Equipment Register',e:'xlsx',f:'QHSE-QP-07%20Calibration%20and%20Measurement%20Equipment%20Register.xlsx'},
+      {c:'QHSE-QP-08',n:'First Article Inspection Record',e:'docx',f:'QHSE-QP-08%20First%20Article%20Inspection%20Record.docx'},
+    ]},
+    {name:'QHSE — Safety Culture',path:'toolbox/Business%20Excellence/QHSE/Safety%20Culture/',files:[
+      {c:'QHSE-04a',n:'Safety Culture Guide',e:'docx',f:'QHSE-04a%20Safety%20Culture%20Guide%201.docx'},
+      {c:'QHSE-04b',n:'Safety Culture Self Assessment',e:'xlsx',f:'QHSE-04b%20Safety%20Culture%20Self%20Assessment.xlsx'},
+    ]},
+    {name:'QHSE — Traceability, Non-Conformance & CFSI',path:'toolbox/Business%20Excellence/QHSE/Traceability%2C%20Non-Conformance%20%26%20CFSI/',files:[
+      {c:'QHSE-TNC-01',n:'Traceability Procedure',e:'docx',f:'QHSE-TNC-01%20Traceability%20Procedure.docx'},
+      {c:'QHSE-TNC-02',n:'Traceability Work in Progress Register',e:'xlsx',f:'QHSE-TNC-02%20Traceability%20Work%20in%20Progress%20Register.xlsx'},
+      {c:'QHSE-TNC-03',n:'Non-Conformance Report Log',e:'xlsx',f:'QHSE-TNC-03%20Non-Conformance%20Report%20Log.xlsx'},
+      {c:'QHSE-TNC-04',n:'CFSI Procedure',e:'docx',f:'QHSE-TNC-04%20CFSI%20Procedure.docx'},
+      {c:'QHSE-TNC-05',n:'CFSI Non-Conformance Report Training Guide',e:'pptx',f:'QHSE-TNC-05%20CFSI%20Non-Conformance%20Report%20Training%20Guide.pptx'},
+      {c:'QHSE-TNC-06',n:'Customer Complaint Log',e:'xlsx',f:'QHSE-TNC-06%20Customer%20Complaint%20Log.xlsx'},
+      {c:'QHSE-F01',n:'Near Miss Incident Report Form',e:'docx',f:'QHSE-F01%20Near%20Miss%20Incident%20Report%20Form.docx'},
+      {c:'QHSE-RA01',n:'Risk Assessment Template',e:'xlsx',f:'QHSE-RA01%20Risk%20Assessment%20Template.xlsx'},
+      {c:'QHSE-RA02',n:'COSHH Assessment Template',e:'xlsx',f:'QHSE-RA02%20COSHH%20Assessment%20Template.xlsx'},
+      {c:'SUPP-01',n:'Status Tags Printable',e:'pptx',f:'SUPP-01%20Status%20Tags%20Printable.pptx'},
+      {c:'SUPP-02',n:'Shop Floor Posters',e:'pptx',f:'SUPP-02%20Shop%20Floor%20Posters.pptx'},
+      {c:'SUPP-03',n:'Goods Receipt Inspection Checklist',e:'docx',f:'SUPP-03%20Goods%20Receipt%20Inspection%20Checklist.docx'},
+      {c:'SUPP-04',n:'Toolbox Talk Record',e:'docx',f:'SUPP-04%20Toolbox%20Talk%20Record.docx'},
+      {c:'SUPP-05',n:'Certificate of Conformity',e:'docx',f:'SUPP-05%20Certificate%20of%20Conformity.docx'},
+      {c:'SUPP-06',n:'Supplier Corrective Action Request',e:'docx',f:'SUPP-06%20Supplier%20Corrective%20Action%20Request.docx'},
+      {c:'SUPP-07',n:'Operative Briefing Record',e:'docx',f:'SUPP-07%20Operative%20Briefing%20Record.docx'},
+      {c:'SUPP-08',n:'Quick Reference Guide',e:'docx',f:'SUPP-08%20Quick%20Reference%20Guide.docx'},
+    ]},
+    {name:'QHSE — Training Guides',path:'toolbox/Business%20Excellence/QHSE/Training%20guides/',files:[
+      {c:'QHSE-TG01',n:'Risk Assessment Training Guide',e:'pptx',f:'QHSE-TG01%20Risk%20Assessment%20Training%20Guide.pptx'},
+      {c:'QHSE-TG02',n:'COSHH Awareness Training Guide',e:'pptx',f:'QHSE-TG02%20COSHH%20Awareness%20Training%20Guide.pptx'},
+      {c:'QHSE-TG03',n:'Manual Handling Training Guide',e:'pptx',f:'QHSE-TG03%20Manual%20Handling%20Training%20Guide.pptx'},
+      {c:'QHSE-TG04',n:'Fire Safety Training Guide',e:'pptx',f:'QHSE-TG04%20Fire%20Safety%20Training%20Guide.pptx'},
+      {c:'QHSE-TG05',n:'Working at Height Training Guide',e:'pptx',f:'QHSE-TG05%20Working%20at%20Height%20Training%20Guide.pptx'},
+      {c:'QHSE-TG06',n:'Electrical Safety Training Guide',e:'pptx',f:'QHSE-TG06%20Electrical%20Safety%20Training%20Guide.pptx'},
+    ]},
+    {name:'QHSE — Management Review',path:'toolbox/Business%20Excellence/QHSE/Management%20Review/',files:[
+      {c:'QHSE-MR-01',n:'Management Review Meeting Record',e:'docx',f:'QHSE-MR-01%20Management%20Review%20Meeting%20Record.docx'},
+    ]},
+    {name:'QHSE — Objectives, Targets & Goals',path:'toolbox/Business%20Excellence/QHSE/Objectives%2C%20Targets%20%26%20Goals/',files:[
+      {c:'QHSE-03a',n:'Objectives Register and Dashboard',e:'xlsx',f:'QHSE-03a%20Objectives%20Register%20and%20Dashboard.xlsx'},
+      {c:'QHSE-03b',n:'Objectives Targets and Goals Guide',e:'docx',f:'QHSE-03b%20Objectives%20Targets%20and%20Goals%20Guide.docx'},
+      {c:'QHSE-03c',n:'Objectives Targets and Goals Guide 2',e:'docx',f:'QHSE-03c%20Objectives%20Targets%20and%20Goals%20Guide%202.docx'},
+    ]},
+    {name:'SQDCP',path:'toolbox/Business%20Excellence/SQDCP/',files:[
+      {c:'SQDCP-01',n:'Board Design Template',e:'pptx',f:'SQDCP-01%20Board%20Design%20Template.pptx'},
+      {c:'SQDCP-02',n:'Daily Management Meeting Guide',e:'pptx',f:'SQDCP-02%20Daily%20Management%20Meeting%20Guide.pptx'},
+      {c:'SQDCP-03',n:'KPI Tracker',e:'xlsx',f:'SQDCP-03%20KPI%20Tracker%201.xlsx'},
+      {c:'SQDCP-04',n:'Countermeasures Log',e:'xlsx',f:'SQDCP-04%20Countermeasures%20Log%201.xlsx'},
+      {c:'SQDCP-05',n:'Implementation Guide',e:'docx',f:'SQDCP-05%20Implementation%20Guide.docx'},
+      {c:'SQDCP-06',n:'Daily Board Interactive',e:'xlsx',f:'SQDCP-06%20Daily%20Board%20Interactive.xlsx'},
+      {c:'SQDCP-07',n:'Full Workbook',e:'xlsx',f:'SQDCP-07%20Full%20Workbook.xlsx'},
+      {c:'SQDCP-08',n:'Daily Management Board Example',e:'pptx',f:'SQDCP-08%20Daily%20Management%20Board%20Example.pptx'},
+    ]},
+    {name:'Supply Chain & Social Values',path:'toolbox/Business%20Excellence/Supply%20Chain%20%26%20Social%20Values/',files:[
+      {c:'SC-SV-01',n:'Approved Supplier List Scorecard',e:'xlsx',f:'SC-SV-01%20Approved%20Supplier%20List%20Scorecard.xlsx'},
+      {c:'SC-SV-02',n:'Supply Chain Risk Register',e:'xlsx',f:'SC-SV-02%20Supply%20Chain%20Risk%20Register.xlsx'},
+      {c:'SC-SV-03',n:'Procurement Cost Analysis',e:'xlsx',f:'SC-SV-03%20Procurement%20Cost%20Analysis.xlsx'},
+      {c:'SC-SV-04',n:'Supplier Relationship Management Plan',e:'docx',f:'SC-SV-04%20Supplier%20Relationship%20Management%20Plan.docx'},
+      {c:'SC-SV-05',n:'Digital Transformation Register',e:'xlsx',f:'SC-SV-05%20Digital%20Transformation%20Register.xlsx'},
+      {c:'SC-SV-06',n:'Social Value & Ethical Sourcing Policy',e:'docx',f:'SC-SV-06%20Social%20Value%20Ethical%20Sourcing%20Policy.docx'},
+      {c:'SC-SV-07',n:'Social Value Action Plan',e:'xlsx',f:'SC-SV-07%20Social%20Value%20Action%20Plan.xlsx'},
+      {c:'SC-SV-08',n:'Environmental Sustainability Plan',e:'xlsx',f:'SC-SV-08%20Environmental%20Sustainability%20Plan.xlsx'},
+      {c:'SC-SV-09',n:'Diversity & Inclusion Framework',e:'docx',f:'SC-SV-09%20Diversity%20Inclusion%20Framework.docx'},
+      {c:'SC-SV-10',n:'Labour Standards & Modern Slavery',e:'docx',f:'SC-SV-10%20Labour%20Standards%20Modern%20Slavery.docx'},
+      {c:'SC-SV-11',n:'Supply Chain Social Values Training',e:'pptx',f:'SC-SV-11%20Supply%20Chain%20Social%20Values%20Training.pptx'},
+      {c:'SC-SV-12',n:'Display Board Posters',e:'pptx',f:'SC-SV-12%20Display%20Board%20Posters.pptx'},
+    ]},
+    {name:'Safety Messages',path:'toolbox/Business%20Excellence/Safety%20Messages/',files:[
+      {c:'',n:'Monthly Safety Messages',e:'pptx',f:'Monthly%20Safety%20Messages.pptx'},
+      {c:'',n:'QHSE Monthly Safety Messages',e:'docx',f:'QHSE%20Monthly%20Safety%20Messages.docx'},
+    ]},
+  ]},
+  nss:{label:'Nuclear Sector Specific',color:'#7c3aed',cats:[
+    {name:'NSS-01 — Industry Fundamentals',path:'toolbox/Nuclear%20Sector%20Specific/Industry%20Fundamentals/',files:[
+      {c:'NSS-01a',n:'Nuclear Sector Awareness Training Guide',e:'docx',f:'NSS-01a%20Nuclear%20Sector%20Awareness%20Training%20Guide.docx'},
+      {c:'NSS-01b',n:'Regulatory Landscape Quick Reference',e:'docx',f:'NSS-01b%20Regulatory%20Landscape%20Quick%20Reference.docx'},
+      {c:'NSS-01c',n:'Nuclear Sector Awareness Register',e:'xlsx',f:'NSS-01c%20Nuclear%20Sector%20Awareness%20Register.xlsx'},
+      {c:'NSS-01d',n:'Nuclear Sector Awareness Toolbox Talk',e:'pptx',f:'NSS-01d%20Nuclear%20Sector%20Awareness%20Toolbox%20Talk.pptx'},
+      {c:'NSS-01e',n:'Nuclear Stakeholder Engagement Plan',e:'docx',f:'NSS-01e%20Nuclear%20Stakeholder%20Engagement%20Plan.docx'},
+      {c:'NSS-01f',n:'Nuclear Safety Culture Introduction Poster',e:'pptx',f:'NSS-01f%20Nuclear%20Safety%20Culture%20Introduction%20Poster.pptx'},
+      {c:'NSS-01g',n:'Nuclear Risks & Societal Responsibility Briefing Card',e:'docx',f:'NSS-01g%20Nuclear%20Risks%20Societal%20Responsibility%20Briefing%20Card.docx'},
+      {c:'NSS-01h',n:'Approved Nuclear Customer & Licensee Register',e:'xlsx',f:'NSS-01h%20Approved%20Nuclear%20Customer%20and%20Licencee%20Register.xlsx'},
+      {c:'NSS-01j',n:'Nuclear Sector Update Log',e:'xlsx',f:'NSS-01j%20Nuclear%20Sector%20Update%20Log.xlsx'},
+      {c:'NSS-01k',n:'Nuclear Sector Opportunity Risk Register',e:'xlsx',f:'NSS-01k%20Nuclear%20Sector%20Opportunity%20Risk%20Register.xlsx'},
+      {c:'NSS-01l',n:'What Is Nuclear Safety? Poster',e:'pptx',f:'NSS-01l%20What%20Is%20Nuclear%20Safety%20Poster.pptx'},
+    ]},
+    {name:'NSS-02 — Nuclear Safety Culture',path:'toolbox/Nuclear%20Sector%20Specific/Nuclear%20Safety%20Culture/',files:[
+      {c:'NSS-02a',n:'Nuclear Safety Culture Training Guide',e:'docx',f:'NSS-02a%20Nuclear%20Safety%20Culture%20Training%20Guide.docx'},
+      {c:'NSS-02b',n:'Nuclear Safety Culture Self Assessment Tracker',e:'xlsx',f:'NSS-02b%20Nuclear%20Safety%20Culture%20Self%20Assessment%20Tracker.xlsx'},
+      {c:'NSS-02c',n:'Nuclear Leadership Safety Behaviours Framework',e:'docx',f:'NSS-02c%20Nuclear%20Leadership%20Safety%20Behaviours%20Framework.docx'},
+      {c:'NSS-02d',n:'Nuclear Near Miss & Operational Experience Log',e:'xlsx',f:'NSS-02d%20Nuclear%20Near%20Miss%20Operational%20Experience%20Log.xlsx'},
+      {c:'NSS-02e',n:'Just Culture Framework Decision Guide',e:'docx',f:'NSS-02e%20Just%20Culture%20Framework%20Decision%20Guide.docx'},
+      {c:'NSS-02f',n:'Nuclear Safety Culture Toolbox Talk Series',e:'pptx',f:'NSS-02f%20Nuclear%20Safety%20Culture%20Toolbox%20Talk%20Series.pptx'},
+      {c:'NSS-02g',n:'Nuclear Safety Culture Commitment Poster',e:'pptx',f:'NSS-02g%20Nuclear%20Safety%20Culture%20Commitment%20Poster.pptx'},
+      {c:'NSS-02h',n:'Nuclear Safety Culture Review Meeting Template',e:'docx',f:'NSS-02h%20Nuclear%20Safety%20Culture%20Review%20Meeting%20Template.docx'},
+      {c:'NSS-02i',n:'Nuclear Lessons Learned and Knowledge Transfer Log',e:'xlsx',f:'NSS-02i%20Nuclear%20Lessons%20Learned%20and%20Knowledge%20Transfer%20Log.xlsx'},
+    ]},
+    {name:'NSS-03 — Quality & Compliance',path:'toolbox/Nuclear%20Sector%20Specific/Quality%20%26%20Compliance/',files:[
+      {c:'NSS-03a',n:'Introduction to ISO 19443 Training Guide',e:'docx',f:'NSS-03a%20Introduction%20to%20ISO%2019443%20Training%20Guide.docx'},
+      {c:'NSS-03b',n:'ISO 19443 Gap Analysis Tool',e:'xlsx',f:'NSS-03b%20ISO%2019443%20Gap%20Analysis%20Tool.xlsx'},
+      {c:'NSS-03c',n:'Nuclear Quality Plan Template',e:'docx',f:'NSS-03c%20Nuclear%20Quality%20Plan%20Template.docx'},
+      {c:'NSS-03d',n:'Nuclear Inspection Test Plan',e:'xlsx',f:'NSS-03d%20Nuclear%20Inspection%20Test%20Plan.xlsx'},
+      {c:'NSS-03e',n:'Nuclear Non-Conformance Report Tracker',e:'xlsx',f:'NSS-03e%20Nuclear%20Non-Conformance%20Report%20Tracker.xlsx'},
+      {c:'NSS-03f',n:'Nuclear Document Control & Traceability Procedure',e:'docx',f:'NSS-03f%20Nuclear%20Document%20Control%20Traceability%20Procedure.docx'},
+      {c:'NSS-03g',n:'CFSI Awareness Training Guide',e:'docx',f:'NSS-03g%20CFSI%20Awareness%20Training%20Guide.docx'},
+      {c:'NSS-03h',n:'CFSI Goods Receipt Inspection Checklist',e:'docx',f:'NSS-03h%20CFSI%20Goods%20Receipt%20Inspection%20Checklist.docx'},
+      {c:'NSS-03i',n:'CFSI Suspect Item Report Form',e:'docx',f:'NSS-03i%20CFSI%20Suspect%20Item%20Report%20Form.docx'},
+      {c:'NSS-03j',n:'CFSI Toolbox Talk Series',e:'pptx',f:'NSS-03j%20CFSI%20Toolbox%20Talk%20Series.pptx'},
+      {c:'NSS-03k',n:'Nuclear Quality Standards Poster',e:'pptx',f:'NSS-03k%20Nuclear%20Quality%20Standards%20Poster.pptx'},
+      {c:'NSS-03l',n:'CFSI Awareness Pocket Card',e:'docx',f:'NSS-03l%20CFSI%20Awareness%20Pocket%20Card.docx'},
+    ]},
+    {name:'NSS-04 — Leadership & Governance',path:'toolbox/Nuclear%20Sector%20Specific/Leadership%20%26%20Governance/',files:[
+      {c:'NSS-04a',n:'Nuclear Leadership & Governance Training Guide',e:'docx',f:'NSS-04a%20Nuclear%20Leadership%20Governance%20Training%20Guide.docx'},
+      {c:'NSS-04b',n:'Nuclear Governance Framework',e:'docx',f:'NSS-04b%20Nuclear%20Governance%20Framework.docx'},
+      {c:'NSS-04c',n:'Nuclear Safety Leadership Commitment Statement',e:'docx',f:'NSS-04c%20Nuclear%20Safety%20Leadership%20Commitment%20Statement.docx'},
+      {c:'NSS-04d',n:'Nuclear Safety Walkdown Record',e:'docx',f:'NSS-04d%20Nuclear%20Safety%20Walkdown%20Record.docx'},
+      {c:'NSS-04e',n:'Nuclear Oversight Assurance Plan',e:'xlsx',f:'NSS-04e%20Nuclear%20Oversight%20Assurance%20Plan.xlsx'},
+      {c:'NSS-04f',n:'Nuclear Governance Self Assessment Tracker',e:'xlsx',f:'NSS-04f%20Nuclear%20Governance%20Self%20Assessment%20Tracker.xlsx'},
+      {c:'NSS-04g',n:'Nuclear Leadership Awareness Toolbox Talk',e:'pptx',f:'NSS-04g%20Nuclear%20Leadership%20Awareness%20Toolbox%20Talk.pptx'},
+      {c:'NSS-04h',n:'Nuclear Leadership Expectations Poster',e:'pptx',f:'NSS-04h%20Nuclear%20Leadership%20Expectations%20Poster.pptx'},
+      {c:'NSS-04i',n:'Nuclear Roles & Responsibilities RACI',e:'xlsx',f:'NSS-04i%20Nuclear%20Roles%20Responsibilities%20RACI.xlsx'},
+    ]},
+    {name:'NSS-05 — Human Performance',path:'toolbox/Nuclear%20Sector%20Specific/Human%20Performance/',files:[
+      {c:'NSS-05a',n:'Nuclear Human Performance Training Guide',e:'docx',f:'NSS-05a%20Nuclear%20Human%20Performance%20Training%20Guide.docx'},
+      {c:'NSS-05b',n:'Human Performance Tools Reference Card',e:'docx',f:'NSS-05b%20Human%20Performance%20Tools%20Reference%20Card.docx'},
+      {c:'NSS-05c',n:'Pre-Job Briefing Template',e:'docx',f:'NSS-05c%20Pre%20Job%20Briefing%20Template.docx'},
+      {c:'NSS-05d',n:'Nuclear Competence Management Framework',e:'docx',f:'NSS-05d%20Nuclear%20Competence%20Management%20Framework.docx'},
+      {c:'NSS-05e',n:'Nuclear Competence Authorisation Register',e:'xlsx',f:'NSS-05e%20Nuclear%20Competence%20Authorisation%20Register.xlsx'},
+      {c:'NSS-05f',n:'Nuclear Training Record Development Log',e:'xlsx',f:'NSS-05f%20Nuclear%20Training%20Record%20Development%20Log.xlsx'},
+      {c:'NSS-05g',n:'Fatigue & Fitness for Duty Policy',e:'docx',f:'NSS-05g%20Fatigue%20Fitness%20for%20Duty%20Policy.docx'},
+      {c:'NSS-05h',n:'Human Performance Observation & Feedback Record',e:'docx',f:'NSS-05h%20Human%20Performance%20Observation%20Feedback%20Record.docx'},
+      {c:'NSS-05i',n:'Nuclear Human Performance Self Assessment Tracker',e:'xlsx',f:'NSS-05i%20Nuclear%20Human%20Performance%20Self%20Assessment%20Tracker.xlsx'},
+      {c:'NSS-05j',n:'Human Performance Toolbox Talk Series',e:'pptx',f:'NSS-05j%20Human%20Performance%20Toolbox%20Talk%20Series.pptx'},
+      {c:'NSS-05k',n:'Human Performance Awareness Poster',e:'pptx',f:'NSS-05k%20Human%20Performance%20Awareness%20Poster.pptx'},
+    ]},
+    {name:'NSS-06 — Supply Chain Readiness',path:'toolbox/Nuclear%20Sector%20Specific/Supply%20Chain%20Readiness/',files:[
+      {c:'NSS-06-EX-01',n:'Approved Supplier List and Qualification Register',e:'xlsx',f:'NSS-06-EX-01%20Approved%20Supplier%20List%20and%20Qualification%20Register.xlsx'},
+      {c:'NSS-06-EX-02',n:'Nuclear Procurement Requirements Flow Down Tracker',e:'xlsx',f:'NSS-06-EX-02%20Nuclear%20Procurement%20Requirements%20Flow%20Down%20Tracker.xlsx'},
+      {c:'NSS-06-EX-03',n:'Supplier Performance and Surveillance Dashboard',e:'xlsx',f:'NSS-06-EX-03%20Supplier%20Performance%20and%20Surveillance%20Dashboard.xlsx'},
+      {c:'NSS-06-EX-04',n:'Nuclear Supply Chain Readiness Self Assessment',e:'xlsx',f:'NSS-06-EX-04%20Nuclear%20Supply%20Chain%20Readiness%20Self%20Assessment%20Checklist.xlsx'},
+      {c:'NSS-06-PP-01',n:'Introduction to Nuclear Supply Chain Requirements',e:'pptx',f:'NSS-06-PP-01%20Introduction%20to%20Nuclear%20Supply%20Chain%20Requirements.pptx'},
+      {c:'NSS-06-PP-02',n:'Supplier Qualification and Oversight',e:'pptx',f:'NSS-06-PP-02%20Supplier%20Qualification%20and%20Oversight.pptx'},
+      {c:'NSS-06-TG-01',n:'Nuclear Procurement Requirements',e:'docx',f:'NSS-06-TG-01%20Nuclear%20Procurement%20Requirements.docx'},
+      {c:'NSS-06-TG-02',n:'Supplier Qualification and Audit',e:'docx',f:'NSS-06-TG-02%20Supplier%20Qualification%20and%20Audit.docx'},
+      {c:'NSS-06-TG-03',n:'Flow Down of Nuclear Requirements',e:'docx',f:'NSS-06-TG-03%20Flow%20Down%20of%20Nuclear%20Requirements.docx'},
+      {c:'NSS-06-TG-04',n:'Supplier Inspection and Surveillance',e:'docx',f:'NSS-06-TG-04%20Supplier%20Inspection%20and%20Surveillance.docx'},
+    ]},
+    {name:'NSS-07 — Security of Information',path:'toolbox/Nuclear%20Sector%20Specific/Security%20of%20Information/',files:[
+      {c:'NSS-07-01',n:'Information Classification Policy',e:'docx',f:'NSS-07-01%20Information%20Classification%20Policy.docx'},
+      {c:'NSS-07-02',n:'Cybersecurity Controls Framework',e:'docx',f:'NSS-07-02%20Cybersecurity%20Controls%20Framework.docx'},
+      {c:'NSS-07-03',n:'Sensitive Document & IP Protection',e:'docx',f:'NSS-07-03%20Sensitive%20Document%20Intellectual%20Property%20Protection.docx'},
+      {c:'NSS-07-04',n:'Personnel Security Vetting Procedure',e:'docx',f:'NSS-07-04%20Personnel%20Security%20Vetting%20Procedure.docx'},
+      {c:'NSS-07-05',n:'Information Security Risk Register',e:'xlsx',f:'NSS-07-05%20Information%20Security%20Risk%20Register.xlsx'},
+      {c:'NSS-07-06',n:'Security Vetting Tracker',e:'xlsx',f:'NSS-07-06%20Security%20Vetting%20Tracker.xlsx'},
+      {c:'NSS-07-07',n:'Security Incident Log',e:'xlsx',f:'NSS-07-07%20Security%20Incident%20Log.xlsx'},
+      {c:'NSS-07-08',n:'Security of Information Overview',e:'pptx',f:'NSS-07-08%20Security%20of%20Information%20Overview.pptx'},
+      {c:'NSS-07-09',n:'Information Security Awareness Training Guide',e:'docx',f:'NSS-07-09%20Information%20Security%20Awareness%20Training%20Guide.docx'},
+    ]},
+  ]},
+  tbt:{label:'Toolbox Talks',color:'#d97706',cats:[
+    {name:'General Safety',path:'toolbox/Tool%20Box%20Talks/',files:[
+      {c:'TBT-01',n:'Manual Handling',e:'docx',f:'TBT-01%20Manual%20Handling.docx'},
+      {c:'TBT-02',n:'Working at Height',e:'docx',f:'TBT-02%20Working%20at%20Height.docx'},
+      {c:'TBT-03',n:'Hazardous Substances and COSHH',e:'docx',f:'TBT-03%20Hazardous%20Substances%20and%20COSHH.docx'},
+      {c:'TBT-04',n:'PPE Selection and Use',e:'docx',f:'TBT-04%20PPE%20Selection%20and%20Use.docx'},
+      {c:'TBT-05',n:'Slips, Trips and Falls',e:'docx',f:'TBT-05%20Slips%20Trips%20and%20Falls.docx'},
+      {c:'TBT-06',n:'Machine Safety and Guarding',e:'docx',f:'TBT-06%20Machine%20Safety%20and%20Guarding.docx'},
+      {c:'TBT-07',n:'Electrical Safety',e:'docx',f:'TBT-07%20Electrical%20Safety.docx'},
+      {c:'TBT-08',n:'Fire Safety and Emergency Procedures',e:'docx',f:'TBT-08%20Fire%20Safety%20and%20Emergency%20Procedures.docx'},
+      {c:'TBT-09',n:'Noise and Vibration',e:'docx',f:'TBT-09%20Noise%20and%20Vibration.docx'},
+      {c:'TBT-10',n:'Near Miss and Hazard Reporting',e:'docx',f:'TBT-10%20Near%20Miss%20and%20Hazard%20Reporting.docx'},
+      {c:'TBT-11',n:'Lifting Equipment and Lifting Operations',e:'docx',f:'TBT-11%20Lifting%20Equipment%20and%20Lifting%20Operations.docx'},
+      {c:'TBT-12',n:'Mental Health and Wellbeing at Work',e:'docx',f:'TBT-12%20Mental%20Health%20and%20Wellbeing%20at%20Work.docx'},
+    ]},
+    {name:'COSHH Series',path:'toolbox/Tool%20Box%20Talks/',files:[
+      {c:'TBT-COSHH-01',n:'Metalworking Cutting Fluids and Skin Health',e:'docx',f:'TBT-COSHH-01%20Metalworking%20Cutting%20Fluids%20and%20Skin%20Health.docx'},
+      {c:'TBT-COSHH-02',n:'Welding Fume — A Group 1 Carcinogen',e:'docx',f:'TBT-COSHH-02%20Welding%20Fume%20A%20Group%201%20Carcinogen.docx'},
+      {c:'TBT-COSHH-03',n:'Solvents and Chemical Safety in the Workshop',e:'docx',f:'TBT-COSHH-03%20Solvents%20and%20Chemical%20Safety%20in%20the%20Workshop.docx'},
+    ]},
+  ]},
+};
+
+let _tbTab='be';
+const _tbOpen={};
+function tbTab(id){
+  _tbTab=id;
+  document.querySelectorAll('#sec-toolbox .vtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tbtab-'+id).classList.add('active');
+  document.getElementById('tb-search-input').value='';
+  tbRender(id,'');
+}
+function tbSearch(q){tbRender(_tbTab,q.toLowerCase().trim());}
+function tbRender(tabId,query){
+  const container=document.getElementById('tb-content');
+  const section=TB_DATA[tabId];
+  let html='<div class="tb-cats">';
+  let total=0;
+  section.cats.forEach((cat,ci)=>{
+    const key=tabId+'-'+ci;
+    const isOpen=_tbOpen[key]!==false;
+    let fh='';let mc=0;
+    cat.files.forEach(f=>{
+      if(query&&!(f.c+' '+f.n).toLowerCase().includes(query))return;
+      mc++;total++;
+      fh+=`<div class="tb-file"><div class="tb-file-icon tb-icon-${f.e}">${f.e.toUpperCase()}</div><div class="tb-file-info">${f.c?`<div class="tb-file-code">${f.c}</div>`:''}<div class="tb-file-name" title="${f.n}">${f.n}</div></div><a class="tb-dl-btn" href="${cat.path}${f.f}" download title="Download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a></div>`;
+    });
+    if(query&&mc===0)return;
+    const exp=(isOpen||query)?'expanded':'collapsed';
+    const arw=(isOpen||query)?'open':'';
+    html+=`<div class="tb-cat-group ${exp}" id="tb-cg-${key}"><button class="tb-cat-header ${arw}" onclick="tbToggle('${key}')"><span class="tb-cat-dot" style="background:${section.color}"></span>${cat.name}<span class="tb-cat-count">${mc} file${mc!==1?'s':''}</span><svg class="tb-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button><div class="tb-files">${fh}</div></div>`;
+  });
+  if(total===0)html+='<div class="tb-no-results">No files match your search.</div>';
+  container.innerHTML=html+'</div>';
+}
+function tbToggle(key){
+  const el=document.getElementById('tb-cg-'+key);
+  const hdr=el.querySelector('.tb-cat-header');
+  const isOpen=el.classList.contains('expanded');
+  _tbOpen[key]=!isOpen;
+  el.classList.toggle('expanded',!isOpen);
+  el.classList.toggle('collapsed',isOpen);
+  hdr.classList.toggle('open',!isOpen);
+}
+(function(){['be','nss','tbt'].forEach(t=>{const n=TB_DATA[t].cats.reduce((s,c)=>s+c.files.length,0);const el=document.getElementById('tb-'+t+'-cnt');if(el)el.textContent=n;});})();
+function loadToolboxSection(){if(!window._tbInit){tbRender('be','');window._tbInit=true;}}
 
 async function portalSignOut(){
   await db.auth.signOut();
