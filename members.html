@@ -578,6 +578,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       Events Calendar
     </button>
       <div class="sb-label" style="margin-top:12px">Account</div>
+    <button class="sb-item" onclick="nav('addmember')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+      Add Member
+    </button>
     <button class="sb-item" onclick="nav('account')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       My Account
@@ -1042,6 +1046,33 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     </div>
   </div>
 
+
+  <!-- ADD MEMBER SECTION -->
+  <div class="section" id="sec-addmember" style="padding:32px">
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;text-transform:uppercase;color:var(--navy);margin-bottom:8px">Add New Members</h2>
+    <p style="color:#6a7a90;font-size:.9rem;margin-bottom:28px;max-width:520px">Request access for colleagues from your organisation. We'll review and send them invites.</p>
+
+    <div id="addmember-success" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:20px 24px;max-width:520px;margin-bottom:24px">
+      <p style="color:#166534;font-size:.9rem;font-weight:600;margin:0 0 12px" id="addmember-success-msg">✓ Request submitted!</p>
+      <button onclick="resetMemberForm()" style="background:none;border:1px solid #86efac;border-radius:6px;padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#166534;cursor:pointer;transition:.2s" onmouseover="this.style.background='#dcfce7'" onmouseout="this.style.background='none'">+ Add More Members</button>
+    </div>
+
+    <div id="addmember-form-wrap" style="max-width:520px">
+
+      <div id="nm-entries" style="display:flex;flex-direction:column;gap:16px;margin-bottom:16px"></div>
+
+      <button onclick="addMemberEntry()" style="width:100%;background:none;border:1px dashed #dde4ee;border-radius:8px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#6a7a90;cursor:pointer;transition:.2s;margin-bottom:20px" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='#dde4ee';this.style.color='#6a7a90'">
+        + Add Another Person
+      </button>
+
+      <div id="nm-error" style="display:none;font-size:.8rem;color:#f87171;margin-bottom:12px"></div>
+
+      <button onclick="submitMemberRequest()" id="nm-btn" style="width:100%;background:var(--cyan);color:#0a1628;border:none;border-radius:6px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:.2s">
+        Submit Request
+      </button>
+    </div>
+  </div>
+
 </div><!-- /content -->
 
 </div><!-- /main -->
@@ -1078,12 +1109,19 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 
 
 // NAV
-const labels={home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox'};
+const labels={home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account'};
 function nav(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById('sec-'+id);
   if(sec) sec.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  if(id==='addmember'){
+    db.auth.getSession().then(({data:{session}})=>{
+      nmRequesterCompany = session?.user?.user_metadata?.company||'';
+      const wrap = document.getElementById('nm-entries');
+      if(wrap && wrap.children.length === 0) addMemberEntry(nmRequesterCompany);
+    });
+  }
   document.getElementById('bc').innerHTML=`<span>${labels[id]||id}</span>`;
   if(id==='handbook'&&!window.hbInit){loadSection('strategy');window.hbInit=true}
   if(id==='account'){loadAccountSection();}
@@ -1910,6 +1948,107 @@ async function commLoadMembers(){
       </div>
     </div>`).join('');
 }
+
+// ── ADD MEMBER SECTION ──
+let nmEntryCount = 0;
+let nmRequesterCompany = '';
+
+function addMemberEntry(prefillCompany){
+  nmEntryCount++;
+  const idx = nmEntryCount;
+  const co = prefillCompany || nmRequesterCompany || '';
+  const wrap = document.getElementById('nm-entries');
+  const card = document.createElement('div');
+  card.id = 'nm-entry-' + idx;
+  card.style.cssText = 'background:var(--white);border:1px solid #dde4ee;border-radius:10px;padding:20px;position:relative';
+  card.innerHTML = `
+    ${idx > 1 ? `<button onclick="removeMemberEntry(${idx})" style="position:absolute;top:12px;right:12px;background:none;border:none;color:#6a7a90;cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 6px;border-radius:4px" title="Remove">✕</button>` : ''}
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">First Name *</label>
+          <input data-field="first" type="text" placeholder="Jane" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+        </div>
+        <div>
+          <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Email *</label>
+          <input data-field="email" type="email" placeholder="jane@company.com" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+        </div>
+      </div>
+      <div>
+        <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Company</label>
+        <input data-field="company" type="text" value="${co}" placeholder="Organisation name" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+      </div>
+    </div>`;
+  wrap.appendChild(card);
+}
+
+function removeMemberEntry(idx){
+  const el = document.getElementById('nm-entry-' + idx);
+  if(el) el.remove();
+}
+
+async function submitMemberRequest(){
+  const err = document.getElementById('nm-error');
+  const btn = document.getElementById('nm-btn');
+  err.style.display = 'none';
+
+  const entries = document.querySelectorAll('#nm-entries > div');
+  if(!entries.length){err.textContent='Please add at least one person.';err.style.display='block';return;}
+
+  const rows = [];
+  for(const entry of entries){
+    const first = entry.querySelector('[data-field="first"]').value.trim();
+    const email = entry.querySelector('[data-field="email"]').value.trim();
+    const company = entry.querySelector('[data-field="company"]').value.trim();
+    if(!first){err.textContent='Please enter a first name for every person.';err.style.display='block';return;}
+    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter a valid email for every person.';err.style.display='block';return;}
+    rows.push({first, email, company});
+  }
+
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
+
+  const {data:{session}} = await db.auth.getSession();
+  const requester = session?.user;
+
+  const inserts = rows.map(r => ({
+    requested_by: requester?.id ?? null,
+    requester_email: requester?.email ?? null,
+    requester_company: requester?.user_metadata?.company ?? null,
+    new_member_first_name: r.first,
+    new_member_email: r.email,
+    new_member_company: r.company || null
+  }));
+
+  const {error} = await db.from('member_requests').insert(inserts);
+
+  if(error){
+    err.textContent = 'Something went wrong — please try again or contact us directly.';
+    err.style.display = 'block';
+    btn.textContent = 'Submit Request';
+    btn.disabled = false;
+    return;
+  }
+
+  const count = rows.length;
+  document.getElementById('addmember-success-msg').textContent = `✓ ${count} request${count>1?'s':''} submitted! We'll be in touch with your colleague${count>1?'s':''} shortly.`;
+  document.getElementById('addmember-form-wrap').style.display = 'none';
+  document.getElementById('addmember-success').style.display = 'block';
+}
+
+function resetMemberForm(){
+  nmEntryCount = 0;
+  document.getElementById('nm-entries').innerHTML = '';
+  document.getElementById('nm-error').style.display = 'none';
+  document.getElementById('nm-btn').textContent = 'Submit Request';
+  document.getElementById('nm-btn').disabled = false;
+  document.getElementById('addmember-success').style.display = 'none';
+  document.getElementById('addmember-form-wrap').style.display = 'block';
+  addMemberEntry(nmRequesterCompany);
+}
+
+// Pre-fill company when Add Member section is opened
+const _navOrig = typeof nav === 'function' ? nav : null;
 
 // ── ACCOUNT SECTION ──
 async function saveProfile(){
