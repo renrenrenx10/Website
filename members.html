@@ -618,7 +618,7 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       <div class="m-hero">
         <div class="m-hero-grid"></div>
         <div class="m-hero-content">
-          <div class="eyebrow">Welcome back, Rene</div>
+          <div class="eyebrow" id="hero-welcome">Welcome back</div>
           <h1 id="we-hero_title">NucCol <span>Members</span><br>Area</h1>
           <p id="we-hero_sub">Your central hub for F4N progress, the Business Excellence Handbook, knowledge sessions, live sector feeds, and the NucCol community.</p>
         </div>
@@ -628,7 +628,7 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
         <div class="card" onclick="nav('f4n')">
           <div class="card-icon" style="background:rgba(0,200,212,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#00c8d4" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           <h3>Fit For Nuclear</h3>
-          <p>Track your F4N journey. 70% complete — log in to the portal to view your assessment.</p>
+          <p>Track your F4N journey — log in to the portal to view your assessment.</p>
           <div class="card-foot"><span>View Progress</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
         </div>
         <div class="card" onclick="nav('handbook')">
@@ -1237,7 +1237,7 @@ function renderWebinars() {
 }
 
 function renderNews(filter){
-  const visible=NEWS_DATA.filter(n=>n.members!==false);
+  const visible=NEWS_DATA.filter(n=>n.members!==false).sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
   const items=filter==='All'?visible:visible.filter(n=>n.category===filter);
   const list=document.getElementById('news-list');if(!list)return;
   list.innerHTML=items.map(n=>{
@@ -1255,7 +1255,7 @@ function filterNews(cat,btn){
 }
 
 function renderEvents(filter){
-  const visible=EVENTS_DATA.filter(e=>e.members!==false);
+  const visible=EVENTS_DATA.filter(e=>e.members!==false).sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
   const items=filter==='All'?visible:visible.filter(e=>e.category===filter);
   const list=document.getElementById('events-list');if(!list)return;
   list.innerHTML=items.map(e=>{
@@ -1278,7 +1278,7 @@ function filterEvents(cat,btn){
 }
 
 function renderTenders(filter){
-  const visible=CONTRACTS_DATA.filter(c=>c.members!==false);
+  const visible=CONTRACTS_DATA.filter(c=>c.members!==false).sort((a,b)=>new Date(b.publishedDate||0)-new Date(a.publishedDate||0));
   const items=filter==='All'?visible:visible.filter(c=>c.sector===filter);
   const list=document.getElementById('tenders-list');if(!list)return;
   list.innerHTML=items.map(c=>{
@@ -1531,6 +1531,8 @@ function populateSidebar(user){
   document.getElementById('sb-avatar').textContent = initials;
   document.getElementById('sb-user-name').textContent = first + (company ? ' · ' + company : '');
   document.getElementById('sb-user-role').textContent = 'NucCol Member';
+  const heroWelcome = document.getElementById('hero-welcome');
+  if(heroWelcome) heroWelcome.textContent = 'Welcome back, ' + first;
 }
 
 async function gateSignIn(){
