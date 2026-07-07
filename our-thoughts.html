@@ -54,7 +54,7 @@
     h1 span { color:var(--cyan); }
     .page-header p { font-size:1.05rem; font-weight:300; line-height:1.75;
       color:rgba(232,238,246,0.82); max-width:600px; }
-    section { padding:100px 48px; }
+    section { padding:60px 48px 100px; }
     .section-wrap { max-width:900px; margin:0 auto; text-align:center; }
     .coming-soon-badge {
       display:inline-block; font-family:'Barlow Condensed',sans-serif;
@@ -86,6 +86,41 @@
     .topic-pill { font-family:'Barlow Condensed',sans-serif; font-size:0.76rem; font-weight:700;
       letter-spacing:0.1em; text-transform:uppercase; padding:8px 16px;
       background:#f4f7fb; border:1px solid #dde4ee; border-radius:3px; color:#5a6a80; }
+    .articles-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); gap:32px; }
+    .article-card { background:#fff; border:1px solid #dde4ee; border-radius:6px; overflow:hidden;
+      display:flex; flex-direction:column; transition:box-shadow 0.2s,transform 0.2s; }
+    .article-card:hover { box-shadow:0 8px 32px rgba(41,182,232,0.12); transform:translateY(-3px); }
+    .article-card-body { padding:32px; flex:1; display:flex; flex-direction:column; }
+    .article-meta { display:flex; align-items:center; gap:16px; margin-bottom:10px; }
+    .article-tag { font-family:'Barlow Condensed',sans-serif; font-size:0.72rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan);
+      border:1px solid rgba(41,182,232,0.4); padding:4px 12px; border-radius:20px;
+      background:rgba(41,182,232,0.06); }
+    .article-date { font-size:0.8rem; color:var(--grey); font-weight:700; }
+    .article-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.6rem; font-weight:800;
+      text-transform:uppercase; letter-spacing:-0.01em; line-height:1.1;
+      color:var(--navy); margin-bottom:14px; }
+    .article-card p { font-size:0.92rem; line-height:1.75; color:#4a5568; flex:1; margin-bottom:24px; }
+    .article-link { display:inline-flex; align-items:center; gap:8px;
+      font-family:'Barlow Condensed',sans-serif; font-size:0.88rem; font-weight:700;
+      letter-spacing:0.08em; text-transform:uppercase; color:var(--cyan);
+      text-decoration:none; transition:gap 0.2s; }
+    .article-link:hover { gap:14px; }
+    .article-link svg { flex-shrink:0; }
+    .article-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+    .article-author { display:flex; align-items:center; gap:10px; margin-bottom:20px;
+      font-size:0.85rem; font-weight:500; color:#4a5568; }
+    .author-avatar { width:30px; height:30px; border-radius:50%; background:var(--cyan);
+      color:var(--navy); font-family:'Barlow Condensed',sans-serif; font-size:0.72rem;
+      font-weight:700; display:flex; align-items:center; justify-content:center;
+      letter-spacing:0.04em; flex-shrink:0; }
+    .article-card--soon { opacity:0.65; }
+    .article-card--soon:hover { opacity:0.85; }
+    .soon-badge { display:inline-block; font-family:'Barlow Condensed',sans-serif;
+      font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--grey); border:1px solid #dde4ee; padding:5px 14px; border-radius:20px;
+      background:#f4f7fb; margin-top:auto; }
+    @media(max-width:640px) { .articles-grid { grid-template-columns:1fr; } }
     footer { background:#060f1c; padding:64px 48px 32px; border-top:1px solid var(--border); }
     .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px; }
     .footer-logo { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
@@ -146,17 +181,66 @@
 </div>
 
 <section>
-  <div class="section-wrap">
-    <h2>Something <span>Worth Reading</span> is on Its Way</h2>
-    <p class="lead">We're putting together a space for the NucCol team to share commentary, analysis, and opinion on the challenges and opportunities facing the UK's nuclear supply chain. Check back soon.</p>
-    <div class="topics">
-      <span class="topic-pill">Supply Chain</span>
-      <span class="topic-pill">Nuclear Policy</span>
-      <span class="topic-pill">Manufacturing</span>
-      <span class="topic-pill">F4N Programme</span>
-      <span class="topic-pill">Demand Modelling</span>
-      <span class="topic-pill">Industry Events</span>
+  <div class="articles-grid">
+
+    <!-- Article 1 -->
+    <div class="article-card">
+      <div class="article-card-body">
+        <div class="article-meta">
+          <span class="article-date">7 July 2026</span>
+        </div>
+        <div class="article-tags">
+          <span class="article-tag">Demand Modelling</span>
+          <span class="article-tag">Nuclear</span>
+          <span class="article-tag">Supply Chain</span>
+        </div>
+        <h3>From Siloed Planning to <span style="color:var(--cyan)">Shared Insight</span></h3>
+        <p>The UK's nuclear renaissance will not be constrained by ambition — it will be constrained by supply chain capacity. NucCol's new Demand Model forecasts future product demand across the UK's planned nuclear programmes, identifying where capacity constraints will emerge and where investment needs to be targeted — before those constraints impact delivery.</p>
+        <div class="article-author">
+          <div class="author-avatar">AS</div>
+          <span>Andrew Storer</span>
+        </div>
+        <a class="article-link" href="Our_Thoughts/NucCol From Siloed Planning to Shared Insight v1_0 07 07 26.pdf" target="_blank" rel="noopener">
+          Read the paper
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
     </div>
+
+    <!-- Coming Soon 1 -->
+    <div class="article-card article-card--soon">
+      <div class="article-card-body">
+        <div class="article-meta">
+          <span class="article-date">Coming Soon</span>
+        </div>
+        <div class="article-tags">
+          <span class="article-tag">Nuclear Policy</span>
+          <span class="article-tag">Industry</span>
+        </div>
+        <h3>Next <span style="color:var(--cyan)">Insight</span> Coming Soon</h3>
+        <p>The NucCol team is preparing more commentary, analysis and opinion on the challenges and opportunities facing the UK's nuclear supply chain.</p>
+        <div class="soon-badge">In preparation</div>
+      </div>
+    </div>
+
+    <!-- Coming Soon 2 -->
+    <div class="article-card article-card--soon">
+      <div class="article-card-body">
+        <div class="article-meta">
+          <span class="article-date">Coming Soon</span>
+        </div>
+        <div class="article-tags">
+          <span class="article-tag">Manufacturing</span>
+          <span class="article-tag">F4N Programme</span>
+        </div>
+        <h3>More <span style="color:var(--cyan)">Perspectives</span> on the Way</h3>
+        <p>Watch this space for further insights from across the NucCol network on manufacturing capability, investment, and the future of UK nuclear delivery.</p>
+        <div class="soon-badge">In preparation</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
