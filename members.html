@@ -24,8 +24,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 
 /* LAYOUT */
 #shell{min-height:100vh}
-#sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--white);border-right:1px solid #dde4ee;display:flex;flex-direction:column;z-index:200;overflow:hidden;transition:transform .3s ease}
-#main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;width:calc(100vw - var(--sidebar-w))}
+#sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--white);border-right:1px solid #dde4ee;display:flex;flex-direction:column;z-index:200;overflow:hidden;transition:transform .3s ease,width .3s ease}
+#sidebar.pcv-collapsed{width:0}
+#main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column;width:calc(100vw - var(--sidebar-w));transition:margin-left .3s ease,width .3s ease}
+#main.pcv-expanded{margin-left:0;width:100vw}
 
 /* SIDEBAR */
 .sb-header{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
@@ -458,7 +460,142 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       margin-right: -17px;
     }
 
+    /* ── PROGRAMME COUNTRY VIEW ───────────────────────────────────────────── */
+    #sec-pcv { flex-direction: column; }
+    #sec-pcv.active { display: flex !important; }
+    .pcv-spinner { width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#29b6e8;border-radius:50%;animation:pcv-spin .8s linear infinite; }
+    @keyframes pcv-spin { to { transform:rotate(360deg); } }
 
+    /* base slide */
+    .pcv-slide { width:100%;height:100%;position:absolute;inset:0;font-family:'Barlow',sans-serif;box-sizing:border-box; }
+
+    /* SECTION HEADER */
+    .pcv-sh { background:linear-gradient(135deg,#060e1c 0%,#0a1628 50%,#0d1f40 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:6em;position:relative;overflow:hidden; }
+    .pcv-sh::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(41,182,232,.13) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(41,182,232,.07) 0%,transparent 50%); }
+    .pcv-sh-grid { position:absolute;inset:0;background-image:linear-gradient(rgba(41,182,232,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,182,232,.04) 1px,transparent 1px);background-size:6em 6em; }
+    .pcv-sh-eyebrow { font-family:'Barlow Condensed',sans-serif;font-size:.75em;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:#29b6e8;margin-bottom:1.8em;position:relative;z-index:1; }
+    .pcv-sh-title { font-family:'Barlow Condensed',sans-serif;font-size:4em;font-weight:800;color:#fff;line-height:1.05;position:relative;z-index:1;margin-bottom:1.2em; }
+    .pcv-sh-subtitle { font-size:1.1em;color:rgba(255,255,255,.5);font-weight:400;position:relative;z-index:1;max-width:52%;line-height:1.55; }
+    .pcv-sh-accent { width:5em;height:.25em;background:linear-gradient(90deg,#29b6e8,#1a86b0);border-radius:.15em;margin:2em auto 0;position:relative;z-index:1; }
+
+    /* OVERVIEW */
+    .pcv-ov { background:#fff;display:flex;flex-direction:column;padding:2em 2.5em 1.2em; }
+    .pcv-ov-header { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1em;gap:1.5em;flex-shrink:0; }
+    .pcv-ov-title-block { display:flex;flex-direction:column; }
+    .pcv-ov-eyebrow { font-family:'Barlow Condensed',sans-serif;font-size:.62em;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#e05c00;margin-bottom:.2em; }
+    .pcv-ov-country { font-family:'Barlow Condensed',sans-serif;font-size:1.6em;font-weight:800;color:#0a1628;line-height:1.05; }
+    .pcv-ov-subtitle-text { font-size:.68em;color:#6a7a90;font-weight:400;margin-top:.2em;font-style:italic; }
+    .pcv-ov-legend { display:flex;gap:.75em;flex-wrap:wrap;align-items:center;justify-content:flex-end; }
+    .pcv-ov-leg-item { display:flex;align-items:center;gap:.35em;font-size:.55em;font-weight:600;color:#374151;white-space:nowrap; }
+    .pcv-ov-leg-dot { width:.6em;height:.6em;border-radius:50%;flex-shrink:0; }
+    .pcv-ov-leg-dot.active { background:#16a34a; }
+    .pcv-ov-leg-dot.design { background:#d97706; }
+    .pcv-ov-leg-dot.early  { background:#9ca3af; }
+    /* Card grid */
+    .pcv-ov-cards { flex:1;display:grid;gap:.75em;align-content:stretch; }
+    .pcv-ov-card { border:1px solid #e2e8f0;border-radius:.4em;padding:.85em 1em;display:flex;flex-direction:column;background:#fff;overflow:hidden; }
+    .pcv-ov-card-chip { display:inline-block;padding:.18em .6em;border-radius:.2em;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.58em;letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5em;align-self:flex-start; }
+    .pcv-ov-card-chip.active { background:#16a34a;color:#fff; }
+    .pcv-ov-card-chip.design { background:#d97706;color:#fff; }
+    .pcv-ov-card-chip.early  { background:#9ca3af;color:#fff; }
+    .pcv-ov-card-name { font-family:'Barlow Condensed',sans-serif;font-size:.88em;font-weight:800;color:#0a1628;line-height:1.2;margin-bottom:.2em; }
+    .pcv-ov-card-capacity { font-size:.6em;color:#29b6e8;font-weight:600;margin-bottom:.5em; }
+    .pcv-ov-card-milestone-label { font-size:.5em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;margin-bottom:.15em; }
+    .pcv-ov-card-milestone-text { font-size:.6em;color:#1e293b;line-height:1.35;flex:1; }
+    .pcv-ov-card-partners { font-size:.52em;color:#94a3b8;margin-top:.5em;padding-top:.4em;border-top:1px solid #f0f4f8; }
+    .pcv-ov-source { font-size:.52em;color:#94a3b8;margin-top:.5em;border-top:1px solid #f0f0f0;padding-top:.4em;flex-shrink:0; }
+
+    /* TIMELINE */
+    .pcv-tl { background:#fff;display:flex;flex-direction:column;padding:2.2em 2.8em; }
+    .pcv-tl-top { display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.2em;gap:1.5em; }
+    .pcv-tl-header { font-family:'Barlow Condensed',sans-serif;font-size:1.35em;font-weight:800;color:#0a1628; }
+    .pcv-tl-chart { flex:1;display:flex;flex-direction:column;overflow:hidden; }
+    .pcv-tl-years { display:flex;margin-left:15em;margin-bottom:.3em; }
+    .pcv-tl-year { flex:1;text-align:center;font-size:.56em;font-weight:700;color:#6a7a90;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em; }
+    .pcv-tl-rows { flex:1;display:flex;flex-direction:column;gap:.35em;overflow:hidden; }
+    .pcv-tl-row { display:flex;align-items:center;min-height:2.4em; }
+    .pcv-tl-row-label { width:15em;flex-shrink:0;padding-right:1em; }
+    .pcv-tl-row-name { font-size:.58em;font-weight:600;color:#0a1628;line-height:1.25; }
+    .pcv-tl-row-detail { font-size:.5em;color:#94a3b8;margin-top:.1em; }
+    .pcv-tl-row-bars { flex:1;position:relative;height:2em;display:flex;align-items:center; }
+    .pcv-tl-grid { position:absolute;inset:0;display:flex; }
+    .pcv-tl-grid-col { flex:1;border-left:1px solid #f0f0f0;height:100%; }
+    .pcv-tl-bar { position:absolute;height:1.1em;border-radius:.2em;top:50%;transform:translateY(-50%); }
+    .pcv-tl-bar.active { background:linear-gradient(90deg,#16a34a,#22c55e); }
+    .pcv-tl-bar.design { background:linear-gradient(90deg,#d97706,#f59e0b); }
+    .pcv-tl-bar.early  { background:#e2e8f0; }
+    .pcv-tl-milestone { position:absolute;top:50%;transform:translate(-50%,-50%);width:.8em;height:.8em;background:#0a1628;border-radius:50%;border:.15em solid #fff;box-shadow:0 0 0 .1em #0a1628;z-index:2; }
+    .pcv-tl-ms-label { position:absolute;font-size:.42em;color:#0a1628;font-weight:700;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;transform:translateX(-50%);top:calc(50% + .7em); }
+    .pcv-tl-legend { display:flex;gap:.9em;align-items:center; }
+
+    /* PROGRAMME UPDATE */
+    .pcv-pu { background:linear-gradient(160deg,#060e1c 0%,#0a1628 100%);display:flex;flex-direction:column;padding:1.6em 2.2em 1em; }
+    .pcv-pu-header { margin-bottom:.8em;flex-shrink:0; }
+    .pcv-pu-eyebrow { font-family:'Barlow Condensed',sans-serif;font-size:.62em;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#e05c00;margin-bottom:.25em; }
+    .pcv-pu-title { font-family:'Barlow Condensed',sans-serif;font-size:1.7em;font-weight:800;color:#fff;line-height:1.1; }
+    .pcv-pu-subtitle { font-size:.62em;color:rgba(255,255,255,.45);font-style:italic;margin-top:.2em; }
+    .pcv-pu-stats { display:grid;gap:.6em;margin-bottom:.9em;flex-shrink:0; }
+    .pcv-pu-stat { background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:.35em;padding:.7em 1em;display:flex;flex-direction:column; }
+    .pcv-pu-stat-value { font-family:'Barlow Condensed',sans-serif;font-size:1.5em;font-weight:800;color:#29b6e8;line-height:1;margin-bottom:.2em; }
+    .pcv-pu-stat-label { font-size:.55em;color:rgba(255,255,255,.55);line-height:1.3; }
+    /* body = left (timeline) + right (wim) */
+    .pcv-pu-body { flex:1;display:flex;gap:1.4em;overflow:hidden;min-height:0; }
+    .pcv-pu-left { flex:1;display:flex;flex-direction:column;overflow:hidden; }
+    .pcv-pu-right { width:34%;flex-shrink:0;display:flex;flex-direction:column; }
+    .pcv-pu-tl-title { font-size:.58em;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#29b6e8;margin-bottom:.55em;font-family:'Barlow Condensed',sans-serif;flex-shrink:0; }
+    /* vertical milestone list */
+    .pcv-pu-ms-list { flex:1;display:flex;flex-direction:column;gap:0;overflow:hidden;position:relative; }
+    .pcv-pu-ms-row { display:flex;gap:.5em;align-items:flex-start;flex:1;min-height:0; }
+    .pcv-pu-ms-date { width:3em;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:.58em;font-weight:700;color:#29b6e8;text-align:right;padding-top:.15em;line-height:1.2; }
+    .pcv-pu-ms-line { width:1.2em;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:0; }
+    .pcv-pu-ms-dot { width:.55em;height:.55em;border-radius:50%;background:#29b6e8;flex-shrink:0;margin-top:.2em; }
+    .pcv-pu-ms-connector { flex:1;width:1px;background:rgba(255,255,255,.15);margin-top:.1em; }
+    .pcv-pu-ms-text { flex:1;font-size:.57em;color:rgba(255,255,255,.7);line-height:1.4;padding-bottom:.4em; }
+    /* what it means */
+    .pcv-pu-wim { background:rgba(41,182,232,.09);border:1px solid rgba(41,182,232,.25);border-radius:.4em;padding:1em 1.1em;flex:1;display:flex;flex-direction:column;overflow:hidden; }
+    .pcv-pu-wim-label { font-size:.56em;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#29b6e8;margin-bottom:.55em;font-family:'Barlow Condensed',sans-serif;flex-shrink:0; }
+    .pcv-pu-wim-text { font-size:.6em;color:rgba(255,255,255,.78);line-height:1.6;overflow:hidden; }
+    .pcv-pu-footer { font-size:.43em;color:rgba(255,255,255,.18);text-align:center;padding-top:.5em;flex-shrink:0; }
+
+
+/* PCV readability override - larger on-screen type for programme country view */
+#sec-pcv .pcv-slide { font-size: 19px; }
+#sec-pcv .pcv-ov { padding: 2.1em 2.6em 1.35em; }
+#sec-pcv .pcv-ov-country { font-size: 2.05em; line-height: 1.05; }
+#sec-pcv .pcv-ov-subtitle-text { font-size: .9em; }
+#sec-pcv .pcv-ov-leg-item { font-size: .76em; }
+#sec-pcv .pcv-ov-cards { gap: .85em; }
+#sec-pcv .pcv-ov-card { padding: 1em 1.1em; }
+#sec-pcv .pcv-ov-card-chip { font-size: .72em; }
+#sec-pcv .pcv-ov-card-name { font-size: 1.12em; line-height: 1.18; }
+#sec-pcv .pcv-ov-card-capacity { font-size: .82em; line-height: 1.35; }
+#sec-pcv .pcv-ov-card-milestone-label { font-size: .68em; }
+#sec-pcv .pcv-ov-card-milestone-text { font-size: .82em; line-height: 1.45; }
+#sec-pcv .pcv-ov-card-partners,
+#sec-pcv .pcv-ov-source { font-size: .7em; line-height: 1.35; }
+#sec-pcv .pcv-tl-header { font-size: 1.75em; }
+#sec-pcv .pcv-tl-year { font-size: .76em; }
+#sec-pcv .pcv-tl-row { min-height: 3em; }
+#sec-pcv .pcv-tl-row-name { font-size: .8em; line-height: 1.25; }
+#sec-pcv .pcv-tl-row-detail { font-size: .7em; line-height: 1.3; }
+#sec-pcv .pcv-tl-ms-label { font-size: .62em; }
+#sec-pcv .pcv-pu { padding: 1.65em 2em 1em; }
+#sec-pcv .pcv-pu-title { font-size: 2.15em; line-height: 1.05; }
+#sec-pcv .pcv-pu-subtitle { font-size: .82em; }
+#sec-pcv .pcv-pu-stat-value { font-size: 1.8em; }
+#sec-pcv .pcv-pu-stat-label { font-size: .75em; line-height: 1.35; }
+#sec-pcv .pcv-pu-tl-title { font-size: .78em; }
+#sec-pcv .pcv-pu-ms-date { font-size: .82em; width: 3.6em; }
+#sec-pcv .pcv-pu-ms-text { font-size: .82em; line-height: 1.45; }
+#sec-pcv .pcv-pu-wim-title { font-size: .8em; }
+#sec-pcv .pcv-pu-wim-body { font-size: .82em; line-height: 1.55; }
+#sec-pcv .pcv-topbar,
+#sec-pcv .pcv-tab,
+#sec-pcv .pcv-menu-btn { font-size: 1.05em; }
+
+@media (max-width: 1200px) {
+  #sec-pcv .pcv-slide { font-size: 17px; }
+}
 </style>
 </head>
 <body>
@@ -560,6 +697,12 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     </a>
     -->
 
+    <div class="sb-label">Market Intelligence</div>
+    <button class="sb-item" onclick="nav('pcv')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+      Programme Briefings
+    </button>
+
     <div class="sb-label">Live Feeds</div>
     <button class="sb-item" onclick="nav('news')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -585,6 +728,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     <button class="sb-item" onclick="nav('account')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       My Account
+    </button>
+    <button class="sb-item" id="sb-item-nuclearready" onclick="nav('nuclearready')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.5" /><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(120 12 12)"/></svg>
+      NuclearReady Profile <span class="sb-badge" id="badge-nr" style="display:none">!</span>
     </button>
     <button class="sb-item" onclick="portalSignOut()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1073,6 +1220,239 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     </div>
   </div>
 
+  <!-- NUCLEARREADY PROFILE SECTION
+
+  SQL — run in Supabase SQL editor before going live:
+  ───────────────────────────────────────────────────
+  -- Core table (if not already created)
+  CREATE TABLE IF NOT EXISTS nr_profile_updates (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id uuid REFERENCES auth.users NOT NULL,
+    company_name text, submitted_at timestamptz DEFAULT now(),
+    status text DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+    description text, contact_name text, contact_phone text, contact_email text,
+    linkedin text, website text, region text, employees text,
+    capabilities text, services text, logo_url text,
+    reviewer_notes text, reviewed_at timestamptz, reviewed_by text
+  );
+  ALTER TABLE nr_profile_updates ADD COLUMN IF NOT EXISTS website text;
+  ALTER TABLE nr_profile_updates ADD COLUMN IF NOT EXISTS logo_url text;
+  ALTER TABLE nr_profile_updates ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY IF NOT EXISTS "Users can insert own updates" ON nr_profile_updates FOR INSERT WITH CHECK (auth.uid() = user_id);
+  CREATE POLICY IF NOT EXISTS "Users can view own updates"  ON nr_profile_updates FOR SELECT USING (auth.uid() = user_id);
+
+  -- News submissions table
+  CREATE TABLE IF NOT EXISTS nr_news_submissions (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id uuid REFERENCES auth.users NOT NULL,
+    company_name text, submitted_at timestamptz DEFAULT now(),
+    status text DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+    title text NOT NULL, type text, body text,
+    reviewer_notes text, reviewed_at timestamptz, reviewed_by text
+  );
+  ALTER TABLE nr_news_submissions ENABLE ROW LEVEL SECURITY;
+  CREATE POLICY IF NOT EXISTS "Users can insert own news" ON nr_news_submissions FOR INSERT WITH CHECK (auth.uid() = user_id);
+  CREATE POLICY IF NOT EXISTS "Users can view own news"  ON nr_news_submissions FOR SELECT USING (auth.uid() = user_id);
+
+  -- Supabase Storage: create a public bucket called 'nr-logos' in the Supabase dashboard
+-->
+
+<div class="section" id="sec-nuclearready" style="padding:32px;max-width:760px">
+
+  <div class="sec-header" style="margin-bottom:24px">
+    <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:800;text-transform:uppercase;color:var(--navy);margin-bottom:6px">
+      NuclearReady <span style="color:var(--cyan)">Profile</span>
+    </h2>
+    <p style="font-size:.9rem;color:#5a6a80;line-height:1.6;max-width:580px">
+      Manage your company's listing in the NuclearReady Explorer. Profile changes and news updates are reviewed by NucCol before going live.
+    </p>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:0;border-bottom:2px solid #dde4ee;margin-bottom:28px">
+    <button onclick="nrTab('profile')" id="nrtab-profile" style="padding:10px 22px;border:none;background:none;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cyan);border-bottom:2px solid var(--cyan);margin-bottom:-2px;cursor:pointer">Profile</button>
+    <button onclick="nrTab('news')"    id="nrtab-news"    style="padding:10px 22px;border:none;background:none;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6a7a90;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer">News &amp; Updates</button>
+  </div>
+
+  <!-- ── PROFILE TAB ──────────────────────────────────────────────── -->
+  <div id="nrt-profile">
+
+    <div id="nr-pending-banner" style="display:none;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:#92400e">
+      <strong>⏳ Update pending review</strong> — submitted <span id="nr-pending-date"></span>. NucCol will review it shortly.
+    </div>
+    <div id="nr-approved-banner" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:#166534">
+      <strong>✓ Last update approved</strong> on <span id="nr-approved-date"></span> and is now live in the Explorer.
+    </div>
+
+    <!-- Logo -->
+    <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:14px">Company Logo</h3>
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+        <div id="nr-logo-preview" style="width:90px;height:72px;border:1.5px dashed #dde4ee;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#f4f7fb;overflow:hidden;flex-shrink:0">
+          <span id="nr-logo-placeholder" style="font-size:.72rem;color:#aab;text-align:center;padding:6px">No logo<br>uploaded</span>
+          <img id="nr-logo-img" src="" style="display:none;width:100%;height:100%;object-fit:contain"/>
+        </div>
+        <div>
+          <input type="file" id="nr-logo-file" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none" onchange="nrPreviewLogo(this)"/>
+          <button onclick="document.getElementById('nr-logo-file').click()" style="padding:9px 18px;border:1px solid #dde4ee;border-radius:6px;background:#f4f7fb;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#3a4a5c;cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='#dde4ee';this.style.color='#3a4a5c'">Choose File</button>
+          <p style="font-size:.72rem;color:#6a7a90;margin-top:6px">PNG, JPG or SVG · max 2 MB · will appear in your Explorer listing</p>
+          <div id="nr-logo-status" style="font-size:.75rem;color:#6a7a90;margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview -->
+    <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Company Overview</h3>
+
+      <div style="margin-bottom:13px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Your Company <span id="nr-co-note" style="font-weight:400;text-transform:none;color:#aab"></span></label>
+        <select id="nr-company-select" onchange="nrOnCompanySelect(this.value)"
+          style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box;cursor:pointer">
+          <option value="">— Select your company —</option>
+        </select>
+      </div>
+      <div style="margin-bottom:13px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Company Description</label>
+        <textarea id="nr-description" rows="4" placeholder="A clear, public-facing summary of what your company does and its nuclear expertise…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+      </div>
+      <div style="margin-bottom:13px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Website</label>
+        <input id="nr-website" type="url" placeholder="https://www.yourcompany.co.uk" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Region</label>
+          <select id="nr-region" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box">
+            <option value="">Select…</option>
+            <option>East Midlands</option><option>East of England</option><option>London</option>
+            <option>North East</option><option>North West</option><option>Northern Ireland</option>
+            <option>Scotland</option><option>South East</option><option>South West</option>
+            <option>Wales</option><option>West Midlands</option><option>Yorkshire and the Humber</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Company Size</label>
+          <select id="nr-employees" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box">
+            <option value="">Select…</option>
+            <option>1–10</option><option>11–50</option><option>51–200</option><option>201–500</option><option>500+</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Capabilities taxonomy -->
+    <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">Capabilities &amp; Markets</h3>
+        <span id="nr-sel-count" style="font-size:.75rem;color:var(--cyan);font-weight:600">0 selected</span>
+      </div>
+      <p style="font-size:.78rem;color:#6a7a90;margin-bottom:16px;line-height:1.5">Select everything that applies to your company. Click a section header to expand it.</p>
+      <div id="nr-taxonomy-root"></div>
+    </div>
+
+    <!-- Contact -->
+    <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:22px">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Contact &amp; Links</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Contact Name</label>
+          <input id="nr-contact-name"  type="text" placeholder="Jane Smith" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+        </div>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Contact Phone</label>
+          <input id="nr-contact-phone" type="tel"  placeholder="01234 567890" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Contact Email</label>
+        <input id="nr-contact-email" type="email" placeholder="nuclear@yourcompany.co.uk" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+      </div>
+      <div>
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">LinkedIn URL</label>
+        <input id="nr-linkedin" type="url" placeholder="https://linkedin.com/company/…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+      </div>
+    </div>
+
+    <div id="nr-msg" style="display:none;padding:12px 16px;border-radius:6px;font-size:.85rem;margin-bottom:16px"></div>
+    <button onclick="submitNRUpdate()" id="nr-submit-btn" style="background:var(--cyan);color:#0a1628;border:none;border-radius:6px;padding:13px 28px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:.2s">Submit for Review</button>
+    <p style="margin-top:10px;font-size:.78rem;color:#6a7a90">Changes are reviewed by NucCol and usually live within 2 working days.</p>
+  </div>
+
+  <!-- ── NEWS TAB ─────────────────────────────────────────────────── -->
+  <div id="nrt-news" style="display:none">
+
+    <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:20px">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Submit a Company Update</h3>
+      <div style="margin-bottom:13px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Headline</label>
+        <input id="nrn-title" type="text" placeholder="e.g. We've secured our first HPC supply chain contract" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+      </div>
+      <div style="margin-bottom:13px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Type</label>
+        <select id="nrn-type" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box">
+          <option value="">Select type…</option>
+          <option>Contract Win</option>
+          <option>New Capability</option>
+          <option>F4N Achievement</option>
+          <option>Investment &amp; Growth</option>
+          <option>Industry Event</option>
+          <option>Company News</option>
+        </select>
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Details</label>
+        <textarea id="nrn-body" rows="5" placeholder="Tell the NuclearReady community what's happened. Keep it factual and concise — NucCol may lightly edit before publishing." style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+      </div>
+      <div id="nrn-msg" style="display:none;padding:10px 14px;border-radius:6px;font-size:.82rem;margin-bottom:14px"></div>
+      <button onclick="submitNRNews()" id="nrn-submit-btn" style="background:var(--cyan);color:#0a1628;border:none;border-radius:6px;padding:12px 24px;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer">Submit for Review</button>
+      <p style="margin-top:8px;font-size:.75rem;color:#6a7a90">Updates are reviewed by NucCol before appearing in the NuclearReady directory.</p>
+    </div>
+
+    <div id="nrn-history" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+
+</div>
+
+<!-- PROGRAMME COUNTRY VIEW -->
+<div id="sec-pcv" class="section" style="padding:0;overflow:hidden;height:calc(100vh - var(--topbar-h));display:none;flex-direction:column">
+  <div id="pcv-loading" style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:16px">
+    <div class="pcv-spinner"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6a7a90">Loading briefing…</div>
+  </div>
+  <div id="pcv-viewer" style="display:none;flex-direction:column;height:100%;background:#060e1c">
+    <!-- topbar chrome — counter + section tabs only -->
+    <div id="pcv-chrome" style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="nav('home')" title="Back to menu" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:4px 10px;cursor:pointer;color:rgba(255,255,255,.5);font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.15s;display:flex;align-items:center;gap:5px" onmouseover="this.style.color='#29b6e8';this.style.borderColor='#29b6e8'" onmouseout="this.style.color='rgba(255,255,255,.5)';this.style.borderColor='rgba(255,255,255,.12)'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Menu</button>
+        <span id="pcv-counter" style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;color:#6a9ab0;text-transform:uppercase">1 / 31</span>
+        <span id="pcv-group-label" style="font-family:'Barlow',sans-serif;font-size:.72rem;color:rgba(255,255,255,.3)"></span>
+      </div>
+      <div id="pcv-section-tabs" style="display:flex;gap:4px"></div>
+    </div>
+    <!-- progress bar -->
+    <div style="height:3px;background:rgba(255,255,255,.06);flex-shrink:0">
+      <div id="pcv-progress" style="height:100%;background:linear-gradient(90deg,#00c8d4,#1a86b0);transition:width .35s ease;width:0%"></div>
+    </div>
+    <!-- slide area — fills remaining space, nav buttons overlaid -->
+    <div style="flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center" id="pcv-slide-area">
+      <!-- big overlaid nav buttons -->
+      <button onclick="pcvPrev()" id="pcv-btn-prev" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(10,22,40,.55);border:1.5px solid rgba(255,255,255,.22);border-radius:50%;width:52px;height:52px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:.18s;flex-shrink:0" onmouseover="this.style.background='rgba(41,182,232,.35)';this.style.borderColor='#29b6e8'" onmouseout="this.style.background='rgba(10,22,40,.55)';this.style.borderColor='rgba(255,255,255,.22)'">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button onclick="pcvNext()" id="pcv-btn-next" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(10,22,40,.55);border:1.5px solid rgba(255,255,255,.22);border-radius:50%;width:52px;height:52px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:.18s;flex-shrink:0" onmouseover="this.style.background='rgba(41,182,232,.35)';this.style.borderColor='#29b6e8'" onmouseout="this.style.background='rgba(10,22,40,.55)';this.style.borderColor='rgba(255,255,255,.22)'">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <!-- slide box — CSS aspect-ratio with max-height fills the area -->
+      <div id="pcv-slide-box" style="aspect-ratio:16/9;width:calc(100% - 144px);max-height:100%;position:relative;box-shadow:0 20px 70px rgba(0,0,0,.65);border-radius:5px;overflow:hidden;background:#fff;flex-shrink:0">
+        <div id="pcv-slide-content" style="width:100%;height:100%;position:absolute;inset:0"></div>
+      </div>
+    </div>
+    <!-- bottom hint -->
+    <div style="text-align:center;padding:5px;font-size:.65rem;color:rgba(255,255,255,.18);font-family:'Barlow',sans-serif;flex-shrink:0;letter-spacing:.08em">← → arrow keys to navigate</div>
+  </div>
+</div>
+
 </div><!-- /content -->
 
 </div><!-- /main -->
@@ -1109,11 +1489,15 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 
 
 // NAV
-const labels={home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account'};
+const labels={pcv:'Programme Country View',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account'};
 function nav(id){
+  if(id==='nuclearready' && window.__nuclearReadyEnabled===false){ id='home'; }
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById('sec-'+id);
   if(sec) sec.classList.add('active');
+  const sidebar=document.getElementById('sidebar'),main=document.getElementById('main');
+  if(id==='pcv'){sidebar.classList.add('pcv-collapsed');main.classList.add('pcv-expanded');}
+  else{sidebar.classList.remove('pcv-collapsed');main.classList.remove('pcv-expanded');}
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
   if(id==='addmember'){
     db.auth.getSession().then(({data:{session}})=>{
@@ -1125,9 +1509,11 @@ function nav(id){
   document.getElementById('bc').innerHTML=`<span>${labels[id]||id}</span>`;
   if(id==='handbook'&&!window.hbInit){loadSection('strategy');window.hbInit=true}
   if(id==='account'){loadAccountSection();}
+  if(id==='nuclearready'){loadNRSection();}
   if(id==='toolbox'){loadToolboxSection();}
   if(id==='community'&&!commUser){(async()=>{const {data:{session}}=await db.auth.getSession();if(session)await commInit(session.user);})();}
   if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
+  if(id==='pcv'&&!window.pcvInit){loadPCVSection();window.pcvInit=true;}
   if(window.innerWidth<=900){document.getElementById('sidebar').classList.remove('open');}
   window.scrollTo(0,0);
 }
@@ -1562,6 +1948,25 @@ async function loadLiveBadges(){
 // ── PAGE-LEVEL AUTH GATE ──────────────────────────────────────────────────
 
 // ── POPULATE SIDEBAR WITH REAL USER ──
+// Site-wide feature flags, set by SCC staff in scc.html (nr_site_settings table).
+// Fail-open: if the table/row can't be read, the feature stays visible (current behavior).
+async function applyFeatureFlags(){
+  let enabled = true;
+  try{
+    const {data,error} = await db.from('nr_site_settings').select('value').eq('key','nuclearready_enabled').maybeSingle();
+    if(!error && data && data.value===false) enabled = false;
+  }catch(e){
+    // fail-open — leave enabled = true
+  }
+  window.__nuclearReadyEnabled = enabled;
+  const navBtn = document.getElementById('sb-item-nuclearready');
+  if(navBtn) navBtn.style.display = enabled ? '' : 'none';
+  if(!enabled){
+    const sec = document.getElementById('sec-nuclearready');
+    if(sec) sec.classList.remove('active');
+  }
+}
+
 function populateSidebar(user){
   const first = user.user_metadata?.first_name || user.email.split('@')[0];
   const company = user.user_metadata?.company || '';
@@ -1613,6 +2018,7 @@ document.addEventListener('keydown',e=>{
     document.getElementById('shell').style.display='flex';
     populateSidebar(session.user);
     loadLiveBadges();
+    applyFeatureFlags();
   } else {
     document.getElementById('auth-gate').style.display='flex';
     document.getElementById('shell').style.display='none';
@@ -1662,6 +2068,7 @@ db.auth.onAuthStateChange((event,session)=>{
     document.getElementById('shell').style.display='flex';
     populateSidebar(session.user);
     loadLiveBadges();
+    applyFeatureFlags();
     // Pass identity to Frankie tools (Evidence Vault etc.)
     localStorage.setItem('frankieUserId', session.user.id);
     localStorage.setItem('frankieUserToken', session.access_token);
@@ -1953,6 +2360,11 @@ async function commLoadMembers(){
 let nmEntryCount = 0;
 let nmRequesterCompany = '';
 
+function nmToggleOther(idx, val){
+  const el = document.getElementById('nm-jto-' + idx);
+  if(el) el.style.display = (val === 'Other') ? 'block' : 'none';
+}
+
 function addMemberEntry(prefillCompany){
   nmEntryCount++;
   const idx = nmEntryCount;
@@ -1961,25 +2373,55 @@ function addMemberEntry(prefillCompany){
   const card = document.createElement('div');
   card.id = 'nm-entry-' + idx;
   card.style.cssText = 'background:var(--white);border:1px solid #dde4ee;border-radius:10px;padding:20px;position:relative';
+  const inputStyle = "width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box";
   card.innerHTML = `
     ${idx > 1 ? `<button onclick="removeMemberEntry(${idx})" style="position:absolute;top:12px;right:12px;background:none;border:none;color:#6a7a90;cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 6px;border-radius:4px" title="Remove">✕</button>` : ''}
     <div style="display:flex;flex-direction:column;gap:12px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
           <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">First Name *</label>
-          <input data-field="first" type="text" placeholder="Jane" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+          <input data-field="first" type="text" placeholder="Jane" style="${inputStyle}" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
         </div>
         <div>
+          <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Last Name</label>
+          <input data-field="last" type="text" placeholder="Doe" style="${inputStyle}" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
           <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Email *</label>
-          <input data-field="email" type="email" placeholder="jane@company.com" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+          <input data-field="email" type="email" placeholder="jane@company.com" style="${inputStyle}" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+        </div>
+        <div>
+          <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Phone</label>
+          <input data-field="phone" type="tel" placeholder="07123 456789" style="${inputStyle}" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
         </div>
       </div>
       <div>
         <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Company</label>
-        <input data-field="company" type="text" value="${co}" placeholder="Organisation name" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.88rem;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+        <input data-field="company" type="text" value="${co}" placeholder="Organisation name" style="${inputStyle}" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
+      </div>
+      <div>
+        <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Job Title</label>
+        <select data-field="jobtitle" style="${inputStyle}" onchange="nmToggleOther(${idx}, this.value)">
+          <option value="">Select…</option>
+          <option value="BD">BD</option>
+          <option value="Quality">Quality</option>
+          <option value="Production">Production</option>
+          <option value="Operations">Operations</option>
+          <option value="Engineering">Engineering</option>
+          <option value="H&S">H&S</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div id="nm-jto-${idx}" style="display:none">
+        <label style="font-size:.72rem;color:#6a7a90;display:block;margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase">Please specify</label>
+        <input data-field="jobtitle_other" type="text" placeholder="Job title" style="${inputStyle}" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='#dde4ee'"/>
       </div>
     </div>`;
   wrap.appendChild(card);
+
+  function nmToggleOtherInit(){}
 }
 
 function removeMemberEntry(idx){
@@ -1998,11 +2440,15 @@ async function submitMemberRequest(){
   const rows = [];
   for(const entry of entries){
     const first = entry.querySelector('[data-field="first"]').value.trim();
+    const last = entry.querySelector('[data-field="last"]').value.trim();
     const email = entry.querySelector('[data-field="email"]').value.trim();
+    const phone = entry.querySelector('[data-field="phone"]').value.trim();
     const company = entry.querySelector('[data-field="company"]').value.trim();
+    const jobtitleSel = entry.querySelector('[data-field="jobtitle"]').value.trim();
+    const jobtitleOther = entry.querySelector('[data-field="jobtitle_other"]').value.trim();
     if(!first){err.textContent='Please enter a first name for every person.';err.style.display='block';return;}
     if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent='Please enter a valid email for every person.';err.style.display='block';return;}
-    rows.push({first, email, company});
+    rows.push({first, last, email, phone, company, jobtitle: jobtitleSel, jobtitleOther});
   }
 
   btn.textContent = 'Submitting…';
@@ -2016,8 +2462,12 @@ async function submitMemberRequest(){
     requester_email: requester?.email ?? null,
     requester_company: requester?.user_metadata?.company ?? null,
     new_member_first_name: r.first,
+    new_member_last_name: r.last || null,
     new_member_email: r.email,
-    new_member_company: r.company || null
+    new_member_company: r.company || null,
+    new_member_job_title: r.jobtitle || null,
+    new_member_job_title_other: (r.jobtitle === 'Other' ? (r.jobtitleOther || null) : null),
+    new_member_phone: r.phone || null
   }));
 
   const {error} = await db.from('member_requests').insert(inserts);
@@ -2459,6 +2909,556 @@ function loadAccountSection(){
     document.getElementById('acc-company').value = session.user.user_metadata?.company||'';
     document.getElementById('acc-email').value = session.user.email||'';
   });
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// NUCLEARREADY — TAXONOMY DATA
+// ═══════════════════════════════════════════════════════════
+const NR_TAXONOMY = {
+  categories: ["Bearings, Seals and Drives","Castings","Coatings & Treatments (Inc Heat Treatment)","Enclosures","Fasteners","Forgings","Heating & Ventilation","Heavy Fabrications","Instrumentation & Control Equipment","Light and Medium Fabrications","Material Supplier","Mechanical Handling & Cranes","Other","Pipework Systems & Seals","Power & Data Supply","Precision Machining","Pressure Vessels Heat exchangers & Tanks","Pumps & Valves","Steel Fabrications","Testing & Inspection","Workshop Equipment"],
+  commodities: ["Access Ladders Stairs & Platforms","Acoustic Systems","Additive - metal","Additive - polymer","Adhesives","Air Ejectors Dryers & Receivers","Alarms & Monitoring including Condition Monitoring","Analysers","Analysis","Antivibration","Apparatus","Arrestors Exciters & Inverters","Automation","Backfill & Shoring","Batteries and Battery Chargers","Bearings & Seals","Blowers","Bus Bars","Cable Supports Conduit Fixings Trays Trunking Ducting & Splicers","Cables","Chains & Hoists including Heavy Lift","Chemical Liquid & Resin Products","Circuit Breakers","Civil Works & Civil Engineering excluding Earthworks","Cladding","Class 1E & Non Class 1E Electrical Related Systems","Coatings Paints Protection Processes & Systems","Columns","Communications Systems","Composites","Compressors","Computer monitors & panels","Concrete & Cement","Concrete Panels Pre-cast","Condensers","Condition monitoring equipment","Connectors & Contactors","Construction Building","Consumables","Containers Transportation & Storage","Containment Structure","Control Rod Drive Mechanism","Control Rods","Control Systems","Cooling & Coolers","Core Components & Assemblies","Cranes & Lifting","Cranes Polar & Fuel Handling","Cyber Security","Decontamination","Deminalisation Systems & Equipment","Desalination Equipment","Detectors Sensors Transmitters & Detection Systems","Diesel Generators & Back-up Diesel or Gas Generators","Displacement Sensors","Doors Airlocks Gates Hatches including Barriers Blast & Security","Ducting","Earthworks","Effluent Management Systems","Electrical & Electronic Components, Connectors and PCB's","Electrical Feedthroughs","Electrical Generators","Electrical Protection","Electrical Supplies","Electrical Systems","Electricity","Elevators","Emergency Planning Systems","Equipment Engineered","Equipment Qualification Analysis / Simulation","Equipment Qualification Manufacturing Facility - In-house Physical Testing","Equipment Qualification Unclassified","Equipment Qualification Test Facility - Physical Testing","Exhaust Boot","Expansion Joints","Fabrication Hi-integrity & Complex Structures including Heavy","Fabrication Med-integrity Structures","Facilities","Fan Systems & Fans","Fasteners & Fixings","Fencing","Filtration Systems","Fire Alarms","Fire Protection","Fire Rated Structures","Fire Suppression","Fire Water System","Flasks, Casks & Containers","Flow Sensors","Food Services","Form Work","Freeze Protection","Fuel Components Nuclear","Fuel Handling","Fuel Other & Fuel Systems","Fuel Pool Gates","Fuel Transfer Equipment","Fuses & Switches","Geiger-Muller Tubes","Geotechnical Quality Assurance","Glands","Gloveboxes","Gratings Sumps Covers Plates & Drains","Grounding Devices","Grout & Equipment","Heaters Pressuriser","Heaters Systems","Heat Exchangers including Main Steam Generators","Heat Recovery","Hoses Pneumatic and Hydraulics","HVAC Blowers","HVAC Chillers & Compressors","HVAC Controllers","HVAC Cooling & Coolers","HVAC Dampers & Louvers","HVAC Ducting","HVAC Fan Systems & Fans","HVAC Filtration & Filters","HVAC Heaters & Heating Units","HVAC Humidifiers & Dehumidifiers","HVAC Plenums","HVAC Systems","Hydraulics","In-core monitoring and instrumentation","Inspection & Surveillance Services","Inspection Equipments & Services including NDE & Surveillance","Instrumentation control computers detectors transmitters monitors & panels","Insulation General & Specialist Thermal","Insulators","Integrated Head Assembly","Interior Walls Buildings","Interlock Controls","Ion Exchange Systems","IT Infrastructure including IT and Cyber Security","Laboratory Equipment","Laboratory Systems Titration","Level Control","Level Sensors","Lighting","Load Sensors","Lubrication Systems Generators & Others","Lubrication Systems Main Steam Turbine","Manipulators","Marine Barges","Marine Works","Material Plate & Bar","Materials Castings","Materials Distribution","Materials Embedments & Rebar","Materials Forgings & Steels","Materials Main Stack Discharge","Materials Structural Steels Flanged Beams & Sections","Materials Supplier - all forms","Materials Testing","Materials Tubing & Pipework","Materials Wire & Wire Rope","Mechanical & Electrical Engineering & Services (M&E)","Mechanical handling equipment","Meters & Gauges","Modularised & Skid Mounted Process Systems","Neutron Absorbers & Detectors","Off-site Facility Emergency","Operational Tools","Other Supplies & Support Services including Analysis & Health","Penetrations Electrical & Mechanical Systems","Penetrations, electrical","Penetrations, mechanical","Pest & Rodent Control","Piles and Caissons","Pipework","Pipework Fittings & Spools","Pipework GRP","Pipework Snubbers","Pipework Supports","Pipework Systems including Seals","Planning Structures","Plant and Machinery","Pool Liners","Portable Equipment","Power Distribution","Power Output","Power Supply","Precision & General Machining","Pressure Sensors","Pressure Vessels Heat Exchangers & Tanks including Internals","Protective Clothing","Protective Functions Alarms","Pumps","Pumps & Valves","Pumps including Main Reactor Circulation Pumps & Motors","Racking Devices","Radiation Protection Monitoring & Radiological Controls","Radwaste Processing","Railway","Reactor Cavity Interior","Reactor Control Detectors","Reactor Pressure Vessel","Reactor Pressure Vessel Internals","Receptacles","Recombiners","Regulators","Resin Beds","Resources Labour","Road and Road Materials","Robotics, robots and robotic equipment","Robotic Manipulators Crawlers & Automated Remote Operating Tools","Rotors & Shafts","Sampling","Seals & Metal O-rings","Seals Gaskets O-Rings & Metal O-Rings","Security Facilities & Physical","Separator Reheaters","Services Agents","Services Transport","Shafts Main Turbine Bearings & Seals","Shielding","Shutdown Systems Emergency","Siding","Simulators & Training Systems","Site Gas Supplies & Systems","Site Services","Smoke Detectors","Specialist Services & Processes including Engineering Manufacturing Design & Testing","Spray Nozzles","Spray Pond","Starters","Stators & Stator Cooling","Steelwork including Mezzanine & Gantry Systems","Storage Racks & Furniture including Pond","Structural Components Building","Structural Fabrications","Structures","Stud Tensioning","Surface coatings","Switchgear","Tanks","Temperature Sensors","Terminal Blocks & Boards","Thermal Insulation","Tooling Equipment","Trace Heating","Transfer Devices","Transformers","Tunnel Boring Machinery","Turbine Generators","Turbine Generators Bypass","Turbine Gland Systems","Ultimate Heat Sink","Valves","Valves including Main Isolation SQUIB & Actuators","Vehicles & Plant","Vessels including Main Reactor Pressure Vessel & Internals","Washing & Decontamination","Waste Management","Water Supply","Water Treatment Systems","Water Wells","Welding & Welding Systems","Workshop Equipment"],
+  machining: ["3 Axis Milling","4 Axis Milling","5 Axis Milling","6 Axis Milling","Deep hole Drilling","Horizontal Milling (CNC)","Horizontal Milling (Conventional)","Horizontal Mill / Turn","Horizontal Turning (CNC)","Horizontal Turning (Conventional)","Multi-spindle drilling","Robotic machining","Vertical Milling (CNC)","Vertical Milling (Conventional)","Vertical Mill / Turn","Vertical Turning (Conventional)"],
+  welding: ["Bulk Additive Manufacturing","Diode Laser Cladding","Electron Beam Welding","Electroslag Strip Cladding (ESSC)","Friction Stir Welding","Gas Tungsten Arc Welding (GTAW)","K-TIG (key hole GTAW)","Laser Welding","Manual Metal Arc Welding (MMA)","Metal Active Gas Welding (MAG)","Metal Inert Gas Welding (MIG)","Narrow Gap Welding (GTAW or SAW)","Orbital & Planetary (GTAW & SAW)","Plasma Arc Welding (PAW)","Robotics","Submerged Arc Strip Cladding (SASC)","Submerged Arc Welding (SAW)","Tube Sheet Welding (Using a laser or GTAW process)"],
+  testing: ["Advanced testing facilities","Chemical","Clean room facilities","CMM machines","Drop Testing","Electrical","Electro-Magnetic Compatibility & Interference","Equipment Qualification","Fire Resistant","Non destructive testing - Magnetic Particle","Non destructive testing - Radiography","Non destructive testing - Ultrasonic","Pressure / Hydro Testing","Proof Load Testing","Radiation","Temperature controlled facility for inspection"],
+  design: ["CAD Design - 2D","CAD Design - 3D","CAM Design - 2D","CAM Design - 3D"],
+  services: ["3D laser scanning","Bending","Civil Construction including modular construction","Design services","Exotic materials","Geotechnical Quality Assurance","Heat treatment","Installation","Law","Logistics","Material handling","Modular construction","On Site services","Pipe inspection","Port services","Project management","Radiation monitor calibration","Safety, security and risk management","Stock holders","System integration"],
+  markets: ["Aerospace - Civil and Defence","Automotive","Construction - Civils","Construction - Strategic Platforms & Vessels","Electrical components & equipment","Marine Commercial & Naval","Material Supply","Nuclear Civil","Nuclear Defence - Naval Marine","Oil & Gas including LNG","Petrochemical & Refining","Pharmaceutical & Medical","Power Generation, Distribution & Transmission","Rail & Transport","Renewables - (Wind, Tidal, Solar, Biomass etc.)","Subsea and Offshore","Utilities"]
+};
+
+const NR_GROUPS = [
+  { key:'categories',  label:'Product Categories',  search:false },
+  { key:'commodities', label:'Commodities',          search:true  },
+  { key:'machining',   label:'Machining Capability', search:false },
+  { key:'welding',     label:'Welding Processes',    search:false },
+  { key:'testing',     label:'Testing Capability',   search:false },
+  { key:'design',      label:'Design Capability',    search:false },
+  { key:'services',    label:'Services',             search:false },
+  { key:'markets',     label:'Markets Served',       search:false },
+];
+
+// Selections state
+let nrSelections = {};
+NR_GROUPS.forEach(g => nrSelections[g.key] = new Set());
+let nrLogoFile = null;
+const SUPA_URL_NR = 'https://qkyvmtouwrzrcyagkheo.supabase.co';
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function nrTab(t) {
+  document.getElementById('nrt-profile').style.display = t === 'profile' ? '' : 'none';
+  document.getElementById('nrt-news').style.display    = t === 'news'    ? '' : 'none';
+  const active   = 'color:var(--cyan);border-bottom:2px solid var(--cyan);margin-bottom:-2px';
+  const inactive = 'color:#6a7a90;border-bottom:2px solid transparent;margin-bottom:-2px';
+  document.getElementById('nrtab-profile').style.cssText += t==='profile' ? ';color:var(--cyan);border-bottom-color:var(--cyan)' : ';color:#6a7a90;border-bottom-color:transparent';
+  document.getElementById('nrtab-news').style.cssText    += t==='news'    ? ';color:var(--cyan);border-bottom-color:var(--cyan)' : ';color:#6a7a90;border-bottom-color:transparent';
+}
+
+// ── TAXONOMY RENDER ───────────────────────────────────────────────────────────
+function nrBuildTaxonomy() {
+  const root = document.getElementById('nr-taxonomy-root');
+  if (!root || root.dataset.built) return;
+  root.dataset.built = '1';
+  root.innerHTML = NR_GROUPS.map(g => {
+    const items = NR_TAXONOMY[g.key];
+    const checkboxes = items.map(item => `
+      <label style="display:flex;align-items:flex-start;gap:8px;padding:5px 6px;border-radius:4px;cursor:pointer;font-size:.83rem;color:#3a4a5c;line-height:1.35;transition:background .1s" onmouseover="this.style.background='#f4f7fb'" onmouseout="this.style.background=''">
+        <input type="checkbox" data-group="${g.key}" data-item="${item.replace(/"/g,'&quot;')}"
+          style="margin-top:2px;accent-color:var(--cyan);flex-shrink:0"
+          onchange="nrToggleItem('${g.key}','${item.replace(/'/g,"\\'")}',this.checked)"/>
+        ${item}
+      </label>`).join('');
+
+    const searchBox = g.search ? `
+      <input type="text" placeholder="Search ${g.label.toLowerCase()}…"
+        oninput="nrFilterGroup('${g.key}',this.value)"
+        style="width:100%;border:1px solid #dde4ee;background:#f4f7fb;border-radius:6px;padding:8px 10px;font-size:.82rem;margin-bottom:8px;box-sizing:border-box;outline:none"
+        onclick="event.stopPropagation()"/>` : '';
+
+    return `
+    <div style="border:1px solid #dde4ee;border-radius:8px;margin-bottom:8px;overflow:hidden">
+      <button type="button" onclick="nrToggleGroup('${g.key}')"
+        style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#f9fbfd;border:none;cursor:pointer;text-align:left;transition:background .15s"
+        onmouseover="this.style.background='#eef4fb'" onmouseout="this.style.background='#f9fbfd'">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy)">${g.label}</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          <span id="nrsel-${g.key}" style="font-size:.72rem;font-weight:700;color:var(--cyan);display:none">0 selected</span>
+          <svg id="nrarr-${g.key}" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6a7a90" stroke-width="2.5" style="transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </button>
+      <div id="nrgrp-${g.key}" style="display:none;padding:12px 14px">
+        ${searchBox}
+        <div id="nritems-${g.key}" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:1px;padding-right:4px">
+          ${checkboxes}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function nrToggleGroup(key) {
+  const el  = document.getElementById('nrgrp-' + key);
+  const arr = document.getElementById('nrarr-' + key);
+  const open = el.style.display === 'none';
+  el.style.display  = open ? '' : 'none';
+  arr.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+function nrFilterGroup(key, q) {
+  const term = q.toLowerCase().trim();
+  document.querySelectorAll(`#nritems-${key} label`).forEach(lbl => {
+    lbl.style.display = !term || lbl.textContent.toLowerCase().includes(term) ? '' : 'none';
+  });
+}
+
+function nrToggleItem(key, item, checked) {
+  if (checked) nrSelections[key].add(item);
+  else nrSelections[key].delete(item);
+  nrUpdateSelCount(key);
+  nrUpdateTotalCount();
+}
+
+function nrUpdateSelCount(key) {
+  const n = nrSelections[key].size;
+  const el = document.getElementById('nrsel-' + key);
+  if (!el) return;
+  el.textContent = n + ' selected';
+  el.style.display = n ? '' : 'none';
+}
+
+function nrUpdateTotalCount() {
+  let total = 0;
+  NR_GROUPS.forEach(g => total += nrSelections[g.key].size);
+  const el = document.getElementById('nr-sel-count');
+  if (el) el.textContent = total + ' selected';
+}
+
+function nrSerializeSelections() {
+  const out = {};
+  NR_GROUPS.forEach(g => { if (nrSelections[g.key].size) out[g.key] = [...nrSelections[g.key]]; });
+  return JSON.stringify(out);
+}
+
+function nrRestoreSelections(jsonStr) {
+  if (!jsonStr) return;
+  let data;
+  try { data = JSON.parse(jsonStr); } catch(e) { return; }
+  NR_GROUPS.forEach(g => {
+    if (!data[g.key]) return;
+    nrSelections[g.key] = new Set(data[g.key]);
+  });
+  nrUpdateTotalCount();
+}
+
+// ── NR SECTION INIT ───────────────────────────────────────────────────────────
+async function loadNRSection() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) return;
+  nrBuildTaxonomy();
+  await nrLoadCompanyPicker(session.user.id);
+  nrLoadNewsHistory(session);
+}
+
+async function nrLoadCompanyPicker(userId) {
+  const sel = document.getElementById('nr-company-select');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">\u2014 Select your company \u2014</option>';
+  const { data, error } = await db.from('nr_companies').select('id,name').order('name');
+  if (error || !data) return;
+  const { data: { session } } = await db.auth.getSession();
+  const userCo = session?.user?.user_metadata?.company || '';
+  data.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.id; o.textContent = c.name;
+    if (userCo && c.name.toLowerCase() === userCo.toLowerCase()) o.selected = true;
+    sel.appendChild(o);
+  });
+  if (sel.value) nrOnCompanySelect(sel.value);
+}
+
+async function nrOnCompanySelect(companyId) {
+  if (!companyId) return;
+  const { data } = await db.from('nr_profile_updates')
+    .select('*').eq('company_id', companyId).eq('status', 'pending')
+    .order('created_at', {ascending: false}).limit(1).maybeSingle();
+  const pb = document.getElementById('nr-pending-banner');
+  const pd = document.getElementById('nr-pending-date');
+  if (data) {
+    if (pb) { pb.style.display = 'block'; if (pd) pd.textContent = new Date(data.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+    const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+    set('nr-description', data.description);
+    set('nr-website', data.website);
+    set('nr-contact-name', data.contact_name);
+    set('nr-contact-phone', data.contact_phone);
+    set('nr-contact-email', data.contact_email);
+    set('nr-linkedin', data.linkedin);
+    set('nr-region', data.region);
+    set('nr-employees', data.employees);
+    if (data.capabilities) nrRestoreSelections(data.capabilities);
+    if (data.logo_url) {
+      const img = document.getElementById('nr-logo-img');
+      const ph  = document.getElementById('nr-logo-placeholder');
+      if (img) { img.src = data.logo_url; img.style.display = ''; if (ph) ph.style.display = 'none'; }
+    }
+  } else {
+    if (pb) pb.style.display = 'none';
+  }
+}
+
+function nrPreviewLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  nrLogoFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('nr-logo-img');
+    const ph  = document.getElementById('nr-logo-placeholder');
+    if (img) { img.src = e.target.result; img.style.display = ''; }
+    if (ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function nrUploadLogo(userId) {
+  if (!nrLogoFile) return null;
+  const ext  = nrLogoFile.name.split('.').pop();
+  const path = `${userId}/logo.${ext}`;
+  const { error } = await db.storage.from('nr-logos').upload(path, nrLogoFile, { upsert: true });
+  if (error) { document.getElementById('nr-logo-status').textContent = 'Logo upload failed: ' + error.message; return null; }
+  const { data } = db.storage.from('nr-logos').getPublicUrl(path);
+  return data?.publicUrl || null;
+}
+
+async function submitNRUpdate() {
+  const btn = document.getElementById('nr-submit-btn');
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { showNRMsg('You must be signed in.','#c0392b'); return; }
+  btn.disabled = true; btn.textContent = 'Uploading\u2026';
+  const logo_url = await nrUploadLogo(session.user.id);
+  const sel = document.getElementById('nr-company-select');
+  const companyId = sel ? sel.value : null;
+  if (!companyId) { showNRMsg('Please select your company first.','#c0392b'); btn.disabled=false; btn.textContent='Submit for Review'; return; }
+  const companyName = sel.options[sel.selectedIndex]?.text || '';
+  const payload = {
+    user_id:       session.user.id,
+    company_id:    companyId,
+    company_name:  companyName,
+    description:   document.getElementById('nr-description').value.trim(),
+    website:       document.getElementById('nr-website').value.trim(),
+    contact_name:  document.getElementById('nr-contact-name').value.trim(),
+    contact_phone: document.getElementById('nr-contact-phone').value.trim(),
+    contact_email: document.getElementById('nr-contact-email').value.trim(),
+    linkedin:      document.getElementById('nr-linkedin').value.trim(),
+    region:        document.getElementById('nr-region').value,
+    employees:     document.getElementById('nr-employees').value,
+    capabilities:  nrSerializeSelections(),
+    status:        'pending'
+  };
+  if (logo_url) payload.logo_url = logo_url;
+  btn.textContent = 'Submitting\u2026';
+  const { error } = await db.from('nr_profile_updates').insert(payload);
+  if (error) {
+    showNRMsg('Something went wrong: ' + error.message, '#c0392b');
+    btn.disabled = false; btn.textContent = 'Submit for Review';
+  } else {
+    showNRMsg('\u2713 Profile update submitted! NucCol will review it within 2 working days.', '#166534', '#f0fdf4', '#86efac');
+    btn.textContent = 'Submitted';
+    const pb = document.getElementById('nr-pending-banner');
+    const pd = document.getElementById('nr-pending-date');
+    if (pb) { pb.style.display = 'block'; pd.textContent = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+  }
+}
+
+function showNRMsg(text, color, bg, border) {
+  const el = document.getElementById('nr-msg');
+  el.textContent = text;
+  el.style.color      = color  || '#166534';
+  el.style.background = bg     || '#f0fdf4';
+  el.style.border     = '1px solid ' + (border || '#86efac');
+  el.style.display    = 'block';
+}
+
+async function nrLoadNewsHistory(session) {
+  if (!session) return;
+  const hist = document.getElementById('nrn-history');
+  if (!hist) return;
+  const { data } = await db.from('nr_news_submissions')
+    .select('*').eq('user_id', session.user.id).order('created_at',{ascending:false}).limit(10);
+  if (!data || !data.length) { hist.innerHTML = ''; return; }
+  hist.innerHTML = data.map(n => {
+    const statusColor = n.status==='approved'?'#16a34a':n.status==='rejected'?'#c0392b':'#d97706';
+    return `<div style="background:#fff;border:1px solid #dde4ee;border-radius:8px;padding:16px;font-size:.82rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <strong>${n.title||'(no title)'}</strong>
+        <span style="font-size:.72rem;color:#94a3b8">${new Date(n.created_at).toLocaleDateString('en-GB')}</span>
+      </div>
+      ${n.type?`<div style="color:#6a7a90;font-size:.75rem;margin-bottom:6px">${n.type}</div>`:''}
+      <div style="color:#374151;line-height:1.5">${n.body||''}</div>
+      <div style="margin-top:8px;font-size:.72rem;font-weight:700;color:${statusColor}">${(n.status||'pending').toUpperCase()}</div>
+    </div>`;
+  }).join('');
+}
+
+async function submitNRNews() {
+  const btn   = document.getElementById('nrn-submit-btn');
+  const title = document.getElementById('nrn-title').value.trim();
+  const type  = document.getElementById('nrn-type').value;
+  const body  = document.getElementById('nrn-body').value.trim();
+  const msg   = document.getElementById('nrn-msg');
+  if (!title || !body) {
+    msg.textContent = 'Please fill in the title and body.';
+    msg.style.background='#fee2e2'; msg.style.color='#c0392b'; msg.style.display='block'; return;
+  }
+  btn.disabled=true; btn.textContent='Submitting\u2026';
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { btn.disabled=false; btn.textContent='Submit Update'; return; }
+  const sel = document.getElementById('nr-company-select');
+  const { error } = await db.from('nr_news_submissions').insert({
+    user_id:      session.user.id,
+    company_id:   sel?.value || null,
+    company_name: sel?.options[sel.selectedIndex]?.text || '',
+    title, type, body, status: 'pending'
+  });
+  if (error) {
+    msg.textContent='Error: '+error.message;
+    msg.style.background='#fee2e2'; msg.style.color='#c0392b'; msg.style.display='block';
+    btn.disabled=false; btn.textContent='Submit Update';
+  } else {
+    msg.textContent='\u2713 Submitted! NucCol will review your update before it goes live.';
+    msg.style.background='#f0fdf4'; msg.style.color='#166534'; msg.style.display='block';
+    btn.textContent='Submitted';
+    document.getElementById('nrn-title').value='';
+    document.getElementById('nrn-type').value='';
+    document.getElementById('nrn-body').value='';
+    nrLoadNewsHistory(session);
+  }
+}
+
+// ── PROGRAMME COUNTRY VIEW ────────────────────────────────────────────────────
+let pcvData = null, pcvIndex = 0;
+
+async function loadPCVSection() {
+  const loading = document.getElementById('pcv-loading');
+  const viewer  = document.getElementById('pcv-viewer');
+  try {
+    const r = await fetch(`${BLOB_BASE}/programme-country-view.json?${BLOB_SAS}&t=${Date.now()}`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    pcvData = await r.json();
+
+    loading.style.display = 'none';
+    viewer.style.display  = 'flex';
+
+    // Font-size = 1% of slide width so all em units scale with the slide
+    const box = document.getElementById('pcv-slide-box');
+    const ro  = new ResizeObserver(entries => {
+      for (const e of entries) box.style.fontSize = (e.contentRect.width * 0.01) + 'px';
+    });
+    ro.observe(box);
+
+    // Keyboard nav
+    document.addEventListener('keydown', e => {
+      const sec = document.getElementById('sec-pcv');
+      if (!sec || !sec.classList.contains('active')) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); pcvNext(); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); pcvPrev(); }
+    });
+
+    pcvBuildTabs();
+    pcvGoTo(0);
+  } catch(err) {
+    loading.innerHTML = `<div style="color:#ef4444;font-family:'Barlow',sans-serif;font-size:.85rem">Could not load briefing data.<br><small style="color:#6a7a90">${err.message}</small></div>`;
+  }
+}
+
+function pcvBuildTabs() {
+  const tabsEl = document.getElementById('pcv-section-tabs');
+  if (!tabsEl || !pcvData) return;
+  tabsEl.innerHTML = '';
+  pcvData.slides.filter(s => s.type === 'section_header').forEach(s => {
+    const btn = document.createElement('button');
+    btn.dataset.pcvTab = s.id;
+    btn.textContent = s.title;
+    btn.style.cssText = 'background:rgba(255,255,255,.07);border:none;border-radius:3px;padding:3px 10px;cursor:pointer;color:rgba(255,255,255,.4);font-size:.66rem;font-family:"Barlow Condensed",sans-serif;font-weight:700;letter-spacing:.06em;transition:.15s;text-transform:uppercase';
+    btn.onclick = () => pcvGoTo(pcvData.slides.findIndex(sl => sl.id === s.id));
+    tabsEl.appendChild(btn);
+  });
+}
+
+function pcvGoTo(i) {
+  if (!pcvData) return;
+  pcvIndex = Math.max(0, Math.min(i, pcvData.slides.length - 1));
+  const slide = pcvData.slides[pcvIndex];
+
+  document.getElementById('pcv-slide-content').innerHTML = pcvRenderSlide(slide);
+  document.getElementById('pcv-counter').textContent = `${pcvIndex + 1} / ${pcvData.slides.length}`;
+  document.getElementById('pcv-group-label').textContent = slide.group || slide.country || '';
+  document.getElementById('pcv-progress').style.width = ((pcvIndex + 1) / pcvData.slides.length * 100).toFixed(1) + '%';
+
+  // Active tab highlight
+  const tabs = document.querySelectorAll('#pcv-section-tabs button');
+  tabs.forEach(t => t.style.color = 'rgba(255,255,255,.4)');
+  let activeSection = null;
+  for (let j = pcvIndex; j >= 0; j--) {
+    if (pcvData.slides[j].type === 'section_header') { activeSection = pcvData.slides[j]; break; }
+  }
+  if (activeSection) {
+    const activeTab = document.querySelector(`#pcv-section-tabs button[data-pcv-tab="${activeSection.id}"]`);
+    if (activeTab) activeTab.style.color = '#29b6e8';
+  }
+}
+
+function pcvNext() { pcvGoTo(pcvIndex + 1); }
+function pcvPrev() { pcvGoTo(pcvIndex - 1); }
+
+function pcvRenderSlide(s) {
+  switch (s.type) {
+    case 'section_header':   return pcvRenderSectionHeader(s);
+    case 'overview':         return pcvRenderOverview(s);
+    case 'timeline':         return pcvRenderTimeline(s);
+    case 'programme_update': return pcvRenderProgrammeUpdate(s);
+    default: return `<div class="pcv-slide" style="display:flex;align-items:center;justify-content:center;background:#0a1628;color:#fff;font-size:1.5em">${s.title || 'Slide'}</div>`;
+  }
+}
+
+// ── RENDER: Section Header ────────────────────────────────────────────────────
+function pcvRenderSectionHeader(s) {
+  return `<div class="pcv-slide pcv-sh">
+    <div class="pcv-sh-grid"></div>
+    ${s.eyebrow ? `<div class="pcv-sh-eyebrow">${s.eyebrow}</div>` : ''}
+    <div class="pcv-sh-title">${s.title}</div>
+    ${s.subtitle ? `<div class="pcv-sh-subtitle">${s.subtitle}</div>` : ''}
+    <div class="pcv-sh-accent"></div>
+  </div>`;
+}
+
+// ── RENDER: Overview ──────────────────────────────────────────────────────────
+function pcvRenderOverview(s) {
+  const progs = s.programmes || [];
+  const cols = progs.length <= 3 ? progs.length : progs.length <= 4 ? 2 : 3;
+
+  const legendHtml = (s.legend || []).map(l =>
+    `<span class="pcv-ov-leg-item"><span class="pcv-ov-leg-dot ${l.type}"></span>${l.label}</span>`
+  ).join('');
+
+  const cardsHtml = progs.map(p => {
+    const st = p.statusType || 'early';
+    return `<div class="pcv-ov-card">
+      <div class="pcv-ov-card-chip ${st}">${p.status}</div>
+      <div class="pcv-ov-card-name">${p.name}</div>
+      <div class="pcv-ov-card-capacity">${p.capacity || ''}</div>
+      <div class="pcv-ov-card-milestone-label">MILESTONE</div>
+      <div class="pcv-ov-card-milestone-text">${p.milestone || ''}</div>
+      <div class="pcv-ov-card-partners">${p.partners || ''}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="pcv-slide pcv-ov">
+    <div class="pcv-ov-header">
+      <div class="pcv-ov-title-block">
+        <div class="pcv-ov-eyebrow">${s.country || ''}</div>
+        <div class="pcv-ov-country">${s.title || ''}</div>
+        ${(s.subtitle||s.group) ? `<div class="pcv-ov-subtitle-text">${s.subtitle||s.group}</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5em">
+        <div class="pcv-ov-legend">${legendHtml}</div>
+      </div>
+    </div>
+    <div class="pcv-ov-cards" style="grid-template-columns:repeat(${cols},1fr)">${cardsHtml}</div>
+    ${s.source ? `<div class="pcv-ov-source">Source: ${s.source}</div>` : ''}
+  </div>`;
+}
+
+// ── RENDER: Timeline ──────────────────────────────────────────────────────────
+function pcvRenderTimeline(s) {
+  const startY = s.startYear, endY = s.endYear, span = endY - startY;
+  const yearLabels = s.yearLabels || [];
+
+  const yearsHtml = yearLabels.map(y => `<div class="pcv-tl-year">${y}</div>`).join('');
+  const gridColsHtml = yearLabels.map(() => `<div class="pcv-tl-grid-col"></div>`).join('');
+
+  const legendHtml = (s.legend || []).map(l =>
+    `<div class="pcv-ov-leg-item"><div class="pcv-ov-leg-dot ${l.type}"></div>${l.label}</div>`
+  ).join('');
+
+  const rowsHtml = (s.rows || []).map(row => {
+    const barsHtml = (row.bars || []).map(b => {
+      const left  = ((b.start - startY) / span * 100).toFixed(2);
+      const width = Math.max(1, ((b.end - b.start) / span * 100)).toFixed(2);
+      return `<div class="pcv-tl-bar ${b.type || 'active'}" style="left:${left}%;width:${width}%"></div>`;
+    }).join('');
+
+    const msHtml = (row.milestones || []).map(m => {
+      const pos = ((m.year - startY) / span * 100).toFixed(2);
+      return `<div class="pcv-tl-milestone" style="left:${pos}%"></div>
+              <div class="pcv-tl-ms-label" style="left:${pos}%">${m.label}</div>`;
+    }).join('');
+
+    return `<div class="pcv-tl-row">
+      <div class="pcv-tl-row-label">
+        <div class="pcv-tl-row-name">${row.name}</div>
+        ${row.detail ? `<div class="pcv-tl-row-detail">${row.detail}</div>` : ''}
+      </div>
+      <div class="pcv-tl-row-bars">
+        <div class="pcv-tl-grid">${gridColsHtml}</div>
+        ${barsHtml}${msHtml}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="pcv-slide pcv-tl">
+    <div class="pcv-tl-top">
+      <div class="pcv-tl-header">${s.title || 'Programme Timeline'}</div>
+      <div class="pcv-tl-legend">${legendHtml}</div>
+    </div>
+    <div class="pcv-tl-chart">
+      <div class="pcv-tl-years">${yearsHtml}</div>
+      <div class="pcv-tl-rows">${rowsHtml}</div>
+    </div>
+    ${s.source ? `<div class="pcv-ov-source" style="margin-top:.6em">Source: ${s.source}</div>` : ''}
+  </div>`;
+}
+
+// ── RENDER: Programme Update ──────────────────────────────────────────────────
+function pcvRenderProgrammeUpdate(s) {
+  const stats = s.stats || [];
+  const statsHtml = stats.map(st =>
+    `<div class="pcv-pu-stat">
+      <div class="pcv-pu-stat-value">${st.value}</div>
+      <div class="pcv-pu-stat-label">${st.label}</div>
+    </div>`
+  ).join('');
+
+  const msHtml = (s.milestones || []).map(m =>
+    `<div class="pcv-pu-ms-row">
+      <div class="pcv-pu-ms-date">${m.date}</div>
+      <div class="pcv-pu-ms-line"><div class="pcv-pu-ms-dot"></div></div>
+      <div class="pcv-pu-ms-text">${m.text}</div>
+    </div>`
+  ).join('');
+
+  const statCols = Math.min(stats.length, 4);
+  return `<div class="pcv-slide pcv-pu">
+    <div class="pcv-pu-header">
+      <div>
+        <div class="pcv-pu-eyebrow">${(s.country||'')}${s.group ? ' · ' + s.group : ''}</div>
+        <div class="pcv-pu-title">${s.title}</div>
+        ${s.subtitle ? `<div class="pcv-pu-subtitle">${s.subtitle}</div>` : ''}
+      </div>
+    </div>
+    <div class="pcv-pu-stats" style="grid-template-columns:repeat(${statCols},1fr)">${statsHtml}</div>
+    <div class="pcv-pu-body">
+      <div class="pcv-pu-left">
+        ${s.timelineTitle ? `<div class="pcv-pu-tl-title">${s.timelineTitle}</div>` : ''}
+        <div class="pcv-pu-ms-list">${msHtml}</div>
+      </div>
+      <div class="pcv-pu-right">
+        <div class="pcv-pu-wim">
+          <div class="pcv-pu-wim-label">WHAT IT MEANS FOR YOU</div>
+          <div class="pcv-pu-wim-text">${s.what_it_means || ''}</div>
+        </div>
+      </div>
+    </div>
+    <div class="pcv-pu-footer">Commercial in Confidence · NucCol Ltd</div>
+  </div>`;
 }
 
 </script>
