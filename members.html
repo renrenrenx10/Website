@@ -117,6 +117,30 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 .card-foot span{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
 .card-foot svg{width:14px;height:14px;color:var(--cyan)}
 
+/* HERO - compact variant for tour landing */
+.m-hero.compact{padding:24px 48px}
+.m-hero.compact .m-hero-content{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.m-hero.compact h1{font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1}
+.m-hero.compact p{margin-top:8px;font-size:.88rem;max-width:460px}
+.m-hero.compact .m-hero-cta{flex-shrink:0}
+.m-hero.compact .m-hero-cta a{display:inline-flex;align-items:center;gap:8px;background:var(--cyan);color:#0a1628;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;padding:12px 22px;border-radius:6px;white-space:nowrap}
+.m-hero.compact .m-hero-cta svg{width:14px;height:14px}
+
+/* TOUR (product-tour landing cards) */
+.tour-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:18px}
+.tour-head .sec-header{margin-bottom:0}
+.tour-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-bottom:32px}
+.tour-card{background:var(--white);border:1px solid #dde4ee;border-radius:10px;overflow:hidden;cursor:pointer;transition:.2s;display:flex;flex-direction:column;text-decoration:none;color:var(--navy)}
+.tour-card:hover{border-color:var(--cyan);transform:translateY(-3px);box-shadow:0 10px 28px rgba(10,22,40,.09)}
+.tour-shot{width:100%;height:152px;object-fit:cover;object-position:top left;display:block;border-bottom:1px solid #eef1f6;background:#f4f7fb}
+.tour-body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
+.tour-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px}
+.tour-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1.02rem;font-weight:700;text-transform:uppercase;letter-spacing:.02em;margin-bottom:8px}
+.tour-card p{font-size:.81rem;color:#5a6a80;line-height:1.6;flex:1}
+.tour-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.tour-foot span{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+.tour-foot svg{width:14px;height:14px;color:var(--cyan)}
+
 /* SECTION HEADER */
 .sec-header{margin-bottom:28px}
 .sec-header h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:8px;color:var(--navy)}
@@ -298,6 +322,9 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
   #main{margin-left:0;width:100%}
   #content{padding:24px 20px}
   .cards-grid{grid-template-columns:1fr}
+  .tour-grid{grid-template-columns:1fr}
+  .m-hero.compact .m-hero-content{display:block}
+  .m-hero.compact .m-hero-cta{margin-top:16px;display:block}
   .quick-stats{flex-direction:column}
   .comm-grid{grid-template-columns:1fr}
   .be-areas{grid-template-columns:repeat(2,1fr)}
@@ -766,63 +793,127 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
 
     <!-- HOME -->
     <div id="sec-home" class="section active">
-      <div class="m-hero">
+      <div class="m-hero compact">
         <div class="m-hero-grid"></div>
         <div class="m-hero-content">
-          <div class="eyebrow" id="hero-welcome">Welcome back</div>
-          <h1 id="we-hero_title">NucCol <span>Members</span><br>Area</h1>
-          <p id="we-hero_sub">Your central hub for F4N progress, the Business Excellence Handbook, knowledge sessions, live sector feeds, and the NucCol community.</p>
+          <div>
+            <div class="eyebrow" id="hero-welcome">Welcome back</div>
+            <h1 id="we-hero_title">NucCol <span>Members</span> Area</h1>
+            <p id="we-hero_sub">Your central hub for F4N progress, the Business Excellence Handbook, knowledge sessions, live sector feeds, and the NucCol community.</p>
+          </div>
+          <div class="m-hero-cta">
+            <a href="https://app.fit4.org.uk/" target="_blank">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              F4N Portal
+            </a>
+          </div>
         </div>
       </div>
 
-      <div class="cards-grid">
-        <div class="card" onclick="nav('f4n')">
-          <div class="card-icon" style="background:rgba(0,200,212,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#00c8d4" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          <h3>Fit For Nuclear</h3>
-          <p>Track your F4N journey — log in to the portal to view your assessment.</p>
-          <div class="card-foot"><span>View Progress</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      <div class="quick-stats">
+        <div class="qs"><div class="qs-num">200+</div><div class="qs-label">Handbook topics</div></div>
+        <div class="qs"><div class="qs-num">240+</div><div class="qs-label">Toolbox templates</div></div>
+        <div class="qs"><div class="qs-num">Live</div><div class="qs-label">Tender feed</div></div>
+      </div>
+
+      <div class="tour-head">
+        <div class="sec-header">
+          <div class="eyebrow">Take the tour</div>
+          <h2>Everything in <span>one place</span></h2>
+          <p>Your own personalised hub — F4N progress, handbooks, live feeds and community, all two clicks from login.</p>
         </div>
-        <div class="card" onclick="nav('handbook')">
-          <div class="card-icon" style="background:rgba(96,165,250,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
-          <h3>Business Excellence Handbook</h3>
-          <p>200+ topics across 6 categories — Strategy, People, Process, QHSE, Design, Supply Chain.</p>
-          <div class="card-foot"><span>Open Handbook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+      </div>
+
+      <div class="tour-grid">
+        <div class="tour-card" onclick="nav('tenders')">
+          <img class="tour-shot" src="images/members-tour/tenders.jpg" alt="Tenders Roundup preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Tenders Roundup</div>
+            <h3>Where's the work? Right here.</h3>
+            <p>Live tender opportunities from Contracts Finder and key procurement portals — nuclear, CCUS and offshore renewables, with closing dates in plain sight.</p>
+            <div class="tour-foot"><span>View Tenders</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
-        <div class="card" onclick="nav('webinars')">
-          <div class="card-icon" style="background:rgba(167,139,250,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-          <h3>Webinars &amp; Videos</h3>
-          <p>Past webinars, business excellence overviews, micro-learning clips and more — all in one place.</p>
-          <div class="card-foot"><span>Watch Now</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="tour-card" onclick="nav('handbook')">
+          <img class="tour-shot" src="images/members-tour/be-handbook.jpg" alt="Business Excellence Handbook preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Business Excellence Handbook</div>
+            <h3>200+ topics. 6 categories.</h3>
+            <p>Practical, implementable guidance to close the gaps on your F4N journey — Strategy, People, Process, QHSE, Design and Supply Chain.</p>
+            <div class="tour-foot"><span>Open Handbook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
-        <div class="card" onclick="nav('knowledge')">
-          <div class="card-icon" style="background:rgba(167,139,250,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
-          <h3>Knowledge Transfer</h3>
-          <p>Expert webinars and videos to support your continuous improvement journey.</p>
-          <div class="card-foot"><span>Watch Sessions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="tour-card" onclick="nav('nhandbook')">
+          <img class="tour-shot" src="images/members-tour/nuclear-handbook.jpg" alt="Nuclear Excellence Handbook preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Nuclear Excellence Handbook</div>
+            <h3>Know what the sector expects</h3>
+            <p>Safety culture, human performance, quality and supply chain readiness — the nuclear-specific half of the journey, before the assessment, not after.</p>
+            <div class="tour-foot"><span>Open Handbook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
-        <div class="card" onclick="nav('news')">
-          <div class="card-icon" style="background:rgba(34,197,94,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-          <h3>Sector News</h3>
-          <p>Nuclear and clean energy updates curated weekly for the supply chain community.</p>
-          <div class="card-foot"><span>Read News</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="tour-card" onclick="nav('toolbox')">
+          <img class="tour-shot" src="images/members-tour/toolbox.jpg" alt="Member Toolbox preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Member Toolbox</div>
+            <h3>Download. Deploy. Done.</h3>
+            <p>240+ ready-to-use templates, trackers and toolbox talks in Word, Excel and PowerPoint — built to work alongside both handbooks.</p>
+            <div class="tour-foot"><span>Open Toolbox</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
-        <div class="card" onclick="nav('tenders')">
-          <div class="card-icon" style="background:rgba(245,158,11,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-          <h3>Tenders Roundup</h3>
-          <p>Live nuclear supply chain opportunities — find relevant tenders for your capability.</p>
-          <div class="card-foot"><span>View Tenders</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="tour-card" onclick="nav('knowledge')">
+          <img class="tour-shot" src="images/members-tour/knowledge.jpg" alt="Knowledge Transfer preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Knowledge Transfer</div>
+            <h3>48 videos. Straight to the point.</h3>
+            <p>Lean, root cause, cyber security, nuclear fundamentals explained in plain English, most in under a minute. Built to bring your whole team up to speed.</p>
+            <div class="tour-foot"><span>Watch Sessions</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
-        <div class="card" onclick="nav('nhandbook')">
-          <div class="card-icon" style="background:rgba(34,197,94,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <h3>Nuclear Excellence Handbook</h3>
-          <p>Nuclear-specific guidance — safety culture, human performance, quality, supply chain readiness, and more.</p>
-          <div class="card-foot"><span>Open Handbook</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="tour-card" onclick="nav('webinars')">
+          <img class="tour-shot" src="images/members-tour/webinars.jpg" alt="Webinars and Past Sessions preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Webinars &amp; Past Sessions</div>
+            <h3>Missed it live? Catch up anytime.</h3>
+            <p>Every NucCol webinar is recorded and waiting — from CFSI to skills readiness for 2026. New sessions added regularly.</p>
+            <div class="tour-foot"><span>Watch Now</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
-        <div class="card" onclick="nav('community')">
-          <div class="card-icon" style="background:rgba(251,146,60,.12)"><svg viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <h3>Community</h3>
-          <p>Connect with peers across the nuclear supply chain. Share insights and best practice.</p>
-          <div class="card-foot"><span>Join Conversation</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        <div class="tour-card" onclick="nav('news')">
+          <img class="tour-shot" src="images/members-tour/news.jpg" alt="Sector News preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Sector News</div>
+            <h3>One feed. Zero trawling.</h3>
+            <p>The week's nuclear and clean energy news, curated for the supply chain community — nuclear, hydrogen, offshore renewables and CCUS.</p>
+            <div class="tour-foot"><span>Read News</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+        </div>
+        <div class="tour-card" onclick="nav('events')">
+          <img class="tour-shot" src="images/members-tour/events.jpg" alt="Events Roundup preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Events Roundup</div>
+            <h3>The sector's diary, sorted</h3>
+            <p>Conferences, exhibitions and networking across clean energy including the Nuclear Supply Chain Summit, 7 October 2026 in Derby.</p>
+            <div class="tour-foot"><span>View Events</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+        </div>
+        <div class="tour-card" onclick="nav('community')">
+          <img class="tour-shot" src="images/members-tour/community.jpg" alt="Online Community preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">Online Community</div>
+            <h3>Not just content — a network</h3>
+            <p>Ask questions, share best practice and swap wins with peers across the nuclear supply chain. Members only.</p>
+            <div class="tour-foot"><span>Join Conversation</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+        </div>
+        <div class="tour-card" onclick="nav('addmember')">
+          <img class="tour-shot" src="images/members-tour/addmember.jpg" alt="Add Your Team preview">
+          <div class="tour-body">
+            <div class="tour-eyebrow">New: Add Your Team</div>
+            <h3>One membership. Your whole business.</h3>
+            <p>Add colleagues in a couple of clicks — BD gets the tenders, quality gets the handbooks, the shop floor gets the toolbox talks. No shared logins.</p>
+            <div class="tour-foot"><span>Add Member</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
         </div>
       </div>
     </div>
@@ -3319,148 +3410,4 @@ function pcvRenderSlide(s) {
   }
 }
 
-// ── RENDER: Section Header ────────────────────────────────────────────────────
-function pcvRenderSectionHeader(s) {
-  return `<div class="pcv-slide pcv-sh">
-    <div class="pcv-sh-grid"></div>
-    ${s.eyebrow ? `<div class="pcv-sh-eyebrow">${s.eyebrow}</div>` : ''}
-    <div class="pcv-sh-title">${s.title}</div>
-    ${s.subtitle ? `<div class="pcv-sh-subtitle">${s.subtitle}</div>` : ''}
-    <div class="pcv-sh-accent"></div>
-  </div>`;
-}
-
-// ── RENDER: Overview ──────────────────────────────────────────────────────────
-function pcvRenderOverview(s) {
-  const progs = s.programmes || [];
-  const cols = progs.length <= 3 ? progs.length : progs.length <= 4 ? 2 : 3;
-
-  const legendHtml = (s.legend || []).map(l =>
-    `<span class="pcv-ov-leg-item"><span class="pcv-ov-leg-dot ${l.type}"></span>${l.label}</span>`
-  ).join('');
-
-  const cardsHtml = progs.map(p => {
-    const st = p.statusType || 'early';
-    return `<div class="pcv-ov-card">
-      <div class="pcv-ov-card-chip ${st}">${p.status}</div>
-      <div class="pcv-ov-card-name">${p.name}</div>
-      <div class="pcv-ov-card-capacity">${p.capacity || ''}</div>
-      <div class="pcv-ov-card-milestone-label">MILESTONE</div>
-      <div class="pcv-ov-card-milestone-text">${p.milestone || ''}</div>
-      <div class="pcv-ov-card-partners">${p.partners || ''}</div>
-    </div>`;
-  }).join('');
-
-  return `<div class="pcv-slide pcv-ov">
-    <div class="pcv-ov-header">
-      <div class="pcv-ov-title-block">
-        <div class="pcv-ov-eyebrow">${s.country || ''}</div>
-        <div class="pcv-ov-country">${s.title || ''}</div>
-        ${(s.subtitle||s.group) ? `<div class="pcv-ov-subtitle-text">${s.subtitle||s.group}</div>` : ''}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5em">
-        <div class="pcv-ov-legend">${legendHtml}</div>
-      </div>
-    </div>
-    <div class="pcv-ov-cards" style="grid-template-columns:repeat(${cols},1fr)">${cardsHtml}</div>
-    ${s.source ? `<div class="pcv-ov-source">Source: ${s.source}</div>` : ''}
-  </div>`;
-}
-
-// ── RENDER: Timeline ──────────────────────────────────────────────────────────
-function pcvRenderTimeline(s) {
-  const startY = s.startYear, endY = s.endYear, span = endY - startY;
-  const yearLabels = s.yearLabels || [];
-
-  const yearsHtml = yearLabels.map(y => `<div class="pcv-tl-year">${y}</div>`).join('');
-  const gridColsHtml = yearLabels.map(() => `<div class="pcv-tl-grid-col"></div>`).join('');
-
-  const legendHtml = (s.legend || []).map(l =>
-    `<div class="pcv-ov-leg-item"><div class="pcv-ov-leg-dot ${l.type}"></div>${l.label}</div>`
-  ).join('');
-
-  const rowsHtml = (s.rows || []).map(row => {
-    const barsHtml = (row.bars || []).map(b => {
-      const left  = ((b.start - startY) / span * 100).toFixed(2);
-      const width = Math.max(1, ((b.end - b.start) / span * 100)).toFixed(2);
-      return `<div class="pcv-tl-bar ${b.type || 'active'}" style="left:${left}%;width:${width}%"></div>`;
-    }).join('');
-
-    const msHtml = (row.milestones || []).map(m => {
-      const pos = ((m.year - startY) / span * 100).toFixed(2);
-      return `<div class="pcv-tl-milestone" style="left:${pos}%"></div>
-              <div class="pcv-tl-ms-label" style="left:${pos}%">${m.label}</div>`;
-    }).join('');
-
-    return `<div class="pcv-tl-row">
-      <div class="pcv-tl-row-label">
-        <div class="pcv-tl-row-name">${row.name}</div>
-        ${row.detail ? `<div class="pcv-tl-row-detail">${row.detail}</div>` : ''}
-      </div>
-      <div class="pcv-tl-row-bars">
-        <div class="pcv-tl-grid">${gridColsHtml}</div>
-        ${barsHtml}${msHtml}
-      </div>
-    </div>`;
-  }).join('');
-
-  return `<div class="pcv-slide pcv-tl">
-    <div class="pcv-tl-top">
-      <div class="pcv-tl-header">${s.title || 'Programme Timeline'}</div>
-      <div class="pcv-tl-legend">${legendHtml}</div>
-    </div>
-    <div class="pcv-tl-chart">
-      <div class="pcv-tl-years">${yearsHtml}</div>
-      <div class="pcv-tl-rows">${rowsHtml}</div>
-    </div>
-    ${s.source ? `<div class="pcv-ov-source" style="margin-top:.6em">Source: ${s.source}</div>` : ''}
-  </div>`;
-}
-
-// ── RENDER: Programme Update ──────────────────────────────────────────────────
-function pcvRenderProgrammeUpdate(s) {
-  const stats = s.stats || [];
-  const statsHtml = stats.map(st =>
-    `<div class="pcv-pu-stat">
-      <div class="pcv-pu-stat-value">${st.value}</div>
-      <div class="pcv-pu-stat-label">${st.label}</div>
-    </div>`
-  ).join('');
-
-  const msHtml = (s.milestones || []).map(m =>
-    `<div class="pcv-pu-ms-row">
-      <div class="pcv-pu-ms-date">${m.date}</div>
-      <div class="pcv-pu-ms-line"><div class="pcv-pu-ms-dot"></div></div>
-      <div class="pcv-pu-ms-text">${m.text}</div>
-    </div>`
-  ).join('');
-
-  const statCols = Math.min(stats.length, 4);
-  return `<div class="pcv-slide pcv-pu">
-    <div class="pcv-pu-header">
-      <div>
-        <div class="pcv-pu-eyebrow">${(s.country||'')}${s.group ? ' · ' + s.group : ''}</div>
-        <div class="pcv-pu-title">${s.title}</div>
-        ${s.subtitle ? `<div class="pcv-pu-subtitle">${s.subtitle}</div>` : ''}
-      </div>
-    </div>
-    <div class="pcv-pu-stats" style="grid-template-columns:repeat(${statCols},1fr)">${statsHtml}</div>
-    <div class="pcv-pu-body">
-      <div class="pcv-pu-left">
-        ${s.timelineTitle ? `<div class="pcv-pu-tl-title">${s.timelineTitle}</div>` : ''}
-        <div class="pcv-pu-ms-list">${msHtml}</div>
-      </div>
-      <div class="pcv-pu-right">
-        <div class="pcv-pu-wim">
-          <div class="pcv-pu-wim-label">WHAT IT MEANS FOR YOU</div>
-          <div class="pcv-pu-wim-text">${s.what_it_means || ''}</div>
-        </div>
-      </div>
-    </div>
-    <div class="pcv-pu-footer">Commercial in Confidence · NucCol Ltd</div>
-  </div>`;
-}
-
-</script>
-</body>
-</html>
+// ── RENDER: Section Header ──────────────────────────────────────
