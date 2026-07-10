@@ -3410,4 +3410,148 @@ function pcvRenderSlide(s) {
   }
 }
 
-// ── RENDER: Section Header ──────────────────────────────────────
+// ── RENDER: Section Header ────────────────────────────────────────────────────
+function pcvRenderSectionHeader(s) {
+  return `<div class="pcv-slide pcv-sh">
+    <div class="pcv-sh-grid"></div>
+    ${s.eyebrow ? `<div class="pcv-sh-eyebrow">${s.eyebrow}</div>` : ''}
+    <div class="pcv-sh-title">${s.title}</div>
+    ${s.subtitle ? `<div class="pcv-sh-subtitle">${s.subtitle}</div>` : ''}
+    <div class="pcv-sh-accent"></div>
+  </div>`;
+}
+
+// ── RENDER: Overview ──────────────────────────────────────────────────────────
+function pcvRenderOverview(s) {
+  const progs = s.programmes || [];
+  const cols = progs.length <= 3 ? progs.length : progs.length <= 4 ? 2 : 3;
+
+  const legendHtml = (s.legend || []).map(l =>
+    `<span class="pcv-ov-leg-item"><span class="pcv-ov-leg-dot ${l.type}"></span>${l.label}</span>`
+  ).join('');
+
+  const cardsHtml = progs.map(p => {
+    const st = p.statusType || 'early';
+    return `<div class="pcv-ov-card">
+      <div class="pcv-ov-card-chip ${st}">${p.status}</div>
+      <div class="pcv-ov-card-name">${p.name}</div>
+      <div class="pcv-ov-card-capacity">${p.capacity || ''}</div>
+      <div class="pcv-ov-card-milestone-label">MILESTONE</div>
+      <div class="pcv-ov-card-milestone-text">${p.milestone || ''}</div>
+      <div class="pcv-ov-card-partners">${p.partners || ''}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="pcv-slide pcv-ov">
+    <div class="pcv-ov-header">
+      <div class="pcv-ov-title-block">
+        <div class="pcv-ov-eyebrow">${s.country || ''}</div>
+        <div class="pcv-ov-country">${s.title || ''}</div>
+        ${(s.subtitle||s.group) ? `<div class="pcv-ov-subtitle-text">${s.subtitle||s.group}</div>` : ''}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.5em">
+        <div class="pcv-ov-legend">${legendHtml}</div>
+      </div>
+    </div>
+    <div class="pcv-ov-cards" style="grid-template-columns:repeat(${cols},1fr)">${cardsHtml}</div>
+    ${s.source ? `<div class="pcv-ov-source">Source: ${s.source}</div>` : ''}
+  </div>`;
+}
+
+// ── RENDER: Timeline ──────────────────────────────────────────────────────────
+function pcvRenderTimeline(s) {
+  const startY = s.startYear, endY = s.endYear, span = endY - startY;
+  const yearLabels = s.yearLabels || [];
+
+  const yearsHtml = yearLabels.map(y => `<div class="pcv-tl-year">${y}</div>`).join('');
+  const gridColsHtml = yearLabels.map(() => `<div class="pcv-tl-grid-col"></div>`).join('');
+
+  const legendHtml = (s.legend || []).map(l =>
+    `<div class="pcv-ov-leg-item"><div class="pcv-ov-leg-dot ${l.type}"></div>${l.label}</div>`
+  ).join('');
+
+  const rowsHtml = (s.rows || []).map(row => {
+    const barsHtml = (row.bars || []).map(b => {
+      const left  = ((b.start - startY) / span * 100).toFixed(2);
+      const width = Math.max(1, ((b.end - b.start) / span * 100)).toFixed(2);
+      return `<div class="pcv-tl-bar ${b.type || 'active'}" style="left:${left}%;width:${width}%"></div>`;
+    }).join('');
+
+    const msHtml = (row.milestones || []).map(m => {
+      const pos = ((m.year - startY) / span * 100).toFixed(2);
+      return `<div class="pcv-tl-milestone" style="left:${pos}%"></div>
+              <div class="pcv-tl-ms-label" style="left:${pos}%">${m.label}</div>`;
+    }).join('');
+
+    return `<div class="pcv-tl-row">
+      <div class="pcv-tl-row-label">
+        <div class="pcv-tl-row-name">${row.name}</div>
+        ${row.detail ? `<div class="pcv-tl-row-detail">${row.detail}</div>` : ''}
+      </div>
+      <div class="pcv-tl-row-bars">
+        <div class="pcv-tl-grid">${gridColsHtml}</div>
+        ${barsHtml}${msHtml}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="pcv-slide pcv-tl">
+    <div class="pcv-tl-top">
+      <div class="pcv-tl-header">${s.title || 'Programme Timeline'}</div>
+      <div class="pcv-tl-legend">${legendHtml}</div>
+    </div>
+    <div class="pcv-tl-chart">
+      <div class="pcv-tl-years">${yearsHtml}</div>
+      <div class="pcv-tl-rows">${rowsHtml}</div>
+    </div>
+    ${s.source ? `<div class="pcv-ov-source" style="margin-top:.6em">Source: ${s.source}</div>` : ''}
+  </div>`;
+}
+
+// ── RENDER: Programme Update ──────────────────────────────────────────────────
+function pcvRenderProgrammeUpdate(s) {
+  const stats = s.stats || [];
+  const statsHtml = stats.map(st =>
+    `<div class="pcv-pu-stat">
+      <div class="pcv-pu-stat-value">${st.value}</div>
+      <div class="pcv-pu-stat-label">${st.label}</div>
+    </div>`
+  ).join('');
+
+  const msHtml = (s.milestones || []).map(m =>
+    `<div class="pcv-pu-ms-row">
+      <div class="pcv-pu-ms-date">${m.date}</div>
+      <div class="pcv-pu-ms-line"><div class="pcv-pu-ms-dot"></div></div>
+      <div class="pcv-pu-ms-text">${m.text}</div>
+    </div>`
+  ).join('');
+
+  const statCols = Math.min(stats.length, 4);
+  return `<div class="pcv-slide pcv-pu">
+    <div class="pcv-pu-header">
+      <div>
+        <div class="pcv-pu-eyebrow">${(s.country||'')}${s.group ? ' · ' + s.group : ''}</div>
+        <div class="pcv-pu-title">${s.title}</div>
+        ${s.subtitle ? `<div class="pcv-pu-subtitle">${s.subtitle}</div>` : ''}
+      </div>
+    </div>
+    <div class="pcv-pu-stats" style="grid-template-columns:repeat(${statCols},1fr)">${statsHtml}</div>
+    <div class="pcv-pu-body">
+      <div class="pcv-pu-left">
+        ${s.timelineTitle ? `<div class="pcv-pu-tl-title">${s.timelineTitle}</div>` : ''}
+        <div class="pcv-pu-ms-list">${msHtml}</div>
+      </div>
+      <div class="pcv-pu-right">
+        <div class="pcv-pu-wim">
+          <div class="pcv-pu-wim-label">WHAT IT MEANS FOR YOU</div>
+          <div class="pcv-pu-wim-text">${s.what_it_means || ''}</div>
+        </div>
+      </div>
+    </div>
+    <div class="pcv-pu-footer">Commercial in Confidence · NucCol Ltd</div>
+  </div>`;
+}
+
+</script>
+</body>
+</html>
