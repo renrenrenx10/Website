@@ -60,7 +60,7 @@
       --grey:  #8a9bb0;
       --border: rgba(41,182,232,0.18);
     }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
     body { font-family: 'Barlow', sans-serif; background: var(--white); color: #1a1a2e; overflow-x: hidden; }
 
     /* ── NAV ─────────────────────────────────────── */
@@ -424,6 +424,17 @@
       nav .nav-links a.nav-cta { margin-top:10px; text-align:center; border-bottom:none; padding:12px 16px!important; }
     }
     /* END MOBILE NAV TOGGLE */
+
+    /* MOBILE OVERFLOW HARDENING (added) */
+    html, body { overflow-x: hidden; max-width: 100%; }
+    .modal-overlay { overflow-y: auto; }
+    .modal-box { max-width: min(540px, calc(100vw - 32px)) !important; }
+    .toc-img, .modal-photo { object-fit: cover; }
+    @media (max-width: 640px) {
+      .modal-header { padding: 20px 44px 16px 20px; }
+      .modal-name { word-break: break-word; }
+    }
+    /* END MOBILE OVERFLOW HARDENING */
 </style>
 </head>
 <body>
