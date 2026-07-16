@@ -181,6 +181,29 @@
       nav .nav-links a.nav-cta { margin-top:10px; text-align:center; border-bottom:none; padding:12px 16px!important; }
     }
     /* END MOBILE NAV TOGGLE */
+
+    /* MOBILE STACK INLINE GRIDS (added) */
+    @media(max-width:768px) {
+      [style*="grid-template-columns:1fr 1fr"],
+      [style*="grid-template-columns: 1fr 1fr"],
+      [style*="grid-template-columns:repeat(2"],
+      [style*="grid-template-columns: repeat(2"],
+      [style*="grid-template-columns:repeat(3"],
+      [style*="grid-template-columns: repeat(3"],
+      [style*="grid-template-columns:repeat(4"],
+      [style*="grid-template-columns: repeat(4"],
+      [style*="grid-template-columns:repeat(5"],
+      [style*="grid-template-columns: repeat(5"],
+      [style*="grid-template-columns:repeat(6"],
+      [style*="grid-template-columns: repeat(6"],
+      [style*="grid-template-columns:2fr 1fr"],
+      [style*="grid-template-columns: 2fr 1fr"],
+      [style*="grid-template-columns:3fr 2fr"],
+      [style*="grid-template-columns: 3fr 2fr"] {
+        grid-template-columns:1fr !important;
+      }
+    }
+    /* END MOBILE STACK INLINE GRIDS */
 </style>
 </head>
 <body>
