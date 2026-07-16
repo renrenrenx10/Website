@@ -429,7 +429,30 @@
       .footer-grid { grid-template-columns: 1fr; }
       .headline-grid { grid-template-columns: 1fr 1fr; }
     }
-  </style>
+  
+    /* MOBILE NAV TOGGLE (added) */
+    .nav-toggle { display:none; background:none; border:0; cursor:pointer; padding:8px; margin-left:auto; z-index:210; }
+    .nav-toggle span { display:block; width:26px; height:2px; background:var(--light); margin:5px 0; border-radius:2px; transition:transform .3s, opacity .3s; }
+    .nav-toggle.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity:0; }
+    .nav-toggle.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    @media(max-width:1024px) {
+      .nav-toggle { display:block; }
+      nav .nav-links { display:flex !important; position:fixed; top:72px; left:0; right:0;
+        flex-direction:column; align-items:stretch; gap:0;
+        background:rgba(10,22,40,0.98); backdrop-filter:blur(12px);
+        border-bottom:1px solid var(--border); padding:8px 16px 18px;
+        max-height:calc(100vh - 72px); overflow-y:auto;
+        transform:translateY(-130%); transition:transform .32s ease; box-shadow:0 14px 30px rgba(0,0,0,0.35); }
+      nav .nav-links.open { transform:translateY(0); }
+      nav .nav-links li { width:100%; }
+      nav .nav-links a { display:block; padding:14px 8px; font-size:0.98rem;
+        border-bottom:1px solid rgba(255,255,255,0.07); border-radius:0; }
+      nav .nav-links li:last-child a { border-bottom:none; }
+      nav .nav-links a.nav-cta { margin-top:10px; text-align:center; border-bottom:none; padding:12px 16px!important; }
+    }
+    /* END MOBILE NAV TOGGLE */
+</style>
 <script src="supabase.min.js"></script>
 </head>
 <body>
@@ -459,7 +482,8 @@
 
 <nav>
   <a href="index.html" class="nav-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"></a>
-  <ul class="nav-links">
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="primaryNav">
     <li><a href="index.html">Home</a></li>
     <li><a href="about.html">Who We Are</a></li>
     <li><a href="markets.html">Markets</a></li>
@@ -839,7 +863,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2025 NucCol &ndash; Nuclear Collaboration Ltd. All rights reserved.</span>
+    <span>&copy; 2026 NucCol &ndash; Nuclear Collaboration Ltd. All rights reserved.</span>
     <a href="https://nuccol.co.uk/privacy-policy/">Privacy Policy</a>
   </div>
 </footer>
@@ -1494,6 +1518,23 @@ db.auth.onAuthStateChange((event,session)=>{
     document.getElementById('page-content').style.display='none';
   }
 });
+</script>
+
+<script>
+/* Mobile nav toggle (added) */
+(function(){
+  var t=document.querySelector('.nav-toggle'), m=document.getElementById('primaryNav')||document.querySelector('.nav-links');
+  if(!t||!m) return;
+  function close(){ m.classList.remove('open'); t.classList.remove('open'); t.setAttribute('aria-expanded','false'); }
+  t.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open=m.classList.toggle('open'); t.classList.toggle('open', open);
+    t.setAttribute('aria-expanded', open?'true':'false');
+  });
+  m.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', close); });
+  document.addEventListener('click', function(e){ if(m.classList.contains('open') && !m.contains(e.target) && !t.contains(e.target)) close(); });
+  window.addEventListener('resize', function(){ if(window.innerWidth>1024) close(); });
+})();
 </script>
 </body>
 </html>
