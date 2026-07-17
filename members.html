@@ -3129,15 +3129,46 @@ function nrSerializeSelections() {
   return JSON.stringify(out);
 }
 
-function nrRestoreSelections(jsonStr) {
-  if (!jsonStr) return;
-  let data;
-  try { data = JSON.parse(jsonStr); } catch(e) { return; }
-  NR_GROUPS.forEach(g => {
-    if (!data[g.key]) return;
-    nrSelections[g.key] = new Set(data[g.key]);
-  });
+function nrRestoreSelections(input) {
+  if (!input) return;
+  // Accept: grouped object, JSON string of grouped object, flat array, or JSON
+  // string of a flat array. SCC writes capabilities from the DataVault supplier
+  // DB as a FLAT array; members.html itself writes a grouped object.
+  let data = input;
+  if (typeof data === 'string') {
+    try { data = JSON.parse(data); } catch(e) { return; }
+  }
+  if (Array.isArray(data)) {
+    // Flat list — match each name to whichever taxonomy group contains it.
+    data.filter(Boolean).forEach(name => {
+      const target = name.toString().trim();
+      let matched = false;
+      NR_GROUPS.forEach(g => {
+        const items = (typeof NR_TAXONOMY !== 'undefined' && NR_TAXONOMY[g.key]) || [];
+        const hit = items.find(it => it.toLowerCase() === target.toLowerCase());
+        if (hit) { nrSelections[g.key].add(hit); matched = true; }
+      });
+      // Unmapped names default into Commodities so nothing on record is lost.
+      if (!matched) nrSelections['commodities'].add(target);
+    });
+  } else if (data && typeof data === 'object') {
+    NR_GROUPS.forEach(g => {
+      if (!data[g.key]) return;
+      nrSelections[g.key] = new Set(data[g.key]);
+    });
+  }
+  nrSyncCheckboxDom();
+  NR_GROUPS.forEach(g => nrUpdateSelCount(g.key));
   nrUpdateTotalCount();
+}
+
+// Tick / untick the taxonomy checkboxes so the UI reflects nrSelections.
+function nrSyncCheckboxDom() {
+  document.querySelectorAll('#nr-taxonomy-root input[type="checkbox"][data-group]').forEach(cb => {
+    const g = cb.getAttribute('data-group');
+    const item = cb.getAttribute('data-item');
+    cb.checked = !!(nrSelections[g] && nrSelections[g].has(item));
+  });
 }
 
 // ── NR SECTION INIT ───────────────────────────────────────────────────────────
@@ -3168,30 +3199,45 @@ async function nrLoadCompanyPicker(userId) {
 
 async function nrOnCompanySelect(companyId) {
   if (!companyId) return;
+  // Live company record (staff-maintained, incl. capabilities/logo pulled from
+  // the DataVault supplier DB via SCC).
+  const { data: company } = await db.from('nr_companies')
+    .select('*').eq('id', companyId).maybeSingle();
+  // Any pending edit the company already submitted — takes precedence so a
+  // draft in progress isn't overwritten.
   const { data } = await db.from('nr_profile_updates')
     .select('*').eq('company_id', companyId).eq('status', 'pending')
     .order('created_at', {ascending: false}).limit(1).maybeSingle();
+
   const pb = document.getElementById('nr-pending-banner');
   const pd = document.getElementById('nr-pending-date');
-  if (data) {
-    if (pb) { pb.style.display = 'block'; if (pd) pd.textContent = new Date(data.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
-    const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
-    set('nr-description', data.description);
-    set('nr-website', data.website);
-    set('nr-contact-name', data.contact_name);
-    set('nr-contact-phone', data.contact_phone);
-    set('nr-contact-email', data.contact_email);
-    set('nr-linkedin', data.linkedin);
-    set('nr-region', data.region);
-    set('nr-employees', data.employees);
-    if (data.capabilities) nrRestoreSelections(data.capabilities);
-    if (data.logo_url) {
-      const img = document.getElementById('nr-logo-img');
-      const ph  = document.getElementById('nr-logo-placeholder');
-      if (img) { img.src = data.logo_url; img.style.display = ''; if (ph) ph.style.display = 'none'; }
-    }
-  } else {
-    if (pb) pb.style.display = 'none';
+  if (data && pb) { pb.style.display = 'block'; if (pd) pd.textContent = new Date(data.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+  else if (pb) pb.style.display = 'none';
+
+  // Prefer the pending draft value, else fall back to the live company record.
+  const pick = (field) => {
+    if (data && data[field] != null && data[field] !== '') return data[field];
+    if (company && company[field] != null && company[field] !== '') return company[field];
+    return null;
+  };
+  const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+  set('nr-description', pick('description'));
+  set('nr-website', pick('website'));
+  set('nr-contact-name', pick('contact_name'));
+  set('nr-contact-phone', pick('contact_phone'));
+  set('nr-contact-email', pick('contact_email'));
+  set('nr-linkedin', pick('linkedin'));
+  set('nr-region', pick('region'));
+  set('nr-employees', pick('employees'));
+
+  const caps = pick('capabilities');
+  if (caps) nrRestoreSelections(caps);
+
+  const logoUrl = pick('logo_url');
+  if (logoUrl) {
+    const img = document.getElementById('nr-logo-img');
+    const ph  = document.getElementById('nr-logo-placeholder');
+    if (img) { img.src = logoUrl; img.style.display = ''; if (ph) ph.style.display = 'none'; }
   }
 }
 
