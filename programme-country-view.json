@@ -1,0 +1,2222 @@
+{
+  "meta": {
+    "title": "Nuclear Programme Country View",
+    "subtitle": "Quarterly Market & Supply Chain Briefing",
+    "updated": "Q2 2026 — July 2026",
+    "edition": "July 2026",
+    "confidentiality": "Commercial in Confidence"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "type": "section_header",
+      "title": "Nuclear Technology",
+      "subtitle": "Programme Country View",
+      "eyebrow": "NucCol · Quarterly Briefing · Q2 2026"
+    },
+    {
+      "id": 2,
+      "type": "overview",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "UK NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Construction / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Design & consenting",
+          "type": "design"
+        },
+        {
+          "label": "Site selection",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "CONSTRUCTION",
+          "statusType": "active",
+          "name": "Hinkley Point C",
+          "capacity": "3.2 GW · 2×EPR",
+          "milestone": "First power 2030",
+          "partners": "EDF Energy · CGN"
+        },
+        {
+          "status": "CONSTRUCTION",
+          "statusType": "active",
+          "name": "Sizewell C",
+          "capacity": "3.2 GW · 2×EPR",
+          "milestone": "FID July 2025 · build to 2033–37",
+          "partners": "EDF · UK Gov (44.9%) · La Caisse · Centrica"
+        },
+        {
+          "status": "PRE-FID DESIGN",
+          "statusType": "design",
+          "name": "Rolls-Royce SMR — Wylfa",
+          "capacity": "1.4 GW+ · 3×470 MWe (up to 8 units)",
+          "milestone": "Grid connection mid-2030s · FID ~2029",
+          "partners": "GBE-N · Rolls-Royce SMR"
+        },
+        {
+          "status": "SITE SELECTION",
+          "statusType": "early",
+          "name": "Further Large-Scale Site",
+          "capacity": "~3.2 GW equivalent",
+          "milestone": "GBE-N site report Autumn 2026",
+          "partners": "GBE-N · DESNZ"
+        },
+        {
+          "status": "PRE-CONSTRUCTION",
+          "statusType": "design",
+          "name": "STEP Fusion — West Burton",
+          "capacity": "~100 MWe prototype",
+          "milestone": "DCO by March 2029 · demo ~2040",
+          "partners": "UK Fusion Energy · UKAEA"
+        },
+        {
+          "status": "ACTIVE DELIVERY",
+          "statusType": "active",
+          "name": "Sellafield Decommissioning",
+          "capacity": "UK's largest nuclear clean-up site",
+          "milestone": "Full site remediation by 2125",
+          "partners": "Sellafield Ltd · NDA · PPP"
+        }
+      ],
+      "source": "UK Nuclear Programme Landscape Report — Market & Supply Chain Analysis, 22 June 2026."
+    },
+    {
+      "id": 3,
+      "type": "timeline",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "UK NUCLEAR & FUSION PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2040+",
+      "legend": [
+        {
+          "label": "Construction / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Design & consenting",
+          "type": "design"
+        },
+        {
+          "label": "Site selection",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2043,
+      "yearLabels": [
+        "2026",
+        "2028",
+        "2030",
+        "2032",
+        "2034",
+        "2036",
+        "2038",
+        "2040",
+        "2042+"
+      ],
+      "rows": [
+        {
+          "name": "Hinkley Point C",
+          "detail": "3.2 GW · EDF Energy · CGN",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2031,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2030,
+              "label": "First power"
+            }
+          ]
+        },
+        {
+          "name": "Sizewell C",
+          "detail": "3.2 GW · EDF · UK Gov · La Caisse · Centrica",
+          "bars": [
+            {
+              "start": 2025.5,
+              "end": 2026,
+              "type": "design"
+            },
+            {
+              "start": 2026,
+              "end": 2037,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.5,
+              "label": "FID Jul-25"
+            },
+            {
+              "year": 2037,
+              "label": "Complete (range)"
+            }
+          ]
+        },
+        {
+          "name": "Rolls-Royce SMR — Wylfa",
+          "detail": "1.4 GW+ · GBE-N · Rolls-Royce SMR",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2029,
+              "type": "design"
+            },
+            {
+              "start": 2029,
+              "end": 2036,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2029,
+              "label": "FID (target)"
+            },
+            {
+              "year": 2034,
+              "label": "Grid connection"
+            }
+          ]
+        },
+        {
+          "name": "Further Large-Scale Site",
+          "detail": "~3.2 GW equivalent · GBE-N · DESNZ",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2030,
+              "type": "early"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.7,
+              "label": "Site report, Autumn 2026"
+            }
+          ]
+        },
+        {
+          "name": "STEP Fusion — West Burton",
+          "detail": "~100 MWe prototype · UK Fusion Energy · UKAEA",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2029,
+              "type": "early"
+            },
+            {
+              "start": 2029,
+              "end": 2043,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2029,
+              "label": "DCO Mar-29"
+            },
+            {
+              "year": 2040,
+              "label": "Net-energy demo ~2040"
+            }
+          ]
+        },
+        {
+          "name": "NDA Decommissioning",
+          "detail": "Sellafield Ltd · NDA · PPP",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2043,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2043,
+              "label": "Remediation by 2125 →"
+            }
+          ]
+        }
+      ],
+      "source": "UK Nuclear Programme Landscape Report — Market & Supply Chain Analysis, 22 June 2026."
+    },
+    {
+      "id": 4,
+      "type": "overview",
+      "country": "UK",
+      "group": "UK Private SMR/AMR",
+      "title": "UK PRIVATE SMR / AMR / MMR PROJECTS",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Construction / contracted delivery",
+          "type": "active"
+        },
+        {
+          "label": "GDA / site-specific licensing",
+          "type": "design"
+        },
+        {
+          "label": "MOU / feasibility",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "GDA STEP 2 COMPLETE",
+          "statusType": "design",
+          "name": "Holtec SMR-300 — Cottam",
+          "capacity": "2×320 MWe+ · ~$11bn",
+          "milestone": "GDA Step 2 done Mar-26 · operational 2030s",
+          "partners": "Holtec · EDF Energy · Tritax"
+        },
+        {
+          "status": "PRE-GDA / LICENSING",
+          "statusType": "design",
+          "name": "Westinghouse AP300 — Seal Sands",
+          "capacity": "4×300 MWe · 1.5 GW total",
+          "milestone": "Site fully licensed (target 2027) · ops early 2030s",
+          "partners": "Westinghouse · Community Nuclear Power"
+        },
+        {
+          "status": "GDA SUBMITTED",
+          "statusType": "design",
+          "name": "X-energy Xe-100 — Hartlepool",
+          "capacity": "12×80 MWe (960 MWe) · ~£40bn lifetime",
+          "milestone": "GDA submitted Jun-26 · concludes end-2029",
+          "partners": "X-energy · Centrica"
+        },
+        {
+          "status": "MOU / FEASIBILITY",
+          "statusType": "early",
+          "name": "Last Energy PWR-20 — London Gateway",
+          "capacity": "20 MWe micro-reactor · £80m private",
+          "milestone": "Operations targeted 2030",
+          "partners": "Last Energy · DP World"
+        }
+      ],
+      "source": "Public company/government announcements as of 22 June 2026. None of these projects has reached FID."
+    },
+    {
+      "id": 5,
+      "type": "timeline",
+      "country": "UK",
+      "group": "UK Private SMR/AMR",
+      "title": "UK PRIVATE SMR / AMR / MMR PROJECTS",
+      "subtitle": "Emerging Programme Timeline, 2025–2034+",
+      "legend": [
+        {
+          "label": "Construction / contracted delivery",
+          "type": "active"
+        },
+        {
+          "label": "GDA / site-specific licensing",
+          "type": "design"
+        },
+        {
+          "label": "MOU / feasibility",
+          "type": "early"
+        }
+      ],
+      "startYear": 2025,
+      "endYear": 2035,
+      "yearLabels": [
+        "2025",
+        "2026",
+        "2027",
+        "2028",
+        "2029",
+        "2030",
+        "2031",
+        "2032",
+        "2033",
+        "2034+"
+      ],
+      "rows": [
+        {
+          "name": "Holtec SMR-300 — Cottam",
+          "detail": "2×320 MWe (+) · Holtec · EDF · Tritax · ~$11bn",
+          "bars": [
+            {
+              "start": 2025,
+              "end": 2026,
+              "type": "early"
+            },
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "design"
+            },
+            {
+              "start": 2028,
+              "end": 2035,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.7,
+              "label": "MOU Sep-25"
+            },
+            {
+              "year": 2026.2,
+              "label": "GDA Step 2 Mar-26"
+            },
+            {
+              "year": 2032,
+              "label": "Operational (2030s)"
+            }
+          ]
+        },
+        {
+          "name": "Westinghouse AP300 — Seal Sands",
+          "detail": "4×300 MWe (1.5 GW) · Westinghouse · Community Nuclear Power",
+          "bars": [
+            {
+              "start": 2025,
+              "end": 2027,
+              "type": "design"
+            },
+            {
+              "start": 2027,
+              "end": 2032,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2027,
+              "label": "Design cert · site licensed"
+            },
+            {
+              "year": 2032,
+              "label": "Operation early 2030s"
+            }
+          ]
+        },
+        {
+          "name": "X-energy Xe-100 — Hartlepool",
+          "detail": "12×80 MWe · X-energy · Centrica · £40bn lifetime",
+          "bars": [
+            {
+              "start": 2025,
+              "end": 2026,
+              "type": "early"
+            },
+            {
+              "start": 2026,
+              "end": 2030,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.7,
+              "label": "JDA Sep-25"
+            },
+            {
+              "year": 2026.5,
+              "label": "GDA Jun-26"
+            },
+            {
+              "year": 2030,
+              "label": "GDA concludes"
+            }
+          ]
+        },
+        {
+          "name": "Last Energy PWR-20 — London Gateway",
+          "detail": "20 MWe micro-reactor · Last Energy · DP World · £80m",
+          "bars": [
+            {
+              "start": 2025,
+              "end": 2026,
+              "type": "early"
+            },
+            {
+              "start": 2026,
+              "end": 2030,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.7,
+              "label": "MOU Sep-25"
+            },
+            {
+              "year": 2030,
+              "label": "Operations targeted"
+            }
+          ]
+        }
+      ],
+      "source": "Public company/government announcements as of 22 June 2026."
+    },
+    {
+      "id": 6,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "BWRX-300: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for manufacturing supply chain partners",
+      "stats": [
+        {
+          "value": "GDA Step 2",
+          "label": "Completed 21 Jan 2026 — fastest UK GDA to date"
+        },
+        {
+          "value": "14 units",
+          "label": "SGE fleet proposal: 4.2GW across 3 UK sites"
+        },
+        {
+          "value": "£35bn",
+          "label": "SGE investment target; first power sought by 2034"
+        },
+        {
+          "value": "1st in G7",
+          "label": "BWRX-300 under construction at Darlington, Canada"
+        }
+      ],
+      "timelineTitle": "2025–26 STATUS TIMELINE",
+      "milestones": [
+        {
+          "date": "Apr '25",
+          "text": "GEH submits final tender to Great British Nuclear; Rolls-Royce selected as preferred bidder for Wylfa two months later."
+        },
+        {
+          "date": "21 Jan '26",
+          "text": "BWRX-300 completes UK GDA Step 2 — 'no fundamental shortfalls' found; fastest two-step GDA engagement completed to date."
+        },
+        {
+          "date": "4 Feb '26",
+          "text": "Government publishes the new Advanced Nuclear Framework (ANF) — a private-sector route to market for advanced/SMR projects."
+        },
+        {
+          "date": "1 Jul '26",
+          "text": "SGE submits an ANF application to build 14 BWRX-300 units (4.2GW) across three UK sites, backed by Samsung C&T, Laing O'Rourke, Aecon, Google Cloud and others."
+        },
+        {
+          "date": "Ongoing '26",
+          "text": "BWRX-300 momentum continues globally (Darlington construction, Poland, Sweden MoUs); UK supply chain MoUs with Sheffield Forgemasters, AtkinsRéalis, Jacobs and others."
+        }
+      ],
+      "what_it_means": "The 'no UK pathway' story has just changed: SGE's 14-unit, 4.2GW proposal is a concrete, privately financed UK route for the BWRX-300 — filed under the new Advanced Nuclear Framework rather than the GBN competition GEH lost. A parallel route to market alongside Rolls-Royce and Holtec."
+    },
+    {
+      "id": 7,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "SMR-300: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for F4N cohort July 2026",
+      "stats": [
+        {
+          "value": "Step 2",
+          "label": "UK GDA passed — no fundamental shortfalls"
+        },
+        {
+          "value": "4 units",
+          "label": "Proposed at Cottam, Nottinghamshire (~1.3GW)"
+        },
+        {
+          "value": "£1.5bn",
+          "label": "South Yorkshire SMR-300 factory"
+        },
+        {
+          "value": "70%",
+          "label": "UK content target for factory build"
+        }
+      ],
+      "timelineTitle": "2026 MILESTONE TIMELINE",
+      "milestones": [
+        {
+          "date": "13 Feb",
+          "text": "US NRC accepts Holtec's Pioneer 1 & 2 Construction Permit Application for review (Palisades, Michigan). Safety/environmental review due early-mid 2027."
+        },
+        {
+          "date": "31 Mar",
+          "text": "SMR-300 completes Step 2 of the UK GDA. No fundamental shortfalls across 21 technical areas; 14 regulatory observations to resolve."
+        },
+        {
+          "date": "23 Jun",
+          "text": "Holtec and EDF Energy sign Heads of Terms for a JV and jointly submit a proposal for up to four SMR-300 units at the former Cottam coal site."
+        },
+        {
+          "date": "24 Jun",
+          "text": "Cottam proposal confirmed: ~1.3GW capacity, targeting power for co-located data centres. Holtec signals plans for a larger UK operations centre."
+        }
+      ],
+      "what_it_means": "A second live UK SMR pipeline alongside Wylfa: South Yorkshire (factory) plus Cottam (deployment site). More entry points beyond Rolls-Royce. The 70% UK-content ambition for the factory build offers direct manufacturing opportunity for qualified UK suppliers."
+    },
+    {
+      "id": 8,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "PWR-20: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for F4N cohort July 2026",
+      "stats": [
+        {
+          "value": "PDR passed",
+          "label": "First UK developer to complete Preliminary Design Review"
+        },
+        {
+          "value": "£80m",
+          "label": "DP World London Gateway microreactor"
+        },
+        {
+          "value": "$100m+",
+          "label": "Series C funding, closed Dec 2025"
+        },
+        {
+          "value": "SIP filed",
+          "label": "Llynfi planning notice, 11 June 2026"
+        }
+      ],
+      "timelineTitle": "2025–26 STATUS TIMELINE",
+      "milestones": [
+        {
+          "date": "Jun '25",
+          "text": "PWR-20 completes the UK's first-ever Preliminary Design Review; ONR says a December 2027 site licence decision remains achievable."
+        },
+        {
+          "date": "Sep '25",
+          "text": "MoU signed with DP World for an £80m, subsidy-free micro-nuclear plant at London Gateway (Thames Freeport, Essex). Targeting operation in 2030."
+        },
+        {
+          "date": "Dec '25",
+          "text": "Closes an oversubscribed third major round of investment of $100m+, led by Astera Institute."
+        },
+        {
+          "date": "11 Jun '26",
+          "text": "Last Energy UK notifies Welsh Government of intent to submit a Significant Infrastructure Project application for the 4-unit Llynfi (Bridgend) project; formal application expected July 2026."
+        }
+      ],
+      "what_it_means": "A fundamentally different model: no government competition to win. Last Energy builds, owns and operates plants, selling power directly to industrial customers on-site, entirely privately financed. Two active UK sites now (London Gateway and Llynfi) with a licensing milestone due December 2027."
+    },
+    {
+      "id": 9,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "LFR-AS-200: UK Programme Update",
+      "subtitle": "UK nuclear sector briefing for F4N cohort July 2026",
+      "stats": [
+        {
+          "value": "Suspended",
+          "label": "UK reactor programme paused, July 2025"
+        },
+        {
+          "value": "London→Paris",
+          "label": "HQ relocated, October 2024"
+        },
+        {
+          "value": "€645m",
+          "label": "Total funds raised since 2021"
+        },
+        {
+          "value": "~150",
+          "label": "UK staff retained despite pause"
+        }
+      ],
+      "timelineTitle": "2024–26 STATUS TIMELINE",
+      "milestones": [
+        {
+          "date": "Oct '24",
+          "text": "Newcleo relocates its holding HQ from London to Paris, citing focus on its European precursor and prototype reactor programme."
+        },
+        {
+          "date": "Jun '25",
+          "text": "LFR-AS-200 becomes the first Advanced Modular Reactor design accepted into the UK's Generic Design Assessment — achieved without public funding."
+        },
+        {
+          "date": "Jul '25",
+          "text": "Newcleo announces suspension of its UK reactor development programme, citing lack of access to the UK's plutonium stockpile and insufficient government support."
+        },
+        {
+          "date": "Feb '26",
+          "text": "Closes a further €75m funding round; continues to prioritise Italy, France and Slovakia over the UK for near-term deployment."
+        }
+      ],
+      "what_it_means": "A genuine cautionary tale: even a vendor that hit a real UK regulatory first (first AMR into GDA, no public funding needed) pulled back when policy support didn't follow. GDA entry is necessary but not sufficient for UK deployment."
+    },
+    {
+      "id": 10,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "Rolls-Royce SMR: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for F4N cohort July 2026",
+      "stats": [
+        {
+          "value": "3",
+          "label": "European markets with signed contracts"
+        },
+        {
+          "value": "£599m",
+          "label": "UK National Wealth Fund investment"
+        },
+        {
+          "value": "£12m",
+          "label": "Pioneer Works, Derby manufacturing centre"
+        },
+        {
+          "value": "~8,000",
+          "label": "UK jobs supported per year (est.)"
+        }
+      ],
+      "timelineTitle": "2026 MILESTONE TIMELINE",
+      "milestones": [
+        {
+          "date": "Feb",
+          "text": "Yokogawa Electric appointed to supply control systems (Runcorn design facility)."
+        },
+        {
+          "date": "13 Apr",
+          "text": "Contract signed with GBE-N for site-specific design at Wylfa; long lead-time equipment ordering begins."
+        },
+        {
+          "date": "24 Apr",
+          "text": "Early Works Contract signed with CEZ Group for Czech Republic's first SMR at Temelín (up to 3GW)."
+        },
+        {
+          "date": "May",
+          "text": "Škoda JS and Doosan Enerbility appointed as dual suppliers for nuclear island components."
+        },
+        {
+          "date": "15 Jun",
+          "text": "Selected by Videberg Kraft (Vattenfall) to deliver 3 SMRs at Värö Peninsula, Sweden — third European contract win."
+        },
+        {
+          "date": "26 Jun",
+          "text": "Pioneer Works manufacturing development centre announced for Derby — precision assembly, welding & testing, ~40 skilled roles."
+        }
+      ],
+      "what_it_means": "Only supplier with multiple signed SMR contracts in Europe (UK, Czechia, Sweden). Programme momentum is real, not speculative. Overseas nuclear-island awards (Škoda JS, Doosan) show the 70% UK-content ambition will require active supplier qualification to win work."
+    },
+    {
+      "id": 11,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "AP300: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for F4N cohort July 2026",
+      "stats": [
+        {
+          "value": "Withdrew",
+          "label": "From GBN/Wylfa competition, April 2025"
+        },
+        {
+          "value": "4 units",
+          "label": "Private AP300 fleet planned, North Teesside"
+        },
+        {
+          "value": "80 yrs",
+          "label": "Springfields fuel site milestone, March 2026"
+        },
+        {
+          "value": "Step 1",
+          "label": "UK GDA complete; Step 2 assessment ongoing"
+        }
+      ],
+      "timelineTitle": "2025–26 STATUS TIMELINE",
+      "milestones": [
+        {
+          "date": "Apr '25",
+          "text": "Westinghouse withdraws from Great British Nuclear's SMR competition; Rolls-Royce selected as preferred UK partner two months later."
+        },
+        {
+          "date": "2025",
+          "text": "Six UK supplier MoUs signed (William Cook, Trillium Flow, Curtiss-Wright UK, Boccard UK, Bendalls Engineering, Sheffield Forgemasters)."
+        },
+        {
+          "date": "30 Mar '26",
+          "text": "Springfields, Lancashire marks 80 years as the world's oldest continuously operating nuclear fuel manufacturing site."
+        },
+        {
+          "date": "Ongoing '26",
+          "text": "AP300 remains in UK 2-step GDA (Step 1 complete). Community Nuclear Power continues developing the privately financed 4-unit fleet at North Teesside, targeting a licensed site by 2027."
+        }
+      ],
+      "what_it_means": "Unlike Rolls-Royce, Holtec and X-energy, Westinghouse is not part of the government-backed Wylfa programme. Its UK SMR future rests on the privately financed Teesside project — a different risk profile, potentially faster to market without government procurement timelines."
+    },
+    {
+      "id": 12,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "Xe-100: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for F4N cohort July 2026",
+      "stats": [
+        {
+          "value": "6 GW",
+          "label": "Proposed UK fleet at Hartlepool"
+        },
+        {
+          "value": "GDA",
+          "label": "Xe-100 submitted June 2026"
+        },
+        {
+          "value": "$1bn+",
+          "label": "Raised in Nasdaq IPO, April 2026"
+        },
+        {
+          "value": "£40bn",
+          "label": "Estimated lifetime UK economic value"
+        }
+      ],
+      "timelineTitle": "2026 MILESTONE TIMELINE",
+      "milestones": [
+        {
+          "date": "Feb",
+          "text": "US NRC approves the TX-1 fuel facility's Part 70 licence for TRISO-X fuel handling — first Category II licence ever issued."
+        },
+        {
+          "date": "Apr",
+          "text": "UK Government confirms Future Nuclear Enabling Fund award (£6.68m); Kier Group joins as UK constructability and supply chain partner."
+        },
+        {
+          "date": "24 Apr",
+          "text": "X-energy lists on Nasdaq (ticker: XE), raising over $1bn — the largest nuclear IPO on record."
+        },
+        {
+          "date": "2 Jun",
+          "text": "Xe-100 HTGR formally submitted into the UK Generic Design Assessment (GDA). Regulatory review expected to conclude by end of 2029."
+        },
+        {
+          "date": "16 Jun",
+          "text": "Closes $700m Series D: $1.4bn raised in a year, $1.8bn total; 144 SMR orders logged globally (11GW)."
+        }
+      ],
+      "what_it_means": "Earliest-stage UK programme: GDA only just submitted, not expected to conclude until end-2029. Longer runway to prepare, but least near-term certainty. The Xe-100 is a helium-cooled, graphite-moderated HTGR — different technology and supply chain from PWR-based SMRs."
+    },
+    {
+      "id": 13,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "STEP Fusion: 2026 Programme Update",
+      "subtitle": "UK nuclear sector briefing for manufacturing supply chain partners",
+      "stats": [
+        {
+          "value": "£1.3bn",
+          "label": "Government funding for STEP via UK Fusion Energy"
+        },
+        {
+          "value": "£200m",
+          "label": "ILIOS Construction Partner initial contract"
+        },
+        {
+          "value": "£70m",
+          "label": "Tokamak Energy magnets contract to March 2029"
+        },
+        {
+          "value": "8,000",
+          "label": "Peak construction jobs expected at West Burton"
+        }
+      ],
+      "timelineTitle": "2026 MILESTONE TIMELINE",
+      "milestones": [
+        {
+          "date": "14 Jan–11 Mar",
+          "text": "First public consultation on STEP Fusion's DCO held across North Nottinghamshire, Lincolnshire and South Yorkshire communities."
+        },
+        {
+          "date": "Mar",
+          "text": "ILIOS consortium (Kier-Nuvia JV, with AECOM, AL_A and Turner & Townsend) appointed Construction Partner — £200m initial contract, up to 8,000 jobs at peak."
+        },
+        {
+          "date": "23 Mar",
+          "text": "UKAEA completes first phase of West Burton site acquisition from EDF — land transferred 3.5 years ahead of schedule."
+        },
+        {
+          "date": "14 Apr",
+          "text": "Tokamak Energy named Magnet Systems Partner — £70m contract to March 2029, securing UK sovereign HTS magnet capability."
+        },
+        {
+          "date": "Mid-Apr",
+          "text": "At Fusion Fest 2026, UK Fusion Energy and UKAEA launch strategies to 2030/2040; £30m Dassault Systèmes digital/PLM deal signed."
+        }
+      ],
+      "what_it_means": "STEP is a single UK national programme, not a multi-vendor competition — the entry point is UKFE's own procurement portal. Already a live, spending programme with £108.8m industry contracts placed and site construction starting. Earlier in spend terms than most SMR programmes."
+    },
+    {
+      "id": 14,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Nuclear Programme",
+      "title": "Decommissioning Programmes: 2026 Update",
+      "subtitle": "UK nuclear sector briefing for manufacturing supply chain partners",
+      "stats": [
+        {
+          "value": "£1.8bn",
+          "label": "NDA group's annual supply chain spend"
+        },
+        {
+          "value": "£45m",
+          "label": "SME win: LTi Metaltech, Sellafield SRP, Feb 2026"
+        },
+        {
+          "value": "New Strategy",
+          "label": "NDA group Strategy effective March 2026"
+        },
+        {
+          "value": "1st AGRs",
+          "label": "Hunterston B & Hinkley Pt B transfer to NDA in 2026"
+        }
+      ],
+      "timelineTitle": "2026 MILESTONE TIMELINE",
+      "milestones": [
+        {
+          "date": "Oct '25",
+          "text": "Three companies win contracts worth up to £2.9bn for non-nuclear infrastructure works at Sellafield — context for the scale of work entering the market."
+        },
+        {
+          "date": "18 Feb",
+          "text": "Sellafield awards a £45m contract to LTi Metaltech to supply plutonium storage containers ('100-year cans') for the new Product and Residue Store Retreatment Plant."
+        },
+        {
+          "date": "23 Feb",
+          "text": "NDA publishes its latest group Strategy, effective March 2026 — a refreshed roadmap prioritising hazard reduction and collaboration."
+        },
+        {
+          "date": "During '26",
+          "text": "Hunterston B becomes the first AGR site to transfer from EDF Energy to the NDA group for decommissioning, with Hinkley Point B to follow."
+        },
+        {
+          "date": "21 May",
+          "text": "Sellafield's PPP marks 7 years, with major projects (SRP, SIXEP Continuity Plant, BEPPS2, LSS1) progressing through construction and design."
+        }
+      ],
+      "what_it_means": "The largest, steadiest source of UK nuclear manufacturing demand in this briefing — £1.8bn spent every year, for decades, regardless of how any single SMR programme fares. LTi Metaltech's £45m win shows UK SMEs can secure significant contracts in this market."
+    },
+    {
+      "id": 15,
+      "type": "overview",
+      "country": "UK",
+      "group": "UK Submarine Defence",
+      "title": "UK SUBMARINE DEFENCE PROGRAMMES",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "In service / active build",
+          "type": "active"
+        },
+        {
+          "label": "Detailed design / long-lead procurement",
+          "type": "design"
+        },
+        {
+          "label": "Concept / pre-contract",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "ACTIVE BUILD / FINISHING",
+          "statusType": "active",
+          "name": "Astute Class (SSN)",
+          "capacity": "7 boats · ~£12bn+ programme",
+          "milestone": "5 in service · Achilles (final boat) enters service 2029",
+          "partners": "BAE Systems · Submarine Delivery Agency"
+        },
+        {
+          "status": "ACTIVE BUILD",
+          "statusType": "active",
+          "name": "Dreadnought Class (SSBN)",
+          "capacity": "4 boats · ~£41bn",
+          "milestone": "All 4 boats cut · first in service early 2030s · CASD to 2060s",
+          "partners": "BAE Systems · Rolls-Royce · Submarine Delivery Agency"
+        },
+        {
+          "status": "DESIGN / LONG-LEAD",
+          "statusType": "design",
+          "name": "SSN-AUKUS (SSN)",
+          "capacity": "Up to 12 boats (UK) · ~£2.5bn/boat",
+          "milestone": "D2L2 design phase · first UK boat delivered late 2030s",
+          "partners": "BAE Systems · Rolls-Royce · Babcock"
+        }
+      ],
+      "source": "Ministry of Defence, BAE Systems, Rolls-Royce, Submarine Delivery Agency announcements as of June 2026."
+    },
+    {
+      "id": 16,
+      "type": "timeline",
+      "country": "UK",
+      "group": "UK Submarine Defence",
+      "title": "UK SUBMARINE DEFENCE PROGRAMMES",
+      "subtitle": "Build & Delivery Timeline, 2026–2045+",
+      "legend": [
+        {
+          "label": "In service / active build",
+          "type": "active"
+        },
+        {
+          "label": "Detailed design / long-lead procurement",
+          "type": "design"
+        },
+        {
+          "label": "Concept / pre-contract",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2046,
+      "yearLabels": [
+        "2026",
+        "2029",
+        "2032",
+        "2035",
+        "2038",
+        "2041",
+        "2045+"
+      ],
+      "rows": [
+        {
+          "name": "Astute Class (SSN)",
+          "detail": "7 boats · ~£12bn+ · BAE Systems · Submarine Delivery Agency",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2030,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2029,
+              "label": "HMS Achilles enters service"
+            }
+          ]
+        },
+        {
+          "name": "Dreadnought Class (SSBN)",
+          "detail": "4 boats · ~£41bn · BAE Systems · Rolls-Royce · Submarine Delivery Agency",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2042,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2031,
+              "label": "HMS Dreadnought enters service"
+            },
+            {
+              "year": 2040,
+              "label": "Class complete (CASD to 2060s)"
+            }
+          ]
+        },
+        {
+          "name": "SSN-AUKUS",
+          "detail": "Up to 12 boats (UK) · ~£2.5bn/boat · BAE Systems · Rolls-Royce · Babcock",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2033,
+              "type": "design"
+            },
+            {
+              "start": 2033,
+              "end": 2046,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2033,
+              "label": "Long-lead procurement concludes"
+            },
+            {
+              "year": 2039,
+              "label": "First UK boat delivered"
+            }
+          ]
+        }
+      ],
+      "source": "Ministry of Defence, BAE Systems, Submarine Delivery Agency announcements as of June 2026."
+    },
+    {
+      "id": 17,
+      "type": "programme_update",
+      "country": "UK",
+      "group": "UK Submarine Defence",
+      "title": "UK Nuclear Submarine Fleet: 2026 Update",
+      "subtitle": "UK nuclear sector briefing for manufacturing supply chain partners",
+      "stats": [
+        {
+          "value": "Up to 12",
+          "label": "SSN-AUKUS attack submarines confirmed"
+        },
+        {
+          "value": "21,000",
+          "label": "UK jobs supported at peak production"
+        },
+        {
+          "value": "£9bn+",
+          "label": "Rolls-Royce reactor agreement, Derby"
+        },
+        {
+          "value": "4 reactors",
+          "label": "PWR3+ units under construction, May 2026"
+        }
+      ],
+      "timelineTitle": "2025–26 MILESTONE TIMELINE",
+      "milestones": [
+        {
+          "date": "26 Jul '25",
+          "text": "UK and Australia sign the Geelong Treaty — a 50-year bilateral agreement governing joint construction of Australia's SSN-AUKUS submarines."
+        },
+        {
+          "date": "22 Feb '26",
+          "text": "HMS Anson becomes the first RN nuclear submarine to undergo a maintenance period in Australia, at HMAS Stirling."
+        },
+        {
+          "date": "24 Feb '26",
+          "text": "Australia announces A$310m payment to the UK for long-lead reactor items; manufacture of complete welded nuclear propulsion systems begins at Rolls-Royce Submarines, Derby."
+        },
+        {
+          "date": "10 Apr '26",
+          "text": "Australian Submarine Supplier Qualification programme expanded to link Australian businesses into UK submarine supply chains for the first time."
+        },
+        {
+          "date": "28 Apr '26",
+          "text": "UK Parliament's Defence Committee warns of 'shortcomings and failings', flagging delays to the Barrow shipyard upgrade and submarine availability as 'critically low'."
+        },
+        {
+          "date": "May '26",
+          "text": "Defence Secretary John Healey confirms four PWR3+ reactors are under construction at the expanded Rolls-Royce Raynesway facility in Derby."
+        }
+      ],
+      "what_it_means": "The largest sustained nuclear manufacturing programme in this briefing — up to 12 boats, one every 18 months, 21,000 jobs at peak, with billions already committed to Barrow and Derby. Entry requires ITAR clearance and strict quality regimes, but the pipeline is multi-decade and real."
+    },
+    {
+      "id": 18,
+      "type": "section_header",
+      "title": "International Programme Landscape",
+      "subtitle": "Country-by-Country Market View",
+      "eyebrow": "NucCol · Q2 2026 Market Briefing"
+    },
+    {
+      "id": 19,
+      "type": "section_header",
+      "title": "Country Profiles",
+      "subtitle": "South Africa · Netherlands · Sweden · Poland · Czechia · Romania",
+      "eyebrow": "International Markets"
+    },
+    {
+      "id": 20,
+      "type": "overview",
+      "country": "ZA",
+      "group": "South Africa",
+      "title": "SOUTH AFRICA NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Operational / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Policy mandate / pre-procurement / R&D",
+          "type": "design"
+        },
+        {
+          "label": "Concept / early stage",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "OPERATIONAL (RELICENSED)",
+          "statusType": "active",
+          "name": "Koeberg Units 1 & 2",
+          "capacity": "1,860 MWe combined · ~5% of SA electricity",
+          "milestone": "Licensed to 2044 (U1) and 2045 (U2) · U2 record 365-day run, Mar-26",
+          "partners": "Eskom · NNR · Framatome"
+        },
+        {
+          "status": "PRE-PROCUREMENT",
+          "statusType": "design",
+          "name": "New Build — Duynefontein/Thyspunt",
+          "capacity": "5,200 MWe by 2039 · 1,200 MWe by 2036",
+          "milestone": "Sites approved · reset RFP expected 2025/26 · no vendor selected",
+          "partners": "Eskom · DEE · NERSA · NNR"
+        },
+        {
+          "status": "R&D / PRE-RFP",
+          "statusType": "design",
+          "name": "SMR / PBMR Revival",
+          "capacity": "Scale not yet specified · Pelindaba (possible site)",
+          "milestone": "Necsa preparing SMR-specific RFP",
+          "partners": "Necsa · Pelchem"
+        },
+        {
+          "status": "CONCEPT / EARLY DEVELOPMENT",
+          "statusType": "early",
+          "name": "BridgePower Nuclear (private)",
+          "capacity": "Thermal phase now · 'Pearl SMR' modules from 2029",
+          "milestone": "Thermal phase deployable in 12–24 months",
+          "partners": "USP&E · BAM Energy"
+        }
+      ],
+      "source": "Eskom, NNR, NERSA, World Nuclear Association announcements, 23 June 2026."
+    },
+    {
+      "id": 21,
+      "type": "timeline",
+      "country": "ZA",
+      "group": "South Africa",
+      "title": "SOUTH AFRICA NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2040+",
+      "legend": [
+        {
+          "label": "Operational / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Policy mandate / pre-procurement",
+          "type": "design"
+        },
+        {
+          "label": "Concept / early stage",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2041,
+      "yearLabels": [
+        "2026",
+        "2028",
+        "2030",
+        "2032",
+        "2034",
+        "2036",
+        "2038",
+        "2040+"
+      ],
+      "rows": [
+        {
+          "name": "Koeberg Units 1 & 2",
+          "detail": "1,860 MWe combined · Eskom · NNR · Framatome",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2041,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026,
+              "label": "Both units relicensed (LTO complete)"
+            },
+            {
+              "year": 2041,
+              "label": "Licensed to 2044/45"
+            }
+          ]
+        },
+        {
+          "name": "New Build — Duynefontein/Thyspunt",
+          "detail": "5,200 MWe by 2039 · Eskom · DEE · NERSA",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "design"
+            },
+            {
+              "start": 2028,
+              "end": 2037,
+              "type": "early"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2027,
+              "label": "Reset RFP expected 2025/26"
+            },
+            {
+              "year": 2036,
+              "label": "First 1,200 MWe targeted"
+            }
+          ]
+        },
+        {
+          "name": "SMR / PBMR Revival",
+          "detail": "Necsa · Pelchem · possible Pelindaba site",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2030,
+              "type": "early"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.5,
+              "label": "SMR-specific RFP in preparation"
+            }
+          ]
+        },
+        {
+          "name": "BridgePower Nuclear (private)",
+          "detail": "USP&E · BAM Energy",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2027,
+              "type": "early"
+            },
+            {
+              "start": 2027,
+              "end": 2031,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.5,
+              "label": "Thermal phase deployable"
+            },
+            {
+              "year": 2029,
+              "label": "'Pearl SMR' modules from 2029"
+            }
+          ]
+        }
+      ],
+      "source": "Eskom, NNR, NERSA, World Nuclear Association announcements, 23 June 2026."
+    },
+    {
+      "id": 22,
+      "type": "overview",
+      "country": "NL",
+      "group": "Netherlands",
+      "title": "NETHERLANDS NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Operational / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Siting / design / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Concept / forward option",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "OPERATIONAL / LTO SOUGHT",
+          "statusType": "active",
+          "name": "Borssele — Long-Term Operation",
+          "capacity": "482 MWe · ~3% of NL electricity",
+          "milestone": "Due to close 2033 · extension to 2054 sought",
+          "partners": "EPZ · ANVS"
+        },
+        {
+          "status": "SITING / FEASIBILITY",
+          "statusType": "design",
+          "name": "First Two New Reactors",
+          "capacity": "2 × 1,000–1,650 MWe",
+          "milestone": "Preferred site decision mid-2026 · operational 'late 2030s' (slipped from 2035)",
+          "partners": "NEO NL · EDF · Westinghouse · KHNP · NEXUS-NL"
+        },
+        {
+          "status": "CONCEPT / FORWARD OPTION",
+          "statusType": "early",
+          "name": "Third & Fourth Reactors",
+          "capacity": "Scale and technology not yet announced",
+          "milestone": "Announced March 2024 · targeted by 2050 · no site yet",
+          "partners": "Ministry of Climate and Green Growth"
+        },
+        {
+          "status": "SITING / EARLY DEVELOPMENT",
+          "statusType": "early",
+          "name": "SMR Programme",
+          "capacity": "13+ SMR potential by 2050 (150 MWe class)",
+          "milestone": "Gelderland to designate 2 SMR sites in 2027",
+          "partners": "Rolls-Royce SMR · ULC-Energy · BAM Infra · Thorizon"
+        }
+      ],
+      "source": "World Nuclear Association, Dutch government (Ministry of Climate and Green Growth), ANVS, NRG-Pallas announcements, 23 June 2026."
+    },
+    {
+      "id": 23,
+      "type": "timeline",
+      "country": "NL",
+      "group": "Netherlands",
+      "title": "NETHERLANDS NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2050+",
+      "legend": [
+        {
+          "label": "Operational / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Siting / design / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Concept / forward option",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2052,
+      "yearLabels": [
+        "2026",
+        "2030",
+        "2034",
+        "2038",
+        "2042",
+        "2046",
+        "2050+"
+      ],
+      "rows": [
+        {
+          "name": "Borssele — Long-Term Operation",
+          "detail": "482 MWe · EPZ · ANVS · due to close 2033, extension to 2054 sought",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2033,
+              "type": "active"
+            },
+            {
+              "start": 2033,
+              "end": 2054,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2033,
+              "label": "Original closure date"
+            },
+            {
+              "year": 2052,
+              "label": "Extension to 2054 sought"
+            }
+          ]
+        },
+        {
+          "name": "First Two New Reactors",
+          "detail": "2×1,000–1,650 MWe · NEO NL · EDF/Westinghouse/KHNP · NEXUS-NL",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2038,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.5,
+              "label": "Preferred site decision mid-2026"
+            },
+            {
+              "year": 2038,
+              "label": "Operational late 2030s (slipped)"
+            }
+          ]
+        },
+        {
+          "name": "Third & Fourth Reactors",
+          "detail": "Site and technology not yet announced · Ministry of Climate and Green Growth",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2050,
+              "type": "early"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2050,
+              "label": "Targeted by 2050"
+            }
+          ]
+        },
+        {
+          "name": "SMR Programme",
+          "detail": "Rolls-Royce SMR · ULC-Energy · BAM Infra · Gelderland · Thorizon MSR",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "early"
+            },
+            {
+              "start": 2028,
+              "end": 2052,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2027,
+              "label": "Gelderland designates 2 SMR sites"
+            },
+            {
+              "year": 2052,
+              "label": "Room for 13+ SMRs by 2050"
+            }
+          ]
+        }
+      ],
+      "source": "World Nuclear Association, Dutch government, ANVS announcements, 23 June 2026."
+    },
+    {
+      "id": 24,
+      "type": "overview",
+      "country": "SE",
+      "group": "Sweden",
+      "title": "SWEDEN NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Operational / contracted delivery",
+          "type": "active"
+        },
+        {
+          "label": "Permitting / planning / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Concept / early stage",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "OPERATIONAL / LTO STUDIES",
+          "statusType": "active",
+          "name": "Existing Fleet — Forsmark & Ringhals",
+          "capacity": "6 reactors · ~30% of Swedish electricity",
+          "milestone": "60→80-year life extension studies underway at both plants",
+          "partners": "Vattenfall · Uniper · Fortum · SSM"
+        },
+        {
+          "status": "SUPPLIER SELECTED",
+          "statusType": "design",
+          "name": "Videberg Kraft — Ringhals/Värö SMR",
+          "capacity": "3 × 470 MWe · ~1.5 GW · ~12 TWh/yr",
+          "milestone": "Rolls-Royce SMR selected 15 Jun-26 · first reactor targeted early 2030s",
+          "partners": "Vattenfall · Industrikraft · Rolls-Royce SMR"
+        },
+        {
+          "status": "EARLY PLANNING",
+          "statusType": "early",
+          "name": "Wider Municipal SMR Pipeline",
+          "capacity": "Studsvik · Kärnfull Next · Blykalla (Gävle)",
+          "milestone": "13 feasibility studies done · new permitting law in force Jun–Jul 2026",
+          "partners": "Studsvik · Kärnfull Next · Blykalla"
+        },
+        {
+          "status": "POLICY FRAMEWORK LIVE",
+          "statusType": "design",
+          "name": "National 2045 Ambition",
+          "capacity": "2 large reactors by 2035 · 10-reactor equivalent by 2045",
+          "milestone": "SEK 400bn credit guarantee + two-way CfD scheme now in force",
+          "partners": "Swedish Government · SSM"
+        }
+      ],
+      "source": "Vattenfall, World Nuclear Association, Swedish Government, NucNet announcements, 23 June 2026."
+    },
+    {
+      "id": 25,
+      "type": "timeline",
+      "country": "SE",
+      "group": "Sweden",
+      "title": "SWEDEN NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2045+",
+      "legend": [
+        {
+          "label": "Operational / contracted delivery",
+          "type": "active"
+        },
+        {
+          "label": "Permitting / planning / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Concept / early stage",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2046,
+      "yearLabels": [
+        "2026",
+        "2029",
+        "2032",
+        "2035",
+        "2038",
+        "2041",
+        "2045+"
+      ],
+      "rows": [
+        {
+          "name": "Existing Fleet — Forsmark & Ringhals LTO",
+          "detail": "6 reactors, ~30% of SE electricity · Vattenfall · Uniper · Fortum",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2046,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026,
+              "label": "60→80yr life extension studies"
+            },
+            {
+              "year": 2046,
+              "label": "Reactors to 2040s"
+            }
+          ]
+        },
+        {
+          "name": "Videberg Kraft — Ringhals/Värö SMR",
+          "detail": "3×470 MWe (~1.5 GW) · Vattenfall · Industrikraft · Rolls-Royce SMR",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2031,
+              "type": "design"
+            },
+            {
+              "start": 2031,
+              "end": 2038,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.5,
+              "label": "RR SMR selected Jun-26"
+            },
+            {
+              "year": 2033,
+              "label": "First reactor early 2030s"
+            }
+          ]
+        },
+        {
+          "name": "Wider Municipal SMR Pipeline",
+          "detail": "Studsvik · Kärnfull Next · Blykalla · 13 feasibility studies",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "early"
+            },
+            {
+              "start": 2028,
+              "end": 2046,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.5,
+              "label": "New permitting law Jun–Jul 2026"
+            }
+          ]
+        },
+        {
+          "name": "National 2045 Ambition",
+          "detail": "Swedish Government · SEK 400bn credit guarantee · two-way CfD",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2046,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026,
+              "label": "SEK 400bn framework live"
+            },
+            {
+              "year": 2035,
+              "label": "2 large reactors target"
+            },
+            {
+              "year": 2045,
+              "label": "10-reactor equivalent"
+            }
+          ]
+        }
+      ],
+      "source": "Vattenfall, World Nuclear Association, Swedish Government, NucNet announcements, 23 June 2026."
+    },
+    {
+      "id": 26,
+      "type": "overview",
+      "country": "PL",
+      "group": "Poland",
+      "title": "POLAND NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Construction / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Licensing / design / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Site selection / concept",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "LICENSING / PRE-CONSTRUCTION",
+          "statusType": "design",
+          "name": "Lubiatowo-Kopalino — Large Reactors",
+          "capacity": "3 × Westinghouse AP1000 · 3,750 MWe · ~€42bn",
+          "milestone": "Construction licence application submitted Apr-26 · first concrete late 2028 · units online 2036–2038",
+          "partners": "PEJ · Westinghouse · Bechtel"
+        },
+        {
+          "status": "GENERIC DESIGN / SITING",
+          "statusType": "design",
+          "name": "OSGE — BWRX-300 SMR Fleet",
+          "capacity": "Up to 24 × 300 MWe · Włocławek (first site)",
+          "milestone": "Poland Generic Design Agreement signed Feb-26 · first unit targeted 2032",
+          "partners": "Orlen · Synthos Green Energy · GE Vernova Hitachi"
+        },
+        {
+          "status": "ENABLING FRAMEWORK LIVE",
+          "statusType": "active",
+          "name": "State Financing & EU Approval",
+          "capacity": "Two-way CfD (40-year) · 100% state debt guarantee",
+          "milestone": "European Commission approved state aid Dec-25 · EXIM Bank credit agreement signed Feb-26",
+          "partners": "European Commission · EXIM Bank · Polish Ministry of Finance"
+        }
+      ],
+      "source": "PEJ, Westinghouse, Bechtel, GE Vernova, OSGE, World Nuclear News, Polish Ministry of Energy announcements, 23 June 2026."
+    },
+    {
+      "id": 27,
+      "type": "timeline",
+      "country": "PL",
+      "group": "Poland",
+      "title": "POLAND NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2038+",
+      "legend": [
+        {
+          "label": "Construction / active delivery",
+          "type": "active"
+        },
+        {
+          "label": "Licensing / design / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Site selection / concept",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2039,
+      "yearLabels": [
+        "2026",
+        "2028",
+        "2030",
+        "2032",
+        "2034",
+        "2036",
+        "2038+"
+      ],
+      "rows": [
+        {
+          "name": "Lubiatowo-Kopalino — Large Reactors",
+          "detail": "3×Westinghouse AP1000 (3,750 MWe) · PEJ · Westinghouse · Bechtel · ~€42bn",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "design"
+            },
+            {
+              "start": 2028,
+              "end": 2039,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.3,
+              "label": "Licence app submitted Apr-26"
+            },
+            {
+              "year": 2028,
+              "label": "First concrete"
+            },
+            {
+              "year": 2036,
+              "label": "Unit 1 online"
+            },
+            {
+              "year": 2038,
+              "label": "Units 2&3"
+            }
+          ]
+        },
+        {
+          "name": "OSGE — BWRX-300 SMR Fleet",
+          "detail": "Up to 24×300 MWe · Orlen · Synthos · GE Vernova Hitachi",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "design"
+            },
+            {
+              "start": 2028,
+              "end": 2039,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.1,
+              "label": "Generic Design Agreement Feb-26"
+            },
+            {
+              "year": 2032,
+              "label": "First unit (Włocławek)"
+            }
+          ]
+        },
+        {
+          "name": "State Financing & EU Approval",
+          "detail": "Two-way CfD (40yr) · 100% debt guarantee · EXIM Bank · EC",
+          "bars": [
+            {
+              "start": 2025.9,
+              "end": 2027,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.9,
+              "label": "EC approves state aid Dec-25"
+            },
+            {
+              "year": 2026.1,
+              "label": "EXIM credit agreement Feb-26"
+            }
+          ]
+        }
+      ],
+      "source": "PEJ, Westinghouse, Bechtel, GE Vernova, OSGE, World Nuclear News, Polish Ministry of Energy announcements, 23 June 2026."
+    },
+    {
+      "id": 28,
+      "type": "overview",
+      "country": "CZ",
+      "group": "Czechia",
+      "title": "CZECHIA NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Operational / contracted construction",
+          "type": "active"
+        },
+        {
+          "label": "Licensing / engineering / early works",
+          "type": "design"
+        },
+        {
+          "label": "Option / pre-decision",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "OPERATIONAL / LTO UNDERWAY",
+          "statusType": "active",
+          "name": "Dukovany 1–4 — Long-Term Operation",
+          "capacity": "4 × VVER-440 · ~30% of Czech electricity",
+          "milestone": "20-year extension programme underway, targeting 60-year operating life",
+          "partners": "ČEZ · SUŽEP"
+        },
+        {
+          "status": "EPC SIGNED / EARLY WORKS",
+          "statusType": "active",
+          "name": "Dukovany 5 & 6 — KHNP APR-1000",
+          "capacity": "2 × 1,050 MWe · CZK 407bn (~€16.5bn)",
+          "milestone": "EPC signed Jun-25 · groundbreaking 2029 · units online 2036/2037",
+          "partners": "KHNP · EDU II · ČEZ · Doosan Enerbility"
+        },
+        {
+          "status": "OPTION / PRE-DECISION",
+          "statusType": "early",
+          "name": "Temelín 3 & 4",
+          "capacity": "Site identified · technology not yet selected",
+          "milestone": "KHNP holds option to extend contract — decision window open to ~2028",
+          "partners": "ČEZ · Government of Czechia"
+        },
+        {
+          "status": "EARLY WORKS CONTRACT",
+          "statusType": "design",
+          "name": "Rolls-Royce SMR — Temelín",
+          "capacity": "Up to 3 GW · 470 MWe units",
+          "milestone": "Early Works Contract signed 24 Apr-26 · approvals targeted by 2030",
+          "partners": "ČEZ (20% RR-SMR equity) · Rolls-Royce SMR"
+        }
+      ],
+      "source": "ČEZ, KHNP, Rolls-Royce SMR, World Nuclear Association, World Nuclear News, NucNet announcements, 23 June 2026."
+    },
+    {
+      "id": 29,
+      "type": "timeline",
+      "country": "CZ",
+      "group": "Czechia",
+      "title": "CZECHIA NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2038+",
+      "legend": [
+        {
+          "label": "Operational / contracted construction",
+          "type": "active"
+        },
+        {
+          "label": "Licensing / engineering / early works",
+          "type": "design"
+        },
+        {
+          "label": "Option / pre-decision",
+          "type": "early"
+        }
+      ],
+      "startYear": 2026,
+      "endYear": 2039,
+      "yearLabels": [
+        "2026",
+        "2028",
+        "2030",
+        "2032",
+        "2034",
+        "2036",
+        "2038+"
+      ],
+      "rows": [
+        {
+          "name": "Dukovany 1–4 — Long-Term Operation",
+          "detail": "4×VVER-440 · ~30% of CZ electricity · ČEZ · SUŽEP",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2039,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026,
+              "label": "20-year extension programme"
+            },
+            {
+              "year": 2039,
+              "label": "Last unit retires 2047"
+            }
+          ]
+        },
+        {
+          "name": "Dukovany 5 & 6 — KHNP APR-1000",
+          "detail": "2×1,050 MWe · CZK 407bn (~€16.5bn) · KHNP · EDU II · ČEZ",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2029,
+              "type": "design"
+            },
+            {
+              "start": 2029,
+              "end": 2038,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.3,
+              "label": "EPC + docs filed Apr-26"
+            },
+            {
+              "year": 2029,
+              "label": "Groundbreaking"
+            },
+            {
+              "year": 2036,
+              "label": "U5 online"
+            },
+            {
+              "year": 2037,
+              "label": "U6 online"
+            }
+          ]
+        },
+        {
+          "name": "Temelín 3 & 4 — Option",
+          "detail": "KHNP eligible within 3yr of Jun-25 EPC signing",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2028,
+              "type": "early"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2028,
+              "label": "Decision window closes ~2028"
+            }
+          ]
+        },
+        {
+          "name": "Rolls-Royce SMR — Temelín",
+          "detail": "Up to 3 GW (470 MWe units) · ČEZ (20% RR-SMR equity) · Rolls-Royce SMR",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2033,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.3,
+              "label": "Early Works Contract Apr-26"
+            },
+            {
+              "year": 2030,
+              "label": "Approvals target"
+            },
+            {
+              "year": 2033,
+              "label": "First unit, 2nd half 2030s"
+            }
+          ]
+        }
+      ],
+      "source": "ČEZ, KHNP, Rolls-Royce SMR, World Nuclear Association, NucNet announcements, 23 June 2026."
+    },
+    {
+      "id": 30,
+      "type": "overview",
+      "country": "RO",
+      "group": "Romania",
+      "title": "ROMANIA NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Programme Overview at a Glance",
+      "legend": [
+        {
+          "label": "Operational / contracted construction",
+          "type": "active"
+        },
+        {
+          "label": "Licensing / engineering / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Option / forward planning",
+          "type": "early"
+        }
+      ],
+      "programmes": [
+        {
+          "status": "CIVIL WORKS UNDERWAY",
+          "statusType": "active",
+          "name": "Cernavodă Unit 1 — Refurbishment",
+          "capacity": "650 MWe CANDU-6 · ~€1.9bn",
+          "milestone": "Civil works begun Sep-25 · refurb outage Dec-26–Dec-28 · +30yr life",
+          "partners": "KHNP · Candu Energy · Ansaldo Nucleare"
+        },
+        {
+          "status": "EPCM LIMITED NOTICE TO PROCEED",
+          "statusType": "design",
+          "name": "Cernavodă 3 & 4 — Completion",
+          "capacity": "2 × 700+ MWe CANDU · ~€3.2bn EPCM",
+          "milestone": "Construction FID pending · units targeted online 2030 (U3) and 2031 (U4)",
+          "partners": "Fluor · AtkinsRéalis · Ansaldo Nucleare · Sargent & Lundy"
+        },
+        {
+          "status": "FID APPROVED",
+          "statusType": "active",
+          "name": "Doicești — NuScale VOYGR-6 SMR",
+          "capacity": "6 × 77 MWe · 462 MWe total",
+          "milestone": "FID approved by SNN shareholders Feb-26 · first module operational 2033",
+          "partners": "RoPower (SNN/Nova) · NuScale · Fluor"
+        },
+        {
+          "status": "STRATEGY APPROVED",
+          "statusType": "active",
+          "name": "SNN Strategic Investment Programme",
+          "capacity": "€20bn portfolio · horizon to 2035",
+          "milestone": "2025–2030 investment strategy approved by shareholders Sep-25",
+          "partners": "Nuclearelectrica (SNN) · Romanian Government"
+        }
+      ],
+      "source": "Nuclearelectrica (SNN), World Nuclear Association, World Nuclear News, NucNet announcements, 23 June 2026."
+    },
+    {
+      "id": 31,
+      "type": "timeline",
+      "country": "RO",
+      "group": "Romania",
+      "title": "ROMANIA NUCLEAR PROGRAMME LANDSCAPE",
+      "subtitle": "Delivery Timeline, 2026–2037+",
+      "legend": [
+        {
+          "label": "Operational / contracted construction",
+          "type": "active"
+        },
+        {
+          "label": "Licensing / engineering / pre-FID",
+          "type": "design"
+        },
+        {
+          "label": "Option / forward planning",
+          "type": "early"
+        }
+      ],
+      "startYear": 2025,
+      "endYear": 2037,
+      "yearLabels": [
+        "2026",
+        "2028",
+        "2030",
+        "2032",
+        "2034",
+        "2036",
+        "2037+"
+      ],
+      "rows": [
+        {
+          "name": "Cernavodă Unit 1 — Refurbishment",
+          "detail": "650 MWe CANDU-6 · KHNP · Candu Energy · Ansaldo · ~€1.9bn",
+          "bars": [
+            {
+              "start": 2025.8,
+              "end": 2026,
+              "type": "design"
+            },
+            {
+              "start": 2026,
+              "end": 2029,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.8,
+              "label": "Civil works begun Sep-25"
+            },
+            {
+              "year": 2026.9,
+              "label": "Refurb outage Dec-26 to Dec-28"
+            }
+          ]
+        },
+        {
+          "name": "Cernavodă 3 & 4 — Completion",
+          "detail": "2×700+ MWe CANDU · Fluor · AtkinsRéalis · Ansaldo · ~€3.2bn",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2031,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026,
+              "label": "EPCM LNTP phase"
+            },
+            {
+              "year": 2030,
+              "label": "U3 online"
+            },
+            {
+              "year": 2031,
+              "label": "U4 online"
+            }
+          ]
+        },
+        {
+          "name": "Doicești — NuScale VOYGR-6 SMR",
+          "detail": "6×77 MWe (462 MWe) · RoPower (SNN/Nova) · NuScale · Fluor",
+          "bars": [
+            {
+              "start": 2026,
+              "end": 2033,
+              "type": "design"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2026.1,
+              "label": "FID approved Feb-26"
+            },
+            {
+              "year": 2033,
+              "label": "First module commercial operation"
+            }
+          ]
+        },
+        {
+          "name": "SNN Strategic Investment Programme",
+          "detail": "€20bn portfolio to 2035 · Nuclearelectrica (SNN) · Romanian Government",
+          "bars": [
+            {
+              "start": 2025.8,
+              "end": 2031,
+              "type": "active"
+            }
+          ],
+          "milestones": [
+            {
+              "year": 2025.8,
+              "label": "2025–2030 strategy approved Sep-25"
+            },
+            {
+              "year": 2031,
+              "label": "€20bn horizon to 2035"
+            }
+          ]
+        }
+      ],
+      "source": "Nuclearelectrica (SNN), World Nuclear Association, World Nuclear News, NucNet announcements, 23 June 2026."
+    }
+  ]
+}

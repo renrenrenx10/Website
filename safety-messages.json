@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "title": "Health, Safety & Wellbeing Messages",
+    "source": "HS&W NucCol Team Messages.pptx",
+    "updated": "2026-07-28"
+  },
+  "slides": [
+    { "img": "images/safety-messages/slide-01.png", "label": "Cover" },
+    { "img": "images/safety-messages/slide-02.png", "label": "2026 Calendar" },
+    { "img": "images/safety-messages/slide-03.png", "label": "Why This Matters" },
+    { "img": "images/safety-messages/slide-04.png", "label": "Why This Matters" },
+    { "img": "images/safety-messages/slide-05.png", "label": "Driving & Fatigue" },
+    { "img": "images/safety-messages/slide-06.png", "label": "Manual Handling & Office Safety" },
+    { "img": "images/safety-messages/slide-07.png", "label": "Manual Handling & Office Safety" },
+    { "img": "images/safety-messages/slide-08.png", "label": "Stress & Workload" },
+    { "img": "images/safety-messages/slide-09.png", "label": "DSE & Home Working" },
+    { "img": "images/safety-messages/slide-10.png", "label": "January: Winter & Travel Safety" },
+    { "img": "images/safety-messages/slide-11.png", "label": "Team Messages" },
+    { "img": "images/safety-messages/slide-12.png", "label": "December: Mental Health at Christmas" },
+    { "img": "images/safety-messages/slide-13.png", "label": "Ergonomics & Posture" },
+    { "img": "images/safety-messages/slide-14.png", "label": "Seasonal Change Risks" },
+    { "img": "images/safety-messages/slide-15.png", "label": "Safe Trip This Summer" },
+    { "img": "images/safety-messages/slide-16.png", "label": "Mental Health Is Everything" }
+  ]
+}
