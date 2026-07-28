@@ -490,6 +490,8 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     /* ── PROGRAMME COUNTRY VIEW ───────────────────────────────────────────── */
     #sec-pcv { flex-direction: column; }
     #sec-pcv.active { display: flex !important; }
+    #sec-safety { flex-direction: column; }
+    #sec-safety.active { display: flex !important; }
     .pcv-spinner { width:32px;height:32px;border:3px solid rgba(255,255,255,.1);border-top-color:#29b6e8;border-radius:50%;animation:pcv-spin .8s linear infinite; }
     @keyframes pcv-spin { to { transform:rotate(360deg); } }
 
@@ -728,6 +730,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     <button class="sb-item" onclick="nav('pcv')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
       Programme Briefings
+    </button>
+    <button class="sb-item" onclick="nav('safety')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      Safety Messages
     </button>
 
     <div class="sb-label">Live Feeds</div>
@@ -1544,6 +1550,44 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
   </div>
 </div>
 
+<!-- SAFETY MESSAGES -->
+<div id="sec-safety" class="section" style="padding:0;overflow:hidden;height:calc(100vh - var(--topbar-h));display:none;flex-direction:column">
+  <div id="safety-loading" style="display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:16px">
+    <div class="pcv-spinner"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6a7a90">Loading safety messages…</div>
+  </div>
+  <div id="safety-viewer" style="display:none;flex-direction:column;height:100%;background:#060e1c">
+    <!-- topbar chrome — counter + label only -->
+    <div id="safety-chrome" style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="nav('home')" title="Back to menu" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:4px 10px;cursor:pointer;color:rgba(255,255,255,.5);font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.15s;display:flex;align-items:center;gap:5px" onmouseover="this.style.color='#29b6e8';this.style.borderColor='#29b6e8'" onmouseout="this.style.color='rgba(255,255,255,.5)';this.style.borderColor='rgba(255,255,255,.12)'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Menu</button>
+        <span id="safety-counter" style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;color:#6a9ab0;text-transform:uppercase">1 / 16</span>
+        <span id="safety-label" style="font-family:'Barlow',sans-serif;font-size:.72rem;color:rgba(255,255,255,.3)"></span>
+      </div>
+    </div>
+    <!-- progress bar -->
+    <div style="height:3px;background:rgba(255,255,255,.06);flex-shrink:0">
+      <div id="safety-progress" style="height:100%;background:linear-gradient(90deg,#00c8d4,#1a86b0);transition:width .35s ease;width:0%"></div>
+    </div>
+    <!-- slide area — fills remaining space, nav buttons overlaid -->
+    <div style="flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center" id="safety-slide-area">
+      <!-- big overlaid nav buttons -->
+      <button onclick="safetyPrev()" id="safety-btn-prev" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(10,22,40,.55);border:1.5px solid rgba(255,255,255,.22);border-radius:50%;width:52px;height:52px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:.18s;flex-shrink:0" onmouseover="this.style.background='rgba(41,182,232,.35)';this.style.borderColor='#29b6e8'" onmouseout="this.style.background='rgba(10,22,40,.55)';this.style.borderColor='rgba(255,255,255,.22)'">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button onclick="safetyNext()" id="safety-btn-next" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(10,22,40,.55);border:1.5px solid rgba(255,255,255,.22);border-radius:50%;width:52px;height:52px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);transition:.18s;flex-shrink:0" onmouseover="this.style.background='rgba(41,182,232,.35)';this.style.borderColor='#29b6e8'" onmouseout="this.style.background='rgba(10,22,40,.55)';this.style.borderColor='rgba(255,255,255,.22)'">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <!-- slide box — CSS aspect-ratio with max-height fills the area -->
+      <div id="safety-slide-box" style="aspect-ratio:16/9;width:calc(100% - 144px);max-height:100%;position:relative;box-shadow:0 20px 70px rgba(0,0,0,.65);border-radius:5px;overflow:hidden;background:#fff;flex-shrink:0">
+        <img id="safety-slide-img" style="width:100%;height:100%;object-fit:contain;position:absolute;inset:0;background:#fff" />
+      </div>
+    </div>
+    <!-- bottom hint -->
+    <div style="text-align:center;padding:5px;font-size:.65rem;color:rgba(255,255,255,.18);font-family:'Barlow',sans-serif;flex-shrink:0;letter-spacing:.08em">← → arrow keys to navigate</div>
+  </div>
+</div>
+
 </div><!-- /content -->
 
 </div><!-- /main -->
@@ -1580,14 +1624,14 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 
 
 // NAV
-const labels={pcv:'Programme Country View',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account'};
+const labels={pcv:'Programme Country View',safety:'Safety Messages',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account'};
 function nav(id){
   if(id==='nuclearready' && window.__nuclearReadyEnabled===false){ id='home'; }
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById('sec-'+id);
   if(sec) sec.classList.add('active');
   const sidebar=document.getElementById('sidebar'),main=document.getElementById('main');
-  if(id==='pcv'){sidebar.classList.add('pcv-collapsed');main.classList.add('pcv-expanded');}
+  if(id==='pcv'||id==='safety'){sidebar.classList.add('pcv-collapsed');main.classList.add('pcv-expanded');}
   else{sidebar.classList.remove('pcv-collapsed');main.classList.remove('pcv-expanded');}
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
   if(id==='addmember'){
@@ -1605,6 +1649,7 @@ function nav(id){
   if(id==='community'&&!commUser){(async()=>{const {data:{session}}=await db.auth.getSession();if(session)await commInit(session.user);})();}
   if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
   if(id==='pcv'&&!window.pcvInit){loadPCVSection();window.pcvInit=true;}
+  if(id==='safety'&&!window.safetyInit){loadSafetySection();window.safetyInit=true;}
   if(window.innerWidth<=900){document.getElementById('sidebar').classList.remove('open');}
   window.scrollTo(0,0);
 }
@@ -3377,9 +3422,10 @@ async function loadPCVSection() {
   const loading = document.getElementById('pcv-loading');
   const viewer  = document.getElementById('pcv-viewer');
   try {
-    const r = await fetch(`${BLOB_BASE}/programme-country-view.json?${BLOB_SAS}&t=${Date.now()}`);
+    const r = await fetch(`programme-country-view.json?t=${Date.now()}`);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     pcvData = await r.json();
+    if (!pcvData || !Array.isArray(pcvData.slides) || !pcvData.slides.length) throw new Error('No slide data found');
 
     loading.style.display = 'none';
     viewer.style.display  = 'flex';
@@ -3597,6 +3643,52 @@ function pcvRenderProgrammeUpdate(s) {
     <div class="pcv-pu-footer">Commercial in Confidence · NucCol Ltd</div>
   </div>`;
 }
+
+// ═══════════════════════════════════════════════════════════
+// SAFETY MESSAGES VIEWER
+// ═══════════════════════════════════════════════════════════
+let safetyData = null;
+let safetyIndex = 0;
+
+async function loadSafetySection() {
+  const loading = document.getElementById('safety-loading');
+  const viewer  = document.getElementById('safety-viewer');
+  try {
+    const r = await fetch(`safety-messages.json?t=${Date.now()}`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    safetyData = await r.json();
+    if (!safetyData || !Array.isArray(safetyData.slides) || !safetyData.slides.length) throw new Error('No slide data found');
+
+    loading.style.display = 'none';
+    viewer.style.display  = 'flex';
+
+    // Keyboard nav
+    document.addEventListener('keydown', e => {
+      const sec = document.getElementById('sec-safety');
+      if (!sec || !sec.classList.contains('active')) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); safetyNext(); }
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); safetyPrev(); }
+    });
+
+    safetyGoTo(0);
+  } catch(err) {
+    loading.innerHTML = `<div style="color:#ef4444;font-family:'Barlow',sans-serif;font-size:.85rem">Could not load safety messages.<br><small style="color:#6a7a90">${err.message}</small></div>`;
+  }
+}
+
+function safetyGoTo(i) {
+  if (!safetyData) return;
+  safetyIndex = Math.max(0, Math.min(i, safetyData.slides.length - 1));
+  const slide = safetyData.slides[safetyIndex];
+
+  document.getElementById('safety-slide-img').src = slide.img;
+  document.getElementById('safety-counter').textContent = `${safetyIndex + 1} / ${safetyData.slides.length}`;
+  document.getElementById('safety-label').textContent = slide.label || '';
+  document.getElementById('safety-progress').style.width = ((safetyIndex + 1) / safetyData.slides.length * 100).toFixed(1) + '%';
+}
+
+function safetyNext() { safetyGoTo(safetyIndex + 1); }
+function safetyPrev() { safetyGoTo(safetyIndex - 1); }
 
 </script>
 </body>
