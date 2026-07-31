@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title id="cs-title">F4N Case Study – NucCol</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--navy:#0a1628;--navy2:#0e2040;--cyan:#29b6e8;--cyan2:#1a96c8;--light:#e8eef6;--white:#fff;--grey:#8a9bb0;--border:rgba(41,182,232,0.18);--amber:#f0b429}
+    html{scroll-behavior:smooth}
+    body{font-family:'Barlow',sans-serif;background:var(--white);color:#1a1a2e;overflow-x:hidden}
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:72px;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;height:52px;flex-shrink:0;text-decoration:none}
+    .nav-logo img{height:48px;width:48px;object-fit:contain;border-radius:4px;display:block}
+    .nav-links{display:flex;gap:2px;align-items:center;list-style:none;flex-wrap:wrap}
+    .nav-links a{color:var(--light);text-decoration:none;font-size:0.78rem;font-weight:500;letter-spacing:0.04em;padding:7px 10px;border-radius:4px;transition:color 0.2s,background 0.2s;white-space:nowrap}
+    .nav-links a:hover{color:var(--cyan);background:rgba(41,182,232,0.08)}
+    .nav-cta{background:var(--cyan)!important;color:var(--navy)!important;font-weight:700!important;padding:6px 14px!important;border-radius:4px}
+    .nav-cta:hover{background:var(--cyan2)!important}
+
+    .page-header{padding:140px 48px 64px;background:var(--navy);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+    .page-header-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(41,182,232,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(41,182,232,0.04) 1px,transparent 1px);background-size:60px 60px}
+    .page-header-glow{position:absolute;top:-100px;right:10%;width:500px;height:500px;background:radial-gradient(circle,rgba(41,182,232,0.1) 0%,transparent 70%)}
+    .page-header-content{position:relative;max-width:900px;margin:0 auto}
+    .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--amber);margin-bottom:16px}
+    .eyebrow::before{content:'';display:block;width:24px;height:2px;background:var(--amber)}
+    h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:800;line-height:1;letter-spacing:-0.02em;text-transform:uppercase;color:var(--white);margin-bottom:16px}
+    #cs-tagline{font-size:1.05rem;font-weight:300;line-height:1.7;color:rgba(232,238,246,0.82);max-width:680px}
+
+    main{max-width:1160px;margin:0 auto;padding:56px 48px 20px}
+    .cs-photo{width:100%;max-height:440px;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-bottom:48px;display:none}
+
+    .cs-layout{display:grid;grid-template-columns:1fr 320px;gap:64px;align-items:start}
+    .cs-main{min-width:0}
+    .cs-body{max-width:680px}
+    .cs-body p{font-size:1.02rem;line-height:1.8;color:#374254;margin-bottom:22px}
+    .cs-inline-photo{width:100%;max-height:340px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block;margin:6px 0 28px}
+
+    .cs-sidebar{display:flex;flex-direction:column;gap:28px;position:sticky;top:96px}
+
+    .cs-quote-card{background:#f4f7fb;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:26px 28px}
+    .cs-quote-card blockquote{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:600;line-height:1.4;color:var(--navy);margin-bottom:10px}
+    .cs-quote-attr{font-family:'Barlow',sans-serif;font-size:0.82rem;font-weight:500;color:var(--grey);text-transform:none;letter-spacing:0}
+
+    .cs-panel{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px 24px}
+    .cs-panel-label{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:8px;margin-bottom:16px}
+    .cs-panel-label::before{content:'';display:block;width:18px;height:2px;background:var(--cyan)}
+
+    .cs-stat-list{display:flex;flex-direction:column;gap:14px}
+    .cs-stat-row{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding-bottom:14px;border-bottom:1px solid rgba(41,182,232,0.14)}
+    .cs-stat-row:last-child{border-bottom:none;padding-bottom:0}
+    .cs-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:800;color:var(--navy);white-space:nowrap;flex-shrink:0}
+    .cs-stat-label{font-size:0.78rem;color:var(--grey);text-align:right;line-height:1.4}
+
+    .cs-milestone-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+    .cs-milestone-list li{display:flex;gap:10px;align-items:flex-start;font-size:0.86rem;line-height:1.55;color:#374254}
+    .cs-milestone-list li::before{content:'';flex-shrink:0;width:7px;height:7px;border-radius:50%;background:var(--cyan);margin-top:6px}
+
+    @media(max-width:900px){
+      .cs-layout{grid-template-columns:1fr}
+      .cs-sidebar{position:static}
+      .cs-body{max-width:none}
+    }
+
+    .cs-cta{max-width:1160px;margin:56px auto 0;padding:0 48px}
+    .cta-strip{background:var(--cyan);padding:44px 40px;display:flex;align-items:center;justify-content:space-between;gap:32px;border-radius:8px;flex-wrap:wrap}
+    .cta-strip h2{font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;text-transform:uppercase;color:var(--navy)}
+    .cta-label{font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.65;color:var(--navy);margin-bottom:6px}
+    .btn-dark{flex-shrink:0;display:inline-block;background:var(--navy);color:var(--cyan);font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:14px 30px;text-decoration:none;border-radius:3px;transition:background 0.2s;white-space:nowrap}
+    .btn-dark:hover{background:#05101e}
+    .cs-back{display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--grey);text-decoration:none;margin-top:40px}
+    .cs-back:hover{color:var(--navy)}
+
+    footer{background:#060f1c;padding:64px 48px 32px;border-top:1px solid var(--border);margin-top:64px}
+    .fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;max-width:1200px;margin-left:auto;margin-right:auto}
+    .fl{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+    .fl img{height:44px;width:44px;object-fit:contain;border-radius:4px;display:block}
+    .fl span{font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:var(--white);letter-spacing:0.06em;text-transform:uppercase}
+    .fa{font-size:0.85rem;color:var(--grey);line-height:1.7;margin-bottom:16px}
+    .fc h4{font-family:'Barlow Condensed',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .fc ul{list-style:none}.fc li{margin-bottom:9px}
+    .fc a{font-size:0.84rem;color:var(--grey);text-decoration:none;transition:color 0.2s}
+    .fc a:hover{color:var(--white)}
+    .fb{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;font-size:0.78rem;color:var(--grey);max-width:1200px;margin-left:auto;margin-right:auto}
+    .fb a{color:var(--grey);text-decoration:none}.fb a:hover{color:var(--white)}
+
+    #cs-loading,#cs-notfound{max-width:780px;margin:160px auto;padding:0 48px;text-align:center;color:var(--grey);font-size:0.95rem}
+    #cs-content{display:none}
+
+    @media(max-width:1024px){
+      nav{padding:0 24px}.nav-links{display:none}
+      .page-header{padding:120px 24px 48px}
+      main{padding:48px 24px 0}
+      .cs-cta{padding:0 24px}
+      .fg{grid-template-columns:1fr 1fr;gap:32px}
+      footer{padding:48px 24px 24px}
+    }
+    @media(max-width:640px){.fg{grid-template-columns:1fr}.cta-strip{flex-direction:column;align-items:flex-start}}
+
+    .nav-toggle{display:none;background:none;border:0;cursor:pointer;padding:8px;margin-left:auto;z-index:210}
+    .nav-toggle span{display:block;width:26px;height:2px;background:var(--light);margin:5px 0;border-radius:2px}
+    @media(max-width:1024px){
+      .nav-toggle{display:block}
+      nav .nav-links{display:flex!important;position:fixed;top:72px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:rgba(10,22,40,0.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:8px 16px 18px;max-height:calc(100vh - 72px);overflow-y:auto;transform:translateY(-130%);transition:transform .32s ease}
+      nav .nav-links.open{transform:translateY(0)}
+      nav .nav-links li{width:100%}
+      nav .nav-links a{display:block;padding:14px 8px;font-size:0.98rem;border-bottom:1px solid rgba(255,255,255,0.07);border-radius:0}
+    }
+
+    .cs-toolbar{display:flex;justify-content:flex-end;margin-bottom:20px}
+    .cs-pdf-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:9px 18px;border-radius:20px;cursor:pointer;transition:border-color .2s,color .2s}
+    .cs-pdf-btn:hover{border-color:var(--cyan);color:var(--cyan2)}
+
+    .print-header,.print-footer{display:none}
+
+    @media print{
+      nav,footer,.cs-cta,.cs-back,.cs-toolbar{display:none!important}
+      *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+      body{background:#fff}
+      .page-header{padding:32px 0 28px}
+      .page-header-glow,.page-header-grid{display:none}
+      main{max-width:100%;padding:20px 0 0}
+      .cs-layout{grid-template-columns:1fr 250px;gap:32px}
+      .cs-sidebar{position:static}
+      .cs-photo{max-height:280px}
+      .cs-panel,.cs-quote-card,.cs-body p{break-inside:avoid}
+
+      .print-header{display:flex;align-items:center;justify-content:space-between;padding:0 0 16px;margin-bottom:26px;border-bottom:2px solid var(--navy)}
+      .print-header-brand{display:flex;align-items:center;gap:10px}
+      .print-header-brand img{height:32px;width:32px;object-fit:contain;border-radius:4px;display:block}
+      .print-header-brand span{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+      .print-header-tag{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
+      .print-header-tag::before{content:'';width:18px;height:2px;background:var(--amber)}
+
+      .print-footer{display:block;margin-top:36px;padding-top:14px;border-top:1px solid var(--border);font-size:.72rem;color:#5a6a80}
+      .print-footer-row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+      .print-footer-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--navy)}
+    }
+  </style>
+</head>
+<body>
+
+<div class="print-header">
+  <div class="print-header-brand">
+    <img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol">
+    <span>NucCol</span>
+  </div>
+  <div class="print-header-tag">Fit For Nuclear Case Study</div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"></a>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="primaryNav">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">Who We Are</a></li>
+    <li><a href="f4n.html">F4N</a></li>
+    <li><a href="f4n-companies.html">F4N Companies</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="members.html" class="nav-cta">Members Login</a></li>
+  </ul>
+</nav>
+
+<div id="cs-loading" class="page-header" style="margin-top:0">Loading case study…</div>
+<div id="cs-notfound" style="display:none">Case study not found. <a href="f4n-companies.html">← Back to F4N Companies</a></div>
+
+<div id="cs-content">
+  <div class="page-header">
+    <div class="page-header-grid"></div><div class="page-header-glow"></div>
+    <div class="page-header-content">
+      <div class="eyebrow">F4N Case Study</div>
+      <h1 id="cs-headline"></h1>
+      <p id="cs-tagline"></p>
+    </div>
+  </div>
+
+  <main>
+    <div class="cs-toolbar">
+      <button type="button" class="cs-pdf-btn" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        Download PDF
+      </button>
+    </div>
+    <img id="cs-photo" class="cs-photo" src="" alt="">
+
+    <div class="cs-layout">
+      <div class="cs-main">
+        <div class="cs-body" id="cs-body"></div>
+        <a href="f4n-companies.html" class="cs-back">← Back to F4N Companies</a>
+      </div>
+
+      <aside class="cs-sidebar">
+        <div class="cs-quote-card" id="cs-quote-wrap" style="display:none">
+          <blockquote><span id="cs-quote-text"></span></blockquote>
+          <div class="cs-quote-attr" id="cs-quote-attr"></div>
+        </div>
+
+        <div class="cs-panel" id="cs-metrics-wrap" style="display:none">
+          <div class="cs-panel-label">Impact at a Glance</div>
+          <div class="cs-stat-list" id="cs-metrics"></div>
+        </div>
+
+        <div class="cs-panel" id="cs-milestones-wrap" style="display:none">
+          <div class="cs-panel-label">Milestones &amp; Achievements</div>
+          <ul class="cs-milestone-list" id="cs-milestones"></ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="cs-cta">
+    <div class="cta-strip">
+      <div>
+        <div class="cta-label">Join the Programme</div>
+        <h2>Ready to Start Your F4N Journey?</h2>
+      </div>
+      <a href="f4n.html" class="btn-dark">Find Out More</a>
+    </div>
+  </div>
+
+  <div class="print-footer">
+    <div class="print-footer-row">
+      <span class="print-footer-brand">NucCol — Nuclear Collaboration Ltd</span>
+      <span>nuccol.co.uk &nbsp;·&nbsp; enquiries@nuccol.co.uk</span>
+      <span id="pf-published"></span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fg">
+    <div>
+      <div class="fl"><img src="https://i0.wp.com/nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg?fit=830%2C830&ssl=1" alt="NucCol"><span>NucCol</span></div>
+      <p class="fa">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+    </div>
+    <div class="fc"><h4>Company</h4><ul>
+      <li><a href="about.html">Who We Are</a></li>
+      <li><a href="f4n.html">F4N Programme</a></li>
+      <li><a href="f4n-companies.html">F4N Companies</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div class="fc"><h4>Connect</h4><ul>
+      <li><a href="https://uk.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn ↗</a></li>
+      <li><a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a></li>
+      <li><a href="members.html">Members Login</a></li>
+    </ul></div>
+    <div class="fc"><h4>&nbsp;</h4><ul></ul></div>
+  </div>
+  <div class="fb">
+    <span>&copy; 2026 NucCol – Nuclear Collaboration Ltd. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const toggle = document.querySelector('.nav-toggle');
+  const links  = document.getElementById('primaryNav');
+  if (toggle && links) toggle.addEventListener('click', () => { toggle.classList.toggle('open'); links.classList.toggle('open'); });
+})();
+
+(async function() {
+  const BASE = 'https://nuccolmedia.blob.core.windows.net/content';
+  const SAS  = 'sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('slug');
+  const loading  = document.getElementById('cs-loading');
+  const notfound = document.getElementById('cs-notfound');
+  const content  = document.getElementById('cs-content');
+
+  const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  if (!slug) { loading.style.display = 'none'; notfound.style.display = 'block'; return; }
+
+  try {
+    const r = await fetch(`${BASE}/site-pages/f4n-case-studies.json?${SAS}&t=${Date.now()}`);
+    if (!r.ok) throw new Error('fetch failed');
+    const all = await r.json();
+    const cs = Array.isArray(all) ? all.find(c => c.slug === slug) : null;
+    if (!cs) throw new Error('not found');
+
+    document.getElementById('cs-title').textContent = (cs.headline || cs.company_name || 'F4N Case Study') + ' – NucCol';
+    document.getElementById('cs-headline').textContent = cs.headline || cs.company_name || '';
+    document.getElementById('cs-tagline').textContent  = cs.tagline || '';
+
+    const pf = document.getElementById('pf-published');
+    if (pf && cs.published_at) {
+      pf.textContent = 'Published ' + new Date(cs.published_at).toLocaleDateString('en-GB', {month:'long', year:'numeric'});
+    }
+
+    if (cs.photo_url) {
+      const img = document.getElementById('cs-photo');
+      img.src = cs.photo_url;
+      img.alt = cs.company_name || '';
+      img.style.display = 'block';
+    }
+
+    const bodyParts = (cs.body || []).map(p => `<p>${esc(p)}</p>`);
+    if (cs.photo2_url) {
+      // Drop the second photo at a natural break — after the 3rd paragraph
+      // for a longer story, or roughly the midpoint for a shorter one.
+      const n = bodyParts.length;
+      const insertAt = n > 4 ? 3 : Math.max(1, Math.ceil(n / 2));
+      bodyParts.splice(insertAt, 0, `<img src="${esc(cs.photo2_url)}" alt="${esc(cs.company_name || '')}" class="cs-inline-photo">`);
+    }
+    document.getElementById('cs-body').innerHTML = bodyParts.join('');
+
+    if (cs.quote && cs.quote.text) {
+      document.getElementById('cs-quote-wrap').style.display = 'block';
+      document.getElementById('cs-quote-text').textContent = '“' + cs.quote.text + '”';
+      document.getElementById('cs-quote-attr').textContent = [cs.quote.name, cs.quote.role].filter(Boolean).join(', ');
+    }
+
+    if (Array.isArray(cs.milestones) && cs.milestones.length) {
+      document.getElementById('cs-milestones-wrap').style.display = 'block';
+      document.getElementById('cs-milestones').innerHTML = cs.milestones.map(m => `<li>${esc(m)}</li>`).join('');
+    }
+
+    if (Array.isArray(cs.metrics) && cs.metrics.length) {
+      document.getElementById('cs-metrics-wrap').style.display = 'block';
+      document.getElementById('cs-metrics').innerHTML = cs.metrics.map(m => `
+        <div class="cs-stat-row"><div class="cs-stat-val">${esc(m.value)}</div><div class="cs-stat-label">${esc(m.label)}</div></div>
+      `).join('');
+    }
+
+    loading.style.display = 'none';
+    content.style.display = 'block';
+  } catch (e) {
+    loading.style.display = 'none';
+    notfound.style.display = 'block';
+  }
+})();
+</script>
+
+</body>
+</html>

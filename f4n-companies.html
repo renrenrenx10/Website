@@ -690,6 +690,30 @@
     const jc = document.getElementById('f4n-page-journey-count');
     if (gc) gc.textContent = '- ' + granted;
     if (jc) jc.textContent = '- ' + journey;
+
+    // Append any staff-published Journey rows (e.g. approved member F4N Journey
+    // case studies) that aren't already represented as a static card above.
+    const grid = document.getElementById('f4n-journey-grid');
+    if (grid) {
+      const existingNames = [...grid.querySelectorAll('.company-name')].map(el => el.textContent.trim().toLowerCase());
+      const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      rows
+        .filter(x => x.section === 'Journey' && x.title && !existingNames.includes(x.title.trim().toLowerCase()))
+        .sort((a,b) => (a.sort||0) - (b.sort||0))
+        .forEach(x => {
+          const card = document.createElement(x.linkUrl ? 'a' : 'div');
+          card.className = 'company-card' + (x.linkUrl ? '' : ' company-card-nolink');
+          if (x.linkUrl) { card.href = x.linkUrl; card.target = '_blank'; card.rel = 'noopener'; }
+          card.innerHTML = `
+            <div class="company-logo-wrap">${x.imageUrl ? `<img src="${esc(x.imageUrl)}" alt="${esc(x.title)}">` : ''}</div>
+            <div class="company-body">
+              <div class="company-name">${esc(x.title)}</div>
+              <p class="company-desc">${esc(x.body || '')}</p>
+              ${x.caseStudyUrl ? `<a href="${esc(x.caseStudyUrl)}" class="company-link-indicator" style="color:var(--amber)">Read Case Study</a>` : (x.linkUrl ? `<span class="company-link-indicator">Visit Website</span>` : '')}
+            </div>`;
+          grid.appendChild(card);
+        });
+    }
   } catch(e) {}
 })();
 </script>

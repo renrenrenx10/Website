@@ -450,6 +450,12 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
   .compose-left{flex-direction:column}
   .btn-submit-post{width:100%}
 }
+.fj-layout{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.fj-side{position:sticky;top:20px;display:flex;flex-direction:column;gap:18px}
+@media(max-width:900px){
+  .fj-layout{grid-template-columns:1fr}
+  .fj-side{position:static}
+}
 .comm-toast{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--white);border:1px solid #dde4ee;border-radius:7px;padding:12px 18px;font-size:.83rem;max-width:300px;transform:translateY(60px);opacity:0;transition:.3s;pointer-events:none}
 .comm-toast.show{transform:none;opacity:1}
 .comm-toast.ok{border-color:rgba(34,197,94,.5);color:#86efac}
@@ -766,6 +772,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="3.5" /><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(120 12 12)"/></svg>
       NuclearReady Profile <span class="sb-badge" id="badge-nr" style="display:none">!</span>
     </button>
+    <button class="sb-item" id="sb-item-f4njourney" onclick="nav('f4njourney')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      F4N Case Studies <span class="sb-badge" id="badge-fj" style="display:none">!</span>
+    </button>
     <button class="sb-item" onclick="portalSignOut()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Sign Out
@@ -948,6 +958,190 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- F4N JOURNEY / CASE STUDY SUBMISSION
+
+    SQL — run in Supabase SQL editor before going live:
+    ───────────────────────────────────────────────────
+    CREATE TABLE IF NOT EXISTS f4n_journey_submissions (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id uuid REFERENCES auth.users NOT NULL,
+      company_name text, submitted_at timestamptz DEFAULT now(),
+      status text DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+      website text,
+      company_overview text,
+      journey_reason text,
+      starting_gaps text,
+      milestones text,
+      impact_narrative text,
+      impact_metrics text,
+      opportunities_ahead text,
+      five_year_outlook text,
+      testimonial_quote text, testimonial_name text, testimonial_role text,
+      photo_url text,
+      photo2_url text,
+      consent_given boolean DEFAULT false,
+      case_study_slug text,
+      reviewer_notes text, reviewed_at timestamptz, reviewed_by text
+    );
+    ALTER TABLE f4n_journey_submissions ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY IF NOT EXISTS "Users can insert own journey submissions" ON f4n_journey_submissions FOR INSERT WITH CHECK (auth.uid() = user_id);
+    CREATE POLICY IF NOT EXISTS "Users can view own journey submissions"  ON f4n_journey_submissions FOR SELECT USING (auth.uid() = user_id);
+
+    -- Supabase Storage: create a public bucket called 'f4n-journey-photos' in the Supabase dashboard
+    -->
+
+    <div class="section" id="sec-f4njourney" style="padding:32px;max-width:1320px">
+
+      <div class="sec-header" style="margin-bottom:24px">
+        <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:800;text-transform:uppercase;color:var(--navy);margin-bottom:6px">
+          My <span style="color:var(--cyan)">F4N Journey</span>
+        </h2>
+        <p style="font-size:.9rem;color:#5a6a80;line-height:1.6;max-width:580px">
+          Tell us about your Fit For Nuclear journey. NucCol will turn it into a published case study — reviewed by our team before it goes live.
+        </p>
+      </div>
+
+      <div id="fj-pending-banner" style="display:none;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:#92400e">
+        <strong>⏳ Submission pending review</strong> — submitted <span id="fj-pending-date"></span>. NucCol will review it shortly.
+      </div>
+      <div id="fj-approved-banner" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:#166534">
+        <strong>✓ Case study approved</strong> on <span id="fj-approved-date"></span> and published.
+      </div>
+
+      <div class="fj-layout">
+      <div>
+
+      <!-- Company overview -->
+      <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Company Overview</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:13px">
+          <div>
+            <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Company Name</label>
+            <input id="fj-company-name" type="text" placeholder="Your company name" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Website</label>
+            <input id="fj-website" type="url" placeholder="https://www.yourcompany.co.uk" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+          </div>
+        </div>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">What does your company do?</label>
+          <textarea id="fj-overview" rows="4" placeholder="A clear summary of your company, what you make or supply, and your place in the nuclear supply chain…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+      </div>
+
+      <!-- Journey & expectations -->
+      <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Starting Your F4N Journey</h3>
+        <div style="margin-bottom:13px">
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Why did you start your F4N journey, and what did you hope to get out of it?</label>
+          <textarea id="fj-reason" rows="4" placeholder="What prompted you to pursue Fit For Nuclear, and what were you hoping to achieve…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">What did your F4N assessment identify as needing improvement?</label>
+          <textarea id="fj-gaps" rows="4" placeholder="Be honest about the starting point — the areas where you were strong, and the gaps the assessment flagged (e.g. strategy, HSE, safety culture, process control)…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+      </div>
+
+      <!-- Milestones -->
+      <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:6px">How You Closed The Gaps</h3>
+        <p style="font-size:.78rem;color:#6a7a90;margin-bottom:14px;line-height:1.5">The milestones and actions that got you there — one per line, e.g. "Introduced lean manufacturing training", "Restructured our supply chain", "Won first nuclear contract".</p>
+        <div id="fj-milestones" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+        <button type="button" onclick="fjAddMilestone()" style="padding:8px 16px;border:1px dashed #b9c6d6;border-radius:6px;background:none;font-size:.8rem;font-weight:700;color:#3a4a5c;cursor:pointer;text-transform:uppercase;letter-spacing:.05em">+ Add Milestone</button>
+      </div>
+
+      <!-- Impact -->
+      <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:6px">Impact &amp; Benefits</h3>
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">What benefits have you seen since starting F4N?</label>
+          <textarea id="fj-impact-narrative" rows="4" placeholder="What's actually changed — new contracts, new customers, better processes, more confidence bidding for nuclear work…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+        <p style="font-size:.78rem;color:#6a7a90;margin-bottom:14px;line-height:1.5">Any numbers worth shouting about — jobs created, contracts won, cost or time savings, new certifications.</p>
+        <div id="fj-metrics" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+        <button type="button" onclick="fjAddMetric()" style="padding:8px 16px;border:1px dashed #b9c6d6;border-radius:6px;background:none;font-size:.8rem;font-weight:700;color:#3a4a5c;cursor:pointer;text-transform:uppercase;letter-spacing:.05em">+ Add Metric</button>
+      </div>
+
+      <!-- Looking ahead -->
+      <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Looking Ahead</h3>
+        <div style="margin-bottom:13px">
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Where do you see opportunities for your business in nuclear next?</label>
+          <textarea id="fj-opportunities" rows="3" placeholder="New markets, new contract types, tiers you're targeting, sectors adjacent to nuclear…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+        <div>
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Where do you see your business in five years' time?</label>
+          <textarea id="fj-fiveyear" rows="3" placeholder="Your longer-term ambition — growth, new capabilities, how big a part nuclear plays in the business…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+      </div>
+
+      <!-- Testimonial -->
+      <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:22px">
+        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:16px">Testimonial</h3>
+        <div style="margin-bottom:13px">
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Quote</label>
+          <textarea id="fj-quote" rows="3" placeholder="A short, quotable line about what F4N meant for your business…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Name</label>
+            <input id="fj-quote-name" type="text" placeholder="Jane Smith" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Role</label>
+            <input id="fj-quote-role" type="text" placeholder="Managing Director" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#f4f7fb;border:1px solid #dde4ee;border-radius:8px;padding:14px 16px;margin-bottom:16px">
+        <input type="checkbox" id="fj-consent" style="margin-top:3px;width:16px;height:16px;flex-shrink:0;cursor:pointer"/>
+        <label for="fj-consent" style="font-size:.82rem;color:var(--navy);line-height:1.55;cursor:pointer">I confirm I'm authorised to submit this on behalf of my company, and I give NucCol permission to use the contents of this submission — including any photos, quotes and the resulting case study — in NucCol's promotional and marketing materials.</label>
+      </div>
+
+      <div id="fj-msg" style="display:none;padding:12px 16px;border-radius:6px;font-size:.85rem;margin-bottom:16px"></div>
+      <button onclick="submitF4NJourney()" id="fj-submit-btn" style="background:var(--cyan);color:#0a1628;border:none;border-radius:6px;padding:13px 28px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:.2s">Submit for Review</button>
+      <p style="margin-top:10px;font-size:.78rem;color:#6a7a90">NucCol will draft your case study from this and reach out before publishing.</p>
+
+      </div>
+
+      <aside class="fj-side">
+        <!-- Photos -->
+        <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px">
+          <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--navy);margin-bottom:14px">Photos</h3>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:18px">
+            <div id="fj-photo-preview" style="width:100%;height:120px;border:1.5px dashed #dde4ee;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#f4f7fb;overflow:hidden;flex-shrink:0">
+              <span id="fj-photo-placeholder" style="font-size:.72rem;color:#aab;text-align:center;padding:6px">No photo<br>uploaded</span>
+              <img id="fj-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover"/>
+            </div>
+            <div style="width:100%">
+              <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Main Photo</label>
+              <input type="file" id="fj-photo-file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="fjPreviewPhoto(this)"/>
+              <button onclick="document.getElementById('fj-photo-file').click()" style="padding:9px 18px;border:1px solid #dde4ee;border-radius:6px;background:#f4f7fb;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#3a4a5c;cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='#dde4ee';this.style.color='#3a4a5c'">Choose File</button>
+              <p style="font-size:.72rem;color:#6a7a90;margin-top:6px">PNG, JPG or WebP · max 4 MB · <strong>portrait orientation works best</strong> · a team, factory floor or product shot — this is the main banner image</p>
+              <div id="fj-photo-status" style="font-size:.75rem;color:#6a7a90;margin-top:4px"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;border-top:1px solid #eef2f7;padding-top:18px">
+            <div id="fj-photo2-preview" style="width:100%;height:120px;border:1.5px dashed #dde4ee;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#f4f7fb;overflow:hidden;flex-shrink:0">
+              <span id="fj-photo2-placeholder" style="font-size:.72rem;color:#aab;text-align:center;padding:6px">No photo<br>uploaded</span>
+              <img id="fj-photo2-img" src="" style="display:none;width:100%;height:100%;object-fit:cover"/>
+            </div>
+            <div style="width:100%">
+              <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Second Photo (optional)</label>
+              <input type="file" id="fj-photo2-file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="fjPreviewPhoto2(this)"/>
+              <button onclick="document.getElementById('fj-photo2-file').click()" style="padding:9px 18px;border:1px solid #dde4ee;border-radius:6px;background:#f4f7fb;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#3a4a5c;cursor:pointer;transition:.15s" onmouseover="this.style.borderColor='var(--cyan)';this.style.color='var(--cyan)'" onmouseout="this.style.borderColor='#dde4ee';this.style.color='#3a4a5c'">Choose File</button>
+              <p style="font-size:.72rem;color:#6a7a90;margin-top:6px"><strong>Portrait orientation works best</strong> · a second shot — different angle, product close-up or team photo — used further down the published case study</p>
+              <div id="fj-photo2-status" style="font-size:.75rem;color:#6a7a90;margin-top:4px"></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
       </div>
     </div>
 
@@ -1625,7 +1819,7 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 
 
 // NAV
-const labels={pcv:'Programme Country View',safety:'Safety Messages',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account'};
+const labels={pcv:'Programme Country View',safety:'Safety Messages',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account',f4njourney:'My F4N Journey'};
 function nav(id){
   if(id==='nuclearready' && window.__nuclearReadyEnabled===false){ id='home'; }
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1646,6 +1840,7 @@ function nav(id){
   if(id==='handbook'&&!window.hbInit){loadSection('strategy');window.hbInit=true}
   if(id==='account'){loadAccountSection();}
   if(id==='nuclearready'){loadNRSection();}
+  if(id==='f4njourney'){loadF4NJourneySection();}
   if(id==='toolbox'){loadToolboxSection();}
   if(id==='community'&&!commUser){(async()=>{const {data:{session}}=await db.auth.getSession();if(session)await commInit(session.user);})();}
   if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
@@ -3358,6 +3553,199 @@ function showNRMsg(text, color, bg, border) {
   el.style.background = bg     || '#f0fdf4';
   el.style.border     = '1px solid ' + (border || '#86efac');
   el.style.display    = 'block';
+}
+
+// ── F4N JOURNEY / CASE STUDY SUBMISSION ────────────────────────────────────
+let fjPhotoFile = null;
+let fjMilestoneCount = 0;
+let fjMetricCount = 0;
+const fjInputStyle = "width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;color:var(--navy);font-family:'Barlow',sans-serif;font-size:.85rem;box-sizing:border-box";
+
+async function loadF4NJourneySection() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) return;
+
+  const nameEl = document.getElementById('fj-company-name');
+  if (nameEl && !nameEl.value) nameEl.value = session.user?.user_metadata?.company || '';
+
+  if (!document.getElementById('fj-milestones').children.length) fjAddMilestone();
+  if (!document.getElementById('fj-metrics').children.length) fjAddMetric();
+
+  // Fetch every submission this member has made, not just the latest — if
+  // they've submitted more than once, a newer pending draft shouldn't hide
+  // an earlier one that's already been approved and published.
+  const { data: rows } = await db.from('f4n_journey_submissions')
+    .select('*').eq('user_id', session.user.id)
+    .order('submitted_at', { ascending: false });
+
+  const pb = document.getElementById('fj-pending-banner');
+  const ab = document.getElementById('fj-approved-banner');
+  if (pb) pb.style.display = 'none';
+  if (ab) ab.style.display = 'none';
+
+  if (rows && rows.length) {
+    const approved = rows.find(r => r.status === 'approved');
+    const pending  = rows.find(r => r.status === 'pending');
+    if (approved && ab) {
+      ab.style.display = 'block';
+      document.getElementById('fj-approved-date').textContent = new Date(approved.reviewed_at || approved.submitted_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    } else if (pending && pb) {
+      pb.style.display = 'block';
+      document.getElementById('fj-pending-date').textContent = new Date(pending.submitted_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    }
+  }
+}
+
+function fjAddMilestone(value) {
+  fjMilestoneCount++;
+  const idx = fjMilestoneCount;
+  const wrap = document.getElementById('fj-milestones');
+  const row = document.createElement('div');
+  row.id = 'fj-milestone-' + idx;
+  row.style.cssText = 'display:flex;gap:8px;align-items:center';
+  row.innerHTML = `
+    <input data-fj-milestone type="text" value="${value ? escFjAttr(value) : ''}" placeholder="e.g. Completed initial F4N assessment" style="${fjInputStyle}"/>
+    <button type="button" onclick="fjRemoveRow('fj-milestone-${idx}')" style="background:none;border:none;color:#6a7a90;cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 6px;flex-shrink:0" title="Remove">✕</button>`;
+  wrap.appendChild(row);
+}
+
+function fjAddMetric(label, value) {
+  fjMetricCount++;
+  const idx = fjMetricCount;
+  const wrap = document.getElementById('fj-metrics');
+  const row = document.createElement('div');
+  row.id = 'fj-metric-' + idx;
+  row.style.cssText = 'display:flex;gap:8px;align-items:center';
+  row.innerHTML = `
+    <input data-fj-metric-label type="text" value="${label ? escFjAttr(label) : ''}" placeholder="e.g. Jobs created" style="${fjInputStyle};max-width:200px"/>
+    <input data-fj-metric-value type="text" value="${value ? escFjAttr(value) : ''}" placeholder="e.g. 12" style="${fjInputStyle}"/>
+    <button type="button" onclick="fjRemoveRow('fj-metric-${idx}')" style="background:none;border:none;color:#6a7a90;cursor:pointer;font-size:1.1rem;line-height:1;padding:2px 6px;flex-shrink:0" title="Remove">✕</button>`;
+  wrap.appendChild(row);
+}
+
+function fjRemoveRow(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function escFjAttr(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+function fjPreviewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  fjPhotoFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('fj-photo-img');
+    const ph  = document.getElementById('fj-photo-placeholder');
+    if (img) { img.src = e.target.result; img.style.display = ''; }
+    if (ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function fjUploadPhoto(userId) {
+  if (!fjPhotoFile) return null;
+  const ext  = fjPhotoFile.name.split('.').pop();
+  const path = `${userId}/photo-${Date.now()}.${ext}`;
+  const { error } = await db.storage.from('f4n-journey-photos').upload(path, fjPhotoFile, { upsert: true });
+  if (error) { document.getElementById('fj-photo-status').textContent = 'Photo upload failed: ' + error.message; return null; }
+  const { data } = db.storage.from('f4n-journey-photos').getPublicUrl(path);
+  return data?.publicUrl || null;
+}
+
+let fjPhotoFile2 = null;
+function fjPreviewPhoto2(input) {
+  const file = input.files[0];
+  if (!file) return;
+  fjPhotoFile2 = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('fj-photo2-img');
+    const ph  = document.getElementById('fj-photo2-placeholder');
+    if (img) { img.src = e.target.result; img.style.display = ''; }
+    if (ph) ph.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function fjUploadPhoto2(userId) {
+  if (!fjPhotoFile2) return null;
+  const ext  = fjPhotoFile2.name.split('.').pop();
+  const path = `${userId}/photo2-${Date.now()}.${ext}`;
+  const { error } = await db.storage.from('f4n-journey-photos').upload(path, fjPhotoFile2, { upsert: true });
+  if (error) { document.getElementById('fj-photo2-status').textContent = 'Photo upload failed: ' + error.message; return null; }
+  const { data } = db.storage.from('f4n-journey-photos').getPublicUrl(path);
+  return data?.publicUrl || null;
+}
+
+function fjMsg(text, color, bg, border) {
+  const el = document.getElementById('fj-msg');
+  el.textContent = text;
+  el.style.color      = color  || '#166534';
+  el.style.background = bg     || '#f0fdf4';
+  el.style.border     = '1px solid ' + (border || '#86efac');
+  el.style.display    = 'block';
+}
+
+async function submitF4NJourney() {
+  const btn = document.getElementById('fj-submit-btn');
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { fjMsg('You must be signed in.', '#c0392b', '#fef2f2', '#f5c6c0'); return; }
+
+  const companyName = document.getElementById('fj-company-name').value.trim();
+  if (!companyName) { fjMsg('Please enter your company name.', '#c0392b', '#fef2f2', '#f5c6c0'); return; }
+
+  const consentGiven = document.getElementById('fj-consent').checked;
+  if (!consentGiven) { fjMsg('Please confirm you\'re authorised to submit this and give NucCol permission to use it in promotional material.', '#c0392b', '#fef2f2', '#f5c6c0'); return; }
+
+  btn.disabled = true; btn.textContent = 'Uploading…';
+  const photo_url  = await fjUploadPhoto(session.user.id);
+  const photo2_url = await fjUploadPhoto2(session.user.id);
+
+  const milestones = [...document.querySelectorAll('[data-fj-milestone]')]
+    .map(el => el.value.trim()).filter(Boolean);
+  const metrics = [...document.querySelectorAll('#fj-metrics > div')]
+    .map(row => ({
+      label: row.querySelector('[data-fj-metric-label]')?.value.trim() || '',
+      value: row.querySelector('[data-fj-metric-value]')?.value.trim() || ''
+    }))
+    .filter(m => m.label || m.value);
+
+  const payload = {
+    user_id:              session.user.id,
+    company_name:         companyName,
+    website:              document.getElementById('fj-website').value.trim(),
+    company_overview:     document.getElementById('fj-overview').value.trim(),
+    journey_reason:       document.getElementById('fj-reason').value.trim(),
+    starting_gaps:        document.getElementById('fj-gaps').value.trim(),
+    milestones:           JSON.stringify(milestones),
+    impact_narrative:     document.getElementById('fj-impact-narrative').value.trim(),
+    impact_metrics:       JSON.stringify(metrics),
+    opportunities_ahead:  document.getElementById('fj-opportunities').value.trim(),
+    five_year_outlook:    document.getElementById('fj-fiveyear').value.trim(),
+    testimonial_quote:    document.getElementById('fj-quote').value.trim(),
+    testimonial_name:     document.getElementById('fj-quote-name').value.trim(),
+    testimonial_role:     document.getElementById('fj-quote-role').value.trim(),
+    consent_given:        consentGiven,
+    status:               'pending'
+  };
+  if (photo_url) payload.photo_url = photo_url;
+  if (photo2_url) payload.photo2_url = photo2_url;
+
+  btn.textContent = 'Submitting…';
+  const { error } = await db.from('f4n_journey_submissions').insert(payload);
+  if (error) {
+    fjMsg('Something went wrong: ' + error.message, '#c0392b', '#fef2f2', '#f5c6c0');
+    btn.disabled = false; btn.textContent = 'Submit for Review';
+  } else {
+    fjMsg('✓ Submitted! NucCol will review it and be in touch before publishing.', '#166534', '#f0fdf4', '#86efac');
+    btn.textContent = 'Submitted';
+    const pb = document.getElementById('fj-pending-banner');
+    if (pb) { pb.style.display = 'block'; document.getElementById('fj-pending-date').textContent = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+  }
 }
 
 async function nrLoadNewsHistory(session) {
