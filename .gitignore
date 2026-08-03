@@ -21,3 +21,13 @@ Website bios.docx
 # Temp files
 *.tmp
 *.log
+
+# Frankie KB files — these live in Azure Blob storage behind the gated
+# Cloudflare Worker /kb/* route, never committed to this repo (added 2026-08-03)
+frankie/kb/
+
+# Backup/snapshot files created during editing sessions — never intended for deploy
+*.backup-*
+*.bak-*
+*.bak
+*.preocr
