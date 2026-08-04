@@ -1,5 +1,29 @@
 # Frankie changelog
 
+## 2026-08-04 — Drawers anchored to the sidebar edge
+
+**All form-style drawers now pull out from the same spot: right at the edge
+of the left sidebar (282px), instead of floating as a narrow box over on the
+right of the screen.** Applies to the shared `.assess-panel` drawer (Evidence
+Vault, Website Review's sibling `.wr-panel`, ISO 19443, Social Value,
+Supplier Intel, Toolbox Talk, SOP Builder, Safety Culture, Quality Plan,
+SQDCP, NCR, Strategy Builder, Business/F4N Self-Assessment, NucColpedia).
+Both now use `left: 282px` + `max-width` instead of `right: 0` + fixed
+`width`, and slide in with `translateX` from the left instead of the right.
+Below the 1050px breakpoint (where the sidebar already collapses out of the
+`.app` grid) the drawers fall back to `left: 0` so there's no dead gap.
+
+**Deliberately excluded: Plant Explorer.** Its `.pe-drawer-panel` stays a
+full-screen overlay — it needs the whole canvas for the zone map and
+per-reactor cutaways, per the existing code comment in
+`plant-explorer.css`.
+
+### Files touched
+- `frankie/css/styles.css` — `.assess-panel` and `.wr-panel` repositioned.
+
+### Backup taken before editing
+- `frankie/css/styles.css.backup-20260804-*-preDrawerReposition`
+
 ## 2026-08-04 — Sidebar restyle, grouped nav, NucColpedia drawer
 
 **Sidebar restyled to match the SCC portal (`scc.html`).** Replaced the
