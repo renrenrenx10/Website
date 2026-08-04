@@ -1289,22 +1289,41 @@ setReactorFilter=function(sel){pvSel=sel;
   // sub.reactors, so we can see why per-reactor filtering shows 0 components
   // mapped. Safe to remove once the mismatch is found — read-only, no writes.
   function debug() {
-    const tree = ACTIVE_TREE || [];
+    // v2 (2026-08-04): inspect the RAW unfiltered PLANT_TREE, not ACTIVE_TREE —
+    // v1 iterated ACTIVE_TREE, which is already the (empty) filtered result,
+    // so it couldn't show why the filter was producing nothing.
+    const raw = PLANT_TREE || [];
     const locCounts = {};
     const reactorNames = new Set();
-    tree.forEach(site => (site.locations || []).forEach(loc => {
-      locCounts[loc.name] = (locCounts[loc.name] || 0) + 1;
-      (loc.systems || []).forEach(sys => (sys.components || []).forEach(comp =>
-        (comp.subcomponents || []).forEach(sub => (sub.reactors || []).forEach(r => reactorNames.add(r)))));
-    }));
+    let subWithReactorsField = 0, subMissingReactorsField = 0, totalSubs = 0;
+    let sampleSub = null, sampleLoc = null, sampleSite = null;
+    raw.forEach(site => {
+      if (!sampleSite) sampleSite = { name: site.name, keys: Object.keys(site) };
+      (site.locations || []).forEach(loc => {
+        if (!sampleLoc) sampleLoc = { name: loc.name, keys: Object.keys(loc) };
+        locCounts[loc.name] = (locCounts[loc.name] || 0) + 1;
+        (loc.systems || []).forEach(sys => (sys.components || []).forEach(comp =>
+          (comp.subcomponents || []).forEach(sub => {
+            totalSubs++;
+            if (!sampleSub) sampleSub = sub;
+            if (sub.reactors && sub.reactors.length) { subWithReactorsField++; sub.reactors.forEach(r => reactorNames.add(r)); }
+            else subMissingReactorsField++;
+          })));
+      });
+    });
     const out = {
-      dataLoaded, plantTreeIsArray: Array.isArray(PLANT_TREE), plantTreeSiteCount: (PLANT_TREE || []).length,
-      activeTreeSiteCount: tree.length, locationNamesFound: locCounts,
+      dataLoaded, plantTreeSiteCount: raw.length,
+      locationNamesInRawTree: locCounts,
       dseBuildingNamesExpected: DSE_BUILDINGS.map(b => b.dse),
-      reactorNameStringsFoundInData: Array.from(reactorNames).sort(),
-      currentPvSel: pvSel, currentSelectedReactor: selectedReactor
+      totalSubcomponents: totalSubs,
+      subcomponentsWithNonEmptyReactorsField: subWithReactorsField,
+      subcomponentsMissingOrEmptyReactorsField: subMissingReactorsField,
+      reactorNameStringsFoundInRawData: Array.from(reactorNames).sort(),
+      sampleSite, sampleLocation: sampleLoc, sampleSubcomponent: sampleSub,
+      currentPvSel: pvSel, currentSelectedReactor: selectedReactor,
+      activeTreeSiteCountAfterFilter: (ACTIVE_TREE || []).length
     };
-    console.log('[PlantExplorerDrawer.debug]', out);
+    console.log('[PlantExplorerDrawer.debug v2]', out);
     return out;
   }
 
