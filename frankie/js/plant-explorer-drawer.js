@@ -7,18 +7,28 @@
 // What's different from the standalone file:
 //  - The supplier/company map feature (COMPANY_DICT, COMPANIES, Leaflet,
 //    "view on map" buttons/chips) has been removed entirely, per request.
-//  - Tree data is fetched live from the SAME gated Worker endpoint the
-//    chat-triggered PlantDrawer already uses (${WORKER_URL}/kb/plant_tree_data.json)
-//    instead of being baked into this file — one source of truth, no risk
-//    of this copy drifting from what the rest of Frankie shows.
+//  - Tree data (2026-08-04 update): originally fetched from the SAME gated
+//    Worker endpoint the chat-triggered PlantDrawer uses
+//    (kb/plant_tree_data.json), on the theory of "one source of truth". That
+//    endpoint turned out to be the OLDER generic DSE taxonomy with no
+//    per-reactor BOM mapping at all (0 of 4466 subcomponents had a reactors[]
+//    field — confirmed via PlantExplorerDrawer.debug()), so every specific-
+//    reactor selection silently showed zero components. Switched to a static
+//    JSON export of the standalone tool's own baked-in PLANT_TREE
+//    (images/plant-explorer/plant_tree_v2.json, ~12MB, 8361 subcomponents,
+//    100% with real reactors[]/instances[] data across all 18 designs) so
+//    Plant Explorer matches the standalone "sliced version" tool exactly.
+//    This does mean Plant Explorer's tree can drift from the chat's
+//    PlantDrawer tree (kb/plant_tree_data.json) until the live KB is
+//    rebuilt with the v2 schema — see project_frankie_plant_explorer_v2
+//    memory. No auth token needed for this fetch (same-origin static file,
+//    already behind Frankie's page-level auth gate).
 //  - All inline style="..." attributes and .style.cssText assignments were
 //    converted to CSS classes / per-property JS style sets, since Frankie's
 //    CSP (style-src) has no 'unsafe-inline' — see css/plant-explorer.css.
-//  - Layer 2 of the original tool (per-reactor cutaway diagrams with
-//    building callouts — PLANT_VIEWS/PLANT_INFO/PV_IMG) was deliberately
-//    left out of this pass. The 35 diagram images are still extracted and
-//    sitting in images/plant-explorer/pv/ (see manifest.json) for a future
-//    follow-up; nothing in this file references them yet.
+//  - Layer 2 (per-reactor cutaway diagrams with building callouts —
+//    PLANT_VIEWS/PLANT_INFO/PV_IMG/PV_CALLOUTS) was added 2026-08-04, using
+//    the pv/*.jpeg images extracted alongside plant_tree_v2.json.
 //
 // Usage:
 //   PlantExplorerDrawer.open()
@@ -27,13 +37,10 @@
 (function () {
   'use strict';
 
-  const WORKER_URL = 'https://ch.rene-dorset.workers.dev';
-  const DATA_FILE = `${WORKER_URL}/kb/plant_tree_data.json`;
-
-  function authHeaders() {
-    const token = localStorage.getItem('frankieUserToken');
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
-  }
+  // Static asset, same-origin, resolved against <base href="/frankie/">.
+  // No Bearer token needed — see header comment above for why this no
+  // longer goes through the gated Worker endpoint.
+  const DATA_FILE = 'images/plant-explorer/plant_tree_v2.json';
 
   let dataLoaded = false;
 
@@ -500,7 +507,9 @@ function pvRestoreOriginal(){if(!PV_ORIG)return;
 function pvRestoreFull(){pvApplyView(pvSel);}
 
 /* ---- generic composite tree filter (GW / SMR) ---- */
-function pvFilterSet(setArr){const S=new Set(setArr),out=[];
+function pvFilterSet(setArr){
+  if (!dataHasReactorMapping()) return PLANT_TREE || []; // see dataHasReactorMapping() note above
+  const S=new Set(setArr),out=[];
   PLANT_TREE.forEach(site=>{const locs=[];site.locations.forEach(loc=>{const syss=[];
     loc.systems.forEach(sys=>{const comps=[];sys.components.forEach(comp=>{const subs=comp.subcomponents.filter(sub=>(sub.reactors||[]).some(r=>S.has(r)));
       if(subs.length)comps.push(Object.assign({},comp,{subcomponents:subs}));});
@@ -515,9 +524,32 @@ const REACTOR_NAMES = ["ABWR", "AP1000", "AP300", "AP600", "APR1400", "BWRX300",
 let selectedReactor = 'ALL';
 let ACTIVE_TREE = PLANT_TREE;
 
+// Confirmed 2026-08-04 via PlantExplorerDrawer.debug(): the live
+// kb/plant_tree_data.json has 0 of 4466 subcomponents with a non-empty
+// `reactors` field — it's the older generic DSE taxonomy, not the
+// reactor-mapped v2 schema the reactor-select dropdown was designed for
+// (that schema only exists baked into the standalone
+// NuCCoL_Plant_Explorer_v2_images.html file, not in the live KB yet).
+// Filtering on a field that's never populated silently returns an empty
+// tree, breaking building browsing, search and drill-down for any specific
+// reactor pick. Until the KB is updated with real per-reactor BOM mapping,
+// fall back to the full/generic tree rather than showing nothing.
+let _hasReactorMappingCache = null;
+function dataHasReactorMapping() {
+  if (_hasReactorMappingCache !== null) return _hasReactorMappingCache;
+  if (!PLANT_TREE) return false;
+  for (const site of PLANT_TREE) for (const loc of site.locations || [])
+    for (const sys of loc.systems || []) for (const comp of sys.components || [])
+      for (const sub of comp.subcomponents || [])
+        if (sub.reactors && sub.reactors.length) { _hasReactorMappingCache = true; return true; }
+  _hasReactorMappingCache = false;
+  return false;
+}
+
 function filterTreeForReactor(reactor) {
   if (!PLANT_TREE) return [];
   if (reactor === 'ALL') return PLANT_TREE;
+  if (!dataHasReactorMapping()) return PLANT_TREE; // no per-reactor data available — show the generic tree
   const out = [];
   PLANT_TREE.forEach(site => {
     const locs = [];
@@ -1252,7 +1284,7 @@ setReactorFilter=function(sel){pvSel=sel;
     if (!dataLoaded) {
       const loadingEl = document.getElementById('loading');
       try {
-        const res = await fetch(DATA_FILE, { headers: authHeaders() });
+        const res = await fetch(DATA_FILE);
         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
         const data = await res.json();
         PLANT_TREE = data.plant_tree || data;
