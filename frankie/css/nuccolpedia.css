@@ -4,7 +4,8 @@
    .assess-topbar shell (see evidence-vault.css / plant-explorer.css for the
    same pattern) so it opens and closes consistently with the other tools. */
 
-.np-panel { max-width: 1040px; width: min(1040px, 96vw); }
+/* .np-panel now inherits the shared .assess-panel full-span width (sidebar
+   edge to screen edge, 2026-08-04) — no cap needed here. */
 
 #npMain {
   display: flex;

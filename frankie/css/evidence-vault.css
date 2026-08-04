@@ -1,7 +1,7 @@
 /* ── Evidence Vault Drawer styles ───────────────────────────────────────── */
 
-/* Panel sizing — wider than default for evidence lists */
-.ev-panel { max-width: 780px; }
+/* Panel sizing — .ev-panel now inherits the shared .assess-panel full-span
+   width (sidebar edge to screen edge, 2026-08-04), no cap needed here. */
 
 /* evMain must fill the remaining panel height and allow body to scroll */
 #evMain {

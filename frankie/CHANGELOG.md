@@ -1,5 +1,24 @@
 # Frankie changelog
 
+## 2026-08-04 — Only one drawer open at a time
+
+**Bug: opening a second tool (e.g. NucColpedia) while a first was already
+open (e.g. Evidence Vault) stacked a new overlay on top instead of replacing
+it** — the first drawer stayed alive behind the second, invisible, and its
+backdrop/close button became unreachable, which looked "stuck" when trying
+to close things. Seen live at nuccol.co.uk/frankie: both drawers' headers
+visible side by side.
+
+Fix: `frankie/js/drawer-manager.js` (new, loaded first). Watches for any
+drawer root (`*-drawer` class family: `.assess-drawer`, `.wr-drawer`,
+`.pe-drawer`) gaining an `--open` state class, and force-closes every other
+open drawer root the same way each drawer's own `close()` does — no changes
+needed in the 15 individual drawer scripts.
+
+### Files touched
+- `frankie/js/drawer-manager.js` — new.
+- `frankie/index.html` — added script include, loaded right after `app.js`.
+
 ## 2026-08-04 — Drawers span full width, still slide in from the right
 
 **All form-style drawers still pull out from the right (unchanged
