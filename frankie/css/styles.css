@@ -1456,27 +1456,27 @@ button.rail-card--link {
     opacity: 0; transition: opacity .25s;
 }
 .assess-drawer--open  .assess-backdrop { opacity: 1; }
-/* Anchored to the right edge of the left sidebar (282px, matches .app's
-   grid-template-columns) rather than floating on the far right of the
-   viewport — so every form-style drawer "pulls out" from the same spot,
-   right where the left menu ends. (2026-08-04) Plant Explorer intentionally
-   stays full-screen (.pe-drawer-panel, plant-explorer.css) since it needs
-   the full canvas for the zone map/cutaways — left untouched. */
+/* Still slides in from the right (translateX 100% -> 0), but once open it
+   always spans the full remaining width — from the sidebar's right edge
+   (282px, matches .app's grid-template-columns) to the screen's right edge
+   — instead of a narrow fixed-width box floating on the right. (2026-08-04)
+   Plant Explorer intentionally stays full-screen (.pe-drawer-panel,
+   plant-explorer.css) since it needs the full canvas for the zone
+   map/cutaways — left untouched. */
 .assess-panel {
     position: absolute; top: 0; left: 282px; right: 0; bottom: 0;
-    max-width: 680px;
     background: #fff;
     display: flex; flex-direction: column;
-    transform: translateX(-100%);
+    transform: translateX(100%);
     transition: transform .28s cubic-bezier(.4,0,.2,1);
-    box-shadow: 4px 0 32px rgba(0,0,0,.18);
+    box-shadow: -4px 0 32px rgba(0,0,0,.18);
 }
 .assess-drawer--open  .assess-panel { transform: translateX(0); }
-.assess-drawer--closed .assess-panel { transform: translateX(-100%); }
+.assess-drawer--closed .assess-panel { transform: translateX(100%); }
 @media (max-width: 1050px) {
   /* Sidebar collapses out of the layout below this breakpoint (see .app
-     media query) — drawer should anchor to the true viewport edge instead
-     of leaving a 282px gap over content that's no longer there. */
+     media query) — drawer should span the true viewport edge to edge
+     instead of leaving a 282px gap over content that's no longer there. */
   .assess-panel { left: 0; }
 }
 
@@ -1690,17 +1690,18 @@ button.rail-card--link {
     background: rgba(10,20,35,.45); opacity: 0; transition: opacity .25s;
 }
 .wr-drawer--open .wr-backdrop { opacity: 1; }
-/* Anchored at the sidebar edge, matching .assess-panel — see note above. */
+/* Slides in from the right, spans full remaining width when open — matches
+   .assess-panel, see note above. */
 .wr-panel {
     position: absolute; top: 0; left: 282px; right: 0; bottom: 0;
-    max-width: 640px; background: #fff;
+    background: #fff;
     display: flex; flex-direction: column;
-    transform: translateX(-100%);
+    transform: translateX(100%);
     transition: transform .28s cubic-bezier(.4,0,.2,1);
-    box-shadow: 4px 0 32px rgba(0,0,0,.18);
+    box-shadow: -4px 0 32px rgba(0,0,0,.18);
 }
 .wr-drawer--open  .wr-panel { transform: translateX(0); }
-.wr-drawer--closed .wr-panel { transform: translateX(-100%); }
+.wr-drawer--closed .wr-panel { transform: translateX(100%); }
 @media (max-width: 1050px) {
   .wr-panel { left: 0; }
 }

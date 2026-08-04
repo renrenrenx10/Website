@@ -1,17 +1,26 @@
 # Frankie changelog
 
-## 2026-08-04 — Drawers anchored to the sidebar edge
+## 2026-08-04 — Drawers span full width, still slide in from the right
 
-**All form-style drawers now pull out from the same spot: right at the edge
-of the left sidebar (282px), instead of floating as a narrow box over on the
-right of the screen.** Applies to the shared `.assess-panel` drawer (Evidence
-Vault, Website Review's sibling `.wr-panel`, ISO 19443, Social Value,
-Supplier Intel, Toolbox Talk, SOP Builder, Safety Culture, Quality Plan,
-SQDCP, NCR, Strategy Builder, Business/F4N Self-Assessment, NucColpedia).
-Both now use `left: 282px` + `max-width` instead of `right: 0` + fixed
-`width`, and slide in with `translateX` from the left instead of the right.
-Below the 1050px breakpoint (where the sidebar already collapses out of the
-`.app` grid) the drawers fall back to `left: 0` so there's no dead gap.
+**All form-style drawers still pull out from the right (unchanged
+animation), but once fully open they now always span the full remaining
+width — from the sidebar's right edge (282px) to the screen's right edge —
+instead of stopping at a narrow fixed-width box floating over on the right.**
+Applies to the shared `.assess-panel` drawer (Evidence Vault, ISO 19443,
+Social Value, Supplier Intel, Toolbox Talk, SOP Builder, Safety Culture,
+Quality Plan, SQDCP, NCR, Strategy Builder, Business/F4N Self-Assessment,
+NucColpedia) and Website Review's sibling `.wr-panel`. Both set
+`left: 282px; right: 0` (no width cap) and keep `translateX(100%)` →
+`translateX(0)` for the slide-in. Removed the per-tool width caps that would
+otherwise have overridden this (`.ev-panel` was 780px, `.np-panel` was
+1040px) — every drawer now fills the same full-span area. Below the 1050px
+breakpoint (sidebar already collapses out of the `.app` grid) drawers fall
+back to `left: 0` so there's no dead gap.
+
+*Correction from an earlier pass today that anchored the panels to the left
+and slid them in from the left — that wasn't what was wanted; the ask was
+for the open state to reach full width while keeping the existing
+right-hand slide-in.*
 
 **Deliberately excluded: Plant Explorer.** Its `.pe-drawer-panel` stays a
 full-screen overlay — it needs the whole canvas for the zone map and
@@ -19,7 +28,9 @@ per-reactor cutaways, per the existing code comment in
 `plant-explorer.css`.
 
 ### Files touched
-- `frankie/css/styles.css` — `.assess-panel` and `.wr-panel` repositioned.
+- `frankie/css/styles.css` — `.assess-panel` and `.wr-panel` full-span.
+- `frankie/css/evidence-vault.css` — removed `.ev-panel` width cap.
+- `frankie/css/nuccolpedia.css` — removed `.np-panel` width cap.
 
 ### Backup taken before editing
 - `frankie/css/styles.css.backup-20260804-*-preDrawerReposition`
