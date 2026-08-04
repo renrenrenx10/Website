@@ -1,5 +1,5 @@
 // ── Frankie Handbook Drawer  v1.0 ─────────────────────────────────────────────
-// Fetches HB data from members_5.html at runtime, renders a slide-in drawer
+// Fetches HB data from members.html at runtime, renders a slide-in drawer
 // so handbook chapters open inline inside Frankie — no page navigation needed.
 //
 // Usage:
@@ -13,8 +13,11 @@
 
     // ── Config ────────────────────────────────────────────────────────────────
     // Path to the members portal HTML relative to Frankie's index.html.
-    // Adjust if Frankie lives in a subdirectory.
-    const MEMBERS_HTML = 'members_5.html';
+    // Frankie has <base href="/frankie/"> (index.html), and members.html
+    // lives one level up at the site root — so this must be '../members.html',
+    // not a bare filename (fixed 2026-08-03: was pointing at a
+    // nonexistent 'members_5.html', silently breaking every handbook card).
+    const MEMBERS_HTML = '../members.html';
 
     // ── State ─────────────────────────────────────────────────────────────────
     let HB_DATA   = null;   // populated on first open
@@ -173,7 +176,7 @@
         const data = await loadHBData();
 
         if (!data) {
-            if (body) body.innerHTML = '<div class="hb-drawer-error">⚠ Could not load handbook. Check that members_5.html is in the parent directory.</div>';
+            if (body) body.innerHTML = '<div class="hb-drawer-error">⚠ Could not load handbook. Check that members.html is in the parent directory.</div>';
             return;
         }
 

@@ -37,7 +37,7 @@ const SOURCE_META = {
     'f4n supply chain consultant training manual': { label: 'SCC Training Manual', icon: '📖', handbookNav: null },
 };
 
-// Handbook chapter IDs that exist in the members portal (members_5.html)
+// Handbook chapter IDs that exist in the members portal (members.html)
 // Maps question_id prefix → which handbook section to open
 // e.g. STR01 → handbook, DES01 → handbook, PEO01 → handbook
 const HANDBOOK_CHAPTER_PREFIXES = /^(STR|DES|PEO|OPS|QMS|CI|HS)\d/i;
@@ -58,7 +58,7 @@ function resolveSource(raw) {
 /** Build a members portal deep-link for a handbook chapter */
 function handbookLink(meta, chapterId) {
     if (!meta.handbookNav) return null;
-    const base = '../members_5.html';  // adjust if Frankie is in a subdirectory
+    const base = '../members.html';  // site root — see <base href="/frankie/"> in index.html
     if (chapterId && HANDBOOK_CHAPTER_PREFIXES.test(chapterId)) {
         return `${base}?section=${meta.handbookNav}&ch=${encodeURIComponent(chapterId)}`;
     }
@@ -319,10 +319,23 @@ export function updateRail(results) {
 
     if (!results?.length) {
         rail.innerHTML = '<p class="rail-empty">No sources matched.</p>';
+        window.frankieLastRailResults = [];
         return;
     }
 
-    rail.innerHTML = results.slice(0, 5).map(r => {
+    const top = results.slice(0, 5);
+
+    // Stash the raw chunk + resolved meta per card, indexed to match the
+    // rendered order below. Supplier/regs/reactors/toolkit sources have no
+    // original document to link to (retrieval works off KB chunks, not
+    // files), so the chunk viewer drawer reads straight from this array
+    // instead of re-deriving anything from the rendered HTML.
+    window.frankieLastRailResults = top.map(r => ({
+        result: r,
+        meta:   resolveSource(r.source || r.source_file || 'frankie_normalized_kb.json'),
+    }));
+
+    rail.innerHTML = top.map((r, i) => {
         const rawSrc   = r.source || r.source_file || 'frankie_normalized_kb.json';
         const meta     = resolveSource(rawSrc);
         const ctLabel  = CONTENT_TYPE_LABELS[r.content_type] || '';
@@ -333,13 +346,17 @@ export function updateRail(results) {
         // Subtitle: source label (only if section is the primary)
         const subLabel = r.section ? meta.label : null;
 
-        // Build link — handbook or plant sources open a drawer
-        const chapterRef   = r.question_id || r.title || null;
-        const isHandbook   = meta.handbookNav !== null;
-        const isPlant      = !!meta.plantNav;
-        const isClickable  = (isHandbook && !!chapterRef) || isPlant;
+        // Build link — handbook or plant sources open their dedicated drawer;
+        // every other source type (supplier, regs, reactors, toolkit, and any
+        // fallback) opens the source chunk viewer instead.
+        const chapterRef         = r.question_id || r.title || null;
+        const isHandbook         = meta.handbookNav !== null;
+        const isPlant            = !!meta.plantNav;
+        const isHandbookClickable = isHandbook && !!chapterRef;
 
-        const actionLabel  = isPlant ? '🏭 Explore in plant →' : '📖 Open in handbook →';
+        const actionLabel = isPlant ? '🏭 Explore in plant →'
+                           : isHandbookClickable ? '📖 Open in handbook →'
+                           : '🔍 View source passage →';
 
         const cardInner = `
             <div class="rail-card-top">
@@ -350,15 +367,15 @@ export function updateRail(results) {
             ${subLabel ? `<div class="rail-source-sub">${_esc(subLabel)}</div>` : ''}
             ${r.question_id ? `<div class="rail-qid">${_esc(r.question_id)}</div>` : ''}
             <div class="rail-score">Match: ${score}</div>
-            ${isClickable ? `<div class="rail-action">${actionLabel}</div>` : ''}`;
+            <div class="rail-action">${actionLabel}</div>`;
 
         if (isPlant) {
             return `<button class="rail-card rail-card--link" type="button" onclick="window.PlantDrawer && window.PlantDrawer.open(window.frankieLastQuery)">${cardInner}</button>`;
         }
-        if (isHandbook && chapterRef) {
+        if (isHandbookClickable) {
             return `<button class="rail-card rail-card--link" type="button" onclick="window.HandbookDrawer && window.HandbookDrawer.open('${_esc(chapterRef)}')">${cardInner}</button>`;
         }
-        return `<div class="rail-card">${cardInner}</div>`;
+        return `<button class="rail-card rail-card--link" type="button" onclick="window.SourceChunkDrawer && window.SourceChunkDrawer.open(${i})">${cardInner}</button>`;
     }).join('');
 }
 

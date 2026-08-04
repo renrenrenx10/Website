@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Added 2026-08-03: without this, visiting nuccol.co.uk/frankie (no trailing
+     slash) makes every relative css/js reference resolve against the site
+     root instead of /frankie/, breaking all styling and scripts. base-uri
+     'self' in the CSP below already permits this. -->
+<base href="/frankie/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://ch.rene-dorset.workers.dev https://api.postcodes.io https://charitybase.uk https://api.opencorporates.com https://qkyvmtouwrzrcyagkheo.supabase.co; img-src 'self' data:; object-src 'none'; base-uri 'self';">
 <title>Frankie - F4N Intelligence Platform</title>
@@ -21,6 +26,7 @@
 <link rel="stylesheet" href="css/ncr.css">
 <link rel="stylesheet" href="css/strategy.css">
 <link rel="stylesheet" href="css/faq.css">
+<link rel="stylesheet" href="css/plant-explorer.css">
 </head>
 <body>
 <div class="app">
@@ -90,6 +96,9 @@
         </button>
         <button class="assess-launch-btn" data-tool="strategy" onclick="window.StrategyDrawer && window.StrategyDrawer.open()" type="button">
           <span>🏆</span><span>Strategy Builder</span>
+        </button>
+        <button class="assess-launch-btn" data-tool="plantExplorer" onclick="window.PlantExplorerDrawer && window.PlantExplorerDrawer.open()" type="button">
+          <span>🏭</span><span>Plant Explorer</span>
         </button>
       </div>
     </div>
@@ -184,6 +193,8 @@
 <script src="js/braincheck-ui.js"></script>
 <script src="js/handbook-drawer.js"></script>
 <script src="js/plant-drawer.js"></script>
+<script src="js/source-chunk-drawer.js"></script>
+<script src="js/plant-explorer-drawer.js"></script>
 <script src="js/assessment-drawer.js"></script>
 <script src="js/website-review.js"></script>
 <script src="js/iso19443-drawer.js"></script>

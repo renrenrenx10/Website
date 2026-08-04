@@ -1200,6 +1200,94 @@ button.rail-card--link {
     font-family: inherit; font-size: inherit;
 }
 
+/* ── Source Chunk Drawer (chunk-drawer-*) ──────────────────────────────────── */
+/* Shows the retrieved KB chunk's text + metadata for source types (supplier,
+   regs, reactors, toolkit, fallback) that have no original document to link
+   to. Shares the hb-drawer slide-in mechanics but is its own namespace. */
+
+.chunk-drawer { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+.chunk-drawer--open  { pointer-events: all; }
+.chunk-drawer--closed .chunk-drawer-panel    { transform: translateX(100%); }
+.chunk-drawer--closed .chunk-drawer-backdrop { opacity: 0; pointer-events: none; }
+
+.chunk-drawer-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.45);
+    transition: opacity .25s;
+}
+.chunk-drawer--open .chunk-drawer-backdrop { opacity: 1; }
+
+.chunk-drawer-panel {
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: min(640px, 95vw);
+    background: #f4f7fb;
+    display: flex; flex-direction: column;
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+    box-shadow: -4px 0 32px rgba(0,0,0,0.18);
+}
+
+.chunk-drawer-topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px;
+    background: #fff;
+    border-bottom: 1px solid #dde4ee;
+    flex-shrink: 0;
+}
+.chunk-drawer-icon { font-size: 1.1rem; flex-shrink: 0; }
+.chunk-drawer-title {
+    flex: 1;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem; font-weight: 700; letter-spacing: .04em;
+    color: #1a2a3c;
+}
+.chunk-drawer-close {
+    background: none; border: none; font-size: 1.1rem; cursor: pointer;
+    color: #8a9bb0; line-height: 1; padding: 4px 8px; border-radius: 4px;
+    transition: background .15s, color .15s;
+}
+.chunk-drawer-close:hover { background: #edf0f5; color: #3a4a5c; }
+
+.chunk-drawer-body    { flex: 1; overflow: hidden; }
+.chunk-drawer-content { height: 100%; overflow-y: auto; padding: 24px 28px; }
+
+.chunk-drawer-meta {
+    background: #fff;
+    border: 1px solid #dde4ee;
+    border-radius: 8px;
+    padding: 4px 16px;
+    margin-bottom: 20px;
+}
+.chunk-meta-row {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid #eef2f7;
+    font-size: .8rem;
+}
+.chunk-meta-row:last-child { border-bottom: none; }
+.chunk-meta-label { color: #8a9bb0; flex-shrink: 0; }
+.chunk-meta-value { color: #1a2a3c; font-weight: 600; text-align: right; word-break: break-word; }
+
+.chunk-drawer-text-head {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: #8a9bb0; margin-bottom: 8px;
+}
+.chunk-drawer-text {
+    background: #fff;
+    border: 1px solid #dde4ee;
+    border-radius: 8px;
+    padding: 18px 20px;
+    color: #2a3a4c;
+    font-size: .88rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+@media (max-width: 600px) {
+    .chunk-drawer-content { padding: 16px; }
+}
+
 /* ── Plant Explorer Drawer ─────────────────────────────────────────────────── */
 
 .plant-drawer { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
