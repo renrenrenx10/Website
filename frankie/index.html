@@ -27,11 +27,11 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4'
     );
     const { data: { session } } = await db.auth.getSession();
-    if (!session) { window.location.replace('../members.html'); return; }
+    if (!session) { window.location.replace('../members.html?redirect=' + encodeURIComponent('/frankie/')); return; }
     document.documentElement.style.visibility = '';
   } catch (e) {
     console.error('[Frankie] Auth check failed, redirecting to login:', e);
-    window.location.replace('../members.html');
+    window.location.replace('../members.html?redirect=' + encodeURIComponent('/frankie/'));
   }
 })();
 </script>

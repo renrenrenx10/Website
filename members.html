@@ -2352,6 +2352,19 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&(e.target.id==='gate-email'||e.target.id==='gate-pass')) gateSignIn();
 });
 
+// Redirect back to whatever page sent someone here to log in, e.g.
+// members.html?redirect=/frankie/ — added 2026-08-04 alongside Frankie's new
+// auth gate, which had no way to send people back after a successful login.
+// Only same-site absolute paths (starting with exactly one "/") are honoured,
+// to avoid this becoming an open redirect.
+function redirectIfPending(){
+  try {
+    const target = new URLSearchParams(window.location.search).get('redirect');
+    if (target && /^\/(?!\/)/.test(target)) { window.location.href = target; return true; }
+  } catch(e){}
+  return false;
+}
+
 // Check session on load — show gate or portal
 (async()=>{
   const {data:{session}} = await db.auth.getSession();
@@ -2366,6 +2379,7 @@ document.addEventListener('keydown',e=>{
         return;
       }
     } catch(e){}
+    if (redirectIfPending()) return;
     document.getElementById('auth-gate').style.display='none';
     document.getElementById('shell').style.display='flex';
     populateSidebar(session.user);
@@ -2425,6 +2439,7 @@ db.auth.onAuthStateChange((event,session)=>{
     localStorage.setItem('frankieUserId', session.user.id);
     localStorage.setItem('frankieUserToken', session.access_token);
     localStorage.setItem('frankieCompanyName', session.user.user_metadata?.company || '');
+    redirectIfPending();
   }
   if(event==='SIGNED_OUT'){
     document.getElementById('auth-gate').style.display='flex';
