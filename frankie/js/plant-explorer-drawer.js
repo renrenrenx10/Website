@@ -466,15 +466,19 @@ function pvApplyView(sel){
   document.getElementById('plant-img').src=PV_IMG[view.fullSlice];
   svg.setAttribute('viewBox','0 0 '+view.w+' '+view.h);svg.innerHTML='';
   view.buildings.forEach(b=>{const c=pvCount(b.dse);
+    // Always wire click-through to pvOpenBuilding(), even when c is 0 — pvRenderBuildingLevel
+    // already shows a graceful "No components mapped to this building yet" empty state, so
+    // gating the listener behind a truthy count just made the badge look clickable but do
+    // nothing (the bug reported 2026-08-04: numbers on the cutaway image didn't respond).
     if(b.points){
       const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
       poly.setAttribute('points',b.points);poly.setAttribute('class','pv-zone'+(c?'':' empty'));poly.setAttribute('data-pv',b.id);
-      if(c){poly.addEventListener('mouseenter',()=>pvHover(b,true));poly.addEventListener('mouseleave',()=>pvHover(b,false));
-        poly.addEventListener('mousemove',moveTooltip);poly.addEventListener('click',()=>pvOpenBuilding(b));}
+      poly.addEventListener('mouseenter',()=>pvHover(b,true));poly.addEventListener('mouseleave',()=>pvHover(b,false));
+      poly.addEventListener('mousemove',moveTooltip);poly.addEventListener('click',()=>pvOpenBuilding(b));
       svg.appendChild(poly);
       const bd=document.createElement('div');bd.className='z-badge pv-badge'+(c?'':' empty');bd.setAttribute('data-pv',b.id);
       bd.textContent=b.id;bd.style.background=b.color;bd.style.left=(b.badge[0]*100)+'%';bd.style.top=(b.badge[1]*100)+'%';
-      if(c){bd.addEventListener('mouseenter',()=>pvHover(b,true));bd.addEventListener('mouseleave',()=>pvHover(b,false));bd.addEventListener('click',()=>pvOpenBuilding(b));}
+      bd.addEventListener('mouseenter',()=>pvHover(b,true));bd.addEventListener('mouseleave',()=>pvHover(b,false));bd.addEventListener('click',()=>pvOpenBuilding(b));
       wrapper.appendChild(bd);
     } else if(b.badge){
       const chip=document.createElement('div');chip.className='pv-chip'+(c?'':' empty');chip.setAttribute('data-pv',b.id);
@@ -482,7 +486,7 @@ function pvApplyView(sel){
       const chipDot=document.createElement('span');chipDot.className='pv-chip-dot';chipDot.style.background=b.color;chipDot.textContent=b.id;
       const chipLbl=document.createElement('span');chipLbl.textContent=b.label;
       chip.appendChild(chipDot);chip.appendChild(chipLbl);
-      if(c){chip.addEventListener('click',()=>pvOpenBuilding(b));} else {chip.style.cursor='default';}
+      chip.addEventListener('click',()=>pvOpenBuilding(b));
       wrapper.appendChild(chip);
     }
   });
@@ -1255,6 +1259,12 @@ setReactorFilter=function(sel){pvSel=sel;
         ACTIVE_TREE = PLANT_TREE;
         dataLoaded = true;
         buildSearchIndex();
+        // Default to a sliced cutaway view on first open (matches the standalone tool's
+        // original auto-select-AP1000-on-load behaviour) instead of leaving the flat
+        // "All 18 designs" zone map as the first thing people see.
+        const reactorSelectEl = document.getElementById('reactor-select');
+        if (reactorSelectEl) reactorSelectEl.value = 'AP1000';
+        setReactorFilter('AP1000');
       } catch (e) {
         console.error('[PlantExplorerDrawer] Failed to load plant data:', e);
         const hintEl = document.getElementById('hint');
