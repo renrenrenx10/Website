@@ -1282,6 +1282,32 @@ setReactorFilter=function(sel){pvSel=sel;
     }
   }
 
-  window.PlantExplorerDrawer = { open, close };
+  // Temporary diagnostic helper (2026-08-04) — call PlantExplorerDrawer.debug()
+  // in the browser console after opening the drawer once (so data has loaded)
+  // to see the real shape of the fetched plant tree: how many locations exist
+  // per DSE building name, and what reactor-name strings actually appear in
+  // sub.reactors, so we can see why per-reactor filtering shows 0 components
+  // mapped. Safe to remove once the mismatch is found — read-only, no writes.
+  function debug() {
+    const tree = ACTIVE_TREE || [];
+    const locCounts = {};
+    const reactorNames = new Set();
+    tree.forEach(site => (site.locations || []).forEach(loc => {
+      locCounts[loc.name] = (locCounts[loc.name] || 0) + 1;
+      (loc.systems || []).forEach(sys => (sys.components || []).forEach(comp =>
+        (comp.subcomponents || []).forEach(sub => (sub.reactors || []).forEach(r => reactorNames.add(r)))));
+    }));
+    const out = {
+      dataLoaded, plantTreeIsArray: Array.isArray(PLANT_TREE), plantTreeSiteCount: (PLANT_TREE || []).length,
+      activeTreeSiteCount: tree.length, locationNamesFound: locCounts,
+      dseBuildingNamesExpected: DSE_BUILDINGS.map(b => b.dse),
+      reactorNameStringsFoundInData: Array.from(reactorNames).sort(),
+      currentPvSel: pvSel, currentSelectedReactor: selectedReactor
+    };
+    console.log('[PlantExplorerDrawer.debug]', out);
+    return out;
+  }
+
+  window.PlantExplorerDrawer = { open, close, debug };
 
 }());
