@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="css/strategy.css">
 <link rel="stylesheet" href="css/faq.css">
 <link rel="stylesheet" href="css/plant-explorer.css">
+<link rel="stylesheet" href="css/nuccolpedia.css">
 </head>
 <body>
 <div class="app">
@@ -85,64 +86,67 @@
       </button>
     </div>
 
-    <!-- Supplier Tools -->
-    <div id="section-supplierTools">
-      <div class="label">Supplier Tools</div>
-      <div class="assess-launch-grid">
-        <button class="assess-launch-btn" data-tool="evidenceVault" onclick="window.EvidenceVault && window.EvidenceVault.open()" type="button">
-          <span>📁</span><span>Evidence Vault</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="websiteReview" onclick="window.WebsiteReview && window.WebsiteReview.open()" type="button">
-          <span>🌐</span><span>Website Review</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="iso19443" onclick="window.Iso19443Drawer && window.Iso19443Drawer.open()" type="button">
-          <span>📋</span><span>ISO 19443 Position</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="socialValue" onclick="window.SocialValueDrawer && window.SocialValueDrawer.open()" type="button">
-          <span>🤝</span><span>Social Value Finder</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="supplierIntel" onclick="window.DueDiligenceDrawer && window.DueDiligenceDrawer.open()" type="button">
-          <span>🛡️</span><span>Supplier Intel</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="toolboxTalk" onclick="window.ToolboxTalkDrawer && window.ToolboxTalkDrawer.open()" type="button">
-          <span>🦺</span><span>Toolbox Talk</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="sopBuilder" onclick="window.SopBuilderDrawer && window.SopBuilderDrawer.open()" type="button">
-          <span>📋</span><span>SOP Builder</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="safetyCulture" onclick="window.SafetyCultureDrawer && window.SafetyCultureDrawer.open()" type="button">
-          <span>☢️</span><span>Safety Culture</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="qualityPlan" onclick="window.CqpDrawer && window.CqpDrawer.open()" type="button">
-          <span>📑</span><span>Quality Plan</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="sqdcp" onclick="window.SqdcpDrawer && window.SqdcpDrawer.open()" type="button">
-          <span>📊</span><span>SQDCP Wizard</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="ncr" onclick="window.NcrDrawer && window.NcrDrawer.open()" type="button">
-          <span>🔎</span><span>NCR Investigation</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="strategy" onclick="window.StrategyDrawer && window.StrategyDrawer.open()" type="button">
-          <span>🏆</span><span>Strategy Builder</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="plantExplorer" onclick="window.PlantExplorerDrawer && window.PlantExplorerDrawer.open()" type="button">
-          <span>🏭</span><span>Plant Explorer</span>
-        </button>
-      </div>
-    </div>
+    <!-- Supplier Tools + Self Assessment — grouped nav, styled to match the SCC portal's left menu -->
+    <nav class="sb-nav" id="section-supplierTools">
+      <div class="sb-section">Compliance &amp; Evidence</div>
+      <button class="sb-item" data-tool="evidenceVault" onclick="window.EvidenceVault && window.EvidenceVault.open()" type="button">
+        <span class="sb-ico">📁</span><span>Evidence Vault</span>
+      </button>
+      <button class="sb-item" data-tool="websiteReview" onclick="window.WebsiteReview && window.WebsiteReview.open()" type="button">
+        <span class="sb-ico">🌐</span><span>Website Review</span>
+      </button>
+      <button class="sb-item" data-tool="iso19443" onclick="window.Iso19443Drawer && window.Iso19443Drawer.open()" type="button">
+        <span class="sb-ico">📋</span><span>ISO 19443 Position</span>
+      </button>
+      <button class="sb-item" data-tool="socialValue" onclick="window.SocialValueDrawer && window.SocialValueDrawer.open()" type="button">
+        <span class="sb-ico">🤝</span><span>Social Value Finder</span>
+      </button>
+      <button class="sb-item" data-tool="supplierIntel" onclick="window.DueDiligenceDrawer && window.DueDiligenceDrawer.open()" type="button">
+        <span class="sb-ico">🛡️</span><span>Supplier Intel</span>
+      </button>
+
+      <div class="sb-section">Quality &amp; Safety</div>
+      <button class="sb-item" data-tool="toolboxTalk" onclick="window.ToolboxTalkDrawer && window.ToolboxTalkDrawer.open()" type="button">
+        <span class="sb-ico">🦺</span><span>Toolbox Talk</span>
+      </button>
+      <button class="sb-item" data-tool="sopBuilder" onclick="window.SopBuilderDrawer && window.SopBuilderDrawer.open()" type="button">
+        <span class="sb-ico">📋</span><span>SOP Builder</span>
+      </button>
+      <button class="sb-item" data-tool="safetyCulture" onclick="window.SafetyCultureDrawer && window.SafetyCultureDrawer.open()" type="button">
+        <span class="sb-ico">☢️</span><span>Safety Culture</span>
+      </button>
+      <button class="sb-item" data-tool="qualityPlan" onclick="window.CqpDrawer && window.CqpDrawer.open()" type="button">
+        <span class="sb-ico">📑</span><span>Quality Plan</span>
+      </button>
+      <button class="sb-item" data-tool="sqdcp" onclick="window.SqdcpDrawer && window.SqdcpDrawer.open()" type="button">
+        <span class="sb-ico">📊</span><span>SQDCP Wizard</span>
+      </button>
+      <button class="sb-item" data-tool="ncr" onclick="window.NcrDrawer && window.NcrDrawer.open()" type="button">
+        <span class="sb-ico">🔎</span><span>NCR Investigation</span>
+      </button>
+
+      <div class="sb-section">Reference &amp; Strategy</div>
+      <button class="sb-item" data-tool="strategy" onclick="window.StrategyDrawer && window.StrategyDrawer.open()" type="button">
+        <span class="sb-ico">🏆</span><span>Strategy Builder</span>
+      </button>
+      <button class="sb-item" data-tool="plantExplorer" onclick="window.PlantExplorerDrawer && window.PlantExplorerDrawer.open()" type="button">
+        <span class="sb-ico">🏭</span><span>Plant Explorer</span>
+      </button>
+      <button class="sb-item" data-tool="nuccolpedia" onclick="window.NucColpediaDrawer && window.NucColpediaDrawer.open()" type="button">
+        <span class="sb-ico">📚</span><span>NucColpedia</span>
+      </button>
+    </nav>
 
     <!-- Self Assessment -->
-    <div id="section-selfAssess">
-      <div class="label">Self Assessment</div>
-      <div class="assess-launch-grid">
-        <button class="assess-launch-btn" data-tool="assessBE" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('be')" type="button">
-          <span>📊</span><span>Business Excellence</span>
-        </button>
-        <button class="assess-launch-btn" data-tool="assessF4N" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('f4n')" type="button">
-          <span>⚛️</span><span>Fit for Nuclear</span>
-        </button>
-      </div>
-    </div>
+    <nav class="sb-nav" id="section-selfAssess">
+      <div class="sb-section">Self Assessment</div>
+      <button class="sb-item" data-tool="assessBE" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('be')" type="button">
+        <span class="sb-ico">📊</span><span>Business Excellence</span>
+      </button>
+      <button class="sb-item" data-tool="assessF4N" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('f4n')" type="button">
+        <span class="sb-ico">⚛️</span><span>Fit for Nuclear</span>
+      </button>
+    </nav>
 
     <!-- Previous questions accordion -->
     <div class="history-section">
@@ -223,6 +227,7 @@
 <script src="js/plant-drawer.js"></script>
 <script src="js/source-chunk-drawer.js"></script>
 <script src="js/plant-explorer-drawer.js"></script>
+<script src="js/nuccolpedia-drawer.js"></script>
 <script src="js/assessment-drawer.js"></script>
 <script src="js/website-review.js"></script>
 <script src="js/iso19443-drawer.js"></script>
