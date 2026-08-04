@@ -7,6 +7,34 @@
      root instead of /frankie/, breaking all styling and scripts. base-uri
      'self' in the CSP below already permits this. -->
 <base href="/frankie/">
+
+<!-- Auth gate (added 2026-08-04): Frankie is a members-only tool, but until now
+     only the KB/Worker data calls were gated (see connect-src below) — the page
+     itself, including all static UI and images (e.g. Plant Explorer's cutaway
+     diagrams), was visible to anyone who navigated here directly, logged in or
+     not. Hide the document immediately and redirect to the login page unless a
+     valid Supabase session exists. Uses el.style.visibility (JS property
+     assignment, not an inline style="" attribute or <style> block) because
+     style-src below has no 'unsafe-inline'. -->
+<script>document.documentElement.style.visibility = 'hidden';</script>
+<script src="../supabase.min.js"></script>
+<script>
+(async function requireFrankieAuth() {
+  try {
+    const { createClient } = supabase;
+    const db = createClient(
+      'https://qkyvmtouwrzrcyagkheo.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4'
+    );
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { window.location.replace('../members.html'); return; }
+    document.documentElement.style.visibility = '';
+  } catch (e) {
+    console.error('[Frankie] Auth check failed, redirecting to login:', e);
+    window.location.replace('../members.html');
+  }
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://ch.rene-dorset.workers.dev https://api.postcodes.io https://charitybase.uk https://api.opencorporates.com https://qkyvmtouwrzrcyagkheo.supabase.co; img-src 'self' data:; object-src 'none'; base-uri 'self';">
 <title>Frankie - F4N Intelligence Platform</title>

@@ -39,9 +39,13 @@
 }
 .pe-drawer--open .pe-drawer-panel{transform:translateY(0);}
 .pe-drawer-close{
-  position:absolute;top:12px;right:16px;z-index:20;
+  /* z-index bumped above #topbar (200) — it was being fully covered by the
+     topbar and unclickable, i.e. "no way to get back to Frankie" (reported
+     2026-08-04). #topbar also gets extra right padding below to make room. */
+  position:absolute;top:11px;right:14px;z-index:250;
   width:32px;height:32px;border-radius:6px;border:none;
-  background:rgba(20,33,50,.55);color:#fff;font-size:1rem;cursor:pointer;
+  background:rgba(20,33,50,.75);color:#fff;font-size:1rem;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
   transition:background .15s;
 }
 .pe-drawer-close:hover{background:rgba(20,33,50,.85);}
@@ -52,7 +56,7 @@
 #topbar{
   height:54px;min-height:54px;background:var(--surface);
   border-bottom:2px solid var(--border);display:flex;align-items:center;
-  padding:0 20px;gap:14px;z-index:200;flex-shrink:0;
+  padding:0 56px 0 20px;gap:14px;z-index:200;flex-shrink:0;
   box-shadow:0 1px 6px rgba(26,106,180,0.09);
 }
 .logo-wrap{display:flex;align-items:center;gap:10px;}
