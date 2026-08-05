@@ -1,133 +1,61 @@
-/* ── Hero landing — shown instead of chat on first load ────────────────────
-   Reuses brand colours/vars from styles.css (--brand, --accent, --line, --muted)
-   and the bc-status-dot--*/bc-status-label--* classes set live by braincheck-ui.js. */
+/* ── Hero landing ─────────────────────────────────────────────────────────
+   Shown instead of chat on first load. Reuses the same drawer-splash
+   template every tool intro uses (.drawer-splash / .ds-* classes, defined
+   in css/drawer-splash.css) so it looks consistent with the rest of Frankie
+   rather than being a one-off design. Only hero-specific additions live
+   here: the wrapper that gives .drawer-splash something to fill, the status
+   pill, the bot-mark art tile, and the small nav hint under the CTA. */
 
 .hero-landing {
   flex: 1;
-  overflow: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 24px;
-  background: #edf3f8;
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-card {
-  width: 100%;
-  max-width: 620px;
-  background: var(--brand, #10243a);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 16px;
-  padding: 40px 44px;
-  color: #edf6ff;
-  text-align: center;
-  box-shadow: 0 24px 60px rgba(16, 36, 58, 0.22);
-}
-
-.hero-bot {
-  width: 68px;
-  height: 68px;
-  margin: 0 auto 18px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #1d64a7, #2bb9e7);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
-}
-.hero-bot svg { width: 40px; height: 40px; }
-
-.hero-eyebrow {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #7fd4f2;
-  margin-bottom: 8px;
-}
-
-.hero-card h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 800;
-  margin: 0 0 14px;
-  line-height: 1.08;
-  color: #fff;
-}
-
-.hero-intro {
-  margin: 0 0 22px;
-  font-size: 0.94rem;
-  line-height: 1.6;
-  color: #cfe1f0;
-}
+/* .drawer-splash is position:absolute so it needs a sized, positioned
+   ancestor — .hero-landing plays that role here (same as .assess-panel
+   does for a tool drawer). No [hidden] logic needed: unlike a one-time
+   tool splash, this is the permanent home screen until "Open Frankie
+   Chat" is pressed. */
+.hero-splash { position: absolute; }
 
 .hero-status-pill {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 8px;
   border: 1px solid rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.07);
   border-radius: 100px;
-  padding: 9px 18px;
-  margin: 0 auto 24px;
-  font-size: 0.8rem;
+  padding: 8px 16px;
+  margin: 0 0 16px;
+  font-size: 0.78rem;
   color: #dcecf9;
   cursor: pointer;
   transition: 0.15s;
 }
 .hero-status-pill:hover { border-color: var(--accent, #26a9d8); background: rgba(38, 169, 216, 0.14); }
-.hero-status-pill .bc-status-dot { font-size: 0.95rem; line-height: 1; }
+.hero-status-pill .bc-status-dot { font-size: 0.92rem; line-height: 1; }
 .hero-status-note { color: #a9c0d6; }
 
-.hero-features {
-  list-style: none;
-  margin: 0 0 24px;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: left;
-}
-.hero-features li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: #dcecf9;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 10px 12px;
-}
-.hero-feat-ico { font-size: 1rem; line-height: 1.3; flex-shrink: 0; }
-
 .hero-nav-note {
-  margin: 0 0 22px;
-  font-size: 0.82rem;
-  color: #a9c0d6;
-  line-height: 1.5;
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-.hero-cta {
-  border: 0;
-  background: var(--accent, #26a9d8);
-  color: #10243a;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.98rem;
-  border-radius: 8px;
-  padding: 13px 26px;
-  transition: 0.15s;
+/* Bot-mark art tile — takes the place of the white ds-art card the tool
+   splashes use, since Frankie's own mark is a self-contained gradient
+   tile (matches .botmark in the sidebar), not an emoji on a white card. */
+.hero-art {
+  background: linear-gradient(135deg, #1d64a7, #2bb9e7);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.hero-cta:hover { background: #4fc0e6; }
-
-@media (max-width: 640px) {
-  .hero-card { padding: 30px 24px; }
-  .hero-card h1 { font-size: 1.8rem; }
-}
+.hero-art svg { width: 55%; height: 55%; }

@@ -23,7 +23,12 @@ previously styled as a standalone `.assess-launch-btn`.
   status pill via `MutationObserver`.
 - `frankie/index.html` — hero markup added to `.main` (before `#messages`);
   `#messages`/`#composer` now start `hidden`; new CSS/JS includes; sidebar
-  FAQ block replaced with the "Frankie Chat" `sb-nav` section.
+  FAQ block replaced with the "Frankie Chat" `sb-nav` section. Hero markup
+  reuses the same `.drawer-splash`/`.ds-*` template every tool intro uses
+  (see "Intro splash for every drawer" below), not a bespoke layout, so it's
+  visually consistent with the rest of Frankie. Only addition is the status
+  pill and a gradient bot-mark tile (`.hero-art`) in place of the white
+  emoji card, since Frankie's own mark isn't an emoji.
 
 ## 2026-08-05 — Intro splash for every drawer
 
