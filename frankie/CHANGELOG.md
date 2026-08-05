@@ -1,5 +1,58 @@
 # Frankie changelog
 
+## 2026-08-04 — Full HTML audit: two CSP-blocked tools fixed
+
+Full pass over `frankie/index.html` and its dependency tree following a
+report that "the website isn't connecting." Structural integrity was clean
+(all script/link references resolve, no truncation, no duplicate IDs, all
+JS syntax-checked). Found two real, pre-existing connectivity bugs, both
+caused by the page's CSP not covering domains those tools depend on:
+
+**Website Review was calling things the CSP doesn't allow — fixed by
+routing through the Worker instead of whitelisting.**
+- `fetchWebsite()` called `https://corsproxy.io` directly — not in
+  `connect-src`, so every "Review" click failed with a silent CSP violation.
+- `callClaude()` called `https://api.anthropic.com` directly from the
+  browser with a key read from `localStorage.frankieClaudeKey` — also not
+  in `connect-src`, and inconsistent with how every other tool talks to
+  Claude (through the Worker, server-side key).
+- Fix: `js/website-review.js` now calls the Worker's own `/fetch?url=` and
+  `/claude/v1/messages` routes (same `Authorization: Bearer
+  frankieUserToken` pattern as `claude.js`, `evidence-vault-drawer.js`,
+  etc.). No CSP changes needed for this one, no client-stored API key
+  required anymore.
+
+**Plant Explorer's Map view loads Leaflet from unpkg.com and tiles from
+OpenStreetMap — neither was in the CSP.**
+- `initMap()` in `js/plant-explorer-drawer.js` dynamically injects
+  `<script>`/`<link>` tags from `unpkg.com` (blocked by `script-src`/
+  `style-src`) and renders map tiles from `*.tile.openstreetmap.org`
+  (blocked by `img-src`).
+- Fix: added `https://unpkg.com` to `script-src` and `style-src`, and
+  `https://*.tile.openstreetmap.org` to `img-src` in the CSP meta tag.
+
+### Files touched
+- `frankie/js/website-review.js` — `fetchWebsite()` and `callClaude()`
+  rewritten to use the Worker.
+- `frankie/index.html` — CSP `script-src`/`style-src`/`img-src` extended.
+
+### Backups taken before editing
+- `frankie/js/website-review.js.backup-20260804-*-preWorkerFetch`
+- `frankie/index.html.backup-20260804-*-preCSP`
+
+### Verified
+- `node --check` on `website-review.js` — no syntax errors.
+- `index.html` tag-balance check (div/script/nav/aside/button/main/section/
+  meta) and `</html>` present — no truncation.
+- CSP line printed and re-read back to confirm the exact string landed
+  correctly.
+
+### Not fixed (flagged, no action taken without confirmation)
+- Nothing else found — the auth-gate / Supabase session flow at the top of
+  `index.html` couldn't be exercised without a live browser; if the page
+  goes fully blank rather than a specific tool failing, that's the next
+  place to check via the browser console.
+
 ## 2026-08-04 — Access box simplified, menu regrouped
 
 **Access section:** Frankie is members-only, so the Free/Member tier picker

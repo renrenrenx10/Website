@@ -1,6 +1,13 @@
-// ── Frankie Website Review  v1.0 ─────────────────────────────────────────────
-// Fetches a supplier website via CORS proxy, extracts text content, sends to
-// Claude with nuclear supply chain criteria, renders a structured scorecard.
+// ── Frankie Website Review  v1.1 ─────────────────────────────────────────────
+// Fetches a supplier website and sends it to Claude with nuclear supply chain
+// criteria, renders a structured scorecard.
+//
+// 2026-08-04: was calling an external CORS proxy (corsproxy.io) and the
+// Anthropic API directly from the browser with a user-supplied key — neither
+// is in the page's CSP allowlist, so both silently failed (CSP violation).
+// Switched to the Worker's own gated /fetch and /claude routes, same pattern
+// as every other tool drawer (see claude.js, evidence-vault-drawer.js) —
+// no CSP changes needed, no client-side API key required.
 //
 // Usage:
 //   WebsiteReview.open()          → opens the drawer
@@ -10,8 +17,13 @@
 (function () {
     'use strict';
 
-    const PROXY      = 'https://corsproxy.io/?';
+    const WORKER_URL = 'https://ch.rene-dorset.workers.dev';
     const MAX_CHARS  = 8000;   // max website text sent to Claude
+
+    function authHeaders() {
+        const token = localStorage.getItem('frankieUserToken');
+        return token ? { 'Authorization': `Bearer ${token}` } : {};
+    }
 
     const CRITERIA = [
         { key: 'clarity',          label: 'Company Clarity',       icon: '🏷️',  desc: 'Is it immediately clear what this company makes or does?' },
@@ -90,11 +102,20 @@ Verdict guide: "Shortlist" = strong candidate worth contacting, "Review" = some 
     }
 
     // ── Fetch website ──────────────────────────────────────────────────────────
+    // Goes through the Worker's /fetch route (gated by the same member-auth
+    // check as everything else) instead of an external CORS proxy. The Worker
+    // already strips <script>/<style>/tags server-side and caps at 15k chars —
+    // htmlToText() below still runs to decode entities and collapse whitespace,
+    // it's just working on already-stripped text now rather than raw HTML.
     async function fetchWebsite(url) {
-        const proxyUrl = PROXY + encodeURIComponent(url);
-        const res = await fetch(proxyUrl);
-        if (!res.ok) throw new Error(`Could not fetch site (proxy returned ${res.status}). The site may block automated access.`);
-        return await res.text();
+        const proxyUrl = `${WORKER_URL}/fetch?url=` + encodeURIComponent(url);
+        const res = await fetch(proxyUrl, { headers: authHeaders() });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || `Could not fetch site (proxy returned ${res.status}). The site may block automated access.`);
+        }
+        const data = await res.json();
+        return data.text || '';
     }
 
     function htmlToText(html) {
@@ -113,21 +134,19 @@ Verdict guide: "Shortlist" = strong candidate worth contacting, "Review" = some 
     }
 
     // ── Claude call ────────────────────────────────────────────────────────────
+    // Via the Worker's /claude route (injects CLAUDE_KEY server-side) instead
+    // of calling api.anthropic.com directly from the browser — matches how
+    // every other tool talks to Claude (see claude.js) and needs no per-user
+    // key stored in localStorage.
     async function callClaude(websiteText, url) {
-        const key   = localStorage.getItem('frankieClaudeKey') || '';
-        const model = localStorage.getItem('frankieClaudeModel') || 'claude-sonnet-4-6';
-
-        if (!key) throw new Error('No Claude API key saved. Add your key in the sidebar → Claude API.');
-
+        const model = 'claude-sonnet-4-6';
         const userMsg = `Website URL: ${url}\n\nWebsite content (extracted text):\n\n${websiteText}`;
 
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const res = await fetch(`${WORKER_URL}/claude/v1/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key': key,
-                'anthropic-version': '2023-06-01',
-                'anthropic-dangerous-direct-browser-access': 'true',
+                ...authHeaders(),
             },
             body: JSON.stringify({
                 model,
