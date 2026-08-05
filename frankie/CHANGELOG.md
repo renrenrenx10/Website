@@ -1,5 +1,30 @@
 # Frankie changelog
 
+## 2026-08-05 — Hero landing page + Frankie Chat menu entry
+
+Frankie no longer drops straight into the chat UI on load. The main panel
+now opens on a hero screen — the Frankiebot mark, an intro to what Frankie
+does, the live brain-check status pill (mirrors the topbar status live, with
+a nudge to wait for "All systems go" before asking a question), a feature
+checklist, and an "Open Frankie Chat →" button. The chat/composer/rail stay
+in the DOM (`hidden` until opened) so nothing about chat behaviour changed —
+only what's shown first.
+
+**Menu changes:** the "FAQs" section is now labelled "Frankie Chat" and
+holds two links — a new "Chat with Frankie" (switches from hero to chat) and
+"Common Questions" (opens the FAQ drawer, as before). Both are now plain
+`.sb-item` links matching the rest of the sidebar — "Common Questions" was
+previously styled as a standalone `.assess-launch-btn`.
+
+### Files touched
+- `frankie/css/hero-landing.css` — new.
+- `frankie/js/hero-landing.js` — new. Exposes `window.FrankieHero.showChat()` /
+  `.showHero()`; mirrors `#statusBtnDot`/`#statusBtnLabel` into the hero's
+  status pill via `MutationObserver`.
+- `frankie/index.html` — hero markup added to `.main` (before `#messages`);
+  `#messages`/`#composer` now start `hidden`; new CSS/JS includes; sidebar
+  FAQ block replaced with the "Frankie Chat" `sb-nav` section.
+
 ## 2026-08-05 — Intro splash for every drawer
 
 Every tool drawer now opens on a brand intro screen the first time it's

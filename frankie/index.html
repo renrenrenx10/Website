@@ -62,6 +62,7 @@
 <link rel="stylesheet" href="css/plant-explorer.css">
 <link rel="stylesheet" href="css/nuccolpedia.css">
 <link rel="stylesheet" href="css/drawer-splash.css">
+<link rel="stylesheet" href="css/hero-landing.css">
 </head>
 <body>
 <div class="app">
@@ -84,13 +85,16 @@
 
     <!-- Mode toggle removed — SCC portal handles mode context -->
 
-    <!-- FAQ launcher -->
-    <div>
-      <div class="label">FAQs</div>
-      <button class="assess-launch-btn" onclick="window.FAQDrawer && window.FAQDrawer.open()" type="button" style="width:100%;justify-content:center;gap:8px">
-        <span>💬</span><span>Common Questions</span>
+    <!-- Frankie Chat -->
+    <nav class="sb-nav" id="section-frankieChat">
+      <div class="sb-section">Frankie Chat</div>
+      <button class="sb-item" data-tool="frankieChat" onclick="window.FrankieHero && window.FrankieHero.showChat()" type="button">
+        <span class="sb-ico">💬</span><span>Chat with Frankie</span>
       </button>
-    </div>
+      <button class="sb-item" data-tool="faq" onclick="window.FAQDrawer && window.FAQDrawer.open()" type="button">
+        <span class="sb-ico">❓</span><span>Common Questions</span>
+      </button>
+    </nav>
 
     <!-- References -->
     <nav class="sb-nav" id="section-references">
@@ -204,8 +208,35 @@
       <div id="brainStatusOutput"></div>
     </div>
 
-    <section class="messages" id="messages"></section>
-    <form class="composer" id="composer">
+    <!-- Hero landing — shown instead of chat on first load, until "Open Frankie Chat" is pressed -->
+    <section class="hero-landing" id="heroLanding">
+      <div class="hero-card">
+        <div class="hero-bot"><svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="8" width="30" height="22" rx="5" fill="rgba(255,255,255,.14)" stroke="white" stroke-width="1.4"/><rect x="13" y="15" width="7" height="4" rx="1.4" fill="white"/><rect x="25" y="15" width="7" height="4" rx="1.4" fill="rgba(255,255,255,.76)"/><path d="M14 23c5 3 11 3 16 0" stroke="white" stroke-width="1.7" stroke-linecap="round"/><path d="M13 31h6v5h-6zM25 31h6v5h-6z" fill="rgba(255,255,255,.28)" stroke="white" stroke-width="1"/></svg></div>
+
+        <div class="hero-eyebrow">F4N Intelligence Platform</div>
+        <h1>Hi, I&rsquo;m Frankie.</h1>
+        <p class="hero-intro">I answer questions on F4N scoring, OSV evidence, SQEP, CFSI and portal steps &mdash; sourced from NucCol and F4N documentation first, with citations so you can verify anything I tell you. I also run a full toolkit for suppliers: evidence, compliance, assessments and reference research, all in the menu on the left.</p>
+
+        <button class="hero-status-pill" id="heroStatusPill" type="button" title="Click to view full status">
+          <span class="bc-status-dot" id="heroStatusDot">⚡</span>
+          <span class="bc-status-label" id="heroStatusLabel">Checking…</span>
+          <span class="hero-status-note">&mdash; wait until this says <strong>All systems go</strong> before asking a question</span>
+        </button>
+
+        <ul class="hero-features">
+          <li><span class="hero-feat-ico">💬</span><span>Ask anything about F4N &amp; OSV &mdash; answers come with source citations you can check</span></li>
+          <li><span class="hero-feat-ico">🧰</span><span>A full toolkit in the menu &mdash; Evidence Vault, ISO 19443, Toolbox Builder, Self Assessment &amp; more</span></li>
+          <li><span class="hero-feat-ico">📚</span><span>Reference tools &mdash; Plant Explorer and NucColpedia for deeper research</span></li>
+        </ul>
+
+        <p class="hero-nav-note">Open Frankie Chat below for general questions, or jump straight to a tool using the menu on the left.</p>
+
+        <button class="hero-cta" id="heroOpenChat" type="button">Open Frankie Chat →</button>
+      </div>
+    </section>
+
+    <section class="messages" id="messages" hidden></section>
+    <form class="composer" id="composer" hidden>
       <div class="input-wrap">
         <textarea id="input" placeholder="Ask about F4N scoring, OSV evidence, SQEP, CFSI, portal steps, suppliers, or nuclear market intelligence…"></textarea>
       </div>
@@ -232,6 +263,7 @@
 <script type="module" src="js/app.js"></script>
 <script src="js/drawer-manager.js"></script>
 <script src="js/drawer-splash.js"></script>
+<script src="js/hero-landing.js"></script>
 <script src="js/token-monitor.js"></script>
 <script src="js/braincheck-ui.js"></script>
 <script src="js/handbook-drawer.js"></script>
