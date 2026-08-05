@@ -1,10 +1,12 @@
 /* ── Hero landing ─────────────────────────────────────────────────────────
-   Shown instead of chat on first load. Reuses the same drawer-splash
+   Shown instead of chat on first load. Uses the exact same drawer-splash
    template every tool intro uses (.drawer-splash / .ds-* classes, defined
-   in css/drawer-splash.css) so it looks consistent with the rest of Frankie
-   rather than being a one-off design. Only hero-specific additions live
-   here: the wrapper that gives .drawer-splash something to fill, the status
-   pill, the bot-mark art tile, and the small nav hint under the CTA. */
+   in css/drawer-splash.css) — same skeleton, same content amount (eyebrow,
+   h1, description, 3-item checklist, single CTA) — so it's visually
+   identical in structure to every other tool's intro screen. Only
+   hero-specific additions live here: the wrapper that gives .drawer-splash
+   something to fill, the clickable live-status checklist row, and the
+   bot-mark art tile in place of the white emoji card. */
 
 .hero-landing {
   flex: 1;
@@ -19,30 +21,11 @@
    Chat" is pressed. */
 .hero-splash { position: absolute; }
 
-.hero-status-pill {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 100px;
-  padding: 8px 16px;
-  margin: 0 0 16px;
-  font-size: 0.78rem;
-  color: #dcecf9;
-  cursor: pointer;
-  transition: 0.15s;
-}
-.hero-status-pill:hover { border-color: var(--accent, #26a9d8); background: rgba(38, 169, 216, 0.14); }
-.hero-status-pill .bc-status-dot { font-size: 0.92rem; line-height: 1; }
-.hero-status-note { color: #a9c0d6; }
-
-.hero-nav-note {
-  margin: 12px 0 0;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-}
+/* First checklist row shows the live brain-check status (mirrored from the
+   topbar's #statusBtnLabel by js/hero-landing.js) and opens the same status
+   dropdown on click. */
+#heroStatusRow { cursor: pointer; }
+#heroStatusRow:hover { color: #fff; }
 
 /* Bot-mark art tile — takes the place of the white ds-art card the tool
    splashes use, since Frankie's own mark is a self-contained gradient
