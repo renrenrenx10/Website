@@ -14,6 +14,15 @@
   overflow: hidden;
 }
 
+/* styles.css sets #messages/#composer to display:flex explicitly, which
+   (being an author rule) beats the browser's default [hidden]{display:none}
+   UA rule — so the plain `hidden` attribute alone was NOT hiding them. That
+   left both empty #messages and the composer bar rendered underneath the
+   hero, stealing half of .main's flex height (each flex:1) and squashing
+   .hero-landing into roughly half the space it needs — the "letterboxed",
+   clipped-content bug. Force it here with matching specificity. */
+#messages[hidden], #composer[hidden] { display: none !important; }
+
 /* .drawer-splash is position:absolute so it needs a sized, positioned
    ancestor — .hero-landing plays that role here (same as .assess-panel
    does for a tool drawer). No [hidden] logic needed: unlike a one-time
