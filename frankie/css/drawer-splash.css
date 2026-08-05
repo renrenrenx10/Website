@@ -1,0 +1,108 @@
+/* ── Drawer Splash ─────────────────────────────────────────────────────────
+   Shared "what is this tool" intro shown once inside each drawer, sized to
+   the drawer panel (not the full viewport — the sidebar stays visible
+   behind it). Navy hero, matches scc.html's brand colours, sits inset with
+   a light border. Added 2026-08-05. */
+
+.drawer-splash {
+  position: absolute;
+  inset: 0;
+  margin: 14px;
+  border: 2px solid rgba(255,255,255,.28);
+  border-radius: 14px;
+  background: var(--brand, #10243a);
+  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  z-index: 40;
+}
+.drawer-splash[hidden] { display: none; }
+
+.ds-deco {
+  position: absolute; right: -80px; top: -80px;
+  width: 340px; height: 340px; border-radius: 50%;
+  background: rgba(38,169,216,.07);
+  pointer-events: none;
+}
+.ds-deco2 {
+  position: absolute; left: -60px; bottom: -100px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: rgba(38,169,216,.05);
+  pointer-events: none;
+}
+
+.ds-inner {
+  display: flex; align-items: center; gap: 48px;
+  padding: 48px 56px; width: 100%; max-width: 1080px;
+  margin: 0 auto; position: relative; z-index: 1;
+  flex-wrap: wrap;
+}
+
+.ds-txt { flex: 1.15; min-width: 280px; }
+.ds-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .8rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent, #26a9d8); margin-bottom: 12px;
+}
+.ds-eyebrow-ico { font-size: 1rem; }
+.ds-txt h1 {
+  margin: 0 0 14px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 2.5rem; font-weight: 800; color: #fff; line-height: 1.08;
+}
+.ds-txt p {
+  margin: 0 0 22px; font-size: 1rem; color: rgba(255,255,255,.68);
+  line-height: 1.6; max-width: 480px;
+}
+
+.ds-checklist { display: flex; flex-direction: column; gap: 11px; margin-bottom: 26px; }
+.ds-checklist div { display: flex; align-items: center; gap: 11px; font-size: .92rem; color: #dcecf9; }
+.ds-tick {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(38,169,216,.18); color: var(--accent, #26a9d8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; flex-shrink: 0;
+}
+
+.ds-cta {
+  border: none; background: var(--accent, #26a9d8); color: var(--brand, #10243a);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase;
+  border-radius: 8px; padding: 13px 26px; font-size: .92rem;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+  transition: background .15s;
+}
+.ds-cta:hover { background: #1a86b0; }
+
+.ds-img { flex: 1; min-width: 220px; display: flex; align-items: center; justify-content: center; }
+.ds-art {
+  background: #fff; border-radius: 16px; padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.28);
+  width: 100%; max-width: 300px;
+}
+.ds-art svg { width: 100%; height: auto; display: block; }
+
+.ds-info-btn {
+  background: none; border: none; color: rgba(255,255,255,.7);
+  font-size: 1rem; cursor: pointer; padding: 2px 7px; border-radius: 4px;
+  transition: .15s;
+}
+.ds-info-btn:hover { color: #fff; background: rgba(255,255,255,.1); }
+
+/* Plant Explorer has no topbar wrapper — its close button floats directly
+   in the panel (see .pe-drawer-close in plant-explorer.css) — so the info
+   button needs the same floating treatment, positioned just to its left. */
+.pe-drawer-panel > .ds-info-btn {
+  position: absolute; top: 11px; right: 56px; z-index: 250;
+  width: 32px; height: 32px; border-radius: 6px;
+  background: rgba(20,33,50,.75); color: #fff; font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+.pe-drawer-panel > .ds-info-btn:hover { background: rgba(20,33,50,.9); }
+
+@media (max-width: 760px) {
+  .ds-inner { padding: 32px 24px; gap: 28px; }
+  .ds-txt h1 { font-size: 2rem; }
+}

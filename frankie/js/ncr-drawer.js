@@ -94,6 +94,24 @@
         '<div class="assess-body" id="ncr-body"></div>' +
       '</div>';
     document.body.appendChild(el);
+
+    window.DrawerSplashKit && window.DrawerSplashKit.attach(el, {
+      key: 'ncr',
+      icon: '🔎',
+      eyebrow: 'Toolbox builder',
+      title: 'NCR Investigation',
+      description: 'Work a non-conformance through to root cause with a structured investigation — not just "what happened", but why, and what stops it happening again.',
+      checklist: ['Structured root-cause method', 'Severity rated automatically', 'Corrective action built in'],
+      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+        '<circle cx="90" cy="85" r="45" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
+        '<path d="M90 62v30" stroke="#10243a" stroke-width="7" stroke-linecap="round"/>' +
+        '<circle cx="90" cy="105" r="4.5" fill="#10243a"/>' +
+        '<rect x="118" y="118" width="45" height="9" rx="4.5" fill="#10243a" transform="rotate(45 118 118)"/>' +
+        '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
+        '<circle cx="72" cy="178" r="5" fill="#26a9d8"/><rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
+        '</svg>',
+    });
+
     $id('ncrClose').addEventListener('click', closeDrawer);
     $id('ncrBackdrop').addEventListener('click', closeDrawer);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });

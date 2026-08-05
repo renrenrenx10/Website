@@ -72,6 +72,23 @@
       '</div>';
     document.body.appendChild(el);
 
+    window.DrawerSplashKit && window.DrawerSplashKit.attach(el, {
+      key: 'socialValue',
+      icon: '🤝',
+      eyebrow: 'Supplier tool',
+      title: 'Social Value Finder',
+      description: 'Find and evidence the social value your company already delivers — jobs, apprenticeships, local spend, community work — mapped to what F4N procurement teams actually score.',
+      checklist: ['Matches your activity to scoring themes', 'Surfaces evidence you already have', 'Built around the F4N social value model'],
+      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+        '<circle cx="76" cy="70" r="24" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
+        '<circle cx="130" cy="76" r="18" fill="#f7fbff" stroke="#d8e2ec" stroke-width="3"/>' +
+        '<path d="M40 150c4-30 26-46 52-46 22 0 40 11 48 30" fill="#10243a"/>' +
+        '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
+        '<circle cx="72" cy="178" r="5" fill="#26a9d8"/>' +
+        '<rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
+        '</svg>',
+    });
+
     $id('svClose').addEventListener('click', closeDrawer);
     $id('svBackdrop').addEventListener('click', closeDrawer);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });

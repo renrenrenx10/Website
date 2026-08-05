@@ -139,6 +139,24 @@
         '<div class="assess-body" id="sqdcp-body"></div>' +
       '</div>';
     document.body.appendChild(el);
+
+    window.DrawerSplashKit && window.DrawerSplashKit.attach(el, {
+      key: 'sqdcp',
+      icon: '📊',
+      eyebrow: 'Toolbox builder',
+      title: 'SQDCP Wizard',
+      description: 'Set up a Safety, Quality, Delivery, Cost, People board in minutes — the same performance framework nuclear customers run daily huddles against.',
+      checklist: ['Covers all five SQDCP pillars', 'Ready for a daily huddle', 'Structured for continuous tracking'],
+      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="35" y="110" width="24" height="60" rx="4" fill="#d8e2ec"/>' +
+        '<rect x="68" y="85" width="24" height="85" rx="4" fill="#26a9d8"/>' +
+        '<rect x="101" y="60" width="24" height="110" rx="4" fill="#10243a"/>' +
+        '<rect x="134" y="95" width="24" height="75" rx="4" fill="#26a9d8"/>' +
+        '<circle cx="150" cy="45" r="18" fill="#26a9d8"/>' +
+        '<path d="M142 45l5.5 5.5 11-11" stroke="#10243a" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>',
+    });
+
     $id('sqdcpClose').addEventListener('click', closeDrawer);
     $id('sqdcpBackdrop').addEventListener('click', closeDrawer);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });

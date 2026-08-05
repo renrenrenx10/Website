@@ -1,5 +1,60 @@
 # Frankie changelog
 
+## 2026-08-05 — Intro splash for every drawer
+
+Every tool drawer now opens on a brand intro screen the first time it's
+used — what the tool is, what it covers, a bespoke illustration — instead
+of dropping straight into a form. Shown once per tool (remembered via
+localStorage), then goes straight to the tool on later opens; a small ℹ️
+button in the topbar brings it back on demand.
+
+**New shared kit** (`frankie/css/drawer-splash.css` + `frankie/js/drawer-splash.js`):
+one `DrawerSplashKit.attach(el, config)` call per drawer, added right after
+`document.body.appendChild(el)` in each drawer's `inject()`. Sized to the
+drawer panel, not the full viewport — the sidebar stays visible behind it
+(this was a deliberate distinction from Plant Explorer's genuinely
+full-screen canvas). Navy background matching the brand, inset with a 2px
+light border, bespoke SVG illustration per tool in a white card, and the
+same icon each tool already uses in the sidebar (no new icon set to design —
+reused what's already there).
+
+Applied to all 15 tool entry points: Evidence Vault, Website Review,
+ISO 19443 Position, Social Value Finder, Supplier Intel (Compliance &
+Evidence); Toolbox Talk, SOP Builder, Safety Culture, Quality Plan, SQDCP
+Wizard, NCR Investigation, Strategy Builder (Toolbox Builder); Plant
+Explorer, NucColpedia (References); and Self Assessment (Business
+Excellence + Fit for Nuclear share one drawer, one combined splash).
+
+**Plant Explorer needed a small kit tweak.** It has no dedicated topbar
+wrapper — its close button floats directly in the panel — so the kit falls
+back to anchoring the info button next to it there instead, with matching
+floating CSS (`.pe-drawer-panel > .ds-info-btn`).
+
+### Files touched
+- `frankie/css/drawer-splash.css` — new.
+- `frankie/js/drawer-splash.js` — new.
+- `frankie/index.html` — new CSS/JS includes.
+- `frankie/js/evidence-vault-drawer.js`, `website-review.js`,
+  `iso19443-drawer.js`, `social-value-drawer.js`, `due-diligence-drawer.js`,
+  `toolbox-talk-drawer.js`, `sop-builder-drawer.js`,
+  `safety-culture-drawer.js`, `cqp-drawer.js`, `sqdcp-drawer.js`,
+  `ncr-drawer.js`, `strategy-drawer.js`, `plant-explorer-drawer.js`,
+  `nuccolpedia-drawer.js`, `assessment-drawer.js` — one `attach()` call +
+  config each.
+
+### Backup taken before editing
+- `frankie/backups_20260805-*_preSplash/` — full copy of `js/`, `css/`, and
+  `index.html` before this rollout.
+
+### Verified
+- `node --check` on every file in `frankie/js/` — all clean.
+- 15 `DrawerSplashKit.attach` call sites confirmed (16th match is the usage
+  example in the kit's own doc comment), all with unique `key` values — no
+  localStorage flag collisions.
+- `index.html` tag-balance check (div/script/nav/aside/button/main/section/
+  meta/link) and `</html>` present — no truncation.
+- `css/drawer-splash.css` brace-balance check.
+
 ## 2026-08-04 — Full HTML audit: two CSP-blocked tools fixed
 
 Full pass over `frankie/index.html` and its dependency tree following a

@@ -96,6 +96,23 @@
         '</div>' +
       '</div>';
     document.body.appendChild(el);
+
+    window.DrawerSplashKit && window.DrawerSplashKit.attach(el, {
+      key: 'supplierIntel',
+      icon: '🛡️',
+      eyebrow: 'Supplier tool',
+      title: 'Supplier Intel',
+      description: 'Run due diligence on any supplier — Companies House data, sanctions screening, credit signals and accreditation checks — pulled together into one risk picture.',
+      checklist: ['Companies House + sanctions checks', 'One combined risk rating', 'Direct links to primary sources'],
+      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M100 25l60 22v45c0 42-25 70-60 88-35-18-60-46-60-88V47z" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
+        '<path d="M78 100l16 16 30-34" stroke="#10243a" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
+        '<circle cx="72" cy="178" r="5" fill="#26a9d8"/>' +
+        '<rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
+        '</svg>',
+    });
+
     $id('ddClose').addEventListener('click', closeDrawer);
     $id('ddBackdrop').addEventListener('click', closeDrawer);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });

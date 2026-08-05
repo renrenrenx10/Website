@@ -144,6 +144,26 @@
       </div>`;
     document.body.appendChild(el);
 
+    window.DrawerSplashKit && window.DrawerSplashKit.attach(el, {
+      key: 'evidenceVault',
+      icon: '📁',
+      eyebrow: 'Supplier tool',
+      title: 'Evidence Vault',
+      description: 'Upload documents against every Business Excellence question and Frankie files them under the right section automatically — no need to work out where each piece of evidence belongs.',
+      checklist: ['6 sections, 60 questions covered', 'Auto-matched to the right question', 'Private — only you and your SCC can see it'],
+      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="40" y="20" width="90" height="120" rx="8" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
+        '<rect x="55" y="40" width="60" height="7" rx="3" fill="#d8e2ec"/>' +
+        '<rect x="55" y="57" width="60" height="7" rx="3" fill="#d8e2ec"/>' +
+        '<rect x="55" y="74" width="40" height="7" rx="3" fill="#d8e2ec"/>' +
+        '<rect x="70" y="95" width="90" height="105" rx="8" fill="#10243a"/>' +
+        '<rect x="85" y="113" width="60" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
+        '<rect x="85" y="130" width="60" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
+        '<circle cx="140" cy="168" r="18" fill="#26a9d8"/>' +
+        '<path d="M132 168l5.5 5.5 11-11" stroke="#10243a" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>',
+    });
+
     document.getElementById('evClose').onclick    = close;
     document.getElementById('evBackdrop').onclick = close;
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });

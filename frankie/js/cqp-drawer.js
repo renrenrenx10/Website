@@ -106,6 +106,24 @@
         '<div class="assess-body" id="cqp-body"></div>' +
       '</div>';
     document.body.appendChild(el);
+
+    window.DrawerSplashKit && window.DrawerSplashKit.attach(el, {
+      key: 'qualityPlan',
+      icon: '📑',
+      eyebrow: 'Toolbox builder',
+      title: 'Quality Plan',
+      description: 'Build a Contract Quality Plan role by role, phase by phase — the structure a nuclear customer expects, filled in from what you already know about the job.',
+      checklist: ['Role and phase structure built in', 'Consistent, auditable format', 'Export ready to issue'],
+      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="45" y="30" width="110" height="130" rx="8" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
+        '<rect x="62" y="50" width="40" height="7" rx="3" fill="#10243a"/>' +
+        '<rect x="62" y="66" width="76" height="30" rx="4" fill="#f0f7fb" stroke="#d8e2ec" stroke-width="2"/>' +
+        '<rect x="62" y="104" width="76" height="30" rx="4" fill="#f0f7fb" stroke="#d8e2ec" stroke-width="2"/>' +
+        '<circle cx="130" cy="150" r="18" fill="#26a9d8"/>' +
+        '<path d="M122 150l5.5 5.5 11-11" stroke="#10243a" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>',
+    });
+
     $id('cqpClose').addEventListener('click', closeDrawer);
     $id('cqpBackdrop').addEventListener('click', closeDrawer);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
