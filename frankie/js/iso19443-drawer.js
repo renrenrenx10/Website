@@ -63,7 +63,7 @@
       '<div class="assess-backdrop" id="isoBackdrop"></div>' +
       '<div class="assess-panel">' +
         '<div class="assess-topbar">' +
-          '<span class="assess-icon">☢</span>' +
+          '<span class="assess-icon">📋</span>' +
           '<div class="assess-title" id="isoTitle">ISO 19443 Position</div>' +
           '<button class="assess-close" id="isoClose" aria-label="Close">✕</button>' +
         '</div>' +

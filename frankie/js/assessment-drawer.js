@@ -24,6 +24,12 @@
         be:  'Business Excellence',
         f4n: 'Fit for Nuclear',
     };
+    // Matches the sidebar's icons (index.html data-tool="assessBE"/"assessF4N")
+    // so the topbar icon stays consistent with whichever mode is active.
+    const TYPE_ICONS = {
+        be:  '📊',
+        f4n: '⚛️',
+    };
 
     const SCORE_COLOURS = [
         { min: 0,  max: 39,  col: '#e05252', label: 'Needs attention' },
@@ -46,7 +52,7 @@
           <div class="assess-backdrop" id="assessBackdrop"></div>
           <div class="assess-panel">
             <div class="assess-topbar">
-              <span class="assess-icon">📋</span>
+              <span class="assess-icon" id="assessIcon">📊</span>
               <div class="assess-title" id="assessTitle">Self Assessment</div>
               <button class="assess-close" id="assessClose" aria-label="Close">✕</button>
             </div>
@@ -247,6 +253,8 @@
         const secs = sections();
 
         title.textContent = `${TYPE_LABELS[state.type]} — ${sectionName}`;
+        const iconEl = document.getElementById('assessIcon');
+        if (iconEl) iconEl.textContent = TYPE_ICONS[state.type] || '📊';
         footer.style.display = 'flex';
 
         const prev = document.getElementById('assessPrev');
@@ -331,6 +339,8 @@
         if (!body) return;
 
         title.textContent = `${TYPE_LABELS[state.type]} — Results`;
+        const iconEl = document.getElementById('assessIcon');
+        if (iconEl) iconEl.textContent = TYPE_ICONS[state.type] || '📊';
         footer.style.display = 'none';
 
         const { score, max } = totalScore();
