@@ -1,5 +1,32 @@
 # Frankie changelog
 
+## 2026-08-04 — Access box simplified, menu regrouped
+
+**Access section:** Frankie is members-only, so the Free/Member tier picker
+(previously hidden entirely via `display:none`) is now a single static
+"Member — Full access to Frankie" box — no click handler, nothing to choose.
+
+**Menu regrouped:**
+- New **References** section (Plant Explorer, NucColpedia) moved to
+  right after the FAQ launcher, ahead of the tool groups. Replaces the old
+  "Reference & Strategy" grouping.
+- **Strategy Builder** moved out of References and into the renamed
+  **Toolbox Builder** section (was "Quality & Safety" — Toolbox Talk, SOP
+  Builder, Safety Culture, Quality Plan, SQDCP Wizard, NCR Investigation,
+  Strategy Builder).
+- Sidebar order is now: Access → FAQs → References → Compliance & Evidence
+  → Toolbox Builder → Self Assessment.
+- `applyToolFlags()` now also hides `#section-references` if every button
+  inside it is switched off via SCC tool-visibility settings (previously
+  only checked `section-supplierTools` / `section-selfAssess`).
+
+### Files touched
+- `frankie/index.html` — Access markup, sidebar regrouped, `applyToolFlags()`
+  section list updated.
+
+### Backup taken before editing
+- `frankie/index.html.backup-20260804-*-preMenuRegroup`
+
 ## 2026-08-04 — Only one drawer open at a time
 
 **Bug: opening a second tool (e.g. NucColpedia) while a first was already

@@ -67,12 +67,12 @@
       <div><h1>Frankie</h1><p>F4N intelligence platform</p></div>
     </div>
 
-    <!-- Access tier -->
-    <div style="display:none">
+    <!-- Access — Frankie is members-only, so this is a static status, not a
+         choice; no click handler needed. -->
+    <div>
       <div class="label">Access</div>
       <div class="tier-grid">
-        <button class="tier-btn active" data-tier="free">Free <span>Programme overview and readiness tools</span></button>
-        <button class="tier-btn" data-tier="member">Member <span>Full corpus, reports, OSV and evidence guidance</span></button>
+        <div class="tier-btn active">Member <span>Full access to Frankie</span></div>
       </div>
     </div>
 
@@ -85,6 +85,17 @@
         <span>💬</span><span>Common Questions</span>
       </button>
     </div>
+
+    <!-- References -->
+    <nav class="sb-nav" id="section-references">
+      <div class="sb-section">References</div>
+      <button class="sb-item" data-tool="plantExplorer" onclick="window.PlantExplorerDrawer && window.PlantExplorerDrawer.open()" type="button">
+        <span class="sb-ico">🏭</span><span>Plant Explorer</span>
+      </button>
+      <button class="sb-item" data-tool="nuccolpedia" onclick="window.NucColpediaDrawer && window.NucColpediaDrawer.open()" type="button">
+        <span class="sb-ico">📚</span><span>NucColpedia</span>
+      </button>
+    </nav>
 
     <!-- Supplier Tools + Self Assessment — grouped nav, styled to match the SCC portal's left menu -->
     <nav class="sb-nav" id="section-supplierTools">
@@ -105,7 +116,7 @@
         <span class="sb-ico">🛡️</span><span>Supplier Intel</span>
       </button>
 
-      <div class="sb-section">Quality &amp; Safety</div>
+      <div class="sb-section">Toolbox Builder</div>
       <button class="sb-item" data-tool="toolboxTalk" onclick="window.ToolboxTalkDrawer && window.ToolboxTalkDrawer.open()" type="button">
         <span class="sb-ico">🦺</span><span>Toolbox Talk</span>
       </button>
@@ -124,16 +135,8 @@
       <button class="sb-item" data-tool="ncr" onclick="window.NcrDrawer && window.NcrDrawer.open()" type="button">
         <span class="sb-ico">🔎</span><span>NCR Investigation</span>
       </button>
-
-      <div class="sb-section">Reference &amp; Strategy</div>
       <button class="sb-item" data-tool="strategy" onclick="window.StrategyDrawer && window.StrategyDrawer.open()" type="button">
         <span class="sb-ico">🏆</span><span>Strategy Builder</span>
-      </button>
-      <button class="sb-item" data-tool="plantExplorer" onclick="window.PlantExplorerDrawer && window.PlantExplorerDrawer.open()" type="button">
-        <span class="sb-ico">🏭</span><span>Plant Explorer</span>
-      </button>
-      <button class="sb-item" data-tool="nuccolpedia" onclick="window.NucColpediaDrawer && window.NucColpediaDrawer.open()" type="button">
-        <span class="sb-ico">📚</span><span>NucColpedia</span>
       </button>
     </nav>
 
@@ -304,7 +307,7 @@
     if (localStorage.getItem(key) === 'false') btn.style.display = 'none';
   });
   // Hide whole sections if all buttons inside are hidden
-  ['section-supplierTools', 'section-selfAssess'].forEach(id => {
+  ['section-references', 'section-supplierTools', 'section-selfAssess'].forEach(id => {
     const section = document.getElementById(id);
     if (!section) return;
     const visible = section.querySelectorAll('[data-tool]:not([style*="display: none"])');
