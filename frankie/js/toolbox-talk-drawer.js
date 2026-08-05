@@ -128,15 +128,6 @@
       title: 'Toolbox Talk',
       description: 'Pick a topic and Frankie generates a ready-to-run toolbox talk — clear enough for the shop floor, structured enough to sign off and file.',
       checklist: ['Ready in under a minute', 'Ready-made discussion points', 'Print or save as a PDF record'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M100 25l70 40v10H30V65z" fill="#10243a"/>' +
-        '<rect x="45" y="75" width="110" height="90" rx="6" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<rect x="60" y="92" width="80" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<rect x="60" y="109" width="80" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<rect x="60" y="126" width="55" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<circle cx="128" cy="145" r="16" fill="#26a9d8"/>' +
-        '<path d="M121 145l5 5 9-10" stroke="#10243a" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg>',
     });
 
     $id('tbtClose').addEventListener('click', close);

@@ -83,13 +83,6 @@
           title: 'Self Assessment',
           description: 'Score yourself against Business Excellence and Fit for Nuclear criteria — the same framework NucCol and F4N assessors use — so you know where you stand before anyone else looks.',
           checklist: ['Business Excellence and Fit for Nuclear, one place', 'Switch between them any time', 'Section-by-section scoring, not just a total'],
-          art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-            '<circle cx="100" cy="100" r="65" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-            '<path d="M100 100V45a55 55 0 0 1 47 27z" fill="#10243a"/>' +
-            '<circle cx="100" cy="100" r="6" fill="#26a9d8"/>' +
-            '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
-            '<circle cx="72" cy="178" r="5" fill="#26a9d8"/><rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-            '</svg>',
         });
 
         document.getElementById('assessClose').addEventListener('click', close);

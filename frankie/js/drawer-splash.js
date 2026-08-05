@@ -15,8 +15,12 @@
 //     description: 'One or two sentences on what this does and why it matters.',
 //     checklist:   ['Point one', 'Point two', 'Point three'],
 //     ctaLabel:    'Open Evidence Vault',          // optional, defaults to "Open <title>"
-//     art:         '<svg viewBox="0 0 200 200">...</svg>',
 //   });
+//
+// The big illustration is just `icon` rendered large in a white card — no
+// separate art asset needed, so the hero image always matches the sidebar
+// icon exactly (2026-08-05: was a bespoke abstract SVG per tool, changed
+// after feedback that it should visually tie back to the sidebar icon).
 //
 // Looks for `.assess-panel, .wr-panel, .pe-drawer-panel` inside the given
 // root element and `.assess-topbar, .wr-topbar, .pe-drawer-topbar` for the
@@ -50,7 +54,7 @@
           <button class="ds-cta" type="button">${esc(cta)} →</button>
         </div>
         <div class="ds-img">
-          <div class="ds-art">${config.art || ''}</div>
+          <div class="ds-art"><span class="ds-art-emoji">${config.icon || ''}</span></div>
         </div>
       </div>`;
   }

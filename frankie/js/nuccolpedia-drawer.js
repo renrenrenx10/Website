@@ -103,14 +103,6 @@
       title: 'NucColpedia',
       description: 'A searchable library of 924 nuclear industry research links — policy, technology, market intelligence and more — filterable by category, country and topic.',
       checklist: ['924 curated research links', 'Filter by category, country, topic', 'Search across titles and summaries'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<rect x="45" y="35" width="35" height="120" rx="4" fill="#10243a"/>' +
-        '<rect x="82" y="45" width="35" height="110" rx="4" fill="#26a9d8"/>' +
-        '<rect x="119" y="30" width="35" height="125" rx="4" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<rect x="129" y="50" width="15" height="7" rx="3" fill="#d8e2ec"/><rect x="129" y="65" width="15" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<circle cx="150" cy="165" r="18" fill="#26a9d8"/>' +
-        '<path d="M143 165l4.5 4.5 9-9" stroke="#10243a" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg>',
     });
 
     document.getElementById('npClose').onclick    = close;

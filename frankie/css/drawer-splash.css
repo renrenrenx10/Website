@@ -81,9 +81,10 @@
 .ds-art {
   background: #fff; border-radius: 14px; padding: 20px;
   box-shadow: 0 20px 60px rgba(0,0,0,.28);
-  width: 100%; max-width: 220px;
+  width: 100%; max-width: 220px; aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
 }
-.ds-art svg { width: 100%; height: auto; display: block; }
+.ds-art-emoji { font-size: 5.5rem; line-height: 1; }
 
 .ds-info-btn {
   background: none; border: none; color: rgba(255,255,255,.7);

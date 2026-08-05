@@ -86,16 +86,6 @@
       title: 'ISO 19443 Position',
       description: 'Work through the ISO 19443 nuclear quality management clauses and get an honest RAG position on where you stand — clause by clause, with what to fix first.',
       checklist: ['Clause-by-clause self-assessment', 'RAG position, not just a score', 'Points straight to what to fix first'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<circle cx="100" cy="90" r="62" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<path d="M100 40a50 50 0 0 1 43 25" stroke="#26a9d8" stroke-width="6" fill="none" stroke-linecap="round"/>' +
-        '<path d="M50 65a50 50 0 0 0 3 55" stroke="#d8e2ec" stroke-width="6" fill="none" stroke-linecap="round"/>' +
-        '<circle cx="100" cy="90" r="6" fill="#10243a"/>' +
-        '<path d="M100 90l24-18" stroke="#10243a" stroke-width="4" stroke-linecap="round"/>' +
-        '<rect x="55" y="165" width="90" height="24" rx="12" fill="#10243a"/>' +
-        '<circle cx="70" cy="177" r="5" fill="#26a9d8"/>' +
-        '<rect x="83" y="173" width="52" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-        '</svg>',
     });
 
     $id('isoClose').addEventListener('click', close);

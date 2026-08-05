@@ -119,11 +119,6 @@
       title: 'Strategy Builder',
       description: 'Turn your growth ambitions into a proper F4N strategy document — objectives, targets, and actions structured the way the programme expects to see them.',
       checklist: ['Objectives tied to real actions', 'Structured the way F4N expects', 'Export ready to share with your board'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M100 30l14 36 38 4-29 25 9 38-32-21-32 21 9-38-29-25 38-4z" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
-        '<circle cx="72" cy="178" r="5" fill="#26a9d8"/><rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-        '</svg>',
     });
 
     $id('stratClose').addEventListener('click', closeDrawer);

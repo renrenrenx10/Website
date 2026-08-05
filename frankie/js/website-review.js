@@ -98,16 +98,6 @@ Verdict guide: "Shortlist" = strong candidate worth contacting, "Review" = some 
             title: 'Website Review',
             description: 'Drop in a supplier’s website and Frankie scores it against nuclear supply chain criteria — clarity, quality credentials, technical depth, and more — in seconds.',
             checklist: ['6 scoring criteria, 0–10 each', 'Honest, critical assessment', 'Shortlist / Review / Pass verdict'],
-            art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-                '<rect x="30" y="30" width="140" height="100" rx="8" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-                '<circle cx="44" cy="44" r="3" fill="#d8e2ec"/><circle cx="54" cy="44" r="3" fill="#d8e2ec"/><circle cx="64" cy="44" r="3" fill="#d8e2ec"/>' +
-                '<rect x="42" y="58" width="116" height="8" rx="4" fill="#d8e2ec"/>' +
-                '<rect x="42" y="74" width="80" height="8" rx="4" fill="#d8e2ec"/>' +
-                '<rect x="40" y="145" width="120" height="40" rx="8" fill="#10243a"/>' +
-                '<circle cx="60" cy="165" r="10" fill="#26a9d8"/>' +
-                '<path d="M55 165l3.5 3.5 7-7" stroke="#10243a" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' +
-                '<rect x="80" y="160" width="65" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-                '</svg>',
         });
 
         document.getElementById('wrClose').addEventListener('click', close);

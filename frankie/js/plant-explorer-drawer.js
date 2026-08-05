@@ -201,13 +201,6 @@
       title: 'Plant Explorer',
       description: 'Explore any of 18 nuclear reactor designs building by building, right down to individual components — 8,000+ mapped subcomponents, cutaway diagrams included.',
       checklist: ['18 reactor designs, fully mapped', 'Zone map and per-reactor cutaways', 'Drill from building to component'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<rect x="35" y="90" width="130" height="80" rx="4" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<rect x="55" y="105" width="24" height="24" fill="#d8e2ec"/><rect x="88" y="105" width="24" height="24" fill="#d8e2ec"/><rect x="121" y="105" width="24" height="24" fill="#d8e2ec"/>' +
-        '<path d="M85 90V55a15 15 0 0 1 30 0v35" fill="none" stroke="#10243a" stroke-width="6"/>' +
-        '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
-        '<circle cx="72" cy="178" r="5" fill="#26a9d8"/><rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-        '</svg>',
     });
 
     document.getElementById('peDrawerClose').addEventListener('click', close);

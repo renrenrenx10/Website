@@ -100,15 +100,6 @@
       title: 'SOP Builder',
       description: 'Turn a process into a proper Standard Operating Procedure — structured steps, revision control, sign-off fields — without starting from a blank page.',
       checklist: ['Structured, auditable format', 'Doc ref and revision fields built in', 'Export ready for your QMS'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<rect x="50" y="20" width="100" height="130" rx="8" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<rect x="66" y="40" width="68" height="7" rx="3" fill="#10243a"/>' +
-        '<rect x="66" y="56" width="20" height="7" rx="3" fill="#26a9d8"/><rect x="90" y="56" width="44" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<rect x="66" y="72" width="20" height="7" rx="3" fill="#26a9d8"/><rect x="90" y="72" width="44" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<rect x="66" y="88" width="20" height="7" rx="3" fill="#26a9d8"/><rect x="90" y="88" width="44" height="7" rx="3" fill="#d8e2ec"/>' +
-        '<rect x="55" y="165" width="90" height="20" rx="10" fill="#10243a"/>' +
-        '<circle cx="72" cy="175" r="5" fill="#26a9d8"/><rect x="85" y="171" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-        '</svg>',
     });
 
     $id('sopClose').addEventListener('click', closeDrawer);

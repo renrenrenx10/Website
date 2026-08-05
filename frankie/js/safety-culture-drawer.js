@@ -172,12 +172,6 @@
       title: 'Safety Culture',
       description: 'Rate where your safety culture genuinely stands across the key dimensions — not a tick-box survey, an honest picture of strengths and gaps you can act on.',
       checklist: ['Rated across every key dimension', 'Scored, not just narrative', 'Highlights where to focus next'],
-      art: '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M100 25l60 22v45c0 42-25 70-60 88-35-18-60-46-60-88V47z" fill="#f7fbff" stroke="#26a9d8" stroke-width="3"/>' +
-        '<path d="M100 55v70M70 90h60" stroke="#10243a" stroke-width="8" stroke-linecap="round"/>' +
-        '<rect x="55" y="168" width="90" height="20" rx="10" fill="#10243a"/>' +
-        '<circle cx="72" cy="178" r="5" fill="#26a9d8"/><rect x="85" y="174" width="50" height="7" rx="3" fill="rgba(255,255,255,.3)"/>' +
-        '</svg>',
     });
 
     $id('scClose').addEventListener('click', closeDrawer);
