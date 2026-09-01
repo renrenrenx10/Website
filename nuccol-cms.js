@@ -200,6 +200,27 @@
         }
       }
       if (webinar[1]) setText('we-webinar_date', webinar[1].title);
+
+      const attending = rows.filter(r => r.section === 'Attending').sort((a, b) => (a.sort || 0) - (b.sort || 0));
+      const attendingList = document.getElementById('we-attending-list');
+      if (attendingList && attending.length) {
+        attendingList.innerHTML = attending.map(ev => {
+          const link = ev.linkUrl
+            ? `<a href="${escAttr(ev.linkUrl)}" target="_blank" rel="noopener" class="btn-ghost" style="margin-top:14px;display:inline-block">Find Out More</a>`
+            : '';
+          return `
+            <div class="event-card">
+              <div class="event-card-header">
+                <div><h3>${escHtml(ev.title || '')}</h3></div>
+                <span class="event-type">Attending</span>
+              </div>
+              <div class="event-card-body">
+                <p>${escHtml(ev.body || '')}</p>
+                ${link}
+              </div>
+            </div>`;
+        }).join('');
+      }
     },
 
     // ── F4N ────────────────────────────────────────────────────────────────
