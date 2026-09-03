@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Fit 4 Nuclear Journey</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -276,6 +281,8 @@ footer .mark .f4{ color:var(--f4n-blue); } footer .mark .n{ color:var(--f4n-purp
 .reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
 .reveal.shown{ opacity:1; transform:translateY(0); }
 </style>
+</head>
+<body>
 
 <div class="grid-bg" style="height:900px"></div>
 
@@ -702,12 +709,15 @@ const progNum = document.getElementById('progressNum');
 
 function onScroll(){
   const doc = document.documentElement;
-  const scrolled = doc.scrollTop / (doc.scrollHeight - doc.clientHeight);
+  const denom = doc.scrollHeight - doc.clientHeight;
+  const scrolled = denom > 0 ? doc.scrollTop / denom : 0;
   const pct = Math.max(0, Math.min(100, Math.round(scrolled*100)));
   fill.style.width = pct+'%';
   progNum.textContent = pct+'%';
 }
 document.addEventListener('scroll', onScroll, {passive:true});
+window.addEventListener('load', onScroll);
+window.addEventListener('resize', onScroll);
 onScroll();
 
 const spy = new IntersectionObserver((entries)=>{
@@ -746,3 +756,5 @@ const countObs = new IntersectionObserver((entries)=>{
 }, { threshold:.5 });
 document.querySelectorAll('.count').forEach(el=>countObs.observe(el));
 </script>
+</body>
+</html>
