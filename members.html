@@ -747,6 +747,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       Safety Messages
     </button>
+    <button class="sb-item" onclick="nav('supplierportals')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      Supplier Portals
+    </button>
 
     <div class="sb-label">Live Feeds</div>
     <button class="sb-item" onclick="nav('news')">
@@ -1290,6 +1294,16 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
       <div class="feed-list" id="tenders-list"></div>
     </div>
 
+    <!-- SUPPLIER PORTALS -->
+    <div id="sec-supplierportals" class="section">
+      <div class="sec-header">
+        <div class="eyebrow">Market Intelligence</div>
+        <h2>Supplier <span>Portals</span></h2>
+        <p>Key procurement and supplier registration portals across the UK nuclear and public sector supply chain.</p>
+      </div>
+      <div class="feed-list" id="supplier-list"></div>
+    </div>
+
     <!-- EVENTS -->
     <div id="sec-events" class="section">
       <div class="sec-header">
@@ -1825,7 +1839,7 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 
 
 // NAV
-const labels={pcv:'Programme Country View',safety:'Safety Messages',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account',f4njourney:'My F4N Journey'};
+const labels={pcv:'Programme Country View',safety:'Safety Messages',supplierportals:'Supplier Portals',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account',f4njourney:'My F4N Journey'};
 function nav(id){
   if(id==='nuclearready' && window.__nuclearReadyEnabled===false){ id='home'; }
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1852,6 +1866,7 @@ function nav(id){
   if(id==='nhandbook'&&!window.nhbInit){loadNSection('safety_culture');window.nhbInit=true;setTimeout(()=>{const first=document.querySelector('#nhb-chapters .hb-ch');if(first)first.click();},100);}
   if(id==='pcv'&&!window.pcvInit){loadPCVSection();window.pcvInit=true;}
   if(id==='safety'&&!window.safetyInit){loadSafetySection();window.safetyInit=true;}
+  if(id==='supplierportals'&&!window.spInit){renderSupplierPortals();window.spInit=true;}
   if(window.innerWidth<=900){document.getElementById('sidebar').classList.remove('open');}
   window.scrollTo(0,0);
 }
@@ -2061,6 +2076,39 @@ function renderTenders(filter){
 function filterTenders(cat,btn){
   document.querySelectorAll('#tender-filters .filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');renderTenders(cat);
+}
+
+// SUPPLIER PORTALS
+const SUPPLIER_PORTALS_DATA=[
+  {name:"Amentum",desc:"Portal for suppliers (including small businesses concerns) interested in doing business with Amentum. The database is available on Amentum's intranet as a resource and search engine for any Amentum unit seeking suppliers.",url:"https://supplier.amentum.com/SupplierRegistration"},
+  {name:"Babcock",desc:"Babcock also encourages new SMEs to register with the Hellios SME Portal. This is a free gateway to improve the visibility of SMEs to buyers across the defence, aerospace and security sectors. Please only complete a registration if your company is an SME that is based in the United Kingdom.",url:"https://hellios.com/sme-portal"},
+  {name:"BidStats UK",desc:"Aggregates notices from thousands of public tender portals across the UK, including live and historical opportunities, contract awards, and analytics.",url:"https://app.bidstats.uk/"},
+  {name:"Contracts Finder",desc:"This is the official free UK government portal for finding public sector contracts in England (works, services and goods) above set thresholds and also recent contract awards.",url:"https://www.contractsfinder.service.gov.uk"},
+  {name:"D3 Tenders",desc:"Free UK tender aggregator (including local councils and smaller tenders).",url:"https://d3tenders.com/"},
+  {name:"Delta eSourcing",desc:"An e‑tendering portal many UK public sector organisations use to publish and manage tenders (you need to register as a supplier to search and respond).",url:"https://www.delta-esourcing.com/delta"},
+  {name:"EDF Hinkley Point C Supplier Portal",desc:"Supplier Portal",url:"https://www.hinkleysupplychain.co.uk/"},
+  {name:"EDF Sizewell C Supplier Portal",desc:"Supplier Portal",url:"https://www.sizewellc.com/building-sizewell-c/our-suppliers/"},
+  {name:"Find a Tender",desc:"To search and apply for high value contracts (>£139,668 inc VAT) in the UK's public and utilities sectors. FTS is particularly useful for \"Prior Information Notices (PINs)\", \"market engagement notices\" and \"large framework announcements\".",url:"https://www.find-tender.service.gov.uk"},
+  {name:"NDA Estate",desc:"The Nuclear Decommissioning Authority (NDA) estate comprises the parent body, the Nuclear Decommissioning Authority, and several wholly-owned subsidiary companies and Site Licence Companies (SLCs) responsible for decommissioning, waste management, transport, and commercial support.",url:"https://sharedsystems.eu-supply.com/ctm/Company/CompanyRegistration/RegisterCompany?OID=7&B=SELLAFIELD"},
+  {name:"Proactis Supplier Portal",desc:"This is the supplier portal used by many UK local authorities, housing associations and public bodies to publish tenders, manage questions, and receive bids. Registration lets you access tender documents directly.",url:"https://procontract.due-north.com/SupplierRegistration/Register"},
+  {name:"Public Contracts Scotland",desc:"This is the main procurement portal for Scottish public sector opportunities, including tenders and contract notices.",url:"https://www.publiccontractsscotland.gov.uk/"},
+  {name:"R&D Funding Opportunities",desc:"For funding opportunities and UKRI Challenge Funds sign up for latest news, funding opportunities and UKRI Challenge Fund updates.",url:"https://cloud.email.comms.iuk.ukri.org/iuk-sign-up"},
+  {name:"Rolls-Royce SMR",desc:"Supplier Portal",url:"https://suppliers.rolls-royce-smr.com/"},
+  {name:"Sell2Wales",desc:"This is the national public sector procurement portal for Wales (works, goods and services). You can search for opportunities, register as a supplier, and receive alerts.",url:"https://www.sell2wales.gov.wales/"},
+  {name:"Tenderbase",desc:"This is a commercial platform that aggregates public sector tenders (UK & Ireland) and provides advanced search, tracking, and alert features.",url:"https://tenderbase.co.uk/"},
+  {name:"UK Atomic Energy Authority EU Supply Portal",desc:"Providing access to tender opportunities across the organisation. A simple, secure, and efficient means for managing tendering and quotation activities reducing the time and effort for both buyers and suppliers.",url:"https://uk.eu-supply.com/login.asp?B=UKAEA&target=/ctm/Supplier/PublicPurchase/58509"}
+];
+function renderSupplierPortals(){
+  const list=document.getElementById('supplier-list');if(!list)return;
+  list.innerHTML=SUPPLIER_PORTALS_DATA.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(p=>{
+    return`<a class="feed-item" href="${esc(p.url)}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+      <div class="feed-body">
+        <h4>${esc(p.name)}</h4>
+        <p>${esc(p.desc)}</p>
+      </div>
+      <div class="feed-meta"><div class="src">Visit portal ↗</div></div>
+    </a>`;
+  }).join('');
 }
 
 loadContentFromBlob();
