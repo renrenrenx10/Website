@@ -52,6 +52,8 @@
             <div class="plant-drawer-search-bar">
               <input class="plant-drawer-search" id="plantDrawerSearch" type="search"
                      placeholder="Search components, systems, commodities…" autocomplete="off">
+              <button class="plant-drawer-full-link" id="plantDrawerFullLink" type="button"
+                      title="Open the full Plant Explorer (zone map, drill-down)">Open full explorer ↗</button>
             </div>
             <div class="plant-drawer-body" id="plantDrawerBody">
               <div class="plant-drawer-loading">Loading plant data…</div>
@@ -62,6 +64,12 @@
         document.getElementById('plantDrawerClose').addEventListener('click', close);
         document.getElementById('plantDrawerBackdrop').addEventListener('click', close);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+        // Escalate from this quick keyword search into the full Plant Explorer
+        // (zone map, per-building drill-down) — separate tool, same data family.
+        document.getElementById('plantDrawerFullLink').addEventListener('click', () => {
+            window.PlantExplorerDrawer && window.PlantExplorerDrawer.open();
+        });
 
         const searchEl = document.getElementById('plantDrawerSearch');
         let debounce;

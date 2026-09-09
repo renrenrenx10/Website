@@ -26,6 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Reopen-Plant-Explorer links in past chat messages — delegated so it keeps
+// working after appendMessage() has rendered new bubbles, and reads the
+// query from a data-attribute (not inlined into onclick) so it's immune to
+// quote/escaping issues in whatever the user typed.
+document.addEventListener('click', e => {
+    const link = e.target.closest('.plant-reopen-link');
+    if (!link) return;
+    e.preventDefault();
+    window.PlantDrawer && window.PlantDrawer.open(link.dataset.plantQuery || '');
+});
+
 async function bootKnowledgeBase() {
     setLoadStatus('Loading knowledge…');
     try {
@@ -123,7 +134,7 @@ async function handleQuery(query) {
     // see "Frankie, Recalibrated" proposal, §02b/§05: a structured per-reactor lookup
     // beats a prose chunk answer for these, and the reactors partition is retired.
     if (isPlantComponentQuery(query) && window.PlantDrawer) {
-        appendMessage('assistant', `<p>That's a plant-systems question — opening Plant Explorer with "${escapeHtml(query)}" so you can drill into the actual component data.</p>`);
+        appendMessage('assistant', `<p>Opened Plant Explorer for "${escapeHtml(query)}". <a href="#" class="plant-reopen-link" data-plant-query="${escapeHtml(query)}">Reopen Plant Explorer ↗</a></p>`);
         window.PlantDrawer.open(query);
         return;
     }
