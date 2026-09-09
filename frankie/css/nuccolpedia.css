@@ -193,6 +193,11 @@
 }
 
 /* ── Reactor Documents tab ───────────────────────────────────────────── */
+.np-search:disabled, .np-select:disabled, .np-search-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
 .np-search-btn {
   width: 100%;
   margin-top: 8px;

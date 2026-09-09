@@ -252,16 +252,29 @@
     countEl.textContent = '';
     resultsEl.innerHTML = '<div class="assess-loading">Loading the reactor document library (61,000+ passages, real DCD/FSAR/PCSR text) — this only happens once per session…</div>';
 
+    setReactorControlsEnabled(false);
     try {
       await window.ReactorsKbSearch.ensureLoaded(stage => {
-        resultsEl.innerHTML = `<div class="assess-loading">${stage === 'indexing' ? 'Indexing for search…' : 'Fetching reactor document library…'}</div>`;
+        resultsEl.innerHTML = `<div class="assess-loading">${stage === 'indexing' ? 'Indexing for search…' : 'Fetching reactor document library — first search of the session only, ~160MB…'}</div>`;
       });
       populateReactorFacets();
       renderReactorResults();
     } catch (e) {
       console.error('[NucColpedia] Reactor KB load failed:', e);
       resultsEl.innerHTML = '<div class="np-empty">Couldn\'t load the reactor document library. Try again shortly.</div>';
+    } finally {
+      setReactorControlsEnabled(true);
     }
+  }
+
+  // While the KB is loading, search/filters silently did nothing if used —
+  // no error, no feedback, which just looked broken. Disable them and show
+  // it, instead.
+  function setReactorControlsEnabled(enabled) {
+    ['rkSearch', 'rkSearchBtn', 'rkReactor', 'rkDocType', 'rkDiscipline'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = !enabled;
+    });
   }
 
   function populateReactorFacets() {
@@ -297,7 +310,11 @@
       renderReactorResults();
       return;
     }
-    if (!window.ReactorsKbSearch?.isLoaded()) return;
+    if (!window.ReactorsKbSearch?.isLoaded()) {
+      document.getElementById('rkResults').innerHTML =
+        '<div class="assess-loading">Still loading the reactor document library — try again in a moment…</div>';
+      return;
+    }
 
     rkState.results = window.ReactorsKbSearch.search(rkState.q, {
       reactorType: rkState.reactorType,
