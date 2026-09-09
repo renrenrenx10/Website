@@ -1,0 +1,137 @@
+/* ── Plant Database Drawer styles ─────────────────────────────────────────
+   Reuses the shared .assess-drawer / .assess-panel / .assess-topbar shell
+   (see nuccolpedia.css for the same pattern). Table-oriented rather than
+   card-oriented — this is structured tabular reference data, not a link
+   library. */
+
+#pdbMain {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pdb-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  gap: 0;
+}
+
+/* ── Filter rail ─────────────────────────────────────────────────────── */
+.pdb-filters {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--line, #e5e7eb);
+  background: var(--wash, #f7fbff);
+  overflow-y: auto;
+  padding: 16px;
+}
+.pdb-filter-group { margin-bottom: 16px; }
+.pdb-filter-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted, #65758a);
+  margin-bottom: 6px;
+}
+.pdb-search {
+  width: 100%;
+  border: 1px solid var(--line, #d8e2ec);
+  background: #fff;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: .84rem;
+  outline: none;
+}
+.pdb-search:focus { border-color: var(--accent, #26a9d8); }
+.pdb-select {
+  width: 100%;
+  border: 1px solid var(--line, #d8e2ec);
+  background: #fff;
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-size: .8rem;
+  outline: none;
+}
+.pdb-select:focus { border-color: var(--accent, #26a9d8); }
+.pdb-reset-btn {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid var(--line, #d8e2ec);
+  background: #fff;
+  color: #40566c;
+  border-radius: 6px;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .15s;
+}
+.pdb-reset-btn:hover { border-color: var(--accent, #26a9d8); color: var(--accent, #26a9d8); }
+.pdb-about {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line, #d8e2ec);
+  font-size: .74rem;
+  line-height: 1.5;
+  color: var(--muted, #65758a);
+}
+
+/* ── Results column ──────────────────────────────────────────────────── */
+.pdb-results-wrap {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 16px 20px;
+}
+.pdb-toolbar {
+  margin-bottom: 12px;
+  font-size: .8rem;
+  color: var(--muted, #65758a);
+}
+.pdb-toolbar strong { color: var(--ink, #142132); }
+
+.pdb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .8rem;
+}
+.pdb-table th {
+  position: sticky;
+  top: 0;
+  background: var(--brand, #10243a);
+  color: #fff;
+  text-align: left;
+  padding: 8px 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pdb-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line, #e5e7eb);
+  color: #33404d;
+  vertical-align: top;
+}
+.pdb-table tr:hover td { background: var(--wash, #f7fbff); }
+
+.pdb-empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--muted, #65758a);
+  font-size: .86rem;
+}
+
+@media (max-width: 760px) {
+  .pdb-body { flex-direction: column; }
+  .pdb-filters { width: 100%; border-right: none; border-bottom: 1px solid var(--line, #e5e7eb); }
+  .pdb-table { font-size: .74rem; }
+}

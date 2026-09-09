@@ -367,7 +367,10 @@
           <span>${escH(r.section || '')}</span>
         </div>
         <div class="np-desc">${escH(snippet(r.text))}</div>
-        <button class="rk-view-btn" type="button" onclick="window.SourceChunkDrawer && window.SourceChunkDrawer.open(${i})">🔍 View full passage →</button>
+        <div class="rk-actions">
+          <button class="rk-view-btn" type="button" onclick="window.SourceChunkDrawer && window.SourceChunkDrawer.open(${i})">🔍 View full passage →</button>
+          <button class="rk-view-btn" type="button" onclick="window.PlantExplorerDrawer && window.PlantExplorerDrawer.open(null, ${escH(JSON.stringify(r.reactor_type || ''))})">🏭 View in Plant Explorer →</button>
+        </div>
       </div>`).join('');
   }
 

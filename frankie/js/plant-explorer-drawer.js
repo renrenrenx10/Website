@@ -100,6 +100,8 @@
       <button id="cap-search-btn">Find in Plant</button>
       <div id="cap-dropdown"></div>
     </div>
+    <div class="pe-toolbar-divider"></div>
+    <button id="pe-db-link" title="Browse the underlying plant taxonomy dictionary" type="button">🗂️ Plant Database</button>
   </div>
 
   <div id="main">
@@ -213,6 +215,7 @@
     // Layer 2 controls (former inline onclick="" in the standalone source)
     document.getElementById('pv-fullbtn')?.addEventListener('click', () => pvRestoreFull());
     document.getElementById('pv-reopen')?.addEventListener('click', () => pvShowHome(pvSel));
+    document.getElementById('pe-db-link')?.addEventListener('click', () => window.PlantDbDrawer && window.PlantDbDrawer.open());
 
     // Capture the pristine layer-1 zone-map DOM (image src, SVG polygons, badges) so
     // pvApplyView()/pvRestoreOriginal() can restore it when the reactor filter is set
@@ -1304,12 +1307,24 @@ setReactorFilter=function(sel){pvSel=sel;
   // drawer's "Open full explorer" link) already carrying a query. In that
   // case we open across all 18 designs, filtered to that term, rather than
   // the plain first-open default below.
-  async function open(searchTerm) {
+  // reactorType: optional — a specific reactor-select value (e.g. 'AP1000') to
+  // filter to instead of the 'ALL'/AP1000 defaults below. Added for the
+  // NucColpedia Reactor Documents cross-link (nuccolpedia-drawer.js), where a
+  // search result already names its reactor design and shouldn't need the
+  // user to re-select it. Falls back to the pre-existing behaviour when a
+  // reactor_type has no matching dropdown option (e.g. 'Ref_OperatingPlants',
+  // which covers real operating plants rather than a reactor design).
+  async function open(searchTerm, reactorType) {
     injectDrawer();
 
     const drawer = document.getElementById('plant-explorer-drawer');
     drawer.classList.remove('pe-drawer--closed');
     drawer.classList.add('pe-drawer--open');
+
+    const reactorSelectEl = document.getElementById('reactor-select');
+    const hasReactorOption = reactorType && reactorSelectEl &&
+      [...reactorSelectEl.options].some(o => o.value === reactorType);
+    const targetReactor = hasReactorOption ? reactorType : 'ALL';
 
     if (!dataLoaded) {
       const loadingEl = document.getElementById('loading');
@@ -1321,11 +1336,11 @@ setReactorFilter=function(sel){pvSel=sel;
         ACTIVE_TREE = PLANT_TREE;
         dataLoaded = true;
         buildSearchIndex();
-        const reactorSelectEl = document.getElementById('reactor-select');
-        if (searchTerm) {
-          // Came in with a query — show it against all 18 designs, not one slice.
-          if (reactorSelectEl) reactorSelectEl.value = 'ALL';
-          setReactorFilter('ALL');
+        if (searchTerm || reactorType) {
+          // Came in with a query and/or a specific reactor — show that
+          // reactor (or all 18 designs) rather than the first-load default.
+          if (reactorSelectEl) reactorSelectEl.value = targetReactor;
+          setReactorFilter(targetReactor);
         } else {
           // Default to a sliced cutaway view on first open (matches the standalone tool's
           // original auto-select-AP1000-on-load behaviour) instead of leaving the flat
@@ -1339,13 +1354,14 @@ setReactorFilter=function(sel){pvSel=sel;
         if (hintEl) hintEl.textContent = '⚠ Could not load plant data — ' + e.message;
       }
       if (loadingEl) loadingEl.style.display = 'none';
-    } else if (searchTerm) {
-      // Drawer already loaded from an earlier open — still reset to "all
-      // reactors" for a query-carrying open, rather than leaving whatever
-      // single reactor was last selected.
-      const reactorSelectEl = document.getElementById('reactor-select');
-      if (reactorSelectEl) reactorSelectEl.value = 'ALL';
-      setReactorFilter('ALL');
+    } else if (searchTerm || reactorType) {
+      // Drawer already loaded from an earlier open — still reset to the
+      // requested reactor (or "all reactors") rather than leaving whatever
+      // single reactor was last selected. Resets even when reactorType had
+      // no matching dropdown option (targetReactor falls back to 'ALL'),
+      // rather than silently leaving the previous selection in place.
+      if (reactorSelectEl) reactorSelectEl.value = targetReactor;
+      setReactorFilter(targetReactor);
     }
 
     if (searchTerm) {

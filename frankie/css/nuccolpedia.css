@@ -210,6 +210,11 @@
 .rk-card .np-meta-row span:not(.np-pill) {
   color: var(--muted, #65758a);
 }
+.rk-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 2px;
+}
 .rk-view-btn {
   border: none;
   background: none;
@@ -218,6 +223,5 @@
   font-weight: 600;
   cursor: pointer;
   padding: 0;
-  margin-top: 2px;
 }
 .rk-view-btn:hover { text-decoration: underline; }

@@ -604,6 +604,12 @@
 
 /* ── Converted from inline style= attributes (CSP: style-src has no unsafe-inline) ── */
 .pe-toolbar-divider{width:1px;height:22px;background:var(--border);margin:0 6px;flex-shrink:0;}
+#pe-db-link{
+  padding:6px 12px; background:transparent; border:1.5px solid var(--border);
+  border-radius:7px; color:var(--text); font-size:12px; font-weight:600;
+  cursor:pointer; font-family:'Barlow',sans-serif; transition:.14s; white-space:nowrap;
+}
+#pe-db-link:hover{ border-color:var(--accent); color:var(--accent); }
 .drill-stripe{background:var(--accent);}
 .z-badge[data-zone="01"]{left:23.3%;top:57%;}
 .z-badge[data-zone="02"]{left:9.2%;top:55.7%;}
