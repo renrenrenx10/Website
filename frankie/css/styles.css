@@ -843,6 +843,15 @@
    `hidden` to <aside class="rail"> in index.html would have no visual effect. */
 .rail[hidden] { display: none; }
 
+/* .app's grid-template-columns (see the big minified block near the top of
+   this file) reserves a fixed 318px third track for .rail regardless of
+   whether it's hidden — a display:none grid item still gets its track
+   sized from the explicit template. Without this, hiding the rail (hero
+   landing screen) left 318px of dead space on the right instead of letting
+   the middle column take it. hero-landing.js toggles this class alongside
+   rail.hidden. */
+.app.no-rail { grid-template-columns: 282px minmax(430px, 1fr); }
+
 /* ── BrainCheck UI (bc-*) — replaces all inline styles for CSP compliance ── */
 
 .bc-panel {

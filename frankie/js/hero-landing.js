@@ -23,6 +23,7 @@
     if (messages) messages.hidden = false;
     if (composer) composer.hidden = false;
     if (rail) rail.hidden = false;
+    document.querySelector('.app')?.classList.remove('no-rail');
     const input = document.getElementById('input');
     if (input) input.focus();
   }
@@ -33,6 +34,7 @@
     if (messages) messages.hidden = true;
     if (composer) composer.hidden = true;
     if (rail) rail.hidden = true; // no sources to cite on the hero screen
+    document.querySelector('.app')?.classList.add('no-rail'); // let the middle column reclaim the rail's grid track
   }
 
   // ── Mirror the live status label (topbar) into the hero's status row ──
