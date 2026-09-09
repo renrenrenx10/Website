@@ -246,7 +246,10 @@
   </main>
 
   <!-- ── RIGHT RAIL ────────────────────────────────────────────────────────── -->
-  <aside class="rail">
+  <!-- Hidden by default: only relevant once there's a chat answer to cite
+       sources for, so it shouldn't show alongside the hero landing screen.
+       hero-landing.js's showChat()/showHero() toggle it from here on. -->
+  <aside class="rail" hidden>
     <div class="rail-head">
       <h3>Sources</h3>
       <p>Matched references appear here after each answer. Click to open where available.</p>

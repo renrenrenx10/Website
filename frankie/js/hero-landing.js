@@ -32,7 +32,7 @@
     if (hero) hero.hidden = false;
     if (messages) messages.hidden = true;
     if (composer) composer.hidden = true;
-    if (rail) rail.hidden = false; // rail has no toggle of its own, leave as-is
+    if (rail) rail.hidden = true; // no sources to cite on the hero screen
   }
 
   // ── Mirror the live status label (topbar) into the hero's status row ──

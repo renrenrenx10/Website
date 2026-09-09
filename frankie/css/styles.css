@@ -836,6 +836,13 @@
 .rail { display: flex; flex-direction: column; }
 .rail-body { flex: 0 1 auto; }
 
+/* .rail's base rule above (and the equivalent one in the big minified block
+   near the top of this file) sets display:flex as a plain class selector,
+   which beats the [hidden] attribute's UA-stylesheet display:none — same
+   origin/specificity gotcha as .chunk-drawer earlier. Without this, adding
+   `hidden` to <aside class="rail"> in index.html would have no visual effect. */
+.rail[hidden] { display: none; }
+
 /* ── BrainCheck UI (bc-*) — replaces all inline styles for CSP compliance ── */
 
 .bc-panel {
