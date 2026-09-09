@@ -24,6 +24,7 @@
     // Updated 2026-08-03: KB files now live behind the gated Worker /kb/* route
     // (Azure Blob-backed), not as static relative paths — see ch-proxy-worker.js.
     const KB_PARTITIONS = [
+        { kb: `${WORKER}/kb/frankie_handbook_kb.json`,   vectors: `${WORKER}/kb/frankie_handbook_vectors.json` },
         { kb: `${WORKER}/kb/frankie7_supplier_kb.json`,  vectors: `${WORKER}/kb/frankie7_supplier_vectors.json` },
         { kb: `${WORKER}/kb/frankie_toolkit_kb.json`,    vectors: `${WORKER}/kb/frankie_toolkit_vectors.json` },
         { kb: `${WORKER}/kb/frankie_regs_kb.json`,       vectors: `${WORKER}/kb/frankie_regs_vectors.json` },
@@ -83,7 +84,17 @@
     async function checkGroq() {
         const enabled = localStorage.getItem('frankieGroqEnabled') !== 'false';
         if (!enabled) return log('Groq', { status: 'warn', label: 'Disabled', detail: 'Turned off in SCC Settings' });
-        const model = localStorage.getItem(LS.groqModel) || 'llama-3.1-8b-instant';
+        // Self-heal (2026-09-08): must match config.js's ConfigManager.groqModel —
+        // this file is a plain <script>, not a module, so it can't import
+        // ConfigManager and was reading the raw localStorage key directly,
+        // silently skipping the migration that clears the decommissioned
+        // 'llama-3.1-8b-instant' model. That let a browser with the old value
+        // cached keep sending a dead model to Groq forever -> HTTP 404 here,
+        // even though config.js's self-heal had already fixed real generation.
+        if (localStorage.getItem(LS.groqModel) === 'llama-3.1-8b-instant') {
+            localStorage.removeItem(LS.groqModel);
+        }
+        const model = localStorage.getItem(LS.groqModel) || 'openai/gpt-oss-20b';
         try {
             const r = await fetch(`${WORKER}/groq/openai/v1/chat/completions`, {
                 method: 'POST',
@@ -102,6 +113,14 @@
     async function checkClaude() {
         const enabled = localStorage.getItem('frankieClaudeEnabled') !== 'false';
         if (!enabled) return log('Claude', { status: 'warn', label: 'Disabled', detail: 'Turned off in SCC Settings' });
+        // Self-heal (2026-09-09): 'claude-sonnet-4-20250514' is Anthropic's
+        // retired dated snapshot for what's now aliased 'claude-sonnet-4-6'
+        // (deprecated 2026-04-14, retired 2026-06-15). Same bypass problem as
+        // the Groq check above — this file can't import ConfigManager, so it
+        // was reading the raw key and re-sending a dead model on every ping.
+        if (localStorage.getItem(LS.claudeModel) === 'claude-sonnet-4-20250514') {
+            localStorage.removeItem(LS.claudeModel);
+        }
         const model = localStorage.getItem(LS.claudeModel) || 'claude-sonnet-4-6';
         try {
             const r = await fetch(`${WORKER}/claude/v1/messages`, {

@@ -502,6 +502,14 @@
       '}\n\n' +
       'Be specific to nuclear supply chain (not nuclear operators). Focus on practical, achievable actions for a manufacturing/engineering SME.';
 
+    // Self-heal (2026-09-09): 'claude-sonnet-4-20250514' is Anthropic's
+    // retired dated snapshot (deprecated 2026-04-14, retired 2026-06-15) for
+    // what's now 'claude-sonnet-4-6'. A browser with that old ID cached in
+    // frankieClaudeModel would send a dead model here -> 404. Same fix as
+    // config.js/braincheck-ui.js.
+    if (localStorage.getItem('frankieClaudeModel') === 'claude-sonnet-4-20250514') {
+        localStorage.removeItem('frankieClaudeModel');
+    }
     var model = localStorage.getItem('frankieClaudeModel') || 'claude-haiku-4-5-20251001';
 
     fetch('https://api.anthropic.com/v1/messages', {

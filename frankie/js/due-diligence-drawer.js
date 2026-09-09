@@ -844,7 +844,7 @@
         'AS9100, UKAS, NQA, BSI, Bureau Veritas, DNV, Lloyds Register, F4N, Fit for Nuclear, Achilles, JOSCAR, Cyber Essentials.\n' +
         'Return ONLY valid JSON, no markdown:\n{"certs":["exact cert name as mentioned"]}';
 
-      var groqModel = localStorage.getItem('frankieGroqModel') || 'llama-3.1-8b-instant';
+      var groqModel = localStorage.getItem('frankieGroqModel') || 'openai/gpt-oss-20b';
       return fetch(WORKER_BASE + '/groq/openai/v1/chat/completions', {
         method: 'POST',
         headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
@@ -956,7 +956,7 @@
       'Text: ' + text.slice(0, 800) + '\n' +
       'Return ONLY valid JSON: {"signals":["tag1","tag2"]}';
 
-    var groqModel = localStorage.getItem('frankieGroqModel') || 'llama-3.1-8b-instant';
+    var groqModel = localStorage.getItem('frankieGroqModel') || 'openai/gpt-oss-20b';
     return fetch(WORKER_BASE + '/groq/openai/v1/chat/completions', {
       method: 'POST',
       headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
@@ -1072,7 +1072,7 @@
       '"f4n":{"status":"","detail":""},' +
       '"credit":{"status":"","detail":""}}';
 
-    var groqModel = localStorage.getItem('frankieGroqModel') || 'llama-3.1-8b-instant';
+    var groqModel = localStorage.getItem('frankieGroqModel') || 'openai/gpt-oss-20b';
     return fetch(WORKER_BASE + '/groq/openai/v1/chat/completions', {
       method: 'POST',
       headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
@@ -1165,7 +1165,7 @@
     }).join('');
     html += '</div>';
 
-    html += '<p class="dd-source-note">Powered by Brave Search + Groq (' + escapeHtml(localStorage.getItem('frankieGroqModel') || 'llama-3.1-8b-instant') + '). Web results may not reflect current status — always verify certifications directly.</p>';
+    html += '<p class="dd-source-note">Powered by Brave Search + Groq (' + escapeHtml(localStorage.getItem('frankieGroqModel') || 'openai/gpt-oss-20b') + '). Web results may not reflect current status — always verify certifications directly.</p>';
     html += '</div>';
     return html;
   }

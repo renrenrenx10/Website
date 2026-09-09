@@ -1,7 +1,10 @@
 // ── Evidence panel renderer  ──────────────────────────────────────────────────
-// v3.0  Source canonicalisation: any legacy source_file name is remapped to
-//        frankie_normalized_kb.json before rendering. The evidence panel will
-//        never show frankie4_kb, frankie_master_kb, COMPANIES, etc.
+// v3.1  Source canonicalisation: legacy pre-partition source_file names
+//        (frankie4_kb, frankie_master_kb, COMPANIES, etc.) are remapped to a
+//        generic "F4N Knowledge Base" label. Real partition sources
+//        (supplier/toolkit/regs/reactors) render under their own basename —
+//        the panel no longer hardcodes frankie_normalized_kb.json, a
+//        pre-partition legacy filename that isn't part of current retrieval.
 
 import { normaliseScore } from './retrieval.js';
 
@@ -16,7 +19,7 @@ const LEGACY_BASENAMES = new Set([
     'COMPANY_DICT',
 ]);
 
-const CANONICAL = 'frankie_normalized_kb.json';
+const CANONICAL = 'F4N Knowledge Base';
 
 /** Strip directory path, strip extension, then check against the legacy list. */
 function canonicalSource(raw) {
@@ -73,7 +76,7 @@ export function renderEvidencePanel(results) {
     }).join('');
 
     return `<details class="evidence-panel">
-      <summary>${results.length} source${results.length !== 1 ? 's' : ''} in evidence — frankie_normalized_kb.json</summary>
+      <summary>${results.length} source${results.length !== 1 ? 's' : ''} in evidence</summary>
       <div class="evidence-list">${cards}</div>
     </details>`;
 }

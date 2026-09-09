@@ -40,11 +40,15 @@ const SOURCE_META = {
 // Handbook chapter IDs that exist in the members portal (members.html)
 // Maps question_id prefix → which handbook section to open
 // e.g. STR01 → handbook, DES01 → handbook, PEO01 → handbook
-const HANDBOOK_CHAPTER_PREFIXES = /^(STR|DES|PEO|OPS|QMS|CI|HS)\d/i;
+// Real prefixes used in kb/handbook_url_map.json (checked against the file directly,
+// 2026-09-08) — the previous list (OPS|QMS|CI|HS) never matched anything real, which
+// silently broke this fallback path. Kept only as a last resort now that rail cards
+// prefer r.url (see updateRail below) whenever handbook-links.js found a real match.
+const HANDBOOK_CHAPTER_PREFIXES = /^(STR|DES|PEO|PRO|QHS|QUA|SAF|SCS|HUM|IND|LEA|SUP)\d/i;
 
 /** Resolve a raw source string to display metadata */
 function resolveSource(raw) {
-    if (!raw) return SOURCE_META['frankie_normalized_kb'];
+    if (!raw) return SOURCE_META['frankie_normalized_kb']; // default when no source string at all
     const stem = String(raw).split('/').pop().replace(/\.[^.]+$/, '').toLowerCase().replace(/_/g, ' ');
     // Exact match first, then prefix scan
     if (SOURCE_META[stem]) return SOURCE_META[stem];
@@ -332,11 +336,11 @@ export function updateRail(results) {
     // instead of re-deriving anything from the rendered HTML.
     window.frankieLastRailResults = top.map(r => ({
         result: r,
-        meta:   resolveSource(r.source || r.source_file || 'frankie_normalized_kb.json'),
+        meta:   resolveSource(r.source || r.source_file),
     }));
 
     rail.innerHTML = top.map((r, i) => {
-        const rawSrc   = r.source || r.source_file || 'frankie_normalized_kb.json';
+        const rawSrc   = r.source || r.source_file;
         const meta     = resolveSource(rawSrc);
         const ctLabel  = CONTENT_TYPE_LABELS[r.content_type] || '';
         const score    = typeof r.score === 'number' ? r.score.toFixed(1) : '—';
@@ -346,16 +350,21 @@ export function updateRail(results) {
         // Subtitle: source label (only if section is the primary)
         const subLabel = r.section ? meta.label : null;
 
-        // Build link — handbook or plant sources open their dedicated drawer;
-        // every other source type (supplier, regs, reactors, toolkit, and any
-        // fallback) opens the source chunk viewer instead.
+        // Build link. Preferred path: r.url, set by handbook-links.js's
+        // matchHandbookLink() in app.js — a real members.html deep-link
+        // (?open=handbook&q=CODE) matched from the chunk's own text, so it
+        // works regardless of which partition the chunk came from. Only
+        // when that heuristic found nothing do we fall back to the older
+        // question_id/title + HANDBOOK_CHAPTER_PREFIXES guess, or finally
+        // the plain source-chunk viewer.
         const chapterRef         = r.question_id || r.title || null;
         const isHandbook         = meta.handbookNav !== null;
         const isPlant            = !!meta.plantNav;
         const isHandbookClickable = isHandbook && !!chapterRef;
+        const hasDeepLink        = !isPlant && !!r.url;
 
         const actionLabel = isPlant ? '🏭 Explore in plant →'
-                           : isHandbookClickable ? '📖 Open in handbook →'
+                           : (hasDeepLink || isHandbookClickable) ? '📖 Open in handbook →'
                            : '🔍 View source passage →';
 
         const cardInner = `
@@ -371,6 +380,9 @@ export function updateRail(results) {
 
         if (isPlant) {
             return `<button class="rail-card rail-card--link" type="button" onclick="window.PlantDrawer && window.PlantDrawer.open(window.frankieLastQuery)">${cardInner}</button>`;
+        }
+        if (hasDeepLink) {
+            return `<a class="rail-card rail-card--link" href="${_esc(r.url)}" target="_blank" rel="noopener">${cardInner}</a>`;
         }
         if (isHandbookClickable) {
             return `<button class="rail-card rail-card--link" type="button" onclick="window.HandbookDrawer && window.HandbookDrawer.open('${_esc(chapterRef)}')">${cardInner}</button>`;

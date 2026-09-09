@@ -19,6 +19,13 @@ function authHeaders() {
 // ── Partition config ──────────────────────────────────────────────────────────
 
 const PARTITIONS = [
+    // Handbook first — curated member guidance, given priority in scoring
+    // below (HANDBOOK_BOOST) so a practical "how do I..." query surfaces
+    // the actual handbook chapter instead of defaulting to raw supplier-
+    // report evidence just because that's the only content that existed
+    // in the corpus before 2026-09-08. See build_frankie_handbook_kb.py
+    // and "Frankie, Recalibrated" proposal, §08.
+    { kb: `${WORKER_URL}/kb/frankie_handbook_kb.json`,   vectors: `${WORKER_URL}/kb/frankie_handbook_vectors.json`,  lazy: false, name: 'handbook'  },
     { kb: `${WORKER_URL}/kb/frankie7_supplier_kb.json`,  vectors: `${WORKER_URL}/kb/frankie7_supplier_vectors.json`, lazy: false, name: 'supplier'  },
     { kb: `${WORKER_URL}/kb/frankie_toolkit_kb.json`,    vectors: `${WORKER_URL}/kb/frankie_toolkit_vectors.json`,   lazy: false, name: 'toolkit'   },
     { kb: `${WORKER_URL}/kb/frankie_regs_kb.json`,       vectors: `${WORKER_URL}/kb/frankie_regs_vectors.json`, lazy: false, name: 'regs'      },
@@ -34,6 +41,31 @@ const KEYWORD_WEIGHT = 0.4;
 
 // Score boost for chunks pinned by graph entity match
 const GRAPH_BOOST = 3.0;
+
+// Anonymised company-submission chunks (F4N/Reports/BE, F4N/Reports/NSS —
+// another supplier's assessment evidence, not guidance written for the
+// reader) get demoted relative to genuine guidance content so a "how do I
+// implement X" query surfaces the handbook/toolkit explanation before it
+// surfaces someone else's anonymised evidence excerpt. Evidence chunks can
+// still win if they're a much stronger match — this only breaks ties in
+// favour of guidance. See "Frankie, Recalibrated" proposal, §08.
+const REPORT_SOURCE_PREFIXES = ['F4N/Reports/BE', 'F4N/Reports/NSS'];
+const REPORT_SOURCE_PENALTY = 0.55; // multiplier applied to final score
+function isAnonymisedReportChunk(chunk) {
+    const folder = chunk.source_folder || '';
+    return REPORT_SOURCE_PREFIXES.some(p => folder.startsWith(p));
+}
+
+// Curated member handbook content — boosted rather than merely un-penalised,
+// since this is the one partition written specifically to answer "how do I
+// do X" questions (vs. guidance docs written for a different purpose, or
+// report evidence written about a specific other company). Multiplier, not
+// additive, so it scales with how strong the underlying match already is
+// rather than letting a weak handbook hit outrank a strong non-handbook one.
+const HANDBOOK_BOOST = 1.4;
+function isHandbookChunk(chunk) {
+    return chunk.category === 'handbook_guidance';
+}
 
 // ── Caches ────────────────────────────────────────────────────────────────────
 
@@ -58,6 +90,22 @@ const NUCLEAR_SIGNALS = [
 function isNuclearQuery(query) {
     const ql = query.toLowerCase();
     return NUCLEAR_SIGNALS.some(s => ql.includes(s));
+}
+
+// ── Plant/component intent (routes to Plant Explorer, not the KB) ─────────────
+// See "Frankie, Recalibrated" proposal, §02b: component/plant-systems questions
+// ("where do the pumps sit") are better answered by Plant Explorer's structured
+// per-reactor BOM data than by KB prose chunks. Reuses the entity lists below.
+const PLANT_INTENT_TERMS = [
+    'pump', 'valve', 'vessel', 'zone', 'building', 'where is', 'where are',
+    'where does', 'located', 'commodity', 'commodities',
+];
+
+export function isPlantComponentQuery(query) {
+    const ql = query.toLowerCase();
+    return COMPONENT_ENTITIES.some(c => ql.includes(c))
+        || MATERIAL_ENTITIES.some(m => ql.includes(m))
+        || PLANT_INTENT_TERMS.some(t => ql.includes(t));
 }
 
 // ── Entity extraction from query ──────────────────────────────────────────────
@@ -190,12 +238,23 @@ async function loadGraph() {
 
 // ── KB loaders ────────────────────────────────────────────────────────────────
 
+// UK-relevant regs categories for the F4N-member launch — see "Frankie, Recalibrated"
+// proposal, §02. Drops nrc_reference, wano, inpo, iaea, nei, gov_policy, cyber_security:
+// none of it is what a UK F4N supplier cites. Filtered client-side for now; folding this
+// into the regs KB build itself is part of the corpus rebuild plan.
+const REGS_CATEGORY_ALLOWLIST = new Set(['onr_sap', 'onr_tag', 'gda_guidance', 'cyber_security']);
+
 async function loadPartitionKb(partition) {
     try {
         const r = await fetch(partition.kb, { headers: authHeaders() });
         if (!r.ok) return [];
         const data = await r.json();
-        const chunks = Array.isArray(data) ? data : (data.chunks || []);
+        let chunks = Array.isArray(data) ? data : (data.chunks || []);
+        if (partition.name === 'regs') {
+            const before = chunks.length;
+            chunks = chunks.filter(c => REGS_CATEGORY_ALLOWLIST.has(c.category));
+            console.log(`Frankie: regs narrowed to UK-relevant categories — ${chunks.length.toLocaleString()} of ${before.toLocaleString()} chunks`);
+        }
         console.log(`Frankie: loaded ${partition.name} KB — ${chunks.length.toLocaleString()} chunks`);
         return chunks;
     } catch (e) {
@@ -395,7 +454,12 @@ export async function getKbStats() {
 // ── Main search export ────────────────────────────────────────────────────────
 
 export async function searchKnowledgeBase(query, maxSources = 5) {
-    const nuclear = isNuclearQuery(query);
+    // Reactors partition retired from default retrieval for the F4N-member soft launch —
+    // see "Frankie, Recalibrated" proposal, §02. isNuclearQuery()/NUCLEAR_SIGNALS kept
+    // in place (unused) in case a separate, explicitly-chosen "nuclear engineering" mode
+    // is built later; for now this always evaluates false so the 61k-chunk reactors KB
+    // never loads by default.
+    const nuclear = false; // was: isNuclearQuery(query)
 
     // Load in parallel: KB chunks, vectors, graph
     const [chunks, vectors, graph] = await Promise.all([
@@ -455,8 +519,12 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
             baseScore = Math.min(kw / 20, 1) * 10;
         }
 
-        const finalScore = baseScore + graphBoost;
-        return { ...chunk, score: finalScore, _kw: kw, _graphBoosted: graphBoost > 0 };
+        let finalScore = baseScore + graphBoost;
+        const isReportEvidence = isAnonymisedReportChunk(chunk);
+        const isHandbook = isHandbookChunk(chunk);
+        if (isReportEvidence) finalScore *= REPORT_SOURCE_PENALTY;
+        if (isHandbook) finalScore *= HANDBOOK_BOOST;
+        return { ...chunk, score: finalScore, _kw: kw, _graphBoosted: graphBoost > 0, _reportEvidence: isReportEvidence, _handbook: isHandbook };
     });
 
     const results = scored

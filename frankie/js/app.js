@@ -3,7 +3,8 @@ import { CONFIG, ConfigManager, refreshConfig } from './config.js';
 import { RequestManager } from './requestManager.js';
 import { escapeHtml } from './utils.js';
 import { initialiseUI, appendMessage, updateMessage, updateRail, updateSuggestions, setLoadStatus, getActiveMode, renderRecentPanel } from './ui.js';
-import { searchKnowledgeBase, getKbStats, normaliseScore } from './retrieval.js';
+import { searchKnowledgeBase, getKbStats, normaliseScore, isPlantComponentQuery } from './retrieval.js';
+import { matchHandbookLink } from './handbook-links.js';
 import { preprocessQuery } from './preprocessing.js';
 import { streamClaude, generateWithClaude } from './claude.js';
 import { routeModel, modelLabel } from './modelRouter.js';
@@ -118,6 +119,15 @@ async function handleQuery(query) {
     addToHistory('user', query);
     appendMessage('user', `<p>${escapeHtml(query)}</p>`);
 
+    // Plant/component questions route straight to Plant Explorer instead of the KB —
+    // see "Frankie, Recalibrated" proposal, §02b/§05: a structured per-reactor lookup
+    // beats a prose chunk answer for these, and the reactors partition is retired.
+    if (isPlantComponentQuery(query) && window.PlantDrawer) {
+        appendMessage('assistant', `<p>That's a plant-systems question — opening Plant Explorer with "${escapeHtml(query)}" so you can drill into the actual component data.</p>`);
+        window.PlantDrawer.open(query);
+        return;
+    }
+
     const pipelineBar    = createPipelineBar();
     const botDiv         = appendMessage('assistant', '');
     const bubble         = botDiv._bubble;
@@ -174,6 +184,17 @@ async function handleQuery(query) {
             ...r,
             normalizedScore: normaliseScore(r.score)
         }));
+
+        // Attach a handbook deep-link. A chunk built from build_frankie_handbook_kb.py
+        // (category 'handbook_guidance') already carries its own authoritative
+        // url — it knows its exact chapter code, no guessing needed. Every other
+        // partition still goes through handbook-links.js's keyword-overlap
+        // matcher — see "Frankie, Recalibrated" proposal, §08. No match means no
+        // link, not a wrong one; claude.js already knows how to cite s.url when present.
+        allResults = await Promise.all(allResults.map(async r => ({
+            ...r,
+            url: r.url || await matchHandbookLink(r)
+        })));
 
         const totalGated = searchResults.reduce((n, r) => n + (r.gatedHits || 0), 0);
         updateRail(allResults);

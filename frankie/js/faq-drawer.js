@@ -64,6 +64,7 @@
                 'How do I get my score verified by an SCC?',
                 'What happens after I reach a score of 7?',
                 'Where can I find nuclear procurement opportunities?',
+                'Does having F4N status actually help me win work?',
                 'How do I join the NuCCoL member network?',
             ]
         },

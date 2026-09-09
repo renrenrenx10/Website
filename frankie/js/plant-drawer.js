@@ -10,10 +10,14 @@
 (function () {
     'use strict';
 
-    // Updated 2026-08-03: served behind the gated Worker /kb/* route (Azure
-    // Blob-backed), not as a static relative path — see ch-proxy-worker.js.
-    const WORKER_URL = 'https://ch.rene-dorset.workers.dev';
-    const DATA_FILE = `${WORKER_URL}/kb/plant_tree_data.json`;
+    // Repointed 2026-09-08: the gated Worker endpoint (kb/plant_tree_data.json) is the
+    // older generic DSE taxonomy with no per-reactor BOM mapping — 0 of 4,466 subcomponents
+    // carried a reactors[] field (see "Frankie, Recalibrated" proposal, §02b). Now reads the
+    // same static plant_tree_v2.json the Tool Kit's PlantExplorerDrawer already uses: 8,361
+    // subcomponents, 100% with real per-reactor data across all 18 designs. Schema-checked
+    // compatible with searchTree() below (site.locations[].systems[].components[].subcomponents[]).
+    // Static, same-origin file — no auth token needed.
+    const DATA_FILE = 'images/plant-explorer/plant_tree_v2.json';
 
     function authHeaders() {
         const token = localStorage.getItem('frankieUserToken');
@@ -76,7 +80,7 @@
         loading = true;
         try {
             console.log('[PlantDrawer] Fetching:', DATA_FILE, '— page:', location.href);
-            const res  = await fetch(DATA_FILE, { headers: authHeaders() });
+            const res  = await fetch(DATA_FILE);
             console.log('[PlantDrawer] Response:', res.status, res.statusText, res.url);
             if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText} — ${res.url}`);
             PLANT_DATA = await res.json();
@@ -158,7 +162,13 @@
             return;
         }
 
-        const matches = searchMulti(term, PLANT_DATA.plant_tree);
+        // Fix (2026-09-09): plant_tree_v2.json's root IS the site array —
+        // there's no wrapping "plant_tree" key (confirmed via direct read of
+        // the file: a top-level list of 3 {name, locations} site objects).
+        // PLANT_DATA.plant_tree was always undefined, so searchTree()'s
+        // `for (const site of tree)` threw "tree is not iterable" on every
+        // search. Keep a fallback in case a future data file DOES wrap it.
+        const matches = searchMulti(term, PLANT_DATA.plant_tree || PLANT_DATA);
 
         if (!matches.length) {
             body.innerHTML = `<div class="plant-drawer-hint">No matches for "<strong>${esc(term)}</strong>" in the plant tree.</div>`;
