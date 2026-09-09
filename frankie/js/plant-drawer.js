@@ -68,7 +68,10 @@
         // Escalate from this quick keyword search into the full Plant Explorer
         // (zone map, per-building drill-down) — separate tool, same data family.
         document.getElementById('plantDrawerFullLink').addEventListener('click', () => {
-            window.PlantExplorerDrawer && window.PlantExplorerDrawer.open();
+            // Carry the current search term across so the full explorer opens
+            // already filtered to it, instead of a blank AP1000-only view.
+            const term = searchEl.value.trim();
+            window.PlantExplorerDrawer && window.PlantExplorerDrawer.open(term);
         });
 
         const searchEl = document.getElementById('plantDrawerSearch');

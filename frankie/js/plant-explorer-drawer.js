@@ -279,7 +279,13 @@ let pvDetail = null;
 let PV_ORIG = null;
 
 function pvHexa(hex,a){const n=parseInt(hex.slice(1),16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
-function pvViewKey(sel){return sel;}
+// 'ALL' ("All 18 designs") has no cutaway image/polygon set of its own — it used
+// to fall back to a separate, stale zone-map.jpeg + hand-drawn 5-zone overlay
+// (pvRestoreOriginal(), now unused for this case). Reusing AP1000's already-
+// correct image+polygons is simpler than maintaining a second image set, and
+// AP1000 is the reference design anyway. The underlying data (ACTIVE_TREE) is
+// unaffected — this only changes which cutaway image/polygons are shown.
+function pvViewKey(sel){return sel==='ALL' ? 'AP1000' : sel;}
 function pvInfoKey(sel){return sel==='GW'?'Generic_GW_v2':sel==='SMR'?'Generic_SMR_v2':sel;}
 function pvSelLabel(){return pvSel==='GW'?'Generic GW':pvSel==='SMR'?'Generic SMR':pvSel==='ALL'?'All designs':pvSel;}
 function pvHomeTitle(sel){const i=PLANT_INFO[pvInfoKey(sel)];return (i&&i.full_name)||pvSelLabel();}
@@ -1283,7 +1289,11 @@ setReactorFilter=function(sel){pvSel=sel;
   // injectDrawer() above instead, and 'loading' is hidden in open() below.
 
   // ── Public API ────────────────────────────────────────────────────────────
-  async function open() {
+  // searchTerm (optional) — passed when opened from elsewhere (e.g. the chat
+  // drawer's "Open full explorer" link) already carrying a query. In that
+  // case we open across all 18 designs, filtered to that term, rather than
+  // the plain first-open default below.
+  async function open(searchTerm) {
     injectDrawer();
 
     const drawer = document.getElementById('plant-explorer-drawer');
@@ -1300,18 +1310,40 @@ setReactorFilter=function(sel){pvSel=sel;
         ACTIVE_TREE = PLANT_TREE;
         dataLoaded = true;
         buildSearchIndex();
-        // Default to a sliced cutaway view on first open (matches the standalone tool's
-        // original auto-select-AP1000-on-load behaviour) instead of leaving the flat
-        // "All 18 designs" zone map as the first thing people see.
         const reactorSelectEl = document.getElementById('reactor-select');
-        if (reactorSelectEl) reactorSelectEl.value = 'AP1000';
-        setReactorFilter('AP1000');
+        if (searchTerm) {
+          // Came in with a query — show it against all 18 designs, not one slice.
+          if (reactorSelectEl) reactorSelectEl.value = 'ALL';
+          setReactorFilter('ALL');
+        } else {
+          // Default to a sliced cutaway view on first open (matches the standalone tool's
+          // original auto-select-AP1000-on-load behaviour) instead of leaving the flat
+          // "All 18 designs" zone map as the first thing people see.
+          if (reactorSelectEl) reactorSelectEl.value = 'AP1000';
+          setReactorFilter('AP1000');
+        }
       } catch (e) {
         console.error('[PlantExplorerDrawer] Failed to load plant data:', e);
         const hintEl = document.getElementById('hint');
         if (hintEl) hintEl.textContent = '⚠ Could not load plant data — ' + e.message;
       }
       if (loadingEl) loadingEl.style.display = 'none';
+    } else if (searchTerm) {
+      // Drawer already loaded from an earlier open — still reset to "all
+      // reactors" for a query-carrying open, rather than leaving whatever
+      // single reactor was last selected.
+      const reactorSelectEl = document.getElementById('reactor-select');
+      if (reactorSelectEl) reactorSelectEl.value = 'ALL';
+      setReactorFilter('ALL');
+    }
+
+    if (searchTerm) {
+      const capInput = document.getElementById('cap-search-input');
+      const findBtn  = document.getElementById('cap-search-btn');
+      if (capInput && findBtn) {
+        capInput.value = searchTerm;
+        findBtn.click();
+      }
     }
   }
 
