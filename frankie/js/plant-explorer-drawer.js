@@ -1065,8 +1065,19 @@ function initCapSearch() {
     const q = query.trim().toLowerCase();
     if (!q) { clearSearch(); return; }
 
-    // Find all matching index entries
-    const matched = SEARCH_INDEX.filter(e => e.label.toLowerCase().includes(q));
+    // A multi-word query (e.g. "pumps smr", carried over from the quick-search
+    // chat drawer) won't literal-substring-match any single label as a whole
+    // phrase — union the matches per significant word instead, same approach
+    // as the chat drawer's own searchMulti(). Falls back to the raw phrase
+    // for single-word queries so short/technical terms still match exactly.
+    const words = q.split(/\s+/).filter(w => w.length > 2);
+    const terms = words.length ? words : [q];
+    const seenLabels = new Map();
+    terms.forEach(term => {
+      SEARCH_INDEX.filter(e => e.label.toLowerCase().includes(term))
+        .forEach(e => seenLabels.set(e.type + '|' + e.label, e));
+    });
+    const matched = Array.from(seenLabels.values());
     if (!matched.length) { clearSearch(); return; }
 
     // Flatten all match entries, deduplicated by zone+comp+sub
