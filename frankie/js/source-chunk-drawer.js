@@ -54,6 +54,8 @@
         ['content_type',     'Content type'],
         ['regulatory_body',  'Regulatory body'],
         ['reactor_type',     'Reactor type'],
+        ['doc_category',     'Document type'],
+        ['discipline',       'Discipline'],
         ['question_id',      'Question ID'],
         ['audience',         'Audience'],
     ];

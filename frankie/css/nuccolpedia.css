@@ -7,13 +7,41 @@
 /* .np-panel now inherits the shared .assess-panel full-span width (sidebar
    edge to screen edge, 2026-08-04) — no cap needed here. */
 
-#npMain {
+/* ── Tab strip ────────────────────────────────────────────────────────── */
+.np-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line, #e5e7eb);
+  background: #fff;
+  flex-shrink: 0;
+}
+.np-tab {
+  border: none;
+  background: none;
+  padding: 10px 14px;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--muted, #65758a);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: .15s;
+}
+.np-tab:hover { color: var(--ink, #142132); }
+.np-tab--active {
+  color: var(--accent, #26a9d8);
+  border-bottom-color: var(--accent, #26a9d8);
+}
+
+#npMain, #npReactorsMain {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
   overflow: hidden;
 }
+#npMain[hidden], #npReactorsMain[hidden] { display: none; }
 
 .np-body {
   flex: 1;
@@ -163,3 +191,28 @@
   .np-body { flex-direction: column; }
   .np-filters { width: 100%; border-right: none; border-bottom: 1px solid var(--line, #e5e7eb); }
 }
+
+/* ── Reactor Documents tab ───────────────────────────────────────────── */
+.np-search-btn {
+  width: 100%;
+  margin-top: 8px;
+  background: var(--accent, #26a9d8);
+  color: #fff;
+  border-color: var(--accent, #26a9d8);
+}
+.np-search-btn:hover { opacity: .9; color: #fff; }
+
+.rk-card .np-meta-row span:not(.np-pill) {
+  color: var(--muted, #65758a);
+}
+.rk-view-btn {
+  border: none;
+  background: none;
+  color: #0c5490;
+  font-size: .76rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 2px;
+}
+.rk-view-btn:hover { text-decoration: underline; }

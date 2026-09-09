@@ -1203,9 +1203,15 @@ button.rail-card--link {
 /* ── Source Chunk Drawer (chunk-drawer-*) ──────────────────────────────────── */
 /* Shows the retrieved KB chunk's text + metadata for source types (supplier,
    regs, reactors, toolkit, fallback) that have no original document to link
-   to. Shares the hb-drawer slide-in mechanics but is its own namespace. */
+   to. Shares the hb-drawer slide-in mechanics but is its own namespace.
 
-.chunk-drawer { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+   z-index 1150, not 1000: it can now be opened from inside an .assess-drawer
+   panel (NucColpedia's Reactor Documents tab, see nuccolpedia-drawer.js) —
+   z-index 1000 left it rendering behind .assess-drawer's 1100 and looking
+   like the click did nothing. 1150 keeps it above every assess-drawer tool
+   while staying below .wr-drawer (1200). */
+
+.chunk-drawer { position: fixed; inset: 0; z-index: 1150; pointer-events: none; }
 .chunk-drawer--open  { pointer-events: all; }
 .chunk-drawer--closed .chunk-drawer-panel    { transform: translateX(100%); }
 .chunk-drawer--closed .chunk-drawer-backdrop { opacity: 0; pointer-events: none; }
