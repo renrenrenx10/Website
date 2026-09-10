@@ -1851,6 +1851,7 @@ const _isRecoveryLink = window.location.hash.includes('type=recovery');
 const labels={pcv:'Programme Country View',safety:'Safety Messages',supplierportals:'Supplier Portals',nuclearready:'NuclearReady Profile',home:'Members Home',f4n:'F4N Portal',calendar:'Events Calendar',handbook:'Business Excellence Handbook',nhandbook:'Nuclear Excellence Handbook',knowledge:'Knowledge Transfer',webinars:'Webinars & Videos',news:'Sector News',tenders:'Tenders Roundup',events:'Events Roundup',community:'Community',toolbox:'Member Toolbox',addmember:'Add Member',account:'My Account',f4njourney:'My F4N Journey'};
 function nav(id){
   if(id==='nuclearready' && window.__nuclearReadyEnabled===false){ id='home'; }
+  logEvent('view', id);
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById('sec-'+id);
   if(sec) sec.classList.add('active');
@@ -2317,6 +2318,50 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const { createClient } = supabase;
 const db = createClient(SUPA_URL, SUPA_KEY);
 
+// ════════════════════════════════════════════════════
+// USAGE ANALYTICS — logs visits, section views and toolkit
+// downloads to Supabase so SCC staff can see if the members
+// area is actually being used (added 2026-09-10). Read by the
+// Usage Analytics screen in scc.html.
+//
+// SQL — run in Supabase SQL editor before going live:
+// ───────────────────────────────────────────────────
+// CREATE TABLE IF NOT EXISTS member_events (
+//   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+//   user_id uuid REFERENCES auth.users NOT NULL,
+//   company_name text,
+//   event_type text NOT NULL,   -- 'visit' | 'login' | 'view' | 'download'
+//   detail text,                -- section id, or "code — file name" for downloads
+//   created_at timestamptz DEFAULT now()
+// );
+// CREATE INDEX IF NOT EXISTS member_events_created_idx ON member_events(created_at);
+// CREATE INDEX IF NOT EXISTS member_events_user_idx ON member_events(user_id);
+// ALTER TABLE member_events ENABLE ROW LEVEL SECURITY;
+// DROP POLICY IF EXISTS "Users can insert own events" ON member_events;
+// CREATE POLICY "Users can insert own events" ON member_events
+//   FOR INSERT WITH CHECK (auth.uid() = user_id);
+// DROP POLICY IF EXISTS "Authenticated users can view all events" ON member_events;
+// CREATE POLICY "Authenticated users can view all events" ON member_events
+//   FOR SELECT USING (auth.role() = 'authenticated');
+// -- Note: this SELECT policy lets ANY signed-in member read the event log via
+// -- the API, same trust model already used for this project's other
+// -- staff-facing tables (nr_companies, f4n tracker, actions). It relies on
+// -- scc.html's URL/login not being shared with members, not on RLS row
+// -- ownership. Tighten later with a real staff-role check if that's not
+// -- an acceptable bar for this data.
+async function logEvent(eventType, detail){
+  try{
+    const {data:{session}} = await db.auth.getSession();
+    if(!session) return;
+    await db.from('member_events').insert({
+      user_id: session.user.id,
+      company_name: session.user.user_metadata?.company || null,
+      event_type: eventType,
+      detail: detail || null
+    });
+  }catch(e){ /* analytics must never break the app */ }
+}
+
 // ── LIVE BADGES (new since last visit) ────────────────────────────────────
 const BADGE_KEY = 'nuccol_last_visit';
 
@@ -2450,6 +2495,7 @@ function redirectIfPending(){
     populateSidebar(session.user);
     loadLiveBadges();
     applyFeatureFlags();
+    logEvent('visit', 'home');
   } else {
     document.getElementById('auth-gate').style.display='flex';
     document.getElementById('shell').style.display='none';
@@ -2500,6 +2546,7 @@ db.auth.onAuthStateChange((event,session)=>{
     populateSidebar(session.user);
     loadLiveBadges();
     applyFeatureFlags();
+    logEvent('login', 'home');
     // Pass identity to Frankie tools (Evidence Vault etc.)
     localStorage.setItem('frankieUserId', session.user.id);
     localStorage.setItem('frankieUserToken', session.access_token);
@@ -3308,7 +3355,7 @@ function tbRender(tabId,query){
     cat.files.forEach(f=>{
       if(query&&!(f.c+' '+f.n).toLowerCase().includes(query))return;
       mc++;total++;
-      fh+=`<div class="tb-file"><div class="tb-file-icon tb-icon-${f.e}">${f.e.toUpperCase()}</div><div class="tb-file-info">${f.c?`<div class="tb-file-code">${f.c}</div>`:''}<div class="tb-file-name" title="${f.n}">${f.n}</div></div><a class="tb-dl-btn" href="${cat.path}${f.f}" download title="Download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a></div>`;
+      fh+=`<div class="tb-file"><div class="tb-file-icon tb-icon-${f.e}">${f.e.toUpperCase()}</div><div class="tb-file-info">${f.c?`<div class="tb-file-code">${f.c}</div>`:''}<div class="tb-file-name" title="${f.n}">${f.n}</div></div><a class="tb-dl-btn" href="${cat.path}${f.f}" download title="Download" data-dl-code="${(f.c||'').replace(/"/g,'&quot;')}" data-dl-name="${f.n.replace(/"/g,'&quot;')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></a></div>`;
     });
     if(query&&mc===0)return;
     const exp=(isOpen||query)?'expanded':'collapsed';
@@ -3318,6 +3365,12 @@ function tbRender(tabId,query){
   if(total===0)html+='<div class="tb-no-results">No files match your search.</div>';
   container.innerHTML=html+'</div>';
 }
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.tb-dl-btn');
+  if(!btn) return;
+  const code = btn.dataset.dlCode, name = btn.dataset.dlName;
+  logEvent('download', code ? `${code} — ${name}` : name);
+});
 function tbToggle(key){
   const el=document.getElementById('tb-cg-'+key);
   const hdr=el.querySelector('.tb-cat-header');
