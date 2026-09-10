@@ -16,6 +16,39 @@ function authHeaders() {
     return token ? { 'Authorization': `Bearer ${token}` } : {};
 }
 
+// ── Nuclear Engineering Mode (site-wide toggle, SCC-controlled) ────────────────
+// SCC turns this on/off for everyone in scc.html ("Website Features" panel),
+// same nr_site_settings table + key ('nuclear_mode_enabled') members.html
+// already reads for the NuclearReady/Frankie-link flags. Direct REST call
+// (not the supabase-js client) since this module has no other Supabase
+// dependency to justify loading the library — same duplicated-constants
+// convention every other Worker/Supabase-calling module in this codebase
+// already follows.
+const SUPABASE_URL = 'https://qkyvmtouwrzrcyagkheo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4';
+
+let nuclearModeCache = null; // cached for the rest of this page session once fetched
+
+async function isNuclearModeEnabled() {
+    if (nuclearModeCache !== null) return nuclearModeCache;
+    try {
+        const token = localStorage.getItem('frankieUserToken');
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/nr_site_settings?key=eq.nuclear_mode_enabled&select=value`,
+            { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token || SUPABASE_ANON_KEY}` } }
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const rows = await res.json();
+        // Fail-closed, same stance as the Frankie-link flag: an experimental,
+        // staged capability stays off unless SCC has explicitly turned it on.
+        nuclearModeCache = rows.length > 0 && rows[0].value === true;
+    } catch (e) {
+        console.warn('Frankie: nuclear_mode_enabled check failed, defaulting to off:', e);
+        nuclearModeCache = false;
+    }
+    return nuclearModeCache;
+}
+
 // ── Partition config ──────────────────────────────────────────────────────────
 
 const PARTITIONS = [
@@ -455,11 +488,12 @@ export async function getKbStats() {
 
 export async function searchKnowledgeBase(query, maxSources = 5) {
     // Reactors partition retired from default retrieval for the F4N-member soft launch —
-    // see "Frankie, Recalibrated" proposal, §02. isNuclearQuery()/NUCLEAR_SIGNALS kept
-    // in place (unused) in case a separate, explicitly-chosen "nuclear engineering" mode
-    // is built later; for now this always evaluates false so the 61k-chunk reactors KB
-    // never loads by default.
-    const nuclear = false; // was: isNuclearQuery(query)
+    // see "Frankie, Recalibrated" proposal, §02. Re-enabled 2026-09-10 as an explicit,
+    // SCC-controlled opt-in ("Nuclear Engineering Mode", scc.html → Website Features):
+    // isNuclearQuery()/NUCLEAR_SIGNALS only ever run at all when SCC has switched the
+    // site-wide flag on, and even then only pull in the 61k-chunk reactors KB for
+    // queries that actually look nuclear-engineering-flavoured — not for every message.
+    const nuclear = (await isNuclearModeEnabled()) && isNuclearQuery(query);
 
     // Load in parallel: KB chunks, vectors, graph
     const [chunks, vectors, graph] = await Promise.all([
