@@ -13,6 +13,21 @@
   // Blob-backed), not as a static relative path — see ch-proxy-worker.js.
   const KB_WORKER_URL = 'https://ch.rene-dorset.workers.dev';
   const DATA_FILE     = `${KB_WORKER_URL}/kb/be_evidence_map.json`;
+  // Added 2026-09-10: shared AI-analysis engine (Features B/F/C — see
+  // frankie_blueprint_v13.docx §10). Same rubric source assessment-drawer.js
+  // uses, so a suggested score lines up with the self-assessment's own bands.
+  const ASSESSMENT_DATA_FILE = `${KB_WORKER_URL}/kb/assessment_data.json`;
+  const ANALYSIS_TABLE = 'nr_evidence_analysis';
+  const CLAUDE_MODEL   = 'claude-sonnet-4-6';
+  // Claude reads PDFs natively as a "document" block and images as an "image"
+  // block. Word/Excel/PowerPoint uploads (still accepted for storage) have no
+  // equivalent - there's no extraction step anywhere in this codebase for
+  // them - so AI review is limited to these two types for now; anything else
+  // stays a manual-SCC-review file.
+  const ANALYSIS_MEDIA_TYPES = {
+    '.pdf': 'application/pdf',
+    '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+  };
 
   function kbAuthHeaders() {
     const token = localStorage.getItem('frankieUserToken');
@@ -20,12 +35,17 @@
   }
 
   let DATA        = null;
+  let assessmentData = null; // assessment_data.json's 'be' key, lazy-loaded (scoring rubric)
+  let companyId   = null;    // nr_companies.id for the signed-in member, fetched once per open()
   let sectionIdx  = 0;
   let uploads     = {};   // { 'sec-slug/Q1': [{name, path}] }
   let sectionExtras = {}; // { 'sec-slug': [{name, path}] } - existing files whose
                           // question can't be determined (uploaded before this
                           // file started tagging the question number in the
                           // storage filename) - shown at section level instead
+  let analysis    = {};   // { 'sec-slug/Q1': nr_evidence_analysis row } - AI read of that question's evidence
+  let analyzing   = {};   // { 'sec-slug/Q1': true } - while a review call is in flight
+  let analysisErrors = {}; // { 'sec-slug/Q1': message } - transient, cleared on next attempt; never overwrites a real analysis[key]
   let loadingUploads = false;
 
   // ── Helpers ──────────────────────────────────────────────────────────────
@@ -116,6 +136,175 @@
       method:  'DELETE',
       headers: authHeaders(token),
     });
+  }
+
+  // ── AI evidence analysis (Features B/F/C — one engine, two consumers) ───────
+  // A company runs this from the question they just uploaded to; SCC reads
+  // the same row (and can override it) from scc.html's Evidence tab. See
+  // frankie/sql/nr_evidence_analysis.sql for the shared schema.
+
+  async function getCompanyId(userId, token) {
+    if (companyId) return companyId;
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/nr_companies?member_user_id=eq.${userId}&select=id`,
+        { headers: authHeaders(token) }
+      );
+      if (!res.ok) return null;
+      const rows = await res.json();
+      companyId = (rows[0] && rows[0].id) || null;
+      return companyId;
+    } catch (e) { return null; }
+  }
+
+  async function loadAssessmentData() {
+    if (assessmentData) return assessmentData;
+    try {
+      const r = await fetch(ASSESSMENT_DATA_FILE, { headers: kbAuthHeaders() });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const all = await r.json();
+      assessmentData = all.be || {};
+    } catch (e) {
+      assessmentData = {};
+    }
+    return assessmentData;
+  }
+
+  // Evidence Vault questions are numbered 1-based per section (q.q); the
+  // assessment's own question array is 0-based. The two files are verified
+  // 1:1 aligned for BE (same section names/order/count) but that's a
+  // convention, not an enforced link - if it ever drifts this returns null
+  // rather than silently matching the wrong question.
+  function getRubric(secName, qNum) {
+    const sec = assessmentData && assessmentData[secName];
+    return (sec && sec.questions && sec.questions[qNum - 1]) || null;
+  }
+
+  async function loadExistingAnalysis(userId, token) {
+    const cid = await getCompanyId(userId, token);
+    if (!cid) return;
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/${ANALYSIS_TABLE}?company_id=eq.${cid}&assessment_type=eq.be&select=*`,
+        { headers: authHeaders(token) }
+      );
+      if (!res.ok) return;
+      const rows = await res.json();
+      analysis = {};
+      rows.forEach(r => { analysis[uploadKey(r.section, r.q)] = r; });
+    } catch (e) { /* leave analysis as-is; questions render without a result */ }
+  }
+
+  function mediaTypeFor(filename) {
+    const ext = filename.slice(filename.lastIndexOf('.')).toLowerCase();
+    return ANALYSIS_MEDIA_TYPES[ext] || null;
+  }
+
+  async function getSignedUrl(path, token) {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${BUCKET}/${path}`, {
+      method:  'POST',
+      headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ expiresIn: 60 }),
+    });
+    if (!res.ok) throw new Error('Could not access file (' + res.status + ')');
+    const data = await res.json();
+    return `${SUPABASE_URL}/storage/v1${data.signedURL}`;
+  }
+
+  async function fetchAsBase64(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Could not download file (' + res.status + ')');
+    const buf   = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary  = '';
+    const chunk = 0x8000; // avoid a stack-overflow from String.fromCharCode on a huge arg list
+    for (let i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary);
+  }
+
+  async function analyzeQuestion(secName, q, file) {
+    const key = uploadKey(secName, q.q);
+    const { userId, token } = getUser();
+
+    const mediaType = mediaTypeFor(file.name);
+    if (!mediaType) {
+      throw new Error('AI review currently only reads PDF, JPG or PNG files — this one needs manual SCC review instead.');
+    }
+
+    await loadAssessmentData();
+    const rubric = getRubric(secName, q.q);
+    if (!rubric || !rubric.options) {
+      throw new Error('Could not find the scoring rubric for this question.');
+    }
+
+    const signedUrl = await getSignedUrl(file.path, token);
+    const b64       = await fetchAsBase64(signedUrl);
+    const blockType = mediaType === 'application/pdf' ? 'document' : 'image';
+    const bands     = rubric.options.map(o => o.score + ': ' + o.desc).join('\n');
+
+    const prompt =
+      'You are assessing supplier evidence for the F4N (Fit for Nuclear) Business Excellence self-assessment.\n' +
+      'Question: ' + q.statement + '\n' +
+      'Evidence expected: ' + q.evidence_type + ' — examples: ' + q.evidence_examples.join('; ') + '\n' +
+      'Scoring bands:\n' + bands + '\n\n' +
+      'Read the attached document and decide which of the exact band scores above it actually supports — do not default to the highest band just because a document was provided; a real but weak or partial document should get a lower band. ' +
+      'Return ONLY valid JSON, no markdown: {"score": <one exact band number from the list above>, "rationale": "<2-3 sentences, specific to what this document shows or is missing>"}';
+
+    const res = await fetch(`${KB_WORKER_URL}/claude/v1/messages`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body:    JSON.stringify({
+        model: CLAUDE_MODEL,
+        max_tokens: 300,
+        temperature: 0,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: blockType, source: { type: 'base64', media_type: mediaType, data: b64 } },
+            { type: 'text', text: prompt },
+          ],
+        }],
+      }),
+    });
+    if (!res.ok) throw new Error('AI review failed (' + res.status + ')');
+
+    const data = await res.json();
+    if (data && data.usage) {
+      window.TM && window.TM.log({
+        api: 'claude', model: data.model || CLAUDE_MODEL,
+        prompt_tokens: data.usage.input_tokens || 0, completion_tokens: data.usage.output_tokens || 0,
+        source: 'frankie', note: 'evidence-vault-analysis',
+      });
+    }
+    const text  = (data && data.content && data.content[0] && data.content[0].text) || '{}';
+    const match = text.match(/\{[\s\S]*\}/);
+    let parsed;
+    try { parsed = JSON.parse(match ? match[0] : text); }
+    catch (e) { throw new Error('AI returned an unexpected format — try again.'); }
+
+    const cid = await getCompanyId(userId, token);
+    if (!cid) throw new Error('Could not identify your company record — is your account linked to a company yet?');
+
+    const row = {
+      company_id: cid, assessment_type: 'be', section: secName, q: q.q,
+      evidence_storage_path: file.path,
+      ai_suggested_score: parsed.score, ai_rationale: parsed.rationale,
+      ai_model: data.model || CLAUDE_MODEL, status: 'analyzed',
+    };
+
+    const saveRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/${ANALYSIS_TABLE}?on_conflict=company_id,assessment_type,section,q,evidence_storage_path`,
+      {
+        method:  'POST',
+        headers: { ...authHeaders(token), 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=representation' },
+        body:    JSON.stringify(row),
+      }
+    );
+    const saved = saveRes.ok ? await saveRes.json().catch(() => null) : null;
+    analysis[key] = (saved && saved[0]) || row;
+    return analysis[key];
   }
 
   // ── DOM ───────────────────────────────────────────────────────────────────
@@ -236,6 +425,7 @@
       const del = document.getElementById(`ev-del-${key}`);
       if (del) del.addEventListener('click', () => handleDelete(secName, q));
     });
+    bindAnalyzeButtons(secName, questions);
 
     bindExistingBlock(secName);
 
@@ -320,9 +510,81 @@
             ${hasFile ? '+ Add another' : '📎 Upload evidence'}
             <input id="ev-input-${key}" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png" multiple hidden>
           </label>
+          ${hasFile ? `<button class="ev-analyze-btn" data-key="${key}" type="button">🤖 AI review</button>` : ''}
         </div>
         <div class="ev-upload-status" id="ev-status-${key}"></div>
+        <div id="ev-analysis-${key}">${renderAnalysis(key)}</div>
       </div>`;
+  }
+
+  // Company-facing half of the shared engine (Feature F): show what the AI
+  // made of the evidence already on file, so the company can fix gaps before
+  // the SCC ever opens the file. SCC's own view of the same row lives in
+  // scc.html (Feature B); this is intentionally read-only here — an
+  // scc_override_score means SCC has already looked and adjusted it, and a
+  // company re-running AI review would just overwrite ai_* fields, not the
+  // override, so nothing is lost either way.
+  function renderAnalysis(key) {
+    if (analyzing[key]) return '<div class="ev-analysis ev-analysis--loading">🤖 Reading your evidence…</div>';
+    if (analysisErrors[key]) return `<div class="ev-analysis ev-analysis--error">⚠️ ${analysisErrors[key]}</div>`;
+
+    const a = analysis[key];
+    if (!a) return '';
+
+    const scoreShown = (a.scc_override_score !== null && a.scc_override_score !== undefined)
+      ? a.scc_override_score : a.ai_suggested_score;
+    const overrideNote = (a.scc_override_score !== null && a.scc_override_score !== undefined)
+      ? '<div class="ev-analysis-override">Reviewed and scored by your SCC.</div>' : '';
+
+    return `
+      <div class="ev-analysis">
+        <div class="ev-analysis-head">
+          <span class="ev-analysis-badge ev-analysis-badge--${scoreBand(scoreShown)}">AI suggested: ${scoreShown}</span>
+        </div>
+        <div class="ev-analysis-rationale">${a.ai_rationale || ''}</div>
+        ${overrideNote}
+      </div>`;
+  }
+
+  function scoreBand(score) {
+    if (score >= 7) return 'high';
+    if (score >= 2) return 'mid';
+    return 'low';
+  }
+
+  // ── AI review button ──────────────────────────────────────────────────────
+
+  function bindAnalyzeButtons(secName, questions) {
+    questions.forEach(q => {
+      const key = uploadKey(secName, q.q);
+      const btn = document.getElementById('ev-q-' + key) &&
+                  document.getElementById('ev-q-' + key).querySelector('.ev-analyze-btn');
+      if (btn) btn.addEventListener('click', () => handleAnalyze(secName, q));
+    });
+  }
+
+  async function handleAnalyze(secName, q) {
+    const key   = uploadKey(secName, q.q);
+    const files = uploads[key] || [];
+    const file  = files[files.length - 1]; // most recently uploaded file for this question
+    if (!file || analyzing[key]) return;
+
+    analyzing[key] = true;
+    delete analysisErrors[key];
+    const box = document.getElementById('ev-analysis-' + key);
+    if (box) box.innerHTML = renderAnalysis(key);
+
+    try {
+      await analyzeQuestion(secName, q, file); // updates analysis[key] on success
+    } catch (err) {
+      // Leave any previous successful analysis[key] untouched - a transient
+      // failure on re-review shouldn't destroy a good prior result.
+      analysisErrors[key] = err.message;
+    } finally {
+      analyzing[key] = false;
+      const box2 = document.getElementById('ev-analysis-' + key);
+      if (box2) box2.innerHTML = renderAnalysis(key);
+    }
   }
 
   // ── Upload / Delete ───────────────────────────────────────────────────────
@@ -365,6 +627,7 @@
       qEl.outerHTML = renderQuestion(secName, q);
       const newInput = document.getElementById('ev-input-' + key);
       if (newInput) newInput.addEventListener('change', ev => handleUpload(ev, secName, q));
+      bindAnalyzeButtons(secName, [q]);
     }
 
     // Bind delete buttons
@@ -396,6 +659,7 @@
         qEl.outerHTML = renderQuestion(secName, q);
         const input = document.getElementById('ev-input-' + key);
         if (input) input.addEventListener('change', ev => handleUpload(ev, secName, q));
+        bindAnalyzeButtons(secName, [q]);
         document.querySelectorAll('.ev-file-del').forEach(btn => {
           btn.addEventListener('click', () => {
             handleDeleteByKey(btn.dataset.key, +btn.dataset.fi, secName);
@@ -532,10 +796,15 @@
     // open→close→open would double up every file already shown).
     uploads = {};
     sectionExtras = {};
+    analysis = {};
+    analyzing = {};
+    analysisErrors = {};
+    companyId = null;
 
     sectionIdx = 0;
     renderSection();
     loadExistingUploads().then(() => renderSection());
+    loadExistingAnalysis(userId, token).then(() => renderSection());
   }
 
   function close() {

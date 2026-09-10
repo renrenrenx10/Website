@@ -266,6 +266,54 @@
 .ev-upload-status--loading { color: #0369a1; }
 .ev-upload-status--error   { color: #dc2626; }
 
+/* AI review (Features B/F/C shared engine) */
+.ev-analyze-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1.5px solid #93c5fd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d4ed8;
+  cursor: pointer;
+  background: #eff6ff;
+  transition: border-color .15s, background .15s;
+}
+.ev-analyze-btn:hover { border-color: #1d4ed8; background: #dbeafe; }
+
+.ev-analysis {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 13px;
+}
+.ev-analysis--loading { color: #0369a1; border-color: #bae6fd; background: #f0f9ff; }
+.ev-analysis--error   { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+
+.ev-analysis-head { margin-bottom: 6px; }
+.ev-analysis-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.ev-analysis-badge--high { background: #dcfce7; color: #166534; }
+.ev-analysis-badge--mid  { background: #fef3c7; color: #92400e; }
+.ev-analysis-badge--low  { background: #fee2e2; color: #991b1b; }
+
+.ev-analysis-rationale { color: #334155; line-height: 1.5; }
+.ev-analysis-override {
+  margin-top: 6px;
+  font-size: 12px;
+  font-style: italic;
+  color: #6b7280;
+}
+
 /* Footer */
 .ev-footer {
   display: flex;
