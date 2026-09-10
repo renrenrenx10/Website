@@ -22,6 +22,10 @@
   let DATA        = null;
   let sectionIdx  = 0;
   let uploads     = {};   // { 'sec-slug/Q1': [{name, path}] }
+  let sectionExtras = {}; // { 'sec-slug': [{name, path}] } - existing files whose
+                          // question can't be determined (uploaded before this
+                          // file started tagging the question number in the
+                          // storage filename) - shown at section level instead
   let loadingUploads = false;
 
   // ── Helpers ──────────────────────────────────────────────────────────────
@@ -56,7 +60,12 @@
     if (!userId || !token) throw new Error('Not authenticated');
 
     const safe = file.name.replace(/[^a-zA-Z0-9._\-() ]/g, '_');
-    const path = `${userId}/${slugify(secName)}/${safe}`;
+    // Tag the question number into the storage filename (Q{n}__{name}) so a
+    // later reopen can restore exactly which question this file belongs to
+    // - the storage path itself has no other field for that. Files uploaded
+    // before this tagging existed have no prefix and fall back to a
+    // section-level "existing files" list instead (see loadExistingUploads).
+    const path = `${userId}/${slugify(secName)}/Q${qNum}__${safe}`;
 
     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
       method:  'POST',
@@ -214,6 +223,7 @@
 
     document.getElementById('evBody').innerHTML = `
       <div class="ev-section-title">${secName}</div>
+      ${renderExistingBlock(secName)}
       <div class="ev-questions">
         ${questions.map(q => renderQuestion(secName, q)).join('')}
       </div>`;
@@ -227,6 +237,8 @@
       if (del) del.addEventListener('click', () => handleDelete(secName, q));
     });
 
+    bindExistingBlock(secName);
+
     // Nav buttons
     const last = sections().length - 1;
     document.getElementById('evPrev').style.visibility = sectionIdx === 0 ? 'hidden' : 'visible';
@@ -236,6 +248,43 @@
     } else {
       document.getElementById('evNext').onclick = () => navigate(1);
     }
+  }
+
+  // Files that exist for this section but can't be matched to a specific
+  // question (uploaded before question-tagging existed - see
+  // loadExistingUploads). Shown once per section, above the question list.
+  function renderExistingBlock(secName) {
+    const slug  = slugify(secName);
+    const files = sectionExtras[slug] || [];
+    if (!files.length) return '';
+
+    const chips = files.map((f, fi) => `
+      <span class="ev-file-chip">
+        <span class="ev-file-name">📄 ${f.name}</span>
+        <button class="ev-file-del" data-extra-fi="${fi}" type="button" title="Remove">✕</button>
+      </span>`).join('');
+
+    return `
+      <div class="ev-existing-block">
+        <div class="ev-existing-label">📂 Already uploaded to this section (${files.length})</div>
+        <div class="ev-upload-row">${chips}</div>
+      </div>`;
+  }
+
+  function bindExistingBlock(secName) {
+    document.querySelectorAll('.ev-existing-block .ev-file-del').forEach(btn => {
+      btn.addEventListener('click', () => handleDeleteExtra(secName, +btn.dataset.extraFi));
+    });
+  }
+
+  async function handleDeleteExtra(secName, fi) {
+    const slug  = slugify(secName);
+    const files = sectionExtras[slug] || [];
+    const file  = files[fi];
+    if (!file) return;
+    try { await deleteFile(file.path); } catch (_) {}
+    files.splice(fi, 1);
+    renderSection();
   }
 
   function renderQuestion(secName, q) {
@@ -363,20 +412,26 @@
     if (loadingUploads || !DATA) return;
     loadingUploads = true;
 
+    const { userId } = getUser();
     const secNames = sections();
     for (const secName of secNames) {
+      const slug = slugify(secName);
       try {
         const files = await listFiles(secName);
         files.forEach(f => {
-          const { userId } = getUser();
-          const namePart   = f.name;
-          const path       = `${userId}/${slugify(secName)}/${namePart}`;
-
-          // Map to a question — best effort by filename, otherwise assign to Q1 of section
-          // Store as unassigned if we can't determine question
-          const key = slugify(secName) + '/unassigned';
-          if (!uploads[key]) uploads[key] = [];
-          uploads[key].push({ name: namePart, path });
+          const path  = `${userId}/${slug}/${f.name}`;
+          const match = f.name.match(/^Q(\d+)__(.+)$/);
+          if (match) {
+            // Tagged with a question number at upload time - restore it exactly.
+            const key = uploadKey(secName, +match[1]);
+            if (!uploads[key]) uploads[key] = [];
+            uploads[key].push({ name: match[2], path });
+          } else {
+            // Uploaded before question-tagging existed - no way to know which
+            // question it belongs to, so surface it at the section level.
+            if (!sectionExtras[slug]) sectionExtras[slug] = [];
+            sectionExtras[slug].push({ name: f.name, path });
+          }
         });
       } catch (_) {}
     }
@@ -390,6 +445,7 @@
     let totalQ     = 0;
     let doneQ      = 0;
     let totalFiles = 0;
+    let extraFiles = 0;
 
     const rows = secNames.map(secName => {
       const qs = DATA[secName];
@@ -400,6 +456,7 @@
       totalQ     += qs.length;
       doneQ      += secDone.length;
       totalFiles += secDone.reduce((n, q) => n + (uploads[uploadKey(secName, q.q)] || []).length, 0);
+      extraFiles += (sectionExtras[slugify(secName)] || []).length;
 
       return `<div class="ev-sum-row">
         <div class="ev-sum-sec">${secName}</div>
@@ -409,6 +466,7 @@
       </div>`;
     }).join('');
 
+    totalFiles += extraFiles;
     const pct = Math.round((doneQ / totalQ) * 100);
 
     document.getElementById('evBody').innerHTML = `
@@ -416,7 +474,7 @@
         <div class="ev-sum-hero">
           <div class="ev-sum-pct">${pct}%</div>
           <div class="ev-sum-label">Evidence uploaded</div>
-          <div class="ev-sum-sub">${doneQ} of ${totalQ} questions have documents · ${totalFiles} file${totalFiles !== 1 ? 's' : ''} total</div>
+          <div class="ev-sum-sub">${doneQ} of ${totalQ} questions have documents · ${totalFiles} file${totalFiles !== 1 ? 's' : ''} total${extraFiles ? ` (${extraFiles} not yet linked to a question — see each section)` : ''}</div>
         </div>
         <div class="ev-sum-rows">${rows}</div>
         <p class="ev-sum-note">Your evidence is saved securely. Your SCC can access it when your assessment is scheduled.</p>
@@ -468,9 +526,16 @@
     const ok = await loadData();
     if (!ok) return;
 
+    // Rebuild from the server fresh on every open, rather than appending to
+    // whatever's left over from a previous open() this page session (uploads/
+    // sectionExtras are module-level state, so without this a repeat
+    // open→close→open would double up every file already shown).
+    uploads = {};
+    sectionExtras = {};
+
     sectionIdx = 0;
     renderSection();
-    loadExistingUploads().then(() => renderSectionBar());
+    loadExistingUploads().then(() => renderSection());
   }
 
   function close() {
