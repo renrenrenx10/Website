@@ -1,5 +1,75 @@
 # Frankie changelog
 
+## 2026-09-11 — Self-assessment answers persist, and link to Evidence Vault
+
+Closes the gap flagged in `frankie_blueprint_v14.docx` §10: `assessment-drawer.js`
+kept every answer in memory only, so closing the drawer lost all progress and
+there was no way to compare a self-declared score against the AI's read of
+the evidence for the same question.
+
+Decided with Rene: Frankie's self-assessment is a **practice** exercise —
+the real submission happens in the separate F4N portal, which has no API to
+push scores to. So the fix isn't "sync to the portal," it's "make the
+practice run persist, and connect it to evidence gathering," so a company's
+practice answers, evidence uploads, and AI feedback all build toward the
+same OSV prep rather than living in three disconnected places.
+
+**Answers now persist per question.** New table `nr_self_assessment_answers`
+(`frankie/sql/nr_self_assessment_answers.sql`) keyed by
+`(company_id, assessment_type, section, q)` — the same `(section, q)`
+convention `nr_evidence_analysis` already uses, with `q` 1-based to match.
+Reopening the drawer (or coming back in a later session) now restores prior
+answers instead of starting over. Unlike `nr_evidence_analysis`, SCC gets
+read-only access here — no override policy — since the real score gets
+verified at the actual assessment, not adjusted by SCC inside Frankie.
+Writes are fire-and-forget (never block the click, never throw back to the
+UI) — a failed save just leaves that answer session-only, same
+graceful-degrade shape Evidence Vault's own writes already use.
+
+**Cross-link into Evidence Vault.** Each question in the self-assessment (BE
+only, for now — Evidence Vault has no f4n data yet) gets a
+"📎 Attach evidence for this answer →" link. `EvidenceVault.open()` now takes
+optional `(secName, qNum)` args, jumps straight to that section, and scrolls
+to + briefly highlights that question's card — no new plumbing needed for
+the link itself, since the two tools' question keys already lined up 1:1.
+
+**Why this matters for the Pre-OSV Pack (Feature C):** once both a
+self-declared score and an evidence AI score exist under the same key, the
+Pre-OSV Pack can show the comparison it was missing, instead of just the AI
+read on its own. Not built this session — the schema now supports it,
+building the comparison view is the next piece.
+
+### Files touched
+- `frankie/sql/nr_self_assessment_answers.sql` — new. Needs to be run in the
+  Supabase SQL editor before this reaches production (same "documented, not
+  yet confirmed run" status as the `member_events` table added 2026-09-10 —
+  worth checking both at once).
+- `frankie/js/assessment-drawer.js` — Supabase persistence
+  (`getCompanyId`/`loadAnswers`/`saveAnswer`), evidence cross-link button +
+  handler.
+- `frankie/js/evidence-vault-drawer.js` — `open()` accepts an optional jump
+  target, `scrollToJump()` helper.
+- `frankie/css/styles.css` — `.assess-evidence-link`.
+- `frankie/css/evidence-vault.css` — `.ev-question--jump-highlight`.
+
+### Not done this session
+- No UI change to the results screen yet — it still shows section-level %
+  only, not a per-question list. Rene's own framing of the deliverable
+  ("a list of scores the user enters onto the portal") argues for a
+  transcription-friendly per-question list there — flagged as the natural
+  next step, not built now to keep this change reviewable on its own.
+- Self-declared vs AI-score comparison view (the Pre-OSV Pack payoff above)
+  — data model is ready, view isn't built.
+- F4N evidence linking — no `f4n_evidence_map.json` equivalent exists, so
+  the cross-link is BE-only until one does.
+
+### Verified
+- `node --check` on both edited JS files — no syntax errors.
+- Supabase URL/anon key in `assessment-drawer.js` byte-compared against
+  `evidence-vault-drawer.js`'s copy — same project.
+- Not live-tested against Supabase (no running session available in this
+  pass) — the new table needs to actually exist first; see above.
+
 ## 2026-08-05 — Hero landing page + Frankie Chat menu entry
 
 Frankie no longer drops straight into the chat UI on load. The main panel

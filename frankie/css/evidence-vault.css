@@ -114,6 +114,11 @@
   border-color: #86efac;
   background: #f0fdf4;
 }
+.ev-question--jump-highlight {
+  border-color: #29b6e8;
+  box-shadow: 0 0 0 3px rgba(41, 182, 232, .25);
+  transition: border-color .3s, box-shadow .3s;
+}
 
 /* Question header */
 .ev-q-header {

@@ -20,6 +20,102 @@
         return token ? { 'Authorization': `Bearer ${token}` } : {};
     }
 
+    // ── Supabase persistence (added 2026-09-11) ──────────────────────────────
+    // Self-declared answers now persist per (company, assessment_type, section,
+    // q) so reopening the drawer restores prior progress instead of starting
+    // over, and so SCC's Pre-OSV Pack can compare a self-declared score
+    // against the AI's read of the evidence for the same question (see
+    // frankie/sql/nr_self_assessment_answers.sql). Same Supabase project/keys
+    // as evidence-vault-drawer.js. q is 1-based here to match
+    // nr_evidence_analysis's convention (qIdx + 1) — NOT the 0-based question
+    // array index answerKey() below uses internally.
+    const SUPABASE_URL  = 'https://qkyvmtouwrzrcyagkheo.supabase.co';
+    const ANON_KEY       = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4';
+    const ANSWERS_TABLE = 'nr_self_assessment_answers';
+
+    function getUser() {
+        return {
+            userId: localStorage.getItem('frankieUserId'),
+            token:  localStorage.getItem('frankieUserToken'),
+        };
+    }
+
+    function supaHeaders(token) {
+        return { 'Authorization': 'Bearer ' + (token || ANON_KEY), 'apikey': ANON_KEY };
+    }
+
+    let companyId = null; // nr_companies.id for the signed-in member, cached per open()
+
+    async function getCompanyId(userId, token) {
+        if (companyId) return companyId;
+        try {
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/nr_companies?member_user_id=eq.${userId}&select=id`,
+                { headers: supaHeaders(token) }
+            );
+            if (!res.ok) return null;
+            const rows = await res.json();
+            companyId = (rows[0] && rows[0].id) || null;
+            return companyId;
+        } catch (e) { return null; }
+    }
+
+    // Restores state.answers from Supabase. Silently leaves things
+    // in-memory-only if the member has no linked company yet - same
+    // graceful-degrade shape evidence-vault-drawer.js uses.
+    async function loadAnswers(type) {
+        const { userId, token } = getUser();
+        if (!userId || !token) return;
+        const cid = await getCompanyId(userId, token);
+        if (!cid) return;
+        try {
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/${ANSWERS_TABLE}?company_id=eq.${cid}&assessment_type=eq.${type}&select=section,q,option_idx`,
+                { headers: supaHeaders(token) }
+            );
+            if (!res.ok) return;
+            const rows = await res.json();
+            const secNames = sections().map(([name]) => name);
+            rows.forEach(r => {
+                const sIdx = secNames.indexOf(r.section);
+                if (sIdx === -1) return; // section renamed/removed since this row was written
+                state.answers[answerKey(sIdx, r.q - 1)] = r.option_idx;
+            });
+        } catch (e) { /* leave state.answers as-is; questions render unanswered */ }
+    }
+
+    // Fire-and-forget: never blocks the click that triggered it, never throws
+    // out to the caller. A failed save just means the answer stays
+    // session-only.
+    function saveAnswer(sIdx, qIdx, oIdx) {
+        const entry = sections()[sIdx];
+        if (!entry) return;
+        const [secName, sec] = entry;
+        const opt = sec.questions[qIdx] && sec.questions[qIdx].options[oIdx];
+        if (!opt) return;
+
+        (async () => {
+            const { userId, token } = getUser();
+            if (!userId || !token) return;
+            const cid = await getCompanyId(userId, token);
+            if (!cid) return;
+            try {
+                await fetch(
+                    `${SUPABASE_URL}/rest/v1/${ANSWERS_TABLE}?on_conflict=company_id,assessment_type,section,q`,
+                    {
+                        method:  'POST',
+                        headers: { ...supaHeaders(token), 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+                        body:    JSON.stringify({
+                            company_id: cid, assessment_type: state.type,
+                            section: secName, q: qIdx + 1,
+                            option_idx: oIdx, score: opt.score,
+                        }),
+                    }
+                );
+            } catch (e) { /* answer stays in local state; not fatal */ }
+        })();
+    }
+
     const TYPE_LABELS = {
         be:  'Business Excellence',
         f4n: 'Fit for Nuclear',
@@ -166,6 +262,7 @@
     function switchType(type) {
         state = { type, sectionIdx: 0, answers: {} };
         renderAll();
+        loadAnswers(type).then(renderAll);
     }
 
     function navigate(dir) {
@@ -280,6 +377,14 @@
 
             html += `</div>`;
 
+            // Cross-link into Evidence Vault at this exact question - the two
+            // tools share the same (section, q) keying (see
+            // frankie/sql/nr_evidence_analysis.sql). BE-only for now: Evidence
+            // Vault's data (be_evidence_map.json) has no f4n counterpart yet.
+            if (state.type === 'be') {
+                html += `<button class="assess-evidence-link" data-qidx="${qIdx}" type="button">📎 Attach evidence for this answer →</button>`;
+            }
+
             // Show feedback for selected option
             if (selected !== undefined) {
                 const opt = q.options[selected];
@@ -304,8 +409,17 @@
                 const oIdx = parseInt(btn.dataset.oidx);
                 const key  = answerKey(state.sectionIdx, qIdx);
                 state.answers[key] = oIdx;
+                saveAnswer(state.sectionIdx, qIdx, oIdx);
                 renderSection();
                 renderSectionBar();
+            });
+        });
+
+        // Evidence Vault cross-link
+        body.querySelectorAll('.assess-evidence-link').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const qIdx = parseInt(btn.dataset.qidx);
+                if (window.EvidenceVault) window.EvidenceVault.open(sectionName, qIdx + 1);
             });
         });
     }
@@ -415,8 +529,10 @@
         }
 
         state = { type: type || 'be', sectionIdx: 0, answers: {} };
+        companyId = null; // rebuild fresh each open, same reasoning as evidence-vault-drawer.js
         renderAll();
         document.getElementById('assessFooter').style.display = 'flex';
+        loadAnswers(state.type).then(renderAll);
     }
 
     function close() {

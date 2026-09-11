@@ -2,6 +2,10 @@
 // Lets companies upload evidence documents against each BE question.
 // Files go to Supabase Storage: evidence-docs/{userId}/{section-slug}/filename
 // Triggered via: window.EvidenceVault.open()
+// Optional jump target (added 2026-09-11, used by assessment-drawer.js's
+// "Attach evidence for this answer" link): window.EvidenceVault.open(secName, qNum)
+// opens straight to that section, scrolled to and briefly highlighting that
+// question's card.
 
 (function () {
   'use strict';
@@ -761,7 +765,16 @@
 
   // ── Open / Close ──────────────────────────────────────────────────────────
 
-  async function open() {
+  function scrollToJump(secName, qNum) {
+    if (!secName || !qNum) return;
+    const el = document.getElementById('ev-q-' + uploadKey(secName, qNum));
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('ev-question--jump-highlight');
+    setTimeout(() => el.classList.remove('ev-question--jump-highlight'), 2000);
+  }
+
+  async function open(jumpSection, jumpQ) {
     inject();
 
     const drawer = document.getElementById('ev-drawer');
@@ -801,8 +814,10 @@
     analysisErrors = {};
     companyId = null;
 
-    sectionIdx = 0;
+    const jumpIdx = jumpSection ? sections().indexOf(jumpSection) : -1;
+    sectionIdx = jumpIdx >= 0 ? jumpIdx : 0;
     renderSection();
+    scrollToJump(jumpSection, jumpQ);
     loadExistingUploads().then(() => renderSection());
     loadExistingAnalysis(userId, token).then(() => renderSection());
   }
