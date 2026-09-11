@@ -127,6 +127,27 @@
     color: rgba(255,255,255,0.7);
 }
 
+.access-signout-btn {
+    margin-top: 8px;
+    width: 100%;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    color: rgba(255,255,255,0.55);
+    font-size: 11px;
+    padding: 5px 10px;
+    cursor: pointer;
+    text-align: center;
+}
+.access-signout-btn:hover {
+    border-color: rgba(255,255,255,0.35);
+    color: #fff;
+}
+.access-signout-btn:disabled {
+    cursor: default;
+    opacity: .6;
+}
+
 /* ── Context indicator ───────────────────────────────────────────────────────── */
 .context-badge {
     display: inline-block;

@@ -1,5 +1,33 @@
 # Frankie changelog
 
+## 2026-09-11 — Sign out
+
+**Bug: no way to log out of Frankie.** The auth-gate added 2026-08-04
+(`frankie/index.html`) only ever checked *for* a Supabase session and
+redirected to login if one was missing — nothing anywhere called
+`auth.signOut()`. So the page just kept re-authenticating on every visit for
+as long as the browser held a valid session, with no escape hatch. Reported
+live by Rene.
+
+Fix: a "Sign out" button in the sidebar's Access box (the account-status
+area, right below the brand mark) that signs out of Supabase, clears the
+`frankieUserId`/`frankieUserToken`/`frankieCompanyName` identity keys other
+Frankie tools read (members.html's own `SIGNED_OUT` listener already does
+this, but that listener only runs on members.html itself, not here — it
+never fires from inside Frankie), and sends the user back to
+`../members.html`.
+
+### Files touched
+- `frankie/index.html` — Access box markup, new `initSignOut()` script block.
+- `frankie/css/styles.css` — `.access-signout-btn`.
+
+### Verified
+- Tag-balance check (div/script/nav/aside/button/main/section, all
+  open==close) and `</html>` present — no truncation.
+- Not live-tested end to end (no test member credentials available in this
+  session) — worth a real click-through after this deploys to confirm the
+  redirect and that a subsequent visit actually asks for login again.
+
 ## 2026-09-11 — Self-assessment answers persist, and link to Evidence Vault
 
 Closes the gap flagged in `frankie_blueprint_v14.docx` §10: `assessment-drawer.js`
