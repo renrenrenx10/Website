@@ -579,14 +579,19 @@
         // flagged as not built when the underlying persistence/cross-link
         // work landed earlier today - section-level, not per-question, per
         // Rene: "it doesn't need every question, just the sections."
-        const sectionRows = sections().map(([name], i) => {
+        // rows keeps the assessment's own canonical section order (used by
+        // the score guide below); sectionRows is a worst-first sorted copy
+        // for the breakdown/priority lists - .sort() mutates in place, so
+        // it has to run on a copy, not rows itself.
+        const rows = sections().map(([name], i) => {
             const s = sectionScore(i);
             const sp = pct(s.score, s.max);
             const sc = scoreColour(sp);
             const ai = state.type === 'be' ? aiSectionScore(i) : { count: 0 };
             const aiPct = ai.count ? pct(ai.score, ai.max) : null;
             return { name, ...s, pct: sp, col: sc, aiPct, aiCount: ai.count, idx: i };
-        }).sort((a,b) => a.pct - b.pct);
+        });
+        const sectionRows = [...rows].sort((a,b) => a.pct - b.pct);
 
         let html = `
           <div class="assess-results">
@@ -600,6 +605,8 @@
                 <div class="assess-results-sub">Overall score · ${TYPE_LABELS[state.type]}</div>
               </div>
             </div>
+
+            <button class="assess-guide-link" id="assessGuideLink" type="button">📋 View F4N Portal Score Guide →</button>
 
             <h4 class="assess-results-section-hd">Section breakdown</h4>
             <p class="assess-results-section-note">Click a section to jump back in and edit it. "AI" is the evidence read from Evidence Vault, where any has been reviewed.</p>
@@ -633,11 +640,49 @@
             });
         });
 
+        document.getElementById('assessGuideLink').addEventListener('click', () => {
+            renderScoreGuide(rows, { score, max, p });
+        });
+
         document.getElementById('assessRestart').addEventListener('click', () => {
             state = { type: state.type, sectionIdx: 0, answers: {} };
             renderAll();
             document.getElementById('assessFooter').style.display = 'flex';
         });
+    }
+
+    // Portal Score Guide (added 2026-09-11) - what Rene actually asked for
+    // under "the summary": a plain list, in the assessment's own natural
+    // section order (not the worst-first order the breakdown above uses),
+    // of the self-declared score to type into the real F4N portal - that
+    // portal has no API Frankie can push to, so this is a read-it-off-and-
+    // type-it-in sheet, not a submission. AI evidence read shown alongside
+    // each row as a secondary reference only, since it's not itself what
+    // goes on the portal.
+    function renderScoreGuide(rows, totals) {
+        const body = document.getElementById('assessBody');
+        const title = document.getElementById('assessTitle');
+        if (!body) return;
+
+        title.textContent = `${TYPE_LABELS[state.type]} — Portal Score Guide`;
+
+        const html = `
+          <div class="assess-guide">
+            <button class="assess-guide-back" id="assessGuideBack" type="button">← Back to results</button>
+            <p class="assess-guide-note">Enter these section scores into the F4N portal's own self-assessment. Listed in the same order as this assessment - not sorted worst-first like the Results breakdown.</p>
+            <div class="assess-guide-rows">
+              ${rows.map(r => `
+                <div class="assess-guide-row">
+                  <div class="assess-guide-row-name">${esc(r.name)}</div>
+                  <div class="assess-guide-row-score">${r.score}/${r.max} <span class="assess-guide-row-pct">(${r.pct}%)</span></div>
+                  <div class="assess-guide-row-ai">${r.aiPct !== null ? `AI read: ${r.aiPct}%` : ''}</div>
+                </div>`).join('')}
+            </div>
+            <div class="assess-guide-total">Overall: ${totals.score}/${totals.max} (${totals.p}%)</div>
+          </div>`;
+
+        body.innerHTML = html;
+        document.getElementById('assessGuideBack').addEventListener('click', renderResults);
     }
 
     // ── Utils ──────────────────────────────────────────────────────────────────

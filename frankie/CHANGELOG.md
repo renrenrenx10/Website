@@ -1,5 +1,35 @@
 # Frankie changelog
 
+## 2026-09-11 — F4N Portal Score Guide
+
+Closes the loop on the self-assessment work from today: Rene confirmed
+"the score guide" is the feature discussed earlier in the design
+conversation — a plain list the company reads off and types into the real
+F4N portal's own self-assessment (that portal has no API Frankie can push
+scores to, so this was always going to be transcribe-by-hand rather than a
+submission).
+
+New "📋 View F4N Portal Score Guide →" button on the Results screen. Opens
+a dedicated list-view, in the assessment's own natural section order (not
+the worst-first order the breakdown above it uses - a portal form is laid
+out in a fixed order, not by how badly you scored), showing the
+self-declared score per section (what actually goes on the portal) with
+the AI evidence read alongside each row as a secondary reference only,
+since that number isn't itself what gets entered anywhere. "← Back to
+results" returns to the normal Results screen.
+
+### Files touched
+- `frankie/js/assessment-drawer.js` — `renderScoreGuide()`, guide-link
+  button on Results, `rows` (canonical order) kept alongside the existing
+  worst-first `sectionRows` rather than re-deriving it.
+- `frankie/css/styles.css` — `.assess-guide-link` and the `.assess-guide-*`
+  block.
+
+### Verified
+- `node --check` — no syntax errors.
+- Brace-balance check on `styles.css` (703/703).
+- Not live-tested end to end (no test member credentials in this session).
+
 ## 2026-09-11 — Uploaded evidence visible in the assessment, section-level AI comparison on Results
 
 Two more from Rene testing live.
