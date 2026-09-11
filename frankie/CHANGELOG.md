@@ -1,5 +1,43 @@
 # Frankie changelog
 
+## 2026-09-11 — Compliance Quiz: "Why this matters," not just the rule
+
+Rene's framing: parroting the requirement back is only half the job for
+something meant to educate, not just gate a pass/fail — knowing *why* a
+rule exists is what actually sticks. Also noted there was plenty of unused
+space on the question screen, so don't be shy about adding more.
+
+Every question got a new `why` field — genuine reasoning grounded in the
+source document's own "Introduction" sections (which explain the risk each
+control addresses) plus, for the admin-account question, NCSC's own
+ransomware example (an admin account opening a malicious attachment let
+ransomware encrypt far more of the network than a standard account could
+have reached) rather than anything invented. Rendered as its own visually
+distinct amber card — "💡 Why this matters" — deliberately not folded into
+the existing green/red explanation box, so it reads as a second, different
+kind of information (reasoning, not verdict) rather than a longer version
+of the same paragraph. Shows in both the per-question view and the results
+summary, so the recap afterward stays as complete as the quiz itself.
+
+### Files touched
+- `frankie/data/compliance_quiz_data.json` — `why` field added to all 10
+  questions.
+- `frankie/js/compliance-quiz-drawer.js` — renders `why` in both
+  `renderQuestion()` and the results summary rows.
+- `frankie/css/styles.css` — `.quiz-why` / `.quiz-why-label` /
+  `.quiz-why-body` (per-question) and `.quiz-summary-why` (results),
+  amber rather than red/green so it doesn't compete with the
+  correct/incorrect colour language already established.
+
+### Verified
+- `node --check`, JSON validation (`json.load` + confirmed all 10
+  questions have a `why` field), brace-balance check.
+- **Live-tested again in a real browser**: confirmed the amber "Why this
+  matters" card renders correctly and distinctly from the green/red
+  explanation box on the per-question view, played through all 10
+  questions again to confirm the same block appears in the results
+  summary for every row. No console errors.
+
 ## 2026-09-11 — Compliance Quiz polish: bigger question, source references, results recap
 
 Four rounds of live feedback from Rene testing the Cyber Essentials quiz,

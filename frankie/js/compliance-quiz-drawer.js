@@ -166,6 +166,18 @@
                         <strong>${correct ? '✓ Correct.' : '✗ Not quite.'}</strong> ${esc(q.explanation)}
                         ${q.reference ? `<div class="quiz-reference">📖 ${esc(q.reference)}</div>` : ''}
                       </div>`;
+            // The rule on its own is "what" - this is "why", added 2026-09-11
+            // per Rene: parroting the requirement is only half the job for
+            // something meant to educate, not just gate a pass/fail. Kept as
+            // its own visually distinct block (not folded into the
+            // explanation above) so it reads as a second, different kind of
+            // information, not more of the same paragraph.
+            if (q.why) {
+                html += `<div class="quiz-why">
+                            <div class="quiz-why-label">💡 Why this matters</div>
+                            <div class="quiz-why-body">${esc(q.why)}</div>
+                          </div>`;
+            }
         }
 
         body.innerHTML = html;
@@ -243,6 +255,7 @@
                 ${!correct ? `<div class="quiz-summary-answer quiz-summary-answer--wrong">Your answer: ${esc(q.options[yourIdx])}</div>` : ''}
                 <div class="quiz-summary-answer quiz-summary-answer--correct">Correct answer: ${esc(q.options[q.correctIndex])}</div>
                 <div class="quiz-summary-explanation">${esc(q.explanation)}</div>
+                ${q.why ? `<div class="quiz-summary-why"><strong>💡 Why this matters:</strong> ${esc(q.why)}</div>` : ''}
                 ${q.reference ? `<div class="quiz-summary-reference">📖 ${esc(q.reference)}</div>` : ''}
               </div>`;
         }).join('');

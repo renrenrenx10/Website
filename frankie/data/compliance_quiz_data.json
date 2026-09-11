@@ -17,6 +17,7 @@
         ],
         "correctIndex": 1,
         "explanation": "For every firewall, you must change default administrative passwords to a strong and unique password — or disable remote administrative access entirely. Internet-facing admin interfaces additionally need MFA or an IP allow list.",
+        "why": "The admin interface is the master control for everything the firewall protects — if an attacker can log into it, every other firewall rule stops mattering, because they can simply reconfigure or switch off the protection itself. A factory default password is public information (it's in the manual), so leaving it unchanged is functionally the same as leaving the front door key under the mat with a sign pointing to it.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls"
       },
       {
@@ -31,6 +32,7 @@
         ],
         "correctIndex": 1,
         "explanation": "Cyber Essentials requires that unauthenticated inbound connections are blocked by default — nothing gets in unless a documented, approved firewall rule lets it.",
+        "why": "Every internet-connected device is constantly scanned by automated tools looking for anything that responds — this starts within minutes of a device going online, not just when someone specifically targets your business. Blocking unrequested inbound traffic by default means an unconfigured device presents nothing to find, rather than quietly waiting to be discovered by whatever's scanning that day.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls"
       },
       {
@@ -45,6 +47,7 @@
         ],
         "correctIndex": 1,
         "explanation": "If a device requires a user's physical presence to access it, a credential must be in place before access is granted — and that credential must be protected against brute-force guessing (throttling or a lockout after no more than 10 attempts).",
+        "why": "A device with no credential gives away everything the moment it's physically accessible — a lost laptop on a train, an unattended desk, a stolen phone — no hacking skill required, just proximity. The brute-force protections matter too: without a throttle or lockout, even a real credential can eventually be guessed by a program trying thousands of combinations automatically, so the credential alone isn't the whole story.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration (Device unlocking credentials)"
       },
       {
@@ -59,6 +62,7 @@
         ],
         "correctIndex": 1,
         "explanation": "Organisations must regularly remove or disable unnecessary user accounts and change any default or guessable account passwords — an unused account with a default password is exactly the kind of weak point Secure Configuration exists to close.",
+        "why": "Every account, used or not, is a potential way in — and an old Guest account nobody remembers is worse than a well-known one, because nobody's watching for it being used. Default installs create these weak points automatically (pre-set passwords, spare accounts, unnecessary services quietly running), which is exactly why Secure Configuration exists as its own control rather than being assumed covered by the other four.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration"
       },
       {
@@ -73,6 +77,7 @@
         ],
         "correctIndex": 1,
         "explanation": "Updates that fix vulnerabilities described as ‘critical’ or ‘high risk’ (or scoring 7+ on CVSS v3) must be applied within 14 days of release — three weeks is outside that window.",
+        "why": "Publishing a security patch effectively announces where a weakness was — attackers study updates specifically to work out what they fix, then go looking for anyone who hasn't applied it yet. The 14-day window isn't arbitrary caution, it's a race against exactly that process, and three weeks gives real attackers a real head start on a known, public weakness.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
       },
       {
@@ -87,6 +92,7 @@
         ],
         "correctIndex": 1,
         "explanation": "All software on in-scope devices must be licensed and supported, and removed from devices once it becomes unsupported (or excluded from scope via a properly defined, internet-isolated sub-set).",
+        "why": "Once a vendor stops supporting a product, any new vulnerability discovered in it will never get fixed — the gap between what's protected and what's exploitable only grows over time, with no way to close it while the software stays connected to your network. \"It still works fine\" describes functionality, not security — the two aren't the same thing, and unsupported software is a permanently open door, not a currently-quiet one.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
       },
       {
@@ -101,6 +107,7 @@
         ],
         "correctIndex": 1,
         "explanation": "Organisations must use separate accounts for administrative activities only, with no emailing, web browsing or other standard activity that could expose admin privileges to avoidable risk — if malware runs under an admin account, it acquires admin-level access too.",
+        "why": "This is the actual mechanism, not just a rule for its own sake: if malware reaches a device through an email or a browser, it runs with whatever privileges the logged-in account already has. On a standard account, the damage is limited. On an admin account, the same malware can rewrite system files, create new accounts, and spread much further. NCSC's own guidance describes exactly this scenario — an admin account opening a malicious attachment let ransomware encrypt far more of the network than a standard account ever could have reached, purely because of which account happened to be logged in when the click happened.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.4, User Access Control"
       },
       {
@@ -115,6 +122,7 @@
         ],
         "correctIndex": 1,
         "explanation": "Cyber Essentials requires MFA wherever available — and authentication to cloud services must always use MFA, regardless of password length.",
+        "why": "A password on its own is only as strong as the last place someone reused it — password lists leaked from unrelated websites get tried against completely different services, and it works often enough to be worth an attacker's time. MFA means a stolen password alone isn't enough to get in, which matters especially for cloud services since, unlike an office network, they're reachable by anyone on the internet, not just someone already inside your building.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.4, User Access Control (Multi-factor authentication)"
       },
       {
@@ -129,6 +137,7 @@
         ],
         "correctIndex": 1,
         "explanation": "For any in-scope device, you need at least one of: anti-malware software, or application allow listing — approved, code-signed applications only, with an actively maintained approval list. Both are valid, not just anti-malware.",
+        "why": "Traditional anti-malware works by recognising threats it already knows about — which means brand-new malware nobody's seen before can slip through until a vendor catches up and issues a detection for it. Allow listing flips that model entirely: nothing runs unless it's already approved, so it doesn't matter whether something is old or brand new — if it's not on the list, it simply never gets the chance to execute in the first place.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.5, Malware Protection (Application allow listing)"
       },
       {
@@ -143,6 +152,7 @@
         ],
         "correctIndex": 1,
         "explanation": "Anti-malware software must be updated in line with vendor recommendations and configured to prevent malware running, prevent execution of malicious code, and prevent connections to malicious websites — installed-but-unconfigured doesn't meet the bar.",
+        "why": "An anti-malware tool that's installed but not actively maintained only protects against what existed at install time — new malware appears constantly, so real protection quietly decays day by day even though the icon in the taskbar looks exactly the same as it always did. \"Installed\" creates a false sense of security; \"active and kept current\" is what the requirement is actually asking for, because that's the only version of it that still works.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.5, Malware Protection (Anti-malware software)"
       }
     ]
