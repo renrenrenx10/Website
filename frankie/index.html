@@ -112,17 +112,31 @@
       </button>
     </nav>
 
-    <!-- Supplier Tools + Self Assessment — grouped nav, styled to match the SCC portal's left menu -->
-    <nav class="sb-nav" id="section-supplierTools">
-      <div class="sb-section">Compliance &amp; Evidence</div>
+    <!-- Menu reordered 2026-09-11 per Rene: Frankie Chat, References,
+         Assessments, Tools, Compliance and Training, Tool Box. -->
+
+    <!-- Assessments — renamed from "Self Assessment"; Evidence Vault moved
+         in here too, since it's already cross-linked with the
+         self-assessment (see assessment-drawer.js / evidence-vault-drawer.js)
+         and belongs with it functionally, not just alphabetically. -->
+    <nav class="sb-nav" id="section-assessments">
+      <div class="sb-section">Assessments</div>
       <button class="sb-item" data-tool="evidenceVault" onclick="window.EvidenceVault && window.EvidenceVault.open()" type="button">
         <span class="sb-ico">📁</span><span>Evidence Vault</span>
       </button>
+      <button class="sb-item" data-tool="assessBE" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('be')" type="button">
+        <span class="sb-ico">📊</span><span>Business Excellence</span>
+      </button>
+      <button class="sb-item" data-tool="assessF4N" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('f4n')" type="button">
+        <span class="sb-ico">⚛️</span><span>Fit for Nuclear</span>
+      </button>
+    </nav>
+
+    <!-- Tools -->
+    <nav class="sb-nav" id="section-tools">
+      <div class="sb-section">Tools</div>
       <button class="sb-item" data-tool="websiteReview" onclick="window.WebsiteReview && window.WebsiteReview.open()" type="button">
         <span class="sb-ico">🌐</span><span>Website Review</span>
-      </button>
-      <button class="sb-item" data-tool="iso19443" onclick="window.Iso19443Drawer && window.Iso19443Drawer.open()" type="button">
-        <span class="sb-ico">📋</span><span>ISO 19443 Position</span>
       </button>
       <button class="sb-item" data-tool="socialValue" onclick="window.SocialValueDrawer && window.SocialValueDrawer.open()" type="button">
         <span class="sb-ico">🤝</span><span>Social Value Finder</span>
@@ -130,20 +144,26 @@
       <button class="sb-item" data-tool="supplierIntel" onclick="window.DueDiligenceDrawer && window.DueDiligenceDrawer.open()" type="button">
         <span class="sb-ico">🛡️</span><span>Supplier Intel</span>
       </button>
+    </nav>
 
-      <!-- Compliance Training — 2026-09-11: each topic is its own quiz and
-           its own sidebar entry (not one shared "pick a topic" tool), per
-           Rene. All launch the same generic ComplianceQuizDrawer with a
-           different topic key - see js/compliance-quiz-drawer.js. -->
-      <div class="sb-section">Compliance Training</div>
+    <!-- Compliance and Training — ISO 19443 Position now sits alongside the
+         quizzes rather than in a generic Compliance & Evidence grab-bag. -->
+    <nav class="sb-nav" id="section-complianceTraining">
+      <div class="sb-section">Compliance and Training</div>
+      <button class="sb-item" data-tool="iso19443" onclick="window.Iso19443Drawer && window.Iso19443Drawer.open()" type="button">
+        <span class="sb-ico">📋</span><span>ISO 19443 Position</span>
+      </button>
       <button class="sb-item" data-tool="quizCyberEssentials" onclick="window.ComplianceQuizDrawer && window.ComplianceQuizDrawer.open('cyber_essentials')" type="button">
         <span class="sb-ico">🖥️</span><span>Cyber Essentials Quiz</span>
       </button>
       <button class="sb-item" data-tool="quizGdpr" onclick="window.ComplianceQuizDrawer && window.ComplianceQuizDrawer.open('gdpr')" type="button">
         <span class="sb-ico">🔒</span><span>GDPR Quiz</span>
       </button>
+    </nav>
 
-      <div class="sb-section">Toolbox Builder</div>
+    <!-- Tool Box — renamed from "Toolbox Builder" -->
+    <nav class="sb-nav" id="section-toolbox">
+      <div class="sb-section">Tool Box</div>
       <button class="sb-item" data-tool="toolboxTalk" onclick="window.ToolboxTalkDrawer && window.ToolboxTalkDrawer.open()" type="button">
         <span class="sb-ico">🦺</span><span>Toolbox Talk</span>
       </button>
@@ -164,17 +184,6 @@
       </button>
       <button class="sb-item" data-tool="strategy" onclick="window.StrategyDrawer && window.StrategyDrawer.open()" type="button">
         <span class="sb-ico">🏆</span><span>Strategy Builder</span>
-      </button>
-    </nav>
-
-    <!-- Self Assessment -->
-    <nav class="sb-nav" id="section-selfAssess">
-      <div class="sb-section">Self Assessment</div>
-      <button class="sb-item" data-tool="assessBE" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('be')" type="button">
-        <span class="sb-ico">📊</span><span>Business Excellence</span>
-      </button>
-      <button class="sb-item" data-tool="assessF4N" onclick="window.AssessmentDrawer && window.AssessmentDrawer.open('f4n')" type="button">
-        <span class="sb-ico">⚛️</span><span>Fit for Nuclear</span>
       </button>
     </nav>
 
@@ -398,7 +407,7 @@
     if (localStorage.getItem(key) === 'false') btn.style.display = 'none';
   });
   // Hide whole sections if all buttons inside are hidden
-  ['section-references', 'section-supplierTools', 'section-selfAssess'].forEach(id => {
+  ['section-references', 'section-assessments', 'section-tools', 'section-complianceTraining', 'section-toolbox'].forEach(id => {
     const section = document.getElementById(id);
     if (!section) return;
     const visible = section.querySelectorAll('[data-tool]:not([style*="display: none"])');

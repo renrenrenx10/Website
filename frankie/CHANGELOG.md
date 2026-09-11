@@ -1,5 +1,57 @@
 # Frankie changelog
 
+## 2026-09-11 — Sidebar reordered: Assessments, Tools, Compliance and Training, Tool Box
+
+Full menu restructure per Rene, to close out today's session. New order:
+Frankie Chat → References → Assessments → Tools → Compliance and Training
+→ Tool Box.
+
+- **Assessments** (renamed from "Self Assessment") — Evidence Vault moved
+  in here, first item, ahead of Business Excellence and Fit for Nuclear.
+  Matches how they're actually used now: Evidence Vault and the
+  self-assessment are already cross-linked (today's earlier work), so
+  grouping them together reflects the real workflow rather than the old
+  alphabetical-ish "Compliance & Evidence" grab-bag.
+- **Tools** (new) — Website Review, Social Value Finder, Supplier Intel.
+- **Compliance and Training** (renamed from "Compliance Training") — ISO
+  19443 Position joins the two quizzes here, rather than sitting in a
+  generic tools list.
+- **Tool Box** (renamed from "Toolbox Builder") — same seven tools,
+  unchanged.
+
+`applyToolFlags()`'s section auto-hide list updated to match the new nav
+ids (`section-assessments`, `section-tools`, `section-complianceTraining`,
+`section-toolbox` replacing `section-supplierTools`/`section-selfAssess`) —
+checked no other live file referenced the old ids first (only historical
+`.backup-*` snapshots did, which are never touched by convention).
+
+### Files touched
+- `frankie/index.html` — sidebar markup restructured into six `<nav>`
+  blocks instead of four; `applyToolFlags()`'s section list updated to
+  match.
+
+### Verified
+- Tag-balance check (nav count 4→6, matching the old `section-supplierTools`
+  splitting into three while `section-selfAssess` merged into one of them).
+- **Live-tested in a real browser** (sidebar markup extracted into a
+  standalone test page against the real CSS, since the full page is
+  auth-gated and no test credentials are available this session):
+  confirmed the exact requested order renders correctly end to end,
+  Evidence Vault sitting first under Assessments, ISO 19443 Position
+  sitting with the two quizzes under Compliance and Training. No console
+  errors.
+
+### Discussed, not built this session
+Rene raised whether a quiz is the right format on its own, or whether
+members also need real reference content to actually learn a topic (not
+just be tested on it) — we have the sourced material to build either.
+Landed on: probably both, but build the reference view second, since it's
+the same data we already have just presented differently, not new
+sourcing work. Rene's own suggested UI for it: a "Learn about" link per
+quiz (splash or results screen) into a companion reference view, rather
+than a separate section to navigate to. Not built this session — next
+one.
+
 ## 2026-09-11 — Second Compliance Quiz (GDPR), and separate sidebar entries per quiz
 
 Rene: the four Feature E topics should each be their own quiz, not options
