@@ -66,7 +66,7 @@
     }
 
     let DATA = null;
-    let state = { topic: 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], logged: false };
+    let state = { topic: 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false };
 
     function injectDrawer() {
         if (document.getElementById('quiz-drawer')) return;
@@ -164,6 +164,7 @@
             const correct = state.selected === q.correctIndex;
             html += `<div class="quiz-explanation ${correct ? 'quiz-explanation--correct' : 'quiz-explanation--wrong'}">
                         <strong>${correct ? '✓ Correct.' : '✗ Not quite.'}</strong> ${esc(q.explanation)}
+                        ${q.reference ? `<div class="quiz-reference">📖 ${esc(q.reference)}</div>` : ''}
                       </div>`;
         }
 
@@ -188,6 +189,7 @@
         state.locked = true;
         const q = currentQuestion();
         state.answers[state.qIdx] = (idx === q.correctIndex);
+        state.selectedAnswers[state.qIdx] = idx; // kept per-question, not just the current one, for the results recap
         renderQuestion();
     }
 
@@ -223,6 +225,28 @@
             logCompletion(state.topic, score, total, t.passMark, passed);
         }
 
+        // Full per-question recap, same red/green treatment as the options
+        // themselves during the quiz - this is the "education, not just a
+        // pass/fail gate" piece: a member can see exactly what they got
+        // wrong, why, and where in the source requirements it comes from,
+        // not just walk away with a percentage.
+        const summaryRows = t.questions.map((q, i) => {
+            const correct = !!state.answers[i];
+            const yourIdx = state.selectedAnswers[i];
+            return `
+              <div class="quiz-summary-row ${correct ? 'quiz-summary-row--correct' : 'quiz-summary-row--wrong'}">
+                <div class="quiz-summary-head">
+                  <span class="quiz-summary-icon">${correct ? '✓' : '✗'}</span>
+                  <span class="quiz-summary-control">${esc(q.control)}</span>
+                </div>
+                <div class="quiz-summary-question">${esc(q.question)}</div>
+                ${!correct ? `<div class="quiz-summary-answer quiz-summary-answer--wrong">Your answer: ${esc(q.options[yourIdx])}</div>` : ''}
+                <div class="quiz-summary-answer quiz-summary-answer--correct">Correct answer: ${esc(q.options[q.correctIndex])}</div>
+                <div class="quiz-summary-explanation">${esc(q.explanation)}</div>
+                ${q.reference ? `<div class="quiz-summary-reference">📖 ${esc(q.reference)}</div>` : ''}
+              </div>`;
+        }).join('');
+
         body.innerHTML = `
           <div class="quiz-results">
             <div class="quiz-results-hero ${passed ? 'quiz-results-hero--pass' : 'quiz-results-hero--fail'}">
@@ -230,11 +254,15 @@
               <div class="quiz-results-label">${passed ? 'Passed' : 'Not yet'}</div>
               <div class="quiz-results-sub">${score} of ${total} correct · pass mark ${t.passMark}%</div>
             </div>
+
+            <h4 class="quiz-summary-hd">Question-by-question summary</h4>
+            <div class="quiz-summary-rows">${summaryRows}</div>
+
             <button class="quiz-retake-btn" id="quizRetake" type="button">↻ Retake quiz</button>
           </div>`;
 
         document.getElementById('quizRetake').addEventListener('click', () => {
-            state = { topic: state.topic, qIdx: 0, selected: null, locked: false, answers: [], logged: false };
+            state = { topic: state.topic, qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false };
             renderQuestion();
         });
     }
@@ -256,7 +284,7 @@
         }
 
         companyId = null; // rebuild fresh each open, same reasoning as the other drawers
-        state = { topic: topic || 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], logged: false };
+        state = { topic: topic || 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false };
         renderQuestion();
     }
 

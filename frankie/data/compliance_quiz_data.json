@@ -16,7 +16,8 @@
           "Only cloud firewalls require a password change"
         ],
         "correctIndex": 1,
-        "explanation": "For every firewall, you must change default administrative passwords to a strong and unique password — or disable remote administrative access entirely. Internet-facing admin interfaces additionally need MFA or an IP allow list."
+        "explanation": "For every firewall, you must change default administrative passwords to a strong and unique password — or disable remote administrative access entirely. Internet-facing admin interfaces additionally need MFA or an IP allow list.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls"
       },
       {
         "control": "Firewalls",
@@ -29,7 +30,8 @@
           "Ask the user to confirm by email first"
         ],
         "correctIndex": 1,
-        "explanation": "Cyber Essentials requires that unauthenticated inbound connections are blocked by default — nothing gets in unless a documented, approved firewall rule lets it."
+        "explanation": "Cyber Essentials requires that unauthenticated inbound connections are blocked by default — nothing gets in unless a documented, approved firewall rule lets it.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls"
       },
       {
         "control": "Secure Configuration",
@@ -42,7 +44,8 @@
           "Only an issue if the laptop ever leaves the building"
         ],
         "correctIndex": 1,
-        "explanation": "If a device requires a user's physical presence to access it, a credential must be in place before access is granted — and that credential must be protected against brute-force guessing (throttling or a lockout after no more than 10 attempts)."
+        "explanation": "If a device requires a user's physical presence to access it, a credential must be in place before access is granted — and that credential must be protected against brute-force guessing (throttling or a lockout after no more than 10 attempts).",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration (Device unlocking credentials)"
       },
       {
         "control": "Secure Configuration",
@@ -55,7 +58,8 @@
           "Rename the account rather than remove it"
         ],
         "correctIndex": 1,
-        "explanation": "Organisations must regularly remove or disable unnecessary user accounts and change any default or guessable account passwords — an unused account with a default password is exactly the kind of weak point Secure Configuration exists to close."
+        "explanation": "Organisations must regularly remove or disable unnecessary user accounts and change any default or guessable account passwords — an unused account with a default password is exactly the kind of weak point Secure Configuration exists to close.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration"
       },
       {
         "control": "Security Update Management",
@@ -68,7 +72,8 @@
           "It depends on whether the vendor sent a reminder email"
         ],
         "correctIndex": 1,
-        "explanation": "Updates that fix vulnerabilities described as ‘critical’ or ‘high risk’ (or scoring 7+ on CVSS v3) must be applied within 14 days of release — three weeks is outside that window."
+        "explanation": "Updates that fix vulnerabilities described as ‘critical’ or ‘high risk’ (or scoring 7+ on CVSS v3) must be applied within 14 days of release — three weeks is outside that window.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
       },
       {
         "control": "Security Update Management",
@@ -81,7 +86,8 @@
           "Fine as long as a firewall is in place in front of it"
         ],
         "correctIndex": 1,
-        "explanation": "All software on in-scope devices must be licensed and supported, and removed from devices once it becomes unsupported (or excluded from scope via a properly defined, internet-isolated sub-set)."
+        "explanation": "All software on in-scope devices must be licensed and supported, and removed from devices once it becomes unsupported (or excluded from scope via a properly defined, internet-isolated sub-set).",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
       },
       {
         "control": "User Access Control",
@@ -94,7 +100,8 @@
           "Only domain administrator accounts are covered by this rule, not local ones"
         ],
         "correctIndex": 1,
-        "explanation": "Organisations must use separate accounts for administrative activities only, with no emailing, web browsing or other standard activity that could expose admin privileges to avoidable risk — if malware runs under an admin account, it acquires admin-level access too."
+        "explanation": "Organisations must use separate accounts for administrative activities only, with no emailing, web browsing or other standard activity that could expose admin privileges to avoidable risk — if malware runs under an admin account, it acquires admin-level access too.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.4, User Access Control"
       },
       {
         "control": "User Access Control",
@@ -107,7 +114,8 @@
           "Only required if the platform stores payment data"
         ],
         "correctIndex": 1,
-        "explanation": "Cyber Essentials requires MFA wherever available — and authentication to cloud services must always use MFA, regardless of password length."
+        "explanation": "Cyber Essentials requires MFA wherever available — and authentication to cloud services must always use MFA, regardless of password length.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.4, User Access Control (Multi-factor authentication)"
       },
       {
         "control": "Malware Protection",
@@ -120,7 +128,8 @@
           "Only if it's also combined with a firewall"
         ],
         "correctIndex": 1,
-        "explanation": "For any in-scope device, you need at least one of: anti-malware software, or application allow listing — approved, code-signed applications only, with an actively maintained approval list. Both are valid, not just anti-malware."
+        "explanation": "For any in-scope device, you need at least one of: anti-malware software, or application allow listing — approved, code-signed applications only, with an actively maintained approval list. Both are valid, not just anti-malware.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.5, Malware Protection (Application allow listing)"
       },
       {
         "control": "Malware Protection",
@@ -133,7 +142,8 @@
           "Only matters for servers, not laptops"
         ],
         "correctIndex": 1,
-        "explanation": "Anti-malware software must be updated in line with vendor recommendations and configured to prevent malware running, prevent execution of malicious code, and prevent connections to malicious websites — installed-but-unconfigured doesn't meet the bar."
+        "explanation": "Anti-malware software must be updated in line with vendor recommendations and configured to prevent malware running, prevent execution of malicious code, and prevent connections to malicious websites — installed-but-unconfigured doesn't meet the bar.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.5, Malware Protection (Anti-malware software)"
       }
     ]
   }

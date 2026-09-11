@@ -1,5 +1,52 @@
 # Frankie changelog
 
+## 2026-09-11 — Compliance Quiz polish: bigger question, source references, results recap
+
+Four rounds of live feedback from Rene testing the Cyber Essentials quiz,
+all pointed the same direction: make it read as a study tool, not just a
+pass/fail gate.
+
+**Question text made much more prominent.** It wasn't reading as "the
+question" — same weight as body text, easy to skim past. Now large,
+bold, Barlow Condensed (matches every other big heading in Frankie),
+clearly separated from the scenario box above it rather than looking like
+part of the same block.
+
+**Explanation box now cites where each answer comes from.** Every question
+got a `reference` field — the actual section of "Cyber Essentials:
+Requirements for IT Infrastructure v3.3" it's drawn from (e.g. "Section
+E.1, Firewalls"), not just a general explanation. Answered directly from
+the document's own contents page, not guessed.
+
+**Results screen now shows a full question-by-question summary**, reusing
+the same red/green treatment the option buttons already had (confirmed
+this was the right visual language via a live screenshot Rene sent).
+Wrong answers show your answer (red) against the correct one (green),
+plus the explanation and reference; correct answers get a shorter green
+recap. This is the actual "education, not just a quiz" piece — a member
+can review exactly what they got wrong and why immediately after
+finishing, not just see a percentage.
+
+### Files touched
+- `frankie/data/compliance_quiz_data.json` — `reference` field added to
+  all 10 questions.
+- `frankie/js/compliance-quiz-drawer.js` — reference rendered in the
+  per-question explanation; `state.selectedAnswers` now tracks every
+  question's pick (not just the current one) so the results screen can
+  build the full recap; `renderResults()` builds the summary list.
+- `frankie/css/styles.css` — `.quiz-question` resized, `.quiz-reference`,
+  `.quiz-summary-*` block.
+
+### Verified
+- `node --check`, JSON validation, brace-balance check.
+- **Live-tested again in a real browser** (same local-server approach):
+  confirmed the bigger question text renders correctly, confirmed the
+  reference line appears under each explanation, played through all 10
+  questions again (mixed correct/incorrect on purpose this time) and
+  confirmed the results summary shows the right red/green row per
+  question with accurate "your answer" vs "correct answer" text. No
+  console errors.
+
 ## 2026-09-11 — First Compliance Training Quiz (Feature E): Cyber Essentials
 
 Feature E's first built module, following a source-gathering pass through
