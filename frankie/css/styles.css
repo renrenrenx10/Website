@@ -1859,6 +1859,37 @@ button.rail-card--link {
 }
 .quiz-retake-btn:hover { background: #1e3247; }
 
+/* "Learn about" companion view (2026-09-11) */
+.quiz-learn-btn {
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+    color: #fff; font-size: .78rem; font-weight: 600;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer;
+    flex-shrink: 0; transition: background .15s;
+}
+.quiz-learn-btn:hover { background: rgba(255,255,255,.2); }
+.quiz-learn { display: flex; flex-direction: column; gap: 4px; }
+.quiz-learn-back {
+    align-self: flex-start;
+    background: none; border: none; color: #0c779c;
+    font-size: .8rem; font-weight: 600; padding: 0; margin-bottom: 10px;
+    cursor: pointer;
+}
+.quiz-learn-back:hover { text-decoration: underline; }
+.quiz-learn-intro {
+    font-size: .82rem; color: #65758a; line-height: 1.55;
+    margin: 0 0 14px; padding-bottom: 14px; border-bottom: 1px solid #e8eef5;
+}
+.quiz-learn-section { margin-bottom: 18px; }
+.quiz-learn-heading {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem; font-weight: 800; color: #142132;
+    margin: 0 0 8px;
+}
+.quiz-learn-para {
+    font-size: .87rem; color: #2c3e50; line-height: 1.65;
+    margin: 0 0 10px;
+}
+
 /* Question-by-question results summary - same red/green language as the
    option boxes during the quiz itself, so it reads as a continuation of
    the same feedback rather than a different UI. */

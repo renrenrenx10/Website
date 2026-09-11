@@ -1,5 +1,56 @@
 # Frankie changelog
 
+## 2026-09-11 — "Learn about" companion view — first one built (Cyber Essentials)
+
+Closes out today's session. Rene's question earlier — is a quiz the right
+format alone, or do members need real reference content too — landed on
+"probably both," with Rene's own suggested shape: a "Learn about" link,
+not a separate section to go hunting for. Built the mechanism generically
+and authored real content for one topic, same "do one properly" pattern as
+every other piece of this feature today.
+
+**New "📖 Learn" button in the quiz topbar**, visible from any screen
+(question view or Results) at any point — not just before starting.
+Opens a reference view built from the same source material as the quiz
+questions, but organised as real explanatory prose per technical control
+rather than scattered quiz-answer fragments — what NCSC's own
+Introduction sections say about each control's purpose and risk, in
+Frankie's own words. "← Back to quiz" returns to exactly where the member
+was (tracked via `state.priorScreen`), so reading up mid-quiz doesn't
+reset progress back to question 1.
+
+**Built generic, content authored for one topic.** The button only shows
+when the current topic actually has a `learn` array in the data file —
+checked live in the browser that GDPR (no `learn` content yet) correctly
+hides the button rather than showing something broken. Cyber Essentials
+got real content: five sections, one per technical control, each with the
+"what it is / why it matters / what's actually required" thread NCSC's
+own guidance follows, not a re-hash of the quiz's own explanations.
+
+### Files touched
+- `frankie/data/compliance_quiz_data.json` — `learn` array added to
+  `cyber_essentials` (5 sections); `gdpr` deliberately left without one
+  for now.
+- `frankie/js/compliance-quiz-drawer.js` — `quizLearnBtn` in the topbar
+  markup (hidden by default), `openLearn()`, `state.priorScreen` tracking
+  in both `renderQuestion()` and `renderResults()`, Learn button
+  shown/hidden per topic in `open()`.
+- `frankie/css/styles.css` — `.quiz-learn-btn` and the `.quiz-learn-*`
+  block.
+
+### Verified
+- `node --check`, JSON validation, brace-balance check.
+- **Live-tested in a real browser**: opened the Learn view from Cyber
+  Essentials, confirmed all five sections render with correct paragraph
+  breaks, confirmed "← Back to quiz" returns to question 1 correctly,
+  confirmed opening GDPR shows no Learn button at all (graceful
+  degradation for a topic without content yet, not a broken empty view).
+  No console errors.
+
+### Not done
+- Learn content for GDPR, Export Control, or Modern Slavery — same
+  pattern, just needs writing, whenever those quizzes get built out.
+
 ## 2026-09-11 — Sidebar reordered: Assessments, Tools, Compliance and Training, Tool Box
 
 Full menu restructure per Rene, to close out today's session. New order:

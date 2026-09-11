@@ -66,7 +66,7 @@
     }
 
     let DATA = null;
-    let state = { topic: 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false };
+    let state = { topic: 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false, priorScreen: 'question' };
 
     function injectDrawer() {
         if (document.getElementById('quiz-drawer')) return;
@@ -79,6 +79,7 @@
             <div class="assess-topbar">
               <span class="assess-icon" id="quizIcon">🛡️</span>
               <div class="assess-title" id="quizTitle">Compliance Training</div>
+              <button class="quiz-learn-btn" id="quizLearnBtn" type="button" hidden>📖 Learn</button>
               <button class="assess-close" id="quizClose" aria-label="Close">✕</button>
             </div>
 
@@ -106,6 +107,7 @@
         document.getElementById('quizBackdrop').addEventListener('click', close);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
         document.getElementById('quizNext').addEventListener('click', next);
+        document.getElementById('quizLearnBtn').addEventListener('click', openLearn);
     }
 
     async function loadData() {
@@ -140,6 +142,8 @@
         const t = topicData();
         const q = currentQuestion();
         if (!body || !t || !q) return;
+
+        state.priorScreen = 'question'; // so the Learn view's back button knows where to return to
 
         title.textContent = `${t.icon} ${t.title} — Question ${state.qIdx + 1} of ${t.questions.length}`;
         footer.style.display = 'none';
@@ -224,6 +228,7 @@
         const t = topicData();
         if (!body || !t) return;
 
+        state.priorScreen = 'results';
         footer.style.display = 'none';
         const score = state.answers.filter(Boolean).length;
         const total = t.questions.length;
@@ -275,7 +280,7 @@
           </div>`;
 
         document.getElementById('quizRetake').addEventListener('click', () => {
-            state = { topic: state.topic, qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false };
+            state = { topic: state.topic, qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false, priorScreen: 'question' };
             renderQuestion();
         });
     }
@@ -297,8 +302,52 @@
         }
 
         companyId = null; // rebuild fresh each open, same reasoning as the other drawers
-        state = { topic: topic || 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false };
+        state = { topic: topic || 'cyber_essentials', qIdx: 0, selected: null, locked: false, answers: [], selectedAnswers: [], logged: false, priorScreen: 'question' };
+
+        // Learn button only shows for topics that actually have reference
+        // content - added 2026-09-11 (Cyber Essentials first; other topics
+        // get theirs added the same way, same feature, no drawer changes
+        // needed). Hidden rather than left visible-but-broken for topics
+        // without a "learn" array yet.
+        const t = topicData();
+        document.getElementById('quizLearnBtn').hidden = !(t && t.learn && t.learn.length);
+
         renderQuestion();
+    }
+
+    // "Learn about" (added 2026-09-11, per Rene): a companion reference view
+    // built from the same sourced material as the quiz questions, reached
+    // from the topbar at any point - not just before starting. Returns to
+    // whichever screen (question or results) was showing when opened,
+    // tracked via state.priorScreen so a member reading up mid-quiz lands
+    // back on the exact question they were on, not question 1.
+    function openLearn() {
+        const body = document.getElementById('quizBody');
+        const title = document.getElementById('quizTitle');
+        const footer = document.getElementById('quizFooter');
+        const t = topicData();
+        if (!body || !t || !t.learn) return;
+
+        footer.style.display = 'none';
+        title.textContent = `${t.icon} ${t.title} — Learn`;
+
+        const sections = t.learn.map(sec => `
+          <div class="quiz-learn-section">
+            <h4 class="quiz-learn-heading">${esc(sec.heading)}</h4>
+            ${sec.body.split('\n\n').map(p => `<p class="quiz-learn-para">${esc(p)}</p>`).join('')}
+          </div>`).join('');
+
+        body.innerHTML = `
+          <div class="quiz-learn">
+            <button class="quiz-learn-back" id="quizLearnBack" type="button">← Back to quiz</button>
+            <p class="quiz-learn-intro">${esc(t.intro)}</p>
+            ${sections}
+          </div>`;
+
+        document.getElementById('quizLearnBack').addEventListener('click', () => {
+            if (state.priorScreen === 'results') renderResults();
+            else renderQuestion();
+        });
     }
 
     function close() {
