@@ -118,9 +118,6 @@
       <button class="sb-item" data-tool="evidenceVault" onclick="window.EvidenceVault && window.EvidenceVault.open()" type="button">
         <span class="sb-ico">📁</span><span>Evidence Vault</span>
       </button>
-      <button class="sb-item" data-tool="complianceQuiz" onclick="window.ComplianceQuizDrawer && window.ComplianceQuizDrawer.open()" type="button">
-        <span class="sb-ico">🛡️</span><span>Compliance Training</span>
-      </button>
       <button class="sb-item" data-tool="websiteReview" onclick="window.WebsiteReview && window.WebsiteReview.open()" type="button">
         <span class="sb-ico">🌐</span><span>Website Review</span>
       </button>
@@ -132,6 +129,18 @@
       </button>
       <button class="sb-item" data-tool="supplierIntel" onclick="window.DueDiligenceDrawer && window.DueDiligenceDrawer.open()" type="button">
         <span class="sb-ico">🛡️</span><span>Supplier Intel</span>
+      </button>
+
+      <!-- Compliance Training — 2026-09-11: each topic is its own quiz and
+           its own sidebar entry (not one shared "pick a topic" tool), per
+           Rene. All launch the same generic ComplianceQuizDrawer with a
+           different topic key - see js/compliance-quiz-drawer.js. -->
+      <div class="sb-section">Compliance Training</div>
+      <button class="sb-item" data-tool="quizCyberEssentials" onclick="window.ComplianceQuizDrawer && window.ComplianceQuizDrawer.open('cyber_essentials')" type="button">
+        <span class="sb-ico">🖥️</span><span>Cyber Essentials Quiz</span>
+      </button>
+      <button class="sb-item" data-tool="quizGdpr" onclick="window.ComplianceQuizDrawer && window.ComplianceQuizDrawer.open('gdpr')" type="button">
+        <span class="sb-ico">🔒</span><span>GDPR Quiz</span>
       </button>
 
       <div class="sb-section">Toolbox Builder</div>

@@ -1,7 +1,7 @@
 {
   "cyber_essentials": {
     "title": "Cyber Essentials",
-    "icon": "🛡️",
+    "icon": "🖥️",
     "intro": "Ten scenario questions covering the five Cyber Essentials technical controls — Firewalls, Secure Configuration, Security Update Management, User Access Control and Malware Protection. Sourced directly from NCSC's own “Cyber Essentials: Requirements for IT Infrastructure v3.3” (Crown Copyright).",
     "passMark": 80,
     "questions": [
@@ -154,6 +154,164 @@
         "explanation": "Anti-malware software must be updated in line with vendor recommendations and configured to prevent malware running, prevent execution of malicious code, and prevent connections to malicious websites — installed-but-unconfigured doesn't meet the bar.",
         "why": "An anti-malware tool that's installed but not actively maintained only protects against what existed at install time — new malware appears constantly, so real protection quietly decays day by day even though the icon in the taskbar looks exactly the same as it always did. \"Installed\" creates a false sense of security; \"active and kept current\" is what the requirement is actually asking for, because that's the only version of it that still works.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.5, Malware Protection (Anti-malware software)"
+      }
+    ]
+  },
+  "gdpr": {
+    "title": "GDPR",
+    "icon": "🔒",
+    "intro": "Ten scenario questions covering the UK GDPR principles and individual rights that come up most in day-to-day supplier operations — lawfulness and consent, data minimisation and retention, security, breach reporting, subject access, erasure, controllers vs processors, and special category data. Sourced directly from the ICO's own guidance.",
+    "passMark": 80,
+    "questions": [
+      {
+        "control": "Lawfulness, Fairness & Transparency",
+        "scenario": "A company starts emailing marketing offers to everyone on its supplier contact list, using addresses that were only ever given for invoicing purposes — without telling anyone or checking whether it's allowed.",
+        "question": "Does this meet the UK GDPR's first principle?",
+        "options": [
+          "Yes — business marketing is always a reasonable use of contact data",
+          "No — you must identify a valid lawful basis for this specific use, and be clear and open about it, before processing data this way",
+          "Yes, as long as an unsubscribe link is included",
+          "Only a problem if someone actually complains"
+        ],
+        "correctIndex": 1,
+        "explanation": "You must identify valid grounds (a “lawful basis”) under the UK GDPR for collecting and using personal data, and be clear, open and honest with people from the start about how you'll use it. Using invoicing contacts for marketing, with no lawful basis and no transparency, breaches this principle.",
+        "why": "Lawfulness, fairness and transparency comes first among the UK GDPR's seven principles because everything else depends on it — no amount of good security or accurate record-keeping fixes the fact that you never had a valid reason to process the data in the first place. Using data for a new purpose people weren't told about also breaks their reasonable expectations, which is exactly what “fairness” exists to protect.",
+        "reference": "ICO Guide to the UK GDPR — Principle (a): Lawfulness, Fairness and Transparency"
+      },
+      {
+        "control": "Consent",
+        "scenario": "A website's newsletter sign-up box is pre-ticked by default, so visitors have to actively un-tick it to avoid being added to the mailing list.",
+        "question": "Does this meet the UK GDPR's standard for consent?",
+        "options": [
+          "Yes, as long as there's a way to opt out later",
+          "No — consent requires a positive opt-in; pre-ticked boxes or any other method of default consent don't meet the standard",
+          "Yes, pre-ticking is an accepted shortcut for newsletters specifically",
+          "Only an issue for special category data"
+        ],
+        "correctIndex": 1,
+        "explanation": "Consent requires a positive opt-in — organisations must not use pre-ticked boxes or any other method of default consent. Genuine consent has to be freely given, specific, and an active choice, not something people have to notice and undo.",
+        "why": "The whole point of consent as a lawful basis is giving people real control — a pre-ticked box quietly assumes agreement nobody actually gave, which defeats that purpose entirely. It's also one of the most commonly cited failures in real ICO enforcement action, precisely because it looks compliant at a glance while not actually being a choice at all.",
+        "reference": "ICO Guidance on Consent"
+      },
+      {
+        "control": "Data Minimisation",
+        "scenario": "An online job application form asks every applicant for their date of birth, marital status and religion “just in case it's useful later,” even though none of it is relevant to the role being advertised.",
+        "question": "Does this meet the data minimisation principle?",
+        "options": [
+          "Yes — collecting more data upfront saves having to ask again later",
+          "No — personal data must be adequate, relevant, and limited to what's necessary for the stated purpose; “might be useful” isn't the same as “necessary”",
+          "Yes, as long as the form marks the fields as optional",
+          "Only a problem if the data is later shared with someone else"
+        ],
+        "correctIndex": 1,
+        "explanation": "Personal data must be adequate, relevant, and limited to what is necessary for your specified purpose — collecting sensitive data “just in case” fails all three tests at once.",
+        "why": "Every extra piece of data held is something that now has to be secured, justified and eventually deleted — data minimisation isn't just a paperwork exercise, it directly shrinks the damage a future breach could do, since nothing can leak that was never collected. Religion in particular is “special category data” under Article 9, which needs its own separate legal justification most job application forms don't have.",
+        "reference": "ICO Guide to the UK GDPR — Principle (c): Data Minimisation"
+      },
+      {
+        "control": "Storage Limitation",
+        "scenario": "A company still holds full CVs and application details for every candidate who's applied for a job in the last eight years — including people never hired — with no policy on when any of it gets deleted.",
+        "question": "Does this meet the storage limitation principle?",
+        "options": [
+          "Yes, as long as the data is kept securely",
+          "No — personal data must not be kept longer than needed, and organisations need a retention policy with regular review and deletion",
+          "Yes — keeping records indefinitely protects against future legal claims",
+          "Only relevant for customer data, not job applicants"
+        ],
+        "correctIndex": 1,
+        "explanation": "You must not keep personal data for longer than you need it, and should have a policy setting standard retention periods, reviewing what's held, and erasing or anonymising it once it's no longer needed.",
+        "why": "Data doesn't get safer the longer it's kept — it becomes a bigger, staler liability, fully exposed in any future breach but with less and less legitimate purpose behind holding it. Unsuccessful job applicants in particular have a reasonable expectation their details won't sit on file indefinitely once a role's been filled — “might need it someday” isn't a retention policy.",
+        "reference": "ICO Guide to the UK GDPR — Principle (e): Storage Limitation"
+      },
+      {
+        "control": "Security",
+        "scenario": "A company emails a spreadsheet of customer names, addresses and order histories to a subcontractor, unencrypted, over regular email.",
+        "question": "Does this meet the UK GDPR's security principle?",
+        "options": [
+          "Yes — email is a normal, everyday business tool",
+          "No — appropriate technical and organisational measures (such as encryption where appropriate) are required to protect personal data's confidentiality, integrity and availability",
+          "Yes, as long as the subcontractor has signed a contract",
+          "Only relevant for special category data"
+        ],
+        "correctIndex": 1,
+        "explanation": "The security principle requires “appropriate technical and organisational measures” to protect personal data — including encryption and pseudonymisation where appropriate, proportionate to the risk the processing poses.",
+        "why": "An unencrypted email can be intercepted, misaddressed, or sit unsecured in an inbox indefinitely — “appropriate” measures are judged against exactly that kind of realistic risk, not just whether the tool used is a familiar one. The ICO developed its security approach jointly with the NCSC precisely because data protection and cyber security are the same problem seen from two angles — get one wrong and the other is usually wrong too.",
+        "reference": "ICO Guide to Data Security"
+      },
+      {
+        "control": "Personal Data Breaches",
+        "scenario": "A staff member reports that a laptop containing an unencrypted customer database was stolen from their car three days ago. Nobody has told the ICO yet, because “we're not sure if it counts as serious.”",
+        "question": "What does the UK GDPR require here?",
+        "options": [
+          "Wait until you're completely certain before doing anything",
+          "Notify the ICO within 72 hours of becoming aware of the breach, where feasible — and inform affected individuals too if their rights and freedoms are at high risk",
+          "Only report it once the police confirm the laptop is unrecoverable",
+          "No obligation exists unless the data was specifically targeted by the thief"
+        ],
+        "correctIndex": 1,
+        "explanation": "Certain personal data breaches must be reported to the ICO within 72 hours of becoming aware of them, where feasible, and affected individuals must be informed without undue delay if there's a high risk to their rights and freedoms. Every breach — reportable or not — must also be logged internally.",
+        "why": "The 72-hour clock starts the moment you become aware, not once an investigation is finished — deliberately so, because delay is exactly what makes breaches worse for the people affected (stolen data tends to get used faster than most organisations can fully assess what happened). An unencrypted database on a stolen laptop is precisely the scenario breach-notification law was built around.",
+        "reference": "ICO Guide to Personal Data Breaches"
+      },
+      {
+        "control": "Subject Access Requests",
+        "scenario": "A former employee emails asking for a copy of all the personal data the company holds about them. The HR manager replies asking for a £10 fee before they'll start looking.",
+        "question": "Is charging a fee here compliant?",
+        "options": [
+          "Yes — a reasonable admin fee is always allowed",
+          "No — in most circumstances you cannot charge a fee for a subject access request, and you must respond within one month",
+          "Yes, but only because they're a former rather than current employee",
+          "Only an issue if the request wasn't made in writing"
+        ],
+        "correctIndex": 1,
+        "explanation": "People have the right to access their personal data (a subject access request). In most circumstances no fee can be charged, and organisations must respond without undue delay and within one month of receipt — a request can be made verbally, in writing, or even via social media.",
+        "why": "The right of access exists so people can actually check what's being held and said about them — charging a fee before you'll even start looking creates exactly the barrier this right was designed to remove, which is why it's the exception rather than the norm (reserved for manifestly unfounded or excessive requests, or extra copies). The one-month clock doesn't pause just because the person has since left the organisation.",
+        "reference": "ICO Guide to Subject Access"
+      },
+      {
+        "control": "Right to Erasure",
+        "scenario": "A customer asks a company to delete all their data. The company ignores the request for four months, because “we've been busy,” then confirms the data has now been removed.",
+        "question": "Does this meet the right to erasure requirements?",
+        "options": [
+          "Yes, as long as the data was eventually deleted",
+          "No — organisations have one month to respond to an erasure request, and need a process to recognise, assess and act on it without undue delay",
+          "Yes — being busy is a recognised valid reason for delay",
+          "The right to erasure doesn't have a time limit"
+        ],
+        "correctIndex": 1,
+        "explanation": "The right to erasure (“the right to be forgotten”) gives individuals the right to have personal data erased in certain circumstances. Requests can be made verbally or in writing, and organisations have one month to respond — the right isn't absolute, but a valid request still needs a timely answer, not silence.",
+        "why": "A right that takes four months to even acknowledge isn't functioning as a right — the one-month timeframe exists so “erasure” means something close to immediate, not eventual. It's also not automatically granted just because someone asks: an organisation needs to actually check whether an exemption applies (a legal duty to retain the data, for example) rather than either ignoring the request or deleting on autopilot.",
+        "reference": "ICO Guidance on the Right to Erasure"
+      },
+      {
+        "control": "Controllers & Processors",
+        "scenario": "A company hires an external payroll bureau to run its monthly payroll. The bureau only acts on the company's instructions and doesn't decide what the data is used for or why.",
+        "question": "Under UK GDPR, what is the payroll bureau in this relationship?",
+        "options": [
+          "The controller, since it physically handles the data",
+          "A processor — the organisation that decides the purposes and means of processing is the controller, regardless of what a contract calls anyone",
+          "A joint controller automatically, since it manages payroll",
+          "Neither term applies to payroll bureaus specifically"
+        ],
+        "correctIndex": 1,
+        "explanation": "Whether an organisation is a controller or processor depends on who determines the purposes and means of processing — not how a contract labels them. An organisation that only acts on another's instructions, without deciding why or how data is used, is a processor.",
+        "why": "This distinction isn't just semantics — the two roles carry genuinely different legal obligations, and getting it wrong (or leaving it undocumented) leaves both organisations exposed, since the ICO can act against controllers and processors alike, and individuals can claim compensation from either. It's worth actually documenting who is which for every organisation data gets shared with, rather than assuming a contract's wording has already settled it.",
+        "reference": "ICO Guide to Controllers and Processors"
+      },
+      {
+        "control": "Special Category Data",
+        "scenario": "A company starts recording employees' religion on its HR system “to plan diversity events better,” relying on the same general lawful basis (legitimate interests) it already uses for standard HR records, with no further checks.",
+        "question": "Is this sufficient to process this data lawfully?",
+        "options": [
+          "Yes — one lawful basis covers all types of personal data equally",
+          "No — special category data like religion needs both a lawful basis under Article 6 and a separate condition for processing under Article 9; these aren't automatically the same thing",
+          "Yes, as long as employees aren't told which lawful basis is being used",
+          "Only relevant if the data is later shared outside the organisation"
+        ],
+        "correctIndex": 1,
+        "explanation": "Special category data needs more protection because it's sensitive. To process it lawfully you need both an Article 6 lawful basis and a separate Article 9 condition for processing — the two don't have to be linked, but both are required, and should be documented before processing begins.",
+        "why": "Article 9 exists because certain categories of data — health, religion, sexuality, ethnicity and others — carry a much higher risk of real harm if mishandled or exposed, so the law deliberately sets a higher bar than “we already had a general reason to hold HR data.” Skipping the extra check is a genuinely common mistake, precisely because it's easy to assume one lawful basis quietly covers everything a system happens to store.",
+        "reference": "ICO Guidance on Special Category Data"
       }
     ]
   }

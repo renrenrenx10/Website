@@ -1,5 +1,46 @@
 # Frankie changelog
 
+## 2026-09-11 — Second Compliance Quiz (GDPR), and separate sidebar entries per quiz
+
+Rene: the four Feature E topics should each be their own quiz, not options
+inside one shared "Compliance Training" tool. `compliance-quiz-drawer.js`
+was already built generic enough for this (topic passed to `open()`,
+content keyed by topic in the data file) — the actual change was in the
+sidebar, not the drawer.
+
+**GDPR is the second topic**, picked for broadest applicability (every F4N
+supplier handles personal data, unlike the more specialist Export Control
+topic) and because it had the richest sourced material (140+ ICO guidance
+pages). Ten questions spanning lawfulness & transparency, consent, data
+minimisation, storage limitation, security, the 72-hour breach-reporting
+rule, subject access requests, the right to erasure, controllers vs
+processors, and special category data — same template as Cyber Essentials:
+real scenario, four options, explanation, "why this matters," and a
+reference to the specific ICO guide it's drawn from.
+
+**Sidebar restructured**: the single "Compliance Training" entry is gone,
+replaced with a "Compliance Training" section holding one button per quiz
+— "Cyber Essentials Quiz" and "GDPR Quiz" — each calling
+`ComplianceQuizDrawer.open('<topic>')` directly with its own `data-tool`
+key, so SCC can toggle them independently later same as any other tool.
+Cyber Essentials' icon changed from 🛡️ to 🖥️ to avoid clashing with
+Supplier Intel's shield icon directly above it in the same nav.
+
+### Files touched
+- `frankie/data/compliance_quiz_data.json` — new `gdpr` topic, 10
+  questions; `cyber_essentials` icon changed to 🖥️.
+- `frankie/index.html` — sidebar restructured into a dedicated
+  "Compliance Training" section with per-quiz buttons.
+
+### Verified
+- JSON validated (`json.load` + confirmed both topics have 10 complete
+  questions with every required field).
+- Tag-balance check on `index.html`.
+- **Live-tested in a real browser**: confirmed both quizzes launch
+  correctly from separate entry points, confirmed the GDPR quiz's
+  content, explanation, and "why this matters" all render correctly (same
+  template, new topic). No console errors.
+
 ## 2026-09-11 — Compliance Quiz: "Why this matters," not just the rule
 
 Rene's framing: parroting the requirement back is only half the job for
