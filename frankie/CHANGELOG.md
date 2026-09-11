@@ -1,5 +1,71 @@
 # Frankie changelog
 
+## 2026-09-11 — Self-assessment/Evidence Vault: three fixes from live feedback
+
+Three issues Rene hit testing the persistence + cross-link work added
+earlier today.
+
+**1. Removed the redundant per-answer "feedback" text.** Selecting an
+option showed a second block of near-identical text below it — e.g.
+selecting "Mission, vision, and values are well-defined and communicated,
+supporting alignment" then showed "The mission, vision, and values are
+defined and communicated but not consistently used to guide actions..."
+directly under it. Checked `assessment_data.json`: `desc` (the option
+button's own text) and `feedback` (this second block) are just two
+paraphrases of the same content for every option — the feedback block was
+adding no new information, only restating. Removed the text; kept the
+"View in handbook →" link where one exists (genuinely useful, not
+redundant), moved above the evidence-link button so the reading order is
+learn-more first, then act.
+
+**2. Evidence Vault: uploaded files' delete (✕) buttons didn't work.**
+Real bug, not a design choice: `renderSection()` was binding a click
+handler by looking up an element id (`ev-del-{key}`) that renderQuestion()
+never creates, calling a function (`handleDelete`) that isn't defined
+anywhere in the file — dead code, probably left over from an earlier
+version of this UI. The actual working delete path
+(`handleDeleteByKey` + `.ev-file-del` buttons) was only ever bound inside
+`handleUpload()`'s and `handleDeleteByKey()`'s own re-render of a single
+question — never on the section's *initial* render — so a file already on
+file when the drawer opened (the normal case, for anyone revisiting their
+own evidence) showed a delete button that silently did nothing. Fixed with
+a shared `bindQuestionFileDelete()` helper, called on initial section
+render and scoped appropriately on later re-renders so it doesn't restack
+a second listener onto every other question's buttons each time.
+
+**3. No way back to the self-assessment after attaching evidence.**
+Clicking "Attach evidence for this answer" opened Evidence Vault, and
+`drawer-manager.js`'s single-drawer-at-a-time rule (2026-08-04) correctly
+closed the assessment behind it — but closing Evidence Vault just dropped
+the member at the main chat, with no path back in short of re-opening the
+assessment from the sidebar (their answers do survive, per today's earlier
+persistence fix, but the flow felt like a dead end). Fixed without
+reintroducing overlapping drawers (deliberately not touched — that was a
+real fixed bug in this codebase's history): `EvidenceVault.open()` now
+accepts an optional third argument, `{returnTo, type, sectionIdx}`; when
+present, explicitly closing Evidence Vault (X / backdrop / Escape only —
+NOT drawer-manager.js force-closing it because some other tool got opened
+instead) reopens `AssessmentDrawer` at the exact section the member came
+from. A plain sidebar-menu open of Evidence Vault passes no such option, so
+it opens and closes exactly as it always has.
+
+### Files touched
+- `frankie/js/assessment-drawer.js` — feedback block removed, evidence-link
+  click handler passes a return target, `open()` accepts an optional
+  starting section index.
+- `frankie/js/evidence-vault-drawer.js` — dead delete-binding code replaced,
+  `open()`/`close()` handle the return target.
+
+### Verified
+- `node --check` on both files — no syntax errors.
+- Confirmed `desc`/`feedback` are near-duplicate text for every option in
+  `frankie/kb/assessment_data.json`'s first section, before removing the
+  feedback block.
+- Grepped for any remaining reference to the removed `handleDelete`/
+  `ev-del-` dead code — none left.
+- Not live-tested end to end (no test member credentials available in this
+  session, same limitation as the sign-out fix above).
+
 ## 2026-09-11 — Sign out
 
 **Bug: no way to log out of Frankie.** The auth-gate added 2026-08-04

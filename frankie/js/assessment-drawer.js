@@ -377,23 +377,21 @@
 
             html += `</div>`;
 
+            // Learn-more link only (2026-09-11: removed the redundant
+            // "feedback" copy that used to render here too - it just
+            // restated the selected option's own desc text back at the
+            // user, e.g. "mission/vision defined but not consistently
+            // used..." duplicating the button above with no new information).
+            if (selected !== undefined && q.handbookUrl) {
+                html += `<a class="assess-hb-link" href="${esc(q.handbookUrl)}" target="_blank" rel="noopener">📖 View in handbook →</a>`;
+            }
+
             // Cross-link into Evidence Vault at this exact question - the two
             // tools share the same (section, q) keying (see
             // frankie/sql/nr_evidence_analysis.sql). BE-only for now: Evidence
             // Vault's data (be_evidence_map.json) has no f4n counterpart yet.
             if (state.type === 'be') {
                 html += `<button class="assess-evidence-link" data-qidx="${qIdx}" type="button">📎 Attach evidence for this answer →</button>`;
-            }
-
-            // Show feedback for selected option
-            if (selected !== undefined) {
-                const opt = q.options[selected];
-                const maxScore = Math.max(...q.options.map(o => o.score));
-                const p = pct(opt.score, maxScore);
-                html += `<div class="assess-feedback" style="border-left-color:${scoreColour(p)}">
-                           ${opt.feedback ? esc(opt.feedback) : ''}
-                           ${q.handbookUrl ? `<a class="assess-hb-link" href="${esc(q.handbookUrl)}" target="_blank" rel="noopener">📖 View in handbook →</a>` : ''}
-                         </div>`;
             }
 
             html += `</div>`; // close assess-question
@@ -415,11 +413,19 @@
             });
         });
 
-        // Evidence Vault cross-link
+        // Evidence Vault cross-link. Passes a returnTarget so that closing
+        // Evidence Vault (its own X/backdrop/Escape - not drawer-manager.js
+        // force-closing it because some other tool got opened instead) comes
+        // straight back to this same section, rather than dropping the
+        // member back at the main chat with no way back in.
         body.querySelectorAll('.assess-evidence-link').forEach(btn => {
             btn.addEventListener('click', () => {
                 const qIdx = parseInt(btn.dataset.qidx);
-                if (window.EvidenceVault) window.EvidenceVault.open(sectionName, qIdx + 1);
+                if (window.EvidenceVault) {
+                    window.EvidenceVault.open(sectionName, qIdx + 1, {
+                        returnTo: 'assessment', type: state.type, sectionIdx: state.sectionIdx,
+                    });
+                }
             });
         });
     }
@@ -511,7 +517,11 @@
     }
 
     // ── Public API ─────────────────────────────────────────────────────────────
-    async function open(type) {
+    // startSectionIdx (added 2026-09-11) lets Evidence Vault hand the member
+    // back to exactly the section they came from when they close it after
+    // attaching evidence via the cross-link below - see EvidenceVault's own
+    // returnTarget handling in evidence-vault-drawer.js.
+    async function open(type, startSectionIdx) {
         injectDrawer();
 
         const drawer = document.getElementById('assessment-drawer');
@@ -528,7 +538,7 @@
             return;
         }
 
-        state = { type: type || 'be', sectionIdx: 0, answers: {} };
+        state = { type: type || 'be', sectionIdx: startSectionIdx || 0, answers: {} };
         companyId = null; // rebuild fresh each open, same reasoning as evidence-vault-drawer.js
         renderAll();
         document.getElementById('assessFooter').style.display = 'flex';

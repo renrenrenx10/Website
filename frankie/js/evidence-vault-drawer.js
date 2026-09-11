@@ -426,11 +426,9 @@
       const key   = uploadKey(secName, q.q);
       const input = document.getElementById(`ev-input-${key}`);
       if (input) input.addEventListener('change', e => handleUpload(e, secName, q));
-      const del = document.getElementById(`ev-del-${key}`);
-      if (del) del.addEventListener('click', () => handleDelete(secName, q));
     });
     bindAnalyzeButtons(secName, questions);
-
+    bindFileDeleteButtons(secName);
     bindExistingBlock(secName);
 
     // Nav buttons
@@ -463,6 +461,32 @@
         <div class="ev-existing-label">📂 Already uploaded to this section (${files.length})</div>
         <div class="ev-upload-row">${chips}</div>
       </div>`;
+  }
+
+  // Per-file delete buttons inside renderQuestion()'s filesList. Bug fixed
+  // 2026-09-11: this used to only ever get bound inside handleUpload()'s and
+  // handleDeleteByKey()'s own re-render of a single question, never on the
+  // section's initial render - so a file already on file when the drawer
+  // opened (the normal case) showed a delete (✕) button that did nothing
+  // until the member uploaded or deleted something else first. Scoped to
+  // .ev-questions so it never touches the separate "existing, unmatched
+  // files" block's own delete buttons (bindExistingBlock handles those).
+  function bindFileDeleteButtons(secName) {
+    bindQuestionFileDelete(document.querySelector('.ev-questions'), secName);
+  }
+
+  // Scoped variant used when only one question's card was just replaced
+  // (handleUpload/handleDeleteByKey's own re-render) - binding within just
+  // that element, rather than the whole section again, avoids stacking a
+  // second listener onto every other question's already-bound delete
+  // buttons each time a file is added or removed anywhere in the section.
+  function bindQuestionFileDelete(scopeEl, secName) {
+    if (!scopeEl) return;
+    scopeEl.querySelectorAll('.ev-file-del').forEach(btn => {
+      btn.addEventListener('click', () => {
+        handleDeleteByKey(btn.dataset.key, +btn.dataset.fi, secName);
+      });
+    });
   }
 
   function bindExistingBlock(secName) {
@@ -629,19 +653,12 @@
     const qEl = document.getElementById('ev-q-' + key);
     if (qEl) {
       qEl.outerHTML = renderQuestion(secName, q);
+      const newQEl   = document.getElementById('ev-q-' + key);
       const newInput = document.getElementById('ev-input-' + key);
       if (newInput) newInput.addEventListener('change', ev => handleUpload(ev, secName, q));
       bindAnalyzeButtons(secName, [q]);
+      bindQuestionFileDelete(newQEl, secName);
     }
-
-    // Bind delete buttons
-    document.querySelectorAll('.ev-file-del').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const k  = btn.dataset.key;
-        const fi = +btn.dataset.fi;
-        handleDeleteByKey(k, fi, secName);
-      });
-    });
 
     renderSectionBar();
   }
@@ -661,14 +678,11 @@
       const qEl = document.getElementById('ev-q-' + key);
       if (qEl) {
         qEl.outerHTML = renderQuestion(secName, q);
-        const input = document.getElementById('ev-input-' + key);
+        const newQEl = document.getElementById('ev-q-' + key);
+        const input  = document.getElementById('ev-input-' + key);
         if (input) input.addEventListener('change', ev => handleUpload(ev, secName, q));
         bindAnalyzeButtons(secName, [q]);
-        document.querySelectorAll('.ev-file-del').forEach(btn => {
-          btn.addEventListener('click', () => {
-            handleDeleteByKey(btn.dataset.key, +btn.dataset.fi, secName);
-          });
-        });
+        bindQuestionFileDelete(newQEl, secName);
       }
     }
     renderSectionBar();
@@ -774,8 +788,16 @@
     setTimeout(() => el.classList.remove('ev-question--jump-highlight'), 2000);
   }
 
-  async function open(jumpSection, jumpQ) {
+  // Set only when opened via a cross-link that wants closing this drawer to
+  // hand the member back somewhere specific (currently just
+  // assessment-drawer.js's "Attach evidence for this answer" link) rather
+  // than just closing to whatever's behind it. Reset on every open() so a
+  // plain sidebar-menu open (no opts) never triggers it - see close() below.
+  let returnTarget = null;
+
+  async function open(jumpSection, jumpQ, opts) {
     inject();
+    returnTarget = (opts && opts.returnTo) ? opts : null;
 
     const drawer = document.getElementById('ev-drawer');
     drawer.classList.remove('assess-drawer--closed');
@@ -826,6 +848,18 @@
     const drawer = document.getElementById('ev-drawer');
     if (drawer) { drawer.classList.remove('assess-drawer--open'); drawer.classList.add('assess-drawer--closed'); }
     document.body.style.overflow = '';
+
+    // Only fires for an explicit close (X / backdrop / Escape - the three
+    // bindings that call this function directly). drawer-manager.js force-
+    // closing this drawer because a different tool got opened instead does
+    // NOT go through here (it flips the classList directly), so opening
+    // something else from the sidebar correctly does not hijack the member
+    // back into the assessment.
+    if (returnTarget && returnTarget.returnTo === 'assessment' && window.AssessmentDrawer) {
+      const rt = returnTarget;
+      returnTarget = null;
+      window.AssessmentDrawer.open(rt.type, rt.sectionIdx);
+    }
   }
 
   // ── Public API ────────────────────────────────────────────────────────────
