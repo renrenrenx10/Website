@@ -1,5 +1,47 @@
 # Frankie changelog
 
+## 2026-09-11 — Uploaded evidence visible in the assessment, section-level AI comparison on Results
+
+Two more from Rene testing live.
+
+**1. Uploaded files now show on the assessment screen, not just Evidence
+Vault.** The self-assessment previously had zero awareness of uploads -
+attaching a file via the cross-link and coming back showed nothing to
+confirm it worked. `assessment-drawer.js` now reads the same Storage
+listing Evidence Vault itself reads (BE only), and shows attached file
+names under each question; the "Attach evidence" link relabels to
+"📎 Manage evidence →" once something's there.
+
+**2. The Results screen now shows a section-level self-declared-vs-AI
+comparison** - the piece flagged as "not built" when the persistence/
+cross-link work landed earlier today. Per Rene: section-level only, not
+per-question ("it doesn't need every question, just the sections"). Each
+section row on Results now shows the self-declared % (as before) plus an
+"AI NN%" figure from `nr_evidence_analysis`, only for sections with at
+least one analyzed file - sections with no evidence reviewed yet show "—"
+rather than a misleading 0%. Rows are now clickable too: click a section to
+jump straight back into it from Results.
+
+**Not done:** a link to an external "portal score guide" - flagged as
+wanted but no URL/destination given yet; needs Rene's steer before
+building since I don't want to invent one.
+
+### Files touched
+- `frankie/js/assessment-drawer.js` — `loadUploads()`/`loadAiScores()`,
+  `aiSectionScore()`, per-question file chips, Results screen comparison +
+  clickable rows, `onResults`/`refreshCurrentView()` so the two new async
+  loads refresh whichever screen (question view or Results) is actually
+  showing when they land.
+- `frankie/css/styles.css` — `.assess-evidence-files`, `.assess-results-row`
+  reworked into a clickable button, `.assess-results-ai-score`,
+  `.assess-results-section-note`.
+
+### Verified
+- `node --check` — no syntax errors.
+- Grepped for duplicate definitions of every new function/state variable —
+  none.
+- Not live-tested end to end (no test member credentials in this session).
+
 ## 2026-09-11 — Explicit "Back to assessment" button, handbook link removed
 
 Two follow-ups from testing the three fixes above.

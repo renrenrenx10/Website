@@ -116,6 +116,84 @@
         })();
     }
 
+    // ── Evidence awareness (added 2026-09-11) ────────────────────────────────
+    // BE-only, same reason the "Attach evidence" link is BE-only: Evidence
+    // Vault has no f4n data yet. Two independent reads, both keyed the same
+    // (section, 1-based q) way as everything else here:
+    //   uploads   - which files exist per question (Storage listing, same
+    //               source of truth evidence-vault-drawer.js itself uses -
+    //               a member reported files uploaded there weren't visible
+    //               back here, which was true, this is the fix)
+    //   aiScores  - the AI's (or SCC's override of the AI's) suggested score
+    //               per question, from nr_evidence_analysis, used to build
+    //               the section-level self-declared-vs-AI comparison on the
+    //               results screen
+    const BUCKET = 'evidence-docs';
+    const ANALYSIS_TABLE = 'nr_evidence_analysis';
+
+    function slugify(str) {
+        return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    function uploadKey(secName, qNum) {
+        return slugify(secName) + '/Q' + qNum;
+    }
+
+    let uploads  = {}; // { 'sec-slug/Q1': [{name}] }
+    let aiScores = {}; // { 'sec-slug/Q1': score }
+
+    async function loadUploads() {
+        uploads = {};
+        if (state.type !== 'be') return;
+        const { userId, token } = getUser();
+        if (!userId || !token) return;
+        for (const [secName] of sections()) {
+            const slug = slugify(secName);
+            try {
+                const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
+                    method:  'POST',
+                    headers: { ...supaHeaders(token), 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ prefix: `${userId}/${slug}/`, limit: 100, offset: 0 }),
+                });
+                if (!res.ok) continue;
+                const items = await res.json();
+                (items || []).forEach(f => {
+                    if (!f.name || f.name.endsWith('/')) return;
+                    const match = f.name.match(/^Q(\d+)__(.+)$/);
+                    if (!match) return; // untagged legacy file - same limitation Evidence Vault itself has
+                    const key = uploadKey(secName, +match[1]);
+                    if (!uploads[key]) uploads[key] = [];
+                    uploads[key].push({ name: match[2] });
+                });
+            } catch (e) { /* leave this section's uploads empty rather than fail the whole load */ }
+        }
+    }
+
+    async function loadAiScores() {
+        aiScores = {};
+        if (state.type !== 'be') return;
+        const { userId, token } = getUser();
+        if (!userId || !token) return;
+        const cid = await getCompanyId(userId, token);
+        if (!cid) return;
+        try {
+            const res = await fetch(
+                `${SUPABASE_URL}/rest/v1/${ANALYSIS_TABLE}?company_id=eq.${cid}&assessment_type=eq.be&select=section,q,ai_suggested_score,scc_override_score`,
+                { headers: supaHeaders(token) }
+            );
+            if (!res.ok) return;
+            const rows = await res.json();
+            rows.forEach(r => {
+                const score = (r.scc_override_score !== null && r.scc_override_score !== undefined)
+                    ? r.scc_override_score : r.ai_suggested_score;
+                if (score === null || score === undefined) return;
+                const key = uploadKey(r.section, r.q);
+                // A question can carry more than one analyzed file - keep the
+                // strongest evidence seen for it rather than the last one read.
+                if (aiScores[key] === undefined || score > aiScores[key]) aiScores[key] = score;
+            });
+        } catch (e) { /* leave aiScores as-is */ }
+    }
+
     const TYPE_LABELS = {
         be:  'Business Excellence',
         f4n: 'Fit for Nuclear',
@@ -137,6 +215,11 @@
     let DATA      = null;
     let loading   = false;
     let state     = { type: 'be', sectionIdx: 0, answers: {} };
+    let onResults = false; // which screen loadUploads()/loadAiScores() should refresh into once they resolve
+
+    function refreshCurrentView() {
+        if (onResults) renderResults(); else renderAll();
+    }
 
     // ── DOM injection ──────────────────────────────────────────────────────────
     function injectDrawer() {
@@ -237,6 +320,25 @@
         return { score, max };
     }
 
+    // AI-evidence read for a section, for the results screen's self-vs-AI
+    // comparison (added 2026-09-11 - the "left out" piece from the
+    // persistence/cross-link work earlier today). Section-level only, not
+    // per-question - only counts questions that actually have an analyzed
+    // file; max scales to however many of the section's questions were
+    // analyzed, not the full section, so a section with only 2 of 10
+    // questions evidenced isn't scored as if the other 8 were zero.
+    function aiSectionScore(sIdx) {
+        const entry = sections()[sIdx];
+        if (!entry) return { score: 0, max: 0, count: 0 };
+        const [secName, sec] = entry;
+        let score = 0, count = 0;
+        sec.questions.forEach((q, qIdx) => {
+            const s = aiScores[uploadKey(secName, qIdx + 1)];
+            if (s !== undefined) { score += s; count++; }
+        });
+        return { score, count, max: count * 10 }; // 10 = top band across every BE rubric
+    }
+
     function totalScore() {
         let score = 0, max = 0;
         sections().forEach((_, i) => {
@@ -262,7 +364,9 @@
     function switchType(type) {
         state = { type, sectionIdx: 0, answers: {} };
         renderAll();
-        loadAnswers(type).then(renderAll);
+        loadAnswers(type).then(refreshCurrentView);
+        loadUploads().then(refreshCurrentView);
+        loadAiScores().then(refreshCurrentView);
     }
 
     function navigate(dir) {
@@ -279,6 +383,7 @@
 
     // ── Render ─────────────────────────────────────────────────────────────────
     function renderAll() {
+        onResults = false;
         updateTypeBar();
         renderSectionBar();
         renderSection();
@@ -382,12 +487,22 @@
             // selected option's own desc back at the user, and the handbook
             // link went too along with it.
 
+            // Uploaded evidence (added 2026-09-11) - a member reported files
+            // uploaded in Evidence Vault weren't visible from here, which was
+            // true (this screen had no awareness of uploads at all). Same
+            // source of truth Evidence Vault itself reads (Storage listing),
+            // fetched by loadUploads() - see its comment above.
+            const files = state.type === 'be' ? (uploads[uploadKey(sectionName, qIdx + 1)] || []) : [];
+            if (files.length) {
+                html += `<div class="assess-evidence-files">📎 ${files.map(f => esc(f.name)).join(', ')}</div>`;
+            }
+
             // Cross-link into Evidence Vault at this exact question - the two
             // tools share the same (section, q) keying (see
             // frankie/sql/nr_evidence_analysis.sql). BE-only for now: Evidence
             // Vault's data (be_evidence_map.json) has no f4n counterpart yet.
             if (state.type === 'be') {
-                html += `<button class="assess-evidence-link" data-qidx="${qIdx}" type="button">📎 Attach evidence for this answer →</button>`;
+                html += `<button class="assess-evidence-link" data-qidx="${qIdx}" type="button">${files.length ? '📎 Manage evidence →' : '📎 Attach evidence for this answer →'}</button>`;
             }
 
             html += `</div>`; // close assess-question
@@ -442,6 +557,7 @@
 
     // ── Results ────────────────────────────────────────────────────────────────
     function renderResults() {
+        onResults = true;
         const body  = document.getElementById('assessBody');
         const title = document.getElementById('assessTitle');
         const footer = document.getElementById('assessFooter');
@@ -457,12 +573,19 @@
         const col = scoreColour(p);
         const lbl = scoreLabel(p);
 
-        // Section breakdown
+        // Section breakdown, plus the AI's evidence-based read per section
+        // where any evidence has been analyzed (BE only - see
+        // aiSectionScore()). This is the self-declared-vs-AI comparison
+        // flagged as not built when the underlying persistence/cross-link
+        // work landed earlier today - section-level, not per-question, per
+        // Rene: "it doesn't need every question, just the sections."
         const sectionRows = sections().map(([name], i) => {
             const s = sectionScore(i);
             const sp = pct(s.score, s.max);
             const sc = scoreColour(sp);
-            return { name, ...s, pct: sp, col: sc };
+            const ai = state.type === 'be' ? aiSectionScore(i) : { count: 0 };
+            const aiPct = ai.count ? pct(ai.score, ai.max) : null;
+            return { name, ...s, pct: sp, col: sc, aiPct, aiCount: ai.count, idx: i };
         }).sort((a,b) => a.pct - b.pct);
 
         let html = `
@@ -479,14 +602,16 @@
             </div>
 
             <h4 class="assess-results-section-hd">Section breakdown</h4>
+            <p class="assess-results-section-note">Click a section to jump back in and edit it. "AI" is the evidence read from Evidence Vault, where any has been reviewed.</p>
             ${sectionRows.map(r => `
-              <div class="assess-results-row">
+              <button class="assess-results-row" data-idx="${r.idx}" type="button">
                 <div class="assess-results-row-name">${esc(r.name)}</div>
                 <div class="assess-results-bar-wrap">
                   <div class="assess-results-bar" style="width:${r.pct}%;background:${r.col}"></div>
                 </div>
                 <div class="assess-results-row-score" style="color:${r.col}">${r.pct}%</div>
-              </div>`).join('')}
+                <div class="assess-results-ai-score" style="${r.aiPct !== null ? `color:${scoreColour(r.aiPct)}` : ''}">${r.aiPct !== null ? `AI ${r.aiPct}%` : '—'}</div>
+              </button>`).join('')}
 
             <h4 class="assess-results-section-hd">Priority improvements</h4>
             ${sectionRows.slice(0,3).map(r => `
@@ -499,6 +624,14 @@
           </div>`;
 
         body.innerHTML = html;
+
+        body.querySelectorAll('.assess-results-row').forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.sectionIdx = parseInt(btn.dataset.idx);
+                renderSectionBar();
+                renderSection();
+            });
+        });
 
         document.getElementById('assessRestart').addEventListener('click', () => {
             state = { type: state.type, sectionIdx: 0, answers: {} };
@@ -538,7 +671,9 @@
         companyId = null; // rebuild fresh each open, same reasoning as evidence-vault-drawer.js
         renderAll();
         document.getElementById('assessFooter').style.display = 'flex';
-        loadAnswers(state.type).then(renderAll);
+        loadAnswers(state.type).then(refreshCurrentView);
+        loadUploads().then(refreshCurrentView);
+        loadAiScores().then(refreshCurrentView);
     }
 
     function close() {

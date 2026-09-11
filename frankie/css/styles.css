@@ -1669,6 +1669,11 @@ button.rail-card--link {
     font-size: .78rem; font-weight: 600; cursor: pointer;
 }
 .assess-evidence-link:hover { text-decoration: underline; }
+.assess-evidence-files {
+    font-size: .76rem; color: #40566c;
+    background: #eef6fb; border: 1px solid #cfe6f2; border-radius: 6px;
+    padding: 5px 10px;
+}
 
 /* Footer */
 .assess-footer {
@@ -1717,15 +1722,24 @@ button.rail-card--link {
     font-size: .85rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: .05em; color: #40566c; margin: 4px 0 2px;
 }
+.assess-results-section-note { font-size: .74rem; color: #8494a8; margin: -4px 0 2px; }
 .assess-results-row {
     display: flex; align-items: center; gap: 10px;
+    width: 100%; background: none; border: none; border-radius: 6px;
+    padding: 4px 6px; margin: 0 -6px; cursor: pointer; text-align: left;
+    font: inherit;
 }
+.assess-results-row:hover { background: #f4f8fc; }
 .assess-results-row-name { font-size: .8rem; color: #142132; width: 160px; flex-shrink: 0; }
 .assess-results-bar-wrap {
     flex: 1; height: 8px; background: #e8eef5; border-radius: 4px; overflow: hidden;
 }
 .assess-results-bar { height: 100%; border-radius: 4px; transition: width .4s; }
 .assess-results-row-score { font-size: .78rem; font-weight: 700; width: 40px; text-align: right; }
+.assess-results-ai-score {
+    font-size: .74rem; font-weight: 700; width: 54px; text-align: right;
+    color: #b7c0cc; flex-shrink: 0;
+}
 
 .assess-priority-card {
     border-left: 3px solid #dde4ee; padding: 8px 12px;
