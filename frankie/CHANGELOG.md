@@ -1,5 +1,38 @@
 # Frankie changelog
 
+## 2026-09-11 — Explicit "Back to assessment" button, handbook link removed
+
+Two follow-ups from testing the three fixes above.
+
+**Explicit "← Back to assessment" button, on every Evidence Vault screen.**
+The earlier fix made closing Evidence Vault (X/backdrop/Escape) return to
+the assessment automatically, but that was invisible until you actually hit
+close - nothing on screen told you it would happen, and nothing offered it
+as an action. Added a visible button in the company bar (the blue strip
+under the topbar, present on every screen including Summary) that does the
+same thing explicitly - it's literally bound to the same `close()`
+function the X already uses, so there's one code path, not two. Only shows
+when Evidence Vault was actually opened via the assessment's own link
+(`returnTarget` set) - opening it from the sidebar menu still shows nothing
+there, exactly as before.
+
+**Handbook link removed from the self-assessment.** Went along with the
+per-answer feedback text removed in the fix above - Rene asked for it gone
+too. `.assess-hb-link`'s CSS rule stays in `styles.css` since
+`iso19443-drawer.js` still uses it independently.
+
+### Files touched
+- `frankie/js/evidence-vault-drawer.js` — back-to-assessment button in
+  `open()`.
+- `frankie/css/evidence-vault.css` — `.ev-back-to-assess`.
+- `frankie/js/assessment-drawer.js` — handbook link removed.
+
+### Verified
+- `node --check` on both edited JS files.
+- Confirmed `.assess-hb-link` still referenced by `iso19443-drawer.js`
+  before leaving its CSS rule in place.
+- Not live-tested end to end (no test member credentials in this session).
+
 ## 2026-09-11 — Self-assessment/Evidence Vault: three fixes from live feedback
 
 Three issues Rene hit testing the persistence + cross-link work added

@@ -814,8 +814,20 @@
 
     document.getElementById('evAuthWarn').hidden = true;
     document.getElementById('evMain').hidden     = false;
+    // "Back to assessment" (added 2026-09-11): explicit and visible on every
+    // Evidence Vault screen (question view and Summary alike), not just an
+    // implicit side-effect of clicking X - members reported not realising
+    // closing the drawer would take them anywhere. Only shown when there's
+    // actually somewhere to go back to (returnTarget set - i.e. opened via
+    // the assessment's own link, not the plain sidebar menu). Reuses close()
+    // itself, which already knows how to act on returnTarget.
     document.getElementById('evCompanyBar').innerHTML =
+      (returnTarget ? `<button class="ev-back-to-assess" id="evBackToAssess" type="button">← Back to assessment</button>` : '') +
       `<span class="ev-company-name">📂 ${company}</span><span class="ev-company-sub">Your evidence is private and visible only to you and your SCC.</span>`;
+    if (returnTarget) {
+      const backBtn = document.getElementById('evBackToAssess');
+      if (backBtn) backBtn.onclick = close;
+    }
 
     // Reset footer visibility
     document.getElementById('evPrev').style.visibility   = 'visible';

@@ -377,14 +377,10 @@
 
             html += `</div>`;
 
-            // Learn-more link only (2026-09-11: removed the redundant
-            // "feedback" copy that used to render here too - it just
-            // restated the selected option's own desc text back at the
-            // user, e.g. "mission/vision defined but not consistently
-            // used..." duplicating the button above with no new information).
-            if (selected !== undefined && q.handbookUrl) {
-                html += `<a class="assess-hb-link" href="${esc(q.handbookUrl)}" target="_blank" rel="noopener">📖 View in handbook →</a>`;
-            }
+            // 2026-09-11: per-answer feedback text and the handbook link
+            // both removed (Rene) - the feedback text just restated the
+            // selected option's own desc back at the user, and the handbook
+            // link went too along with it.
 
             // Cross-link into Evidence Vault at this exact question - the two
             // tools share the same (section, q) keying (see

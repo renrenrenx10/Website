@@ -42,6 +42,21 @@
   color: #0284c7;
   opacity: .8;
 }
+.ev-back-to-assess {
+  background: #fff;
+  border: 1px solid #7dd3fc;
+  color: #0369a1;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.ev-back-to-assess:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+}
 
 /* Section count badge */
 .ev-sec-count {
