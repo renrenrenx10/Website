@@ -1788,6 +1788,56 @@ button.rail-card--link {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   COMPLIANCE TRAINING QUIZ (Feature E) — reuses the .assess-drawer/
+   .assess-panel/.assess-topbar shell, same as every other tool
+══════════════════════════════════════════════════════════════════ */
+.quiz-progress {
+    font-size: .72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; color: #65758a;
+}
+.quiz-scenario {
+    font-size: .85rem; color: #40566c; line-height: 1.55;
+    background: #f4f8fc; border-left: 3px solid #29b6e8;
+    padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 6px 0 10px;
+}
+.quiz-question { font-size: .92rem; font-weight: 700; color: #142132; margin-bottom: 10px; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-option {
+    text-align: left; padding: 10px 14px; border-radius: 8px;
+    border: 1.5px solid #dde4ee; background: #fff;
+    font-size: .85rem; color: #2c3e50; cursor: pointer; transition: all .15s;
+}
+.quiz-option:hover:not(:disabled) { border-color: #29b6e8; background: #f0faff; }
+.quiz-option:disabled { cursor: default; }
+.quiz-option--correct { border-color: #4caf7d; background: #eaf7f1; color: #1a7a4c; font-weight: 600; }
+.quiz-option--wrong { border-color: #e05252; background: #fdeeee; color: #b3261e; font-weight: 600; }
+.quiz-explanation {
+    font-size: .82rem; line-height: 1.5; padding: 10px 14px;
+    border-radius: 0 8px 8px 0; border-left: 3px solid; margin-top: 12px;
+}
+.quiz-explanation--correct { background: #eaf7f1; border-color: #4caf7d; color: #1a5c3a; }
+.quiz-explanation--wrong { background: #fdeeee; border-color: #e05252; color: #7a1f1a; }
+
+.quiz-results { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 12px 0; }
+.quiz-results-hero {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 28px 40px; border-radius: 14px; width: 100%;
+}
+.quiz-results-hero--pass { background: #eaf7f1; }
+.quiz-results-hero--fail { background: #fdeeee; }
+.quiz-results-pct { font-family: 'Barlow Condensed', sans-serif; font-size: 2.4rem; font-weight: 800; color: #142132; }
+.quiz-results-hero--pass .quiz-results-label { color: #1a7a4c; }
+.quiz-results-hero--fail .quiz-results-label { color: #b3261e; }
+.quiz-results-label { font-size: 1rem; font-weight: 700; }
+.quiz-results-sub { font-size: .8rem; color: #65758a; }
+.quiz-retake-btn {
+    padding: 10px 28px; border-radius: 7px;
+    background: #142132; border: none; color: #fff;
+    font-size: .88rem; font-weight: 700; cursor: pointer; transition: background .15s;
+}
+.quiz-retake-btn:hover { background: #1e3247; }
+
+/* ══════════════════════════════════════════════════════════════════
    WEBSITE REVIEW DRAWER
 ══════════════════════════════════════════════════════════════════ */
 .wr-drawer {

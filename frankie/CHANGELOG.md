@@ -1,5 +1,73 @@
 # Frankie changelog
 
+## 2026-09-11 — First Compliance Training Quiz (Feature E): Cyber Essentials
+
+Feature E's first built module, following a source-gathering pass through
+`Feed_Frankie/Frankie files for quiz/` covering all four planned topics
+(Cyber Essentials, Export Control, GDPR, Modern Slavery) plus SQEP for
+Feature D. Cyber Essentials went first because its sourced material was
+richest — NCSC's own scheme overview, both technical requirement specs
+(IT Infrastructure v3.3, CE Plus test spec v3.2), and a real practice
+question set for calibration (used for format reference only, not copied —
+the actual quiz content is grounded directly in NCSC's own Crown Copyright
+requirements text).
+
+**New drawer**, `compliance-quiz-drawer.js` — deliberately generic (topic
+passed to `open()`, content keyed by topic in the data file) rather than
+Cyber-Essentials-specific, so the other three Feature E topics can slot in
+as more question banks later without a second drawer. Ten scenario
+questions across the five technical controls (Firewalls, Secure
+Configuration, Security Update Management, User Access Control, Malware
+Protection) — each poses a realistic situation, not a bare definition
+lookup, and immediate feedback quotes the actual requirement rather than
+just saying right/wrong. Reuses the `.assess-drawer`/`.assess-panel` shell
+and `DrawerSplashKit` every other tool already uses.
+
+**New table**, `nr_quiz_completions` — one row per attempt (not upserted),
+so a retake doesn't erase history; SCC gets read access for the training
+register Feature E's spec calls for. No override concept, unlike the
+evidence/self-assessment tables — a quiz score is an objective right/wrong
+count, nothing for SCC to adjust.
+
+Content data lives in `frankie/data/compliance_quiz_data.json` — a
+same-origin static file (not the gated Worker `/kb/*` route), since this
+content isn't member-sensitive and adding it this way needed no Cloudflare
+Worker/Blob changes.
+
+### Files touched
+- `frankie/js/compliance-quiz-drawer.js` — new.
+- `frankie/data/compliance_quiz_data.json` — new, `cyber_essentials` topic,
+  10 questions.
+- `frankie/sql/nr_quiz_completions.sql` — new.
+- `frankie/css/styles.css` — `.quiz-*` block.
+- `frankie/index.html` — sidebar entry (Compliance & Evidence section),
+  script include.
+
+### Verified
+- `node --check` on the new JS — no syntax errors.
+- JSON validated (`json.load`).
+- Tag-balance check on `index.html`, brace-balance on `styles.css`.
+- **Live-tested in a real browser** (local static server + a temporary test
+  harness, removed after): played through all 10 questions including both
+  a correct and an incorrect answer to confirm the green/red highlight and
+  explanation logic, verified the score footer counts correctly, reached
+  the results screen and confirmed the percentage/pass-fail math (2/10 →
+  20% → "Not yet", red state) and the pass-mark display, confirmed Retake
+  resets cleanly back to question 1. No console errors. Completion
+  logging to Supabase itself wasn't exercised (no test member credentials
+  in this session, same limitation as earlier fixes today) — the
+  fire-and-forget design means a failed log doesn't affect what the member
+  sees either way.
+
+### Not done
+- Export Control, GDPR, and Modern Slavery question banks — sourced,
+  not yet written.
+- SQEP is Feature D, not E — its sourced material (now sorted, see
+  `Feed_Frankie/Frankie files for quiz/SQEP/` and the off-topic strays
+  moved to `_not_sqep_from_search/`) still needs the scope-of-work table
+  and structured requirement tagging the blueprint flagged before Feature
+  D itself is buildable.
+
 ## 2026-09-11 — F4N Portal Score Guide
 
 Closes the loop on the self-assessment work from today: Rene confirmed

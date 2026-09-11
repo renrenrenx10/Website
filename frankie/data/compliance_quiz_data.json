@@ -1,0 +1,140 @@
+{
+  "cyber_essentials": {
+    "title": "Cyber Essentials",
+    "icon": "🛡️",
+    "intro": "Ten scenario questions covering the five Cyber Essentials technical controls — Firewalls, Secure Configuration, Security Update Management, User Access Control and Malware Protection. Sourced directly from NCSC's own “Cyber Essentials: Requirements for IT Infrastructure v3.3” (Crown Copyright).",
+    "passMark": 80,
+    "questions": [
+      {
+        "control": "Firewalls",
+        "scenario": "Your IT contractor sets up remote access to your office firewall's admin interface so they can manage it from home — using the firewall's factory default admin password, since nobody's got round to changing it.",
+        "question": "Which Cyber Essentials requirement does this breach?",
+        "options": [
+          "Nothing — factory passwords are fine as long as the interface isn't advertised publicly",
+          "Default admin passwords must be changed to a strong, unique password — or remote admin access disabled entirely",
+          "Firewalls only need protecting if the office uses public wifi",
+          "Only cloud firewalls require a password change"
+        ],
+        "correctIndex": 1,
+        "explanation": "For every firewall, you must change default administrative passwords to a strong and unique password — or disable remote administrative access entirely. Internet-facing admin interfaces additionally need MFA or an IP allow list."
+      },
+      {
+        "control": "Firewalls",
+        "scenario": "A new starter's laptop is connected straight to the office network before IT has applied any configuration at all.",
+        "question": "What must the firewall do by default with any inbound connection that hasn't been explicitly allowed?",
+        "options": [
+          "Allow it through, then log it for review later",
+          "Block unauthenticated inbound connections by default",
+          "Only block it if the source is outside the UK",
+          "Ask the user to confirm by email first"
+        ],
+        "correctIndex": 1,
+        "explanation": "Cyber Essentials requires that unauthenticated inbound connections are blocked by default — nothing gets in unless a documented, approved firewall rule lets it."
+      },
+      {
+        "control": "Secure Configuration",
+        "scenario": "A shared team laptop is set to auto-login with no PIN or password, so nobody has to type anything to start using it each morning.",
+        "question": "Does this meet Cyber Essentials' secure configuration requirements?",
+        "options": [
+          "Yes — convenience is fine as long as the office itself is locked",
+          "No — a credential (biometric, password or PIN) must be required before a user can access a device's services",
+          "Yes, but only laptops are exempt from this rule",
+          "Only an issue if the laptop ever leaves the building"
+        ],
+        "correctIndex": 1,
+        "explanation": "If a device requires a user's physical presence to access it, a credential must be in place before access is granted — and that credential must be protected against brute-force guessing (throttling or a lockout after no more than 10 attempts)."
+      },
+      {
+        "control": "Secure Configuration",
+        "scenario": "A server set up three years ago still has its original built-in “Guest” account enabled, unused, with its default password never changed.",
+        "question": "What does Cyber Essentials require here?",
+        "options": [
+          "Nothing — an unused account isn't a real risk",
+          "Remove or disable unnecessary user accounts, such as unused guest and administrative accounts, and change any default or guessable passwords",
+          "Only relevant if the server is directly internet-facing",
+          "Rename the account rather than remove it"
+        ],
+        "correctIndex": 1,
+        "explanation": "Organisations must regularly remove or disable unnecessary user accounts and change any default or guessable account passwords — an unused account with a default password is exactly the kind of weak point Secure Configuration exists to close."
+      },
+      {
+        "control": "Security Update Management",
+        "scenario": "A vendor releases a patch rated “critical” for software your business relies on. Three weeks later, it still hasn't been applied.",
+        "question": "Does this meet the requirement?",
+        "options": [
+          "Yes, as long as it's applied within 30 days",
+          "No — critical or high-risk updates (CVSS v3 score 7 or above) must be applied within 14 days of release",
+          "Yes — updates are only mandatory for servers",
+          "It depends on whether the vendor sent a reminder email"
+        ],
+        "correctIndex": 1,
+        "explanation": "Updates that fix vulnerabilities described as ‘critical’ or ‘high risk’ (or scoring 7+ on CVSS v3) must be applied within 14 days of release — three weeks is outside that window."
+      },
+      {
+        "control": "Security Update Management",
+        "scenario": "Your business still runs an accounting package the vendor stopped supporting — and stopped issuing security fixes for — two years ago. It still works fine day to day.",
+        "question": "What does Cyber Essentials require?",
+        "options": [
+          "Keep using it as long as it hasn't been compromised yet",
+          "It must be removed from in-scope devices, or removed from scope entirely via a defined sub-set with no internet traffic",
+          "Only a problem if it's a Windows application",
+          "Fine as long as a firewall is in place in front of it"
+        ],
+        "correctIndex": 1,
+        "explanation": "All software on in-scope devices must be licensed and supported, and removed from devices once it becomes unsupported (or excluded from scope via a properly defined, internet-isolated sub-set)."
+      },
+      {
+        "control": "User Access Control",
+        "scenario": "Jody, an IT administrator, uses their admin account for everyday email and web browsing, not just for admin tasks.",
+        "question": "Why does Cyber Essentials treat this as a risk, and what's required instead?",
+        "options": [
+          "It's fine — administrators are trusted users",
+          "Separate accounts must be used for administrative activities only — malware opened via email or a browser inherits whatever privilege level the account has",
+          "It's only a problem if Jody shares the password with anyone",
+          "Only domain administrator accounts are covered by this rule, not local ones"
+        ],
+        "correctIndex": 1,
+        "explanation": "Organisations must use separate accounts for administrative activities only, with no emailing, web browsing or other standard activity that could expose admin privileges to avoidable risk — if malware runs under an admin account, it acquires admin-level access too."
+      },
+      {
+        "control": "User Access Control",
+        "scenario": "Your business uses a cloud accounting platform. Staff log in with just a username and password — no second factor.",
+        "question": "Does this meet Cyber Essentials?",
+        "options": [
+          "Yes, as long as the password is 12+ characters",
+          "No — authentication to cloud services must always use multi-factor authentication",
+          "Only the admin account needs MFA",
+          "Only required if the platform stores payment data"
+        ],
+        "correctIndex": 1,
+        "explanation": "Cyber Essentials requires MFA wherever available — and authentication to cloud services must always use MFA, regardless of password length."
+      },
+      {
+        "control": "Malware Protection",
+        "scenario": "You issue locked-down tablets to field staff that can only run apps from an approved, code-signed list — no anti-malware software is installed.",
+        "question": "Does this satisfy the malware protection control?",
+        "options": [
+          "No — anti-malware software is always mandatory regardless of other controls",
+          "Yes — application allow listing (approved, code-signed apps only) is a valid alternative to anti-malware software",
+          "Only acceptable for mobile phones, not tablets",
+          "Only if it's also combined with a firewall"
+        ],
+        "correctIndex": 1,
+        "explanation": "For any in-scope device, you need at least one of: anti-malware software, or application allow listing — approved, code-signed applications only, with an actively maintained approval list. Both are valid, not just anti-malware."
+      },
+      {
+        "control": "Malware Protection",
+        "scenario": "Your Windows laptops have Microsoft Defender running, but nobody's checked whether it's actually configured correctly or being kept up to date.",
+        "question": "Is “it's installed” enough to meet the requirement?",
+        "options": [
+          "Yes — the presence of any anti-malware tool is sufficient",
+          "No — it must be active, kept up to date per the vendor's instructions, and configured to prevent malware running, block malicious code execution, and block connections to malicious websites",
+          "Only needs checking once a year",
+          "Only matters for servers, not laptops"
+        ],
+        "correctIndex": 1,
+        "explanation": "Anti-malware software must be updated in line with vendor recommendations and configured to prevent malware running, prevent execution of malicious code, and prevent connections to malicious websites — installed-but-unconfigured doesn't meet the bar."
+      }
+    ]
+  }
+}
