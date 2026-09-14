@@ -1,14 +1,15 @@
 // ── Model router ──────────────────────────────────────────────────────────────
-// Routes each query to the right model based on KB confidence score.
-//
-// Strategy:
-//   high confidence (≥ 0.6)  → Haiku   — KB has the answer; cheap synthesis
-//   medium confidence (0.3–0.6) → Sonnet — needs more reasoning with partial context
-//   low confidence (< 0.3)    → Sonnet — weakest context, needs best model to be useful
-//   no results                → local   — no LLM can help without source material
-//
-// This keeps costs low (~70% Haiku) while reserving Sonnet for the queries
-// where it actually makes a difference.
+// Routes each query to a model. Previously split high-confidence queries to
+// Haiku on the theory that "KB has the answer, cheap synthesis is fine" — see
+// git history for the old logic. Retired 2026-09-14: verified live that Haiku
+// fabricates precise facts (category lists, acronym expansions) even when the
+// correct source chunk is sitting in its own context — it paraphrases instead
+// of quoting, which is the one thing this product cannot tolerate being wrong
+// about. Rene's call: consistent, source-grounded answers over the cost saving.
+// Every Claude-routed query now goes to Sonnet. Keeping MODELS.haiku exported
+// (unused by this router) since other tools in this codebase (cqp-drawer.js,
+// ncr-drawer.js, etc.) still reference the Haiku model id directly for their
+// own, lower-stakes generation tasks — this change does not touch those.
 
 export const MODELS = {
     haiku:  'claude-haiku-4-5-20251001',
@@ -16,7 +17,8 @@ export const MODELS = {
 };
 
 /**
- * @param {number}  confidence   Normalised KB confidence 0–1
+ * @param {number}  confidence   Normalised KB confidence 0–1 (unused now — kept
+ *                                in the signature so callers don't need changing)
  * @param {boolean} claudeEnabled
  * @returns {{ route: string, model: string }}
  */
@@ -24,8 +26,6 @@ export function routeModel(confidence, claudeEnabled) {
     if (!claudeEnabled)    return { route: 'local',  model: null };
     if (confidence === 0)  return { route: 'local',  model: null };
 
-    if (confidence >= 0.6) return { route: 'claude', model: MODELS.haiku };
-    // medium or low confidence — use Sonnet for better reasoning with weak context
     return { route: 'claude', model: MODELS.sonnet };
 }
 
