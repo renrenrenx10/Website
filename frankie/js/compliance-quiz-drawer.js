@@ -131,6 +131,45 @@
         return t ? t.questions[state.qIdx] : null;
     }
 
+    // Section-awareness (added 2026-09-14, per Rene): topics are no longer
+    // flat question lists - each question carries a "section" id, and the
+    // topic carries a "sections" metadata array in display order. The
+    // question array itself STAYS FLAT (ordered so all of one section's
+    // questions are contiguous) - we just compute section boundaries from
+    // it here, rather than restructuring the state machine. A topic with no
+    // "sections" array (there shouldn't be one left, but belt-and-braces)
+    // falls back to treating the whole quiz as a single unnamed section, so
+    // this never throws on unexpected data.
+    function sectionsFor(t) {
+        if (t && Array.isArray(t.sections) && t.sections.length) return t.sections;
+        return [{ id: '__all__', title: t ? t.title : '' }];
+    }
+    // Returns { section, sectionIndex, indexInSection, sectionTotal, globalIndex, globalTotal }
+    // for the question currently at state.qIdx.
+    function sectionProgress() {
+        const t = topicData();
+        if (!t) return null;
+        const sections = sectionsFor(t);
+        const q = t.questions[state.qIdx];
+        const secId = (q && q.section) || sections[0].id;
+        let sectionIndex = sections.findIndex(s => s.id === secId);
+        if (sectionIndex === -1) sectionIndex = 0;
+        const section = sections[sectionIndex];
+        let indexInSection = 0, sectionTotal = 0;
+        t.questions.forEach(qq => {
+            const qSec = qq.section || sections[0].id;
+            if (qSec === section.id) {
+                sectionTotal += 1;
+                if (qq === q) indexInSection = sectionTotal;
+            }
+        });
+        return {
+            section, sectionIndex, indexInSection, sectionTotal,
+            sectionCount: sections.length,
+            globalIndex: state.qIdx + 1, globalTotal: t.questions.length,
+        };
+    }
+
     function esc(s) {
         return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
@@ -145,11 +184,16 @@
 
         state.priorScreen = 'question'; // so the Learn view's back button knows where to return to
 
+        const prog = sectionProgress();
+        const sectionLabel = (prog && prog.sectionCount > 1)
+            ? `Section ${prog.sectionIndex + 1} of ${prog.sectionCount}: ${prog.section.title} — Question ${prog.indexInSection} of ${prog.sectionTotal}`
+            : `Question ${state.qIdx + 1} of ${t.questions.length}`;
+
         title.textContent = `${t.icon} ${t.title} — Question ${state.qIdx + 1} of ${t.questions.length}`;
         footer.style.display = 'none';
 
         let html = `
-          <div class="quiz-progress">Question ${state.qIdx + 1} of ${t.questions.length} · ${q.control}</div>
+          <div class="quiz-progress">${esc(sectionLabel)} · ${esc(q.control)}</div>
           <div class="quiz-scenario">${esc(q.scenario)}</div>
           <div class="quiz-question">${esc(q.question)}</div>
           <div class="quiz-options">`;
@@ -247,7 +291,13 @@
         // pass/fail gate" piece: a member can see exactly what they got
         // wrong, why, and where in the source requirements it comes from,
         // not just walk away with a percentage.
-        const summaryRows = t.questions.map((q, i) => {
+        // Grouped by section heading when the topic has more than one
+        // section (added 2026-09-14) - a flat recap of 14+ questions reads
+        // as a wall of text otherwise; grouping mirrors how the quiz was
+        // actually taken. Falls back to a flat recap for any topic with a
+        // single (or no) section, so nothing regresses for edge-case data.
+        const sections = sectionsFor(t);
+        const rowFor = (q, i) => {
             const correct = !!state.answers[i];
             const yourIdx = state.selectedAnswers[i];
             return `
@@ -263,7 +313,22 @@
                 ${q.why ? `<div class="quiz-summary-why"><strong>💡 Why this matters:</strong> ${esc(q.why)}</div>` : ''}
                 ${q.reference ? `<div class="quiz-summary-reference">📖 ${esc(q.reference)}</div>` : ''}
               </div>`;
-        }).join('');
+        };
+
+        let summaryRows;
+        if (sections.length > 1) {
+            summaryRows = sections.map(sec => {
+                const rows = t.questions
+                    .map((q, i) => ({ q, i }))
+                    .filter(({ q }) => (q.section || sections[0].id) === sec.id)
+                    .map(({ q, i }) => rowFor(q, i))
+                    .join('');
+                if (!rows) return '';
+                return `<h5 class="quiz-summary-section-hd">${esc(sec.title)}</h5>${rows}`;
+            }).join('');
+        } else {
+            summaryRows = t.questions.map((q, i) => rowFor(q, i)).join('');
+        }
 
         body.innerHTML = `
           <div class="quiz-results">

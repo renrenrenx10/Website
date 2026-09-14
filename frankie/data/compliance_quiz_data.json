@@ -2,8 +2,30 @@
   "cyber_essentials": {
     "title": "Cyber Essentials",
     "icon": "🖥️",
-    "intro": "Ten scenario questions covering the five Cyber Essentials technical controls — Firewalls, Secure Configuration, Security Update Management, User Access Control and Malware Protection. Sourced directly from NCSC's own “Cyber Essentials: Requirements for IT Infrastructure v3.3” (Crown Copyright).",
+    "intro": "Fourteen scenario questions covering the five Cyber Essentials technical controls — Firewalls, Secure Configuration, Security Update Management, User Access Control and Malware Protection. Sourced directly from NCSC's own “Cyber Essentials: Requirements for IT Infrastructure v3.3” (Crown Copyright).",
     "passMark": 80,
+    "sections": [
+      {
+        "id": "firewalls",
+        "title": "Firewalls"
+      },
+      {
+        "id": "secure_configuration",
+        "title": "Secure Configuration"
+      },
+      {
+        "id": "security_update_management",
+        "title": "Security Update Management"
+      },
+      {
+        "id": "user_access_control",
+        "title": "User Access Control"
+      },
+      {
+        "id": "malware_protection",
+        "title": "Malware Protection"
+      }
+    ],
     "learn": [
       {
         "heading": "Firewalls",
@@ -29,28 +51,30 @@
     "questions": [
       {
         "control": "Firewalls",
+        "section": "firewalls",
         "scenario": "Your IT contractor sets up remote access to your office firewall's admin interface so they can manage it from home — using the firewall's factory default admin password, since nobody's got round to changing it.",
         "question": "Which Cyber Essentials requirement does this breach?",
         "options": [
-          "Nothing — factory passwords are fine as long as the interface isn't advertised publicly",
-          "Default admin passwords must be changed to a strong, unique password — or remote admin access disabled entirely",
-          "Firewalls only need protecting if the office uses public wifi",
-          "Only cloud firewalls require a password change"
+          "Default passwords must be changed to a strong, unique password, or remote admin access disabled",
+          "Nothing — factory passwords are fine if the interface isn't advertised publicly, according to standard internal policy",
+          "Firewalls only need protecting if the office also uses public wifi",
+          "Only cloud-hosted firewalls require their default password changed"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "For every firewall, you must change default administrative passwords to a strong and unique password — or disable remote administrative access entirely. Internet-facing admin interfaces additionally need MFA or an IP allow list.",
         "why": "The admin interface is the master control for everything the firewall protects — if an attacker can log into it, every other firewall rule stops mattering, because they can simply reconfigure or switch off the protection itself. A factory default password is public information (it's in the manual), so leaving it unchanged is functionally the same as leaving the front door key under the mat with a sign pointing to it.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls"
       },
       {
         "control": "Firewalls",
+        "section": "firewalls",
         "scenario": "A new starter's laptop is connected straight to the office network before IT has applied any configuration at all.",
         "question": "What must the firewall do by default with any inbound connection that hasn't been explicitly allowed?",
         "options": [
-          "Allow it through, then log it for review later",
+          "Allow it through, then log the connection for review later",
           "Block unauthenticated inbound connections by default",
-          "Only block it if the source is outside the UK",
-          "Ask the user to confirm by email first"
+          "Only block it if the source address is outside the UK",
+          "Ask the new starter to confirm the connection by email first"
         ],
         "correctIndex": 1,
         "explanation": "Cyber Essentials requires that unauthenticated inbound connections are blocked by default — nothing gets in unless a documented, approved firewall rule lets it.",
@@ -58,74 +82,127 @@
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls"
       },
       {
+        "control": "Firewalls",
+        "section": "firewalls",
+        "scenario": "Your firewall's admin interface needs to stay reachable from the internet so an offsite contractor can manage it, and the office decides a strong unique password is protection enough.",
+        "question": "Does a strong password alone satisfy Cyber Essentials for this internet-facing admin interface?",
+        "options": [
+          "Yes, provided the password is rotated on a 90-day cycle",
+          "Yes — strong passwords are the only safeguard ever required",
+          "No — it also needs MFA or a trusted IP allow list, not password strength alone",
+          "No — internet-facing admin interfaces aren't permitted at all, according to standard internal policy"
+        ],
+        "correctIndex": 2,
+        "explanation": "Where remote administrative access to a firewall genuinely has to be internet-facing, Cyber Essentials requires it to be protected by multi-factor authentication or a trusted IP allow list — a strong password alone isn't sufficient once the interface is reachable from the open internet.",
+        "why": "A password-only internet-facing admin interface is exactly the kind of target automated scanning tools hunt for around the clock — MFA or an IP allow list adds a second barrier that a leaked or guessed password alone can't get past, which matters far more here than on an interface nobody outside the building can even reach.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.1, Firewalls (Internet-facing admin interfaces)"
+      },
+      {
         "control": "Secure Configuration",
+        "section": "secure_configuration",
         "scenario": "A shared team laptop is set to auto-login with no PIN or password, so nobody has to type anything to start using it each morning.",
         "question": "Does this meet Cyber Essentials' secure configuration requirements?",
         "options": [
-          "Yes — convenience is fine as long as the office itself is locked",
-          "No — a credential (biometric, password or PIN) must be required before a user can access a device's services",
-          "Yes, but only laptops are exempt from this rule",
-          "Only an issue if the laptop ever leaves the building"
+          "Yes — convenience is fine as long as the office door itself is locked",
+          "Only an issue once the laptop actually leaves the building",
+          "Acceptable for shared devices, since no single user is responsible",
+          "No — a credential such as a PIN, password or biometric must be required first"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "If a device requires a user's physical presence to access it, a credential must be in place before access is granted — and that credential must be protected against brute-force guessing (throttling or a lockout after no more than 10 attempts).",
         "why": "A device with no credential gives away everything the moment it's physically accessible — a lost laptop on a train, an unattended desk, a stolen phone — no hacking skill required, just proximity. The brute-force protections matter too: without a throttle or lockout, even a real credential can eventually be guessed by a program trying thousands of combinations automatically, so the credential alone isn't the whole story.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration (Device unlocking credentials)"
       },
       {
         "control": "Secure Configuration",
+        "section": "secure_configuration",
         "scenario": "A server set up three years ago still has its original built-in “Guest” account enabled, unused, with its default password never changed.",
         "question": "What does Cyber Essentials require here?",
         "options": [
-          "Nothing — an unused account isn't a real risk",
-          "Remove or disable unnecessary user accounts, such as unused guest and administrative accounts, and change any default or guessable passwords",
-          "Only relevant if the server is directly internet-facing",
-          "Rename the account rather than remove it"
+          "Remove or disable the account, and change any default or guessable passwords",
+          "Nothing — an account nobody uses isn't a real risk",
+          "Only relevant if the server is directly reachable from the internet, provided it is documented in writing beforehand",
+          "Rename the account rather than remove it, to keep an audit trail"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "Organisations must regularly remove or disable unnecessary user accounts and change any default or guessable account passwords — an unused account with a default password is exactly the kind of weak point Secure Configuration exists to close.",
         "why": "Every account, used or not, is a potential way in — and an old Guest account nobody remembers is worse than a well-known one, because nobody's watching for it being used. Default installs create these weak points automatically (pre-set passwords, spare accounts, unnecessary services quietly running), which is exactly why Secure Configuration exists as its own control rather than being assumed covered by the other four.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration"
       },
       {
+        "control": "Secure Configuration",
+        "section": "secure_configuration",
+        "scenario": "A new laptop ships with three trial applications and a media-sharing service nobody in the business uses, plus auto-run enabled on removable USB drives.",
+        "question": "What does Secure Configuration require the business to do with this before the laptop goes into use?",
+        "options": [
+          "Leave the trial software until its trial period expires naturally",
+          "Remove software that isn't needed, and disable auto-run on removable media",
+          "Only auto-run needs fixing — unused software is a licensing issue, not security",
+          "Nothing — pre-installed software is already vetted by the manufacturer"
+        ],
+        "correctIndex": 1,
+        "explanation": "Secure Configuration requires removing or disabling software and services that aren't needed, and disabling auto-run features that let files execute without anyone approving them first — both the unused applications and the auto-run setting need addressing before the device is deployed.",
+        "why": "Every extra application and every auto-executing feature is one more thing that can be exploited without anyone doing anything obviously wrong — auto-run in particular has been a favourite route for malware spreading via USB drives for years, precisely because it needs no user action at all to trigger.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.2, Secure Configuration"
+      },
+      {
         "control": "Security Update Management",
+        "section": "security_update_management",
         "scenario": "A vendor releases a patch rated “critical” for software your business relies on. Three weeks later, it still hasn't been applied.",
         "question": "Does this meet the requirement?",
         "options": [
-          "Yes, as long as it's applied within 30 days",
-          "No — critical or high-risk updates (CVSS v3 score 7 or above) must be applied within 14 days of release",
-          "Yes — updates are only mandatory for servers",
-          "It depends on whether the vendor sent a reminder email"
+          "Yes, as long as it's applied within 30 days of release",
+          "Yes — updates are only mandatory for internet-facing servers",
+          "No — critical or high-risk updates (CVSS 7+) must be applied within 14 days",
+          "It depends on whether the vendor sent a follow-up reminder email, provided it is documented in writing beforehand"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "Updates that fix vulnerabilities described as ‘critical’ or ‘high risk’ (or scoring 7+ on CVSS v3) must be applied within 14 days of release — three weeks is outside that window.",
         "why": "Publishing a security patch effectively announces where a weakness was — attackers study updates specifically to work out what they fix, then go looking for anyone who hasn't applied it yet. The 14-day window isn't arbitrary caution, it's a race against exactly that process, and three weeks gives real attackers a real head start on a known, public weakness.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
       },
       {
         "control": "Security Update Management",
+        "section": "security_update_management",
         "scenario": "Your business still runs an accounting package the vendor stopped supporting — and stopped issuing security fixes for — two years ago. It still works fine day to day.",
         "question": "What does Cyber Essentials require?",
         "options": [
-          "Keep using it as long as it hasn't been compromised yet",
-          "It must be removed from in-scope devices, or removed from scope entirely via a defined sub-set with no internet traffic",
-          "Only a problem if it's a Windows application",
-          "Fine as long as a firewall is in place in front of it"
+          "Keep using it as normal, provided it hasn't been compromised so far",
+          "Acceptable, so long as a firewall sits in front of it",
+          "Only a problem if it happens to be Windows software",
+          "It must be removed from in-scope devices, or isolated with no internet access"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "All software on in-scope devices must be licensed and supported, and removed from devices once it becomes unsupported (or excluded from scope via a properly defined, internet-isolated sub-set).",
         "why": "Once a vendor stops supporting a product, any new vulnerability discovered in it will never get fixed — the gap between what's protected and what's exploitable only grows over time, with no way to close it while the software stays connected to your network. \"It still works fine\" describes functionality, not security — the two aren't the same thing, and unsupported software is a permanently open door, not a currently-quiet one.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
       },
       {
+        "control": "Security Update Management",
+        "section": "security_update_management",
+        "scenario": "IT leaves automatic updates switched off across the fleet of laptops \"to avoid disruption during the working day\", relying instead on someone manually checking for updates once a quarter.",
+        "question": "Does this approach meet Cyber Essentials' expectations on updates?",
+        "options": [
+          "No — automatic updates should be switched on wherever available",
+          "Yes — quarterly manual checks satisfy the requirement if they happen",
+          "Yes, provided the laptops get reimaged once a year regardless",
+          "No — but only because quarterly is too rare; monthly checks would suffice"
+        ],
+        "correctIndex": 0,
+        "explanation": "Cyber Essentials expects automatic updates to be switched on wherever that's an option, precisely so critical and high-risk fixes land inside the 14-day window without depending on someone remembering to check manually.",
+        "why": "A quarterly manual check leaves months where a known, publicly disclosed vulnerability sits unpatched on every device in the fleet — automatic updates close that gap by design rather than by whoever happens to remember, which is exactly why Cyber Essentials treats them as the preferred default rather than an optional convenience.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.3, Security Update Management"
+      },
+      {
         "control": "User Access Control",
+        "section": "user_access_control",
         "scenario": "Jody, an IT administrator, uses their admin account for everyday email and web browsing, not just for admin tasks.",
         "question": "Why does Cyber Essentials treat this as a risk, and what's required instead?",
         "options": [
-          "It's fine — administrators are trusted users",
-          "Separate accounts must be used for administrative activities only — malware opened via email or a browser inherits whatever privilege level the account has",
-          "It's only a problem if Jody shares the password with anyone",
-          "Only domain administrator accounts are covered by this rule, not local ones"
+          "It's fine, since administrators are trusted, experienced users",
+          "Separate accounts must be used for admin tasks only, since malware inherits the account's privilege",
+          "Only a problem if Jody actually shares the password with someone",
+          "Only domain admin accounts are covered by this rule, not local ones, based on the usual day-to-day interpretation"
         ],
         "correctIndex": 1,
         "explanation": "Organisations must use separate accounts for administrative activities only, with no emailing, web browsing or other standard activity that could expose admin privileges to avoidable risk — if malware runs under an admin account, it acquires admin-level access too.",
@@ -134,43 +211,62 @@
       },
       {
         "control": "User Access Control",
+        "section": "user_access_control",
         "scenario": "Your business uses a cloud accounting platform. Staff log in with just a username and password — no second factor.",
         "question": "Does this meet Cyber Essentials?",
         "options": [
-          "Yes, as long as the password is 12+ characters",
-          "No — authentication to cloud services must always use multi-factor authentication",
-          "Only the admin account needs MFA",
-          "Only required if the platform stores payment data"
+          "Yes, as long as the password is at least 12 characters",
+          "Only the admin account on the platform needs MFA",
+          "No — authentication to cloud services must always use MFA",
+          "Only required if the platform stores payment card details"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "Cyber Essentials requires MFA wherever available — and authentication to cloud services must always use MFA, regardless of password length.",
         "why": "A password on its own is only as strong as the last place someone reused it — password lists leaked from unrelated websites get tried against completely different services, and it works often enough to be worth an attacker's time. MFA means a stolen password alone isn't enough to get in, which matters especially for cloud services since, unlike an office network, they're reachable by anyone on the internet, not just someone already inside your building.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.4, User Access Control (Multi-factor authentication)"
       },
       {
+        "control": "User Access Control",
+        "section": "user_access_control",
+        "scenario": "An employee leaves the business on a Friday. Their laptop is collected the same day, but their network login and email account stay active \"in case anything needs picking up\" for the next few weeks.",
+        "question": "Does leaving the account active meet Cyber Essentials' user access requirements?",
+        "options": [
+          "Yes — a short grace period after someone leaves is explicitly permitted, if agreed in advance with the relevant manager",
+          "Yes, provided the laptop itself was already returned that day",
+          "Only a problem if the employee left on bad terms",
+          "No — accounts must be disabled promptly once no longer needed, such as at leaving"
+        ],
+        "correctIndex": 3,
+        "explanation": "Cyber Essentials requires accounts to be removed or disabled as soon as they're no longer needed — when someone leaves the organisation, or after a defined period of inactivity — rather than being left open indefinitely on the basis they might be useful.",
+        "why": "An active account with no one legitimately using it is pure risk with no offsetting benefit — it can be used by the departing employee, or by anyone else who obtains the credentials, and \"in case something needs picking up\" almost never turns into an actual documented business need worth the exposure.",
+        "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.4, User Access Control"
+      },
+      {
         "control": "Malware Protection",
+        "section": "malware_protection",
         "scenario": "You issue locked-down tablets to field staff that can only run apps from an approved, code-signed list — no anti-malware software is installed.",
         "question": "Does this satisfy the malware protection control?",
         "options": [
-          "No — anti-malware software is always mandatory regardless of other controls",
-          "Yes — application allow listing (approved, code-signed apps only) is a valid alternative to anti-malware software",
+          "Yes — application allow listing, code-signed apps only, is a valid alternative",
+          "No — anti-malware software is always mandatory, whatever else is in place",
           "Only acceptable for mobile phones, not tablets",
-          "Only if it's also combined with a firewall"
+          "Only acceptable if it's also combined with a firewall"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "For any in-scope device, you need at least one of: anti-malware software, or application allow listing — approved, code-signed applications only, with an actively maintained approval list. Both are valid, not just anti-malware.",
         "why": "Traditional anti-malware works by recognising threats it already knows about — which means brand-new malware nobody's seen before can slip through until a vendor catches up and issues a detection for it. Allow listing flips that model entirely: nothing runs unless it's already approved, so it doesn't matter whether something is old or brand new — if it's not on the list, it simply never gets the chance to execute in the first place.",
         "reference": "Cyber Essentials: Requirements for IT Infrastructure v3.3 — Section E.5, Malware Protection (Application allow listing)"
       },
       {
         "control": "Malware Protection",
+        "section": "malware_protection",
         "scenario": "Your Windows laptops have Microsoft Defender running, but nobody's checked whether it's actually configured correctly or being kept up to date.",
         "question": "Is “it's installed” enough to meet the requirement?",
         "options": [
-          "Yes — the presence of any anti-malware tool is sufficient",
-          "No — it must be active, kept up to date per the vendor's instructions, and configured to prevent malware running, block malicious code execution, and block connections to malicious websites",
-          "Only needs checking once a year",
-          "Only matters for servers, not laptops"
+          "Yes — any recognised anti-malware tool being present is sufficient, based on the usual day-to-day interpretation",
+          "No — it must be active, kept current, and configured to block malware and bad sites",
+          "Only needs reviewing once a year, at renewal time",
+          "Only matters for servers, not end-user laptops"
         ],
         "correctIndex": 1,
         "explanation": "Anti-malware software must be updated in line with vendor recommendations and configured to prevent malware running, prevent execution of malicious code, and prevent connections to malicious websites — installed-but-unconfigured doesn't meet the bar.",
@@ -182,48 +278,135 @@
   "gdpr": {
     "title": "GDPR",
     "icon": "🔒",
-    "intro": "Ten scenario questions covering the UK GDPR principles and individual rights that come up most in day-to-day supplier operations — lawfulness and consent, data minimisation and retention, security, breach reporting, subject access, erasure, controllers vs processors, and special category data. Sourced directly from the ICO's own guidance.",
+    "intro": "Fourteen scenario questions covering the seven UK GDPR principles — lawfulness/fairness/transparency, purpose limitation, data minimisation, accuracy, storage limitation, integrity/confidentiality and accountability — plus the individual rights and roles that come up most in day-to-day supplier operations. Sourced directly from the ICO's own guidance.",
     "passMark": 80,
+    "sections": [
+      {
+        "id": "lawfulness_fairness_transparency",
+        "title": "Lawfulness, Fairness & Transparency"
+      },
+      {
+        "id": "purpose_limitation",
+        "title": "Purpose Limitation"
+      },
+      {
+        "id": "data_minimisation",
+        "title": "Data Minimisation"
+      },
+      {
+        "id": "accuracy",
+        "title": "Accuracy"
+      },
+      {
+        "id": "storage_limitation",
+        "title": "Storage Limitation"
+      },
+      {
+        "id": "integrity_confidentiality_breach",
+        "title": "Integrity, Confidentiality & Breach Reporting"
+      },
+      {
+        "id": "accountability",
+        "title": "Accountability"
+      },
+      {
+        "id": "individual_rights_roles",
+        "title": "Individual Rights & Roles"
+      }
+    ],
+    "learn": [
+      {
+        "heading": "Lawfulness, Fairness & Transparency",
+        "body": "This is the first of the UK GDPR's seven principles, and everything else rests on it: you must have a valid lawful basis — one of six set out in Article 6 — before processing anyone's personal data, and you must be clear, open and honest with people about how their data will be used. Consent is one of those six lawful bases, but not the only one, and it comes with its own standard: it has to be a positive opt-in, freely given, specific and informed. Pre-ticked boxes or any other form of default, assumed consent don't count.\n\nFairness means not using data in ways people wouldn't reasonably expect, or that would have unjustified adverse effects on them. Transparency means telling people — usually through a privacy notice — what you're collecting, why, and who it might be shared with, before or at the point of collection, not after the fact."
+      },
+      {
+        "heading": "Purpose Limitation",
+        "body": "Personal data must be collected for specified, explicit and legitimate purposes, and not processed later in any way that's incompatible with those purposes. In practice, that means writing down why you're collecting data before you collect it, and checking any new use against that original purpose — is it the same purpose, a closely related one, or something genuinely new that needs its own lawful basis?\n\nThis principle doesn't freeze an organisation in place forever — data can be used for new, compatible purposes, and further processing for archiving, research or statistical purposes in the public interest gets some latitude. What it stops is data drifting from \"we collected this to deliver your order\" to \"we're now using it however's convenient,\" without anyone checking whether that's actually allowed."
+      },
+      {
+        "heading": "Data Minimisation",
+        "body": "Personal data has to be adequate, relevant, and limited to what's actually necessary for the purpose it's being collected for. Collecting extra fields \"just in case they're useful later\" fails this test even if the intentions are good — necessity is judged against the stated purpose, not against hypothetical future usefulness.\n\nMinimisation isn't just a compliance checkbox — it directly limits how much damage a future breach can do, since nothing can be exposed that was never collected in the first place. It's worth periodically reviewing existing forms and systems against this test too, not just new ones, since requirements (and what's \"necessary\") can change over time."
+      },
+      {
+        "heading": "Accuracy",
+        "body": "Personal data must be accurate and, where necessary, kept up to date. Every reasonable step must be taken to correct or erase data that's found to be inaccurate or out of date, having regard to the purposes for which it's processed — and that duty doesn't stop the moment someone flags an error, it continues until the record is actually fixed.\n\nAccuracy matters because inaccurate data produces real, wrong outcomes for as long as it's relied on — a wrong address means missed deliveries or invoices sent to the wrong place, a wrong medical detail can affect a decision made about someone. It's also one of the principles individuals can most directly notice failing, which makes an ignored correction request a particularly visible kind of non-compliance."
+      },
+      {
+        "heading": "Storage Limitation",
+        "body": "Personal data must not be kept for longer than is necessary for the purposes it was collected for. Organisations need a retention policy — standard periods for different types of data, a process for reviewing what's held, and a mechanism for erasing or anonymising data once it's no longer needed, rather than an unwritten habit of just never deleting anything.\n\n\"Might need it someday\" isn't a retention policy. Data doesn't become safer the longer it sits around — it becomes a bigger, staler liability, fully exposed in any future breach but with progressively less legitimate purpose behind holding it."
+      },
+      {
+        "heading": "Integrity, Confidentiality & Breach Reporting",
+        "body": "Personal data must be processed in a way that ensures appropriate security — protecting against unauthorised or unlawful processing, and against accidental loss, destruction or damage — using appropriate technical and organisational measures. What counts as \"appropriate\" is judged against the actual risk the processing poses, not against whether the tool used (email, a spreadsheet, a USB drive) is a familiar everyday one.\n\nWhen security fails and a breach happens, certain breaches must be reported to the ICO within 72 hours of becoming aware, where feasible, and affected individuals told without undue delay if their rights and freedoms are at high risk. Every breach — reportable to the ICO or not — still needs to be logged internally, since the assessment of whether it's reportable is itself part of that record."
+      },
+      {
+        "heading": "Accountability",
+        "body": "Accountability requires organisations to take responsibility for how they process personal data, and to be able to demonstrate compliance proactively — not just comply quietly and hope it's never checked. Two concrete things flow from this in practice: Data Protection Impact Assessments (DPIAs) before starting processing likely to result in high risk to individuals (systematic profiling and large-scale use of special category data are examples the guidance gives), and records of processing activities under Article 30 — what data is held, why, and who it's shared with.\n\nGetting high-risk processing wrong without having done a DPIA first is one of the areas that can attract the UK GDPR's higher tier of fines, up to £8.7 million or 2% of global annual turnover. Article 30 records are what let an organisation actually answer a regulator's questions (or a subject access request) accurately, rather than reconstructing the answer from memory after the fact."
+      },
+      {
+        "heading": "Individual Rights & Roles",
+        "body": "Alongside the seven principles, UK GDPR gives individuals a set of specific rights over their own data — including the right of access (a subject access request, usually free, with a one-month response deadline), the right to erasure (\"the right to be forgotten,\" not absolute but still needing a timely, considered response), and the right to have inaccurate data corrected. Special category data — health, religion, sexuality, ethnicity and similar — needs an extra Article 9 condition on top of the normal Article 6 lawful basis before it can be processed at all.\n\nSeparately, every organisation handling personal data is either a controller (decides why and how data is processed) or a processor (acts only on a controller's instructions) — a distinction that depends on the actual relationship, not on what a contract happens to call either party, and one that carries genuinely different legal obligations for each role."
+      }
+    ],
     "questions": [
       {
         "control": "Lawfulness, Fairness & Transparency",
+        "section": "lawfulness_fairness_transparency",
         "scenario": "A company starts emailing marketing offers to everyone on its supplier contact list, using addresses that were only ever given for invoicing purposes — without telling anyone or checking whether it's allowed.",
         "question": "Does this meet the UK GDPR's first principle?",
         "options": [
-          "Yes — business marketing is always a reasonable use of contact data",
-          "No — you must identify a valid lawful basis for this specific use, and be clear and open about it, before processing data this way",
-          "Yes, as long as an unsubscribe link is included",
-          "Only a problem if someone actually complains"
+          "Yes — business marketing is a reasonable use of any contact data held",
+          "Yes, as long as an unsubscribe link is included in every email",
+          "No — a valid lawful basis and openness about this new use are both needed first",
+          "Only a problem if a recipient specifically complains about it"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "You must identify valid grounds (a “lawful basis”) under the UK GDPR for collecting and using personal data, and be clear, open and honest with people from the start about how you'll use it. Using invoicing contacts for marketing, with no lawful basis and no transparency, breaches this principle.",
         "why": "Lawfulness, fairness and transparency comes first among the UK GDPR's seven principles because everything else depends on it — no amount of good security or accurate record-keeping fixes the fact that you never had a valid reason to process the data in the first place. Using data for a new purpose people weren't told about also breaks their reasonable expectations, which is exactly what “fairness” exists to protect.",
         "reference": "ICO Guide to the UK GDPR — Principle (a): Lawfulness, Fairness and Transparency"
       },
       {
         "control": "Consent",
+        "section": "lawfulness_fairness_transparency",
         "scenario": "A website's newsletter sign-up box is pre-ticked by default, so visitors have to actively un-tick it to avoid being added to the mailing list.",
         "question": "Does this meet the UK GDPR's standard for consent?",
         "options": [
-          "Yes, as long as there's a way to opt out later",
-          "No — consent requires a positive opt-in; pre-ticked boxes or any other method of default consent don't meet the standard",
-          "Yes, pre-ticking is an accepted shortcut for newsletters specifically",
-          "Only an issue for special category data"
+          "Yes, as long as there's a way to opt out again later",
+          "Yes — pre-ticking is an accepted shortcut for newsletter sign-ups, under typical low-risk circumstances",
+          "Only an issue when the data collected is special category data",
+          "No — consent needs a positive opt-in; pre-ticked boxes don't meet the standard"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "Consent requires a positive opt-in — organisations must not use pre-ticked boxes or any other method of default consent. Genuine consent has to be freely given, specific, and an active choice, not something people have to notice and undo.",
         "why": "The whole point of consent as a lawful basis is giving people real control — a pre-ticked box quietly assumes agreement nobody actually gave, which defeats that purpose entirely. It's also one of the most commonly cited failures in real ICO enforcement action, precisely because it looks compliant at a glance while not actually being a choice at all.",
         "reference": "ICO Guidance on Consent"
       },
       {
+        "control": "Purpose Limitation",
+        "section": "purpose_limitation",
+        "scenario": "A company collects delivery addresses solely to fulfil customer orders, then later starts using that same address list to send unrelated marketing mailshots, without telling customers or offering a new choice.",
+        "question": "Does this meet the UK GDPR's purpose limitation principle?",
+        "options": [
+          "No — data collected for one purpose can't be reused for an incompatible new one without a fresh basis",
+          "Yes — once collected lawfully, data can be used for any later business purpose, if agreed in advance with the relevant manager",
+          "Yes, provided the same company sends both the order and the marketing",
+          "Only a problem if the customer explicitly objected to marketing at signup"
+        ],
+        "correctIndex": 0,
+        "explanation": "Purpose limitation means personal data must be collected for specified, explicit and legitimate purposes, and not further processed in a way incompatible with those purposes — reusing delivery addresses for marketing is a new purpose that needs its own lawful basis, or a genuine assessment that it's compatible with the original one, neither of which happened here.",
+        "why": "This principle is what stops a lawful, well-intentioned initial collection from quietly becoming a licence to use the data for anything at all later — without it, \"we already had the data\" would effectively override the whole point of telling people what it would be used for in the first place.",
+        "reference": "ICO Guide to the UK GDPR — Principle (b): Purpose Limitation"
+      },
+      {
         "control": "Data Minimisation",
+        "section": "data_minimisation",
         "scenario": "An online job application form asks every applicant for their date of birth, marital status and religion “just in case it's useful later,” even though none of it is relevant to the role being advertised.",
         "question": "Does this meet the data minimisation principle?",
         "options": [
-          "Yes — collecting more data upfront saves having to ask again later",
-          "No — personal data must be adequate, relevant, and limited to what's necessary for the stated purpose; “might be useful” isn't the same as “necessary”",
-          "Yes, as long as the form marks the fields as optional",
-          "Only a problem if the data is later shared with someone else"
+          "Yes — collecting more data upfront saves asking again later",
+          "No — data must be adequate, relevant and limited to what's necessary",
+          "Yes, as long as the extra form fields are marked optional",
+          "Only a problem once the data is actually shared with a third party"
         ],
         "correctIndex": 1,
         "explanation": "Personal data must be adequate, relevant, and limited to what is necessary for your specified purpose — collecting sensitive data “just in case” fails all three tests at once.",
@@ -231,44 +414,63 @@
         "reference": "ICO Guide to the UK GDPR — Principle (c): Data Minimisation"
       },
       {
+        "control": "Accuracy",
+        "section": "accuracy",
+        "scenario": "A customer notifies a company that their billing address on file is wrong. The company acknowledges the message but never actually updates the record, and continues sending invoices to the old address for months.",
+        "question": "Does this meet the UK GDPR's accuracy principle?",
+        "options": [
+          "Yes — acknowledging the message is sufficient regardless of what follows",
+          "Yes, provided the address was correct when first collected",
+          "No — inaccurate data must be corrected or erased without undue delay",
+          "Only a legal issue if the error causes the customer financial loss"
+        ],
+        "correctIndex": 2,
+        "explanation": "The accuracy principle requires personal data to be accurate and, where necessary, kept up to date — every reasonable step must be taken to correct or erase data that's found to be inaccurate, having regard to the purpose it's processed for, and an acknowledged error left uncorrected for months doesn't meet that bar.",
+        "why": "Inaccurate data doesn't just sit there harmlessly — it actively produces wrong outcomes for as long as it's relied on, in this case months of misdirected invoices, and accuracy is one of the principles individuals can most directly see fail, which is exactly why the ICO treats a known, unactioned correction request seriously.",
+        "reference": "ICO Guide to the UK GDPR — Principle (d): Accuracy"
+      },
+      {
         "control": "Storage Limitation",
+        "section": "storage_limitation",
         "scenario": "A company still holds full CVs and application details for every candidate who's applied for a job in the last eight years — including people never hired — with no policy on when any of it gets deleted.",
         "question": "Does this meet the storage limitation principle?",
         "options": [
-          "Yes, as long as the data is kept securely",
-          "No — personal data must not be kept longer than needed, and organisations need a retention policy with regular review and deletion",
+          "Yes, provided the data is being kept securely in the meantime",
           "Yes — keeping records indefinitely protects against future legal claims",
-          "Only relevant for customer data, not job applicants"
+          "Only relevant for customer data, not unsuccessful job applicants",
+          "No — data must not be kept longer than needed, with a proper retention policy"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "You must not keep personal data for longer than you need it, and should have a policy setting standard retention periods, reviewing what's held, and erasing or anonymising it once it's no longer needed.",
         "why": "Data doesn't get safer the longer it's kept — it becomes a bigger, staler liability, fully exposed in any future breach but with less and less legitimate purpose behind holding it. Unsuccessful job applicants in particular have a reasonable expectation their details won't sit on file indefinitely once a role's been filled — “might need it someday” isn't a retention policy.",
         "reference": "ICO Guide to the UK GDPR — Principle (e): Storage Limitation"
       },
       {
         "control": "Security",
+        "section": "integrity_confidentiality_breach",
         "scenario": "A company emails a spreadsheet of customer names, addresses and order histories to a subcontractor, unencrypted, over regular email.",
         "question": "Does this meet the UK GDPR's security principle?",
         "options": [
-          "Yes — email is a normal, everyday business tool",
-          "No — appropriate technical and organisational measures (such as encryption where appropriate) are required to protect personal data's confidentiality, integrity and availability",
-          "Yes, as long as the subcontractor has signed a contract",
-          "Only relevant for special category data"
+          "No — appropriate measures, such as encryption where appropriate, are required",
+          "Yes — email is a normal, everyday tool for sharing business files",
+          "Yes, as long as the subcontractor has signed a processing contract, as confirmed informally by the compliance team",
+          "Only relevant when the data being sent is special category data"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "The security principle requires “appropriate technical and organisational measures” to protect personal data — including encryption and pseudonymisation where appropriate, proportionate to the risk the processing poses.",
         "why": "An unencrypted email can be intercepted, misaddressed, or sit unsecured in an inbox indefinitely — “appropriate” measures are judged against exactly that kind of realistic risk, not just whether the tool used is a familiar one. The ICO developed its security approach jointly with the NCSC precisely because data protection and cyber security are the same problem seen from two angles — get one wrong and the other is usually wrong too.",
         "reference": "ICO Guide to Data Security"
       },
       {
         "control": "Personal Data Breaches",
+        "section": "integrity_confidentiality_breach",
         "scenario": "A staff member reports that a laptop containing an unencrypted customer database was stolen from their car three days ago. Nobody has told the ICO yet, because “we're not sure if it counts as serious.”",
         "question": "What does the UK GDPR require here?",
         "options": [
-          "Wait until you're completely certain before doing anything",
-          "Notify the ICO within 72 hours of becoming aware of the breach, where feasible — and inform affected individuals too if their rights and freedoms are at high risk",
+          "Wait until you're completely certain before doing anything at all",
+          "Notify the ICO within 72 hours of becoming aware, and tell affected people if at high risk",
           "Only report it once the police confirm the laptop is unrecoverable",
-          "No obligation exists unless the data was specifically targeted by the thief"
+          "No obligation exists unless the data was specifically targeted by the thief, under typical low-risk circumstances"
         ],
         "correctIndex": 1,
         "explanation": "Certain personal data breaches must be reported to the ICO within 72 hours of becoming aware of them, where feasible, and affected individuals must be informed without undue delay if there's a high risk to their rights and freedoms. Every breach — reportable or not — must also be logged internally.",
@@ -276,29 +478,63 @@
         "reference": "ICO Guide to Personal Data Breaches"
       },
       {
+        "control": "Accountability",
+        "section": "accountability",
+        "scenario": "A company plans to roll out a new system that will systematically profile customers to predict their likely future spending, using automated decision-making with no human review, ahead of a wider marketing campaign.",
+        "question": "What does the accountability principle require before this goes live?",
+        "options": [
+          "Nothing extra — accountability only concerns record-keeping after processing starts",
+          "Sign-off from the marketing director alone is sufficient",
+          "A DPIA, since systematic profiling with automated decisions is likely high-risk",
+          "Only relevant if the profiling system is bought in rather than built in-house"
+        ],
+        "correctIndex": 2,
+        "explanation": "The accountability principle requires organisations to take responsibility for how they process data and demonstrate compliance proactively, not just react if something goes wrong. One concrete requirement flowing from it is a Data Protection Impact Assessment (DPIA) before starting any processing likely to result in high risk to individuals — systematic profiling and automated decision-making are examples the guidance specifically calls out.",
+        "why": "A DPIA forces the risk assessment to happen before the system goes live rather than after something has already gone wrong — getting this wrong on high-risk processing carries some of the highest fines available under the regime (up to £8.7 million or 2% of global turnover), which is exactly the kind of exposure accountability is meant to prevent by building the check in upfront rather than leaving it to be found later.",
+        "reference": "ICO Guidance — What is a DPIA?; UK GDPR Article 35"
+      },
+      {
+        "control": "Accountability",
+        "section": "accountability",
+        "scenario": "An organisation processes personal data across several systems but has never written down what data it holds, why, or who it's shared with — nobody could produce a clear answer if asked.",
+        "question": "What does the accountability principle require here?",
+        "options": [
+          "Nothing, provided the organisation has never actually had a breach",
+          "A written record is only required above 500 employees",
+          "Verbal knowledge among senior staff is an acceptable substitute",
+          "Records of what data is held, why, and who it's shared with, as evidence of compliance"
+        ],
+        "correctIndex": 3,
+        "explanation": "Accountability requires organisations to be able to demonstrate compliance, not just achieve it informally — under Article 30, most organisations must maintain records of processing activities: what personal data is held, the purposes it's used for, and who it's shared with, kept up to date and available to the ICO on request.",
+        "why": "Records of processing aren't paperwork for its own sake — they're the thing that lets an organisation actually answer a subject access request accurately, spot when data is being used beyond its original purpose, and show a regulator it's in control of its own data rather than guessing at it after the fact, which is the whole point accountability is trying to enforce.",
+        "reference": "ICO Guidance — Documentation; UK GDPR Article 30, Records of processing activities"
+      },
+      {
         "control": "Subject Access Requests",
+        "section": "individual_rights_roles",
         "scenario": "A former employee emails asking for a copy of all the personal data the company holds about them. The HR manager replies asking for a £10 fee before they'll start looking.",
         "question": "Is charging a fee here compliant?",
         "options": [
-          "Yes — a reasonable admin fee is always allowed",
-          "No — in most circumstances you cannot charge a fee for a subject access request, and you must respond within one month",
-          "Yes, but only because they're a former rather than current employee",
-          "Only an issue if the request wasn't made in writing"
+          "No — in most circumstances no fee can be charged, and it's a one-month deadline",
+          "Yes — a reasonable admin fee for locating the data is always permitted, in line with common industry practice",
+          "Yes, but only because they're a former employee rather than current",
+          "Only an issue if the original request wasn't made in writing"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "People have the right to access their personal data (a subject access request). In most circumstances no fee can be charged, and organisations must respond without undue delay and within one month of receipt — a request can be made verbally, in writing, or even via social media.",
         "why": "The right of access exists so people can actually check what's being held and said about them — charging a fee before you'll even start looking creates exactly the barrier this right was designed to remove, which is why it's the exception rather than the norm (reserved for manifestly unfounded or excessive requests, or extra copies). The one-month clock doesn't pause just because the person has since left the organisation.",
         "reference": "ICO Guide to Subject Access"
       },
       {
         "control": "Right to Erasure",
+        "section": "individual_rights_roles",
         "scenario": "A customer asks a company to delete all their data. The company ignores the request for four months, because “we've been busy,” then confirms the data has now been removed.",
         "question": "Does this meet the right to erasure requirements?",
         "options": [
           "Yes, as long as the data was eventually deleted",
-          "No — organisations have one month to respond to an erasure request, and need a process to recognise, assess and act on it without undue delay",
-          "Yes — being busy is a recognised valid reason for delay",
-          "The right to erasure doesn't have a time limit"
+          "No — organisations have one month to respond, without undue delay",
+          "Yes — being busy with other priorities is a recognised valid reason",
+          "No — but the right to erasure has no time limit for responding at all"
         ],
         "correctIndex": 1,
         "explanation": "The right to erasure (“the right to be forgotten”) gives individuals the right to have personal data erased in certain circumstances. Requests can be made verbally or in writing, and organisations have one month to respond — the right isn't absolute, but a valid request still needs a timely answer, not silence.",
@@ -307,30 +543,32 @@
       },
       {
         "control": "Controllers & Processors",
+        "section": "individual_rights_roles",
         "scenario": "A company hires an external payroll bureau to run its monthly payroll. The bureau only acts on the company's instructions and doesn't decide what the data is used for or why.",
         "question": "Under UK GDPR, what is the payroll bureau in this relationship?",
         "options": [
-          "The controller, since it physically handles the data",
-          "A processor — the organisation that decides the purposes and means of processing is the controller, regardless of what a contract calls anyone",
-          "A joint controller automatically, since it manages payroll",
-          "Neither term applies to payroll bureaus specifically"
+          "The controller, since it's the organisation physically handling the data",
+          "A joint controller automatically, purely by managing the payroll",
+          "A processor — whoever decides the purposes and means is the controller",
+          "Neither term applies specifically to payroll bureaus"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "Whether an organisation is a controller or processor depends on who determines the purposes and means of processing — not how a contract labels them. An organisation that only acts on another's instructions, without deciding why or how data is used, is a processor.",
         "why": "This distinction isn't just semantics — the two roles carry genuinely different legal obligations, and getting it wrong (or leaving it undocumented) leaves both organisations exposed, since the ICO can act against controllers and processors alike, and individuals can claim compensation from either. It's worth actually documenting who is which for every organisation data gets shared with, rather than assuming a contract's wording has already settled it.",
         "reference": "ICO Guide to Controllers and Processors"
       },
       {
         "control": "Special Category Data",
+        "section": "individual_rights_roles",
         "scenario": "A company starts recording employees' religion on its HR system “to plan diversity events better,” relying on the same general lawful basis (legitimate interests) it already uses for standard HR records, with no further checks.",
         "question": "Is this sufficient to process this data lawfully?",
         "options": [
-          "Yes — one lawful basis covers all types of personal data equally",
-          "No — special category data like religion needs both a lawful basis under Article 6 and a separate condition for processing under Article 9; these aren't automatically the same thing",
-          "Yes, as long as employees aren't told which lawful basis is being used",
-          "Only relevant if the data is later shared outside the organisation"
+          "Yes — one lawful basis is sufficient to cover any type of personal data",
+          "Yes, as long as employees aren't told which basis is being used",
+          "Only relevant once the data is shared outside the organisation",
+          "No — it needs both an Article 6 basis and a separate Article 9 condition"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "Special category data needs more protection because it's sensitive. To process it lawfully you need both an Article 6 lawful basis and a separate Article 9 condition for processing — the two don't have to be linked, but both are required, and should be documented before processing begins.",
         "why": "Article 9 exists because certain categories of data — health, religion, sexuality, ethnicity and others — carry a much higher risk of real harm if mishandled or exposed, so the law deliberately sets a higher bar than “we already had a general reason to hold HR data.” Skipping the extra check is a genuinely common mistake, precisely because it's easy to assume one lawful basis quietly covers everything a system happens to store.",
         "reference": "ICO Guidance on Special Category Data"
@@ -340,8 +578,30 @@
   "export_control": {
     "title": "Export Control",
     "icon": "🛃",
-    "intro": "Ten scenario questions covering UK strategic export controls — what's controlled, when a licence is needed even for items not on any list, the different licence types, and the extra layer that applies to nuclear and radioactive exports specifically. Sourced directly from the Export Control Joint Unit's own guidance (Crown Copyright) and the Export Control Order 2008.",
+    "intro": "Eleven scenario questions covering UK strategic export controls — what's controlled, when a licence is needed even for items not on any list, the different licence types, and the extra layer that applies to nuclear and radioactive exports specifically. Sourced directly from the Export Control Joint Unit's own guidance (Crown Copyright) and the Export Control Order 2008.",
     "passMark": 80,
+    "sections": [
+      {
+        "id": "control_lists_scope",
+        "title": "Control Lists & Scope"
+      },
+      {
+        "id": "end_use_licence_types",
+        "title": "End-Use Controls & Licence Types"
+      },
+      {
+        "id": "nuclear_radioactive",
+        "title": "Nuclear & Radioactive Exports"
+      },
+      {
+        "id": "technology_transfer",
+        "title": "Technology Transfer"
+      },
+      {
+        "id": "sanctions_breaches_penalties",
+        "title": "Sanctions, Breaches & Penalties"
+      }
+    ],
     "learn": [
       {
         "heading": "What's Controlled",
@@ -367,27 +627,29 @@
     "questions": [
       {
         "control": "Control Lists",
+        "section": "control_lists_scope",
         "scenario": "A precision valve manufacturer discovers their valve design appears in the consolidated list of strategic military and dual-use items, under Category 0 (nuclear materials).",
         "question": "What must they do before exporting it?",
         "options": [
-          "Nothing — it's exempt since it also has legitimate civilian nuclear uses",
           "Apply for and hold a valid export licence from ECJU before export",
+          "Nothing — it's exempt since it also has legitimate civilian uses",
           "Only get a licence if the buyer specifically asks for one",
-          "Self-certify compliance without applying for anything"
+          "Self-certify compliance internally, without applying for anything"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "Items on the UK Strategic Export Control Lists require an export licence from the Export Control Joint Unit (ECJU) before export, whatever their legitimate civilian applications — dual-use classification exists precisely because the same item could plausibly serve either a civil or military end.",
         "why": "“Dual-use” doesn't mean “exempt because it's also civilian” — it's closer to the opposite: the classification exists because the same valve could end up in a power station or a weapons programme, and no one can tell which just by looking at the part. The licence process is how the exporter's own knowledge of the actual buyer and end-use gets captured and checked before the goods ever leave the country.",
         "reference": "UK strategic export controls (ECJU/DBT) — Control lists; Export controls: dual-use items — Category 0, nuclear materials"
       },
       {
         "control": "Who It Applies To",
+        "section": "control_lists_scope",
         "scenario": "A small sub-tier supplier assumes export controls are only a large defence prime's problem, since they've never dealt with the military directly and their own turnover is modest.",
         "question": "Who do UK strategic export controls actually apply to?",
         "options": [
-          "Only companies holding existing MOD contracts",
-          "Anyone exporting or transferring controlled goods, software or technology, or providing brokering services — regardless of size or sector",
-          "Only companies exporting outside the EU",
+          "Only companies holding an existing MOD contract",
+          "Anyone exporting controlled goods or technology, or brokering — regardless of size",
+          "Only companies exporting outside the EU specifically, as confirmed informally by the compliance team",
           "Only prime contractors, not their sub-tier suppliers"
         ],
         "correctIndex": 1,
@@ -397,43 +659,62 @@
       },
       {
         "control": "End-Use Controls",
+        "section": "end_use_licence_types",
         "scenario": "A machining company is asked to supply cryogenic equipment to an overseas buyer. The equipment itself doesn't appear anywhere on the UK Strategic Export Control Lists.",
         "question": "Does that mean no export licence is needed?",
         "options": [
-          "Correct — if it's not on the list, it's automatically licence-free",
-          "Not necessarily — end-use (“catch-all”) controls can still require a licence if there's a risk the item is intended for WMD purposes",
-          "Only relevant if the buyer is in an embargoed country",
-          "Only relevant for software, not physical equipment"
+          "Correct — if it isn't on the list, it's automatically licence-free, so long as no one raises an objection",
+          "Only relevant if the buyer is based in an embargoed country",
+          "Not necessarily — end-use controls can still apply if there's a WMD-related risk",
+          "Only relevant for software exports, not physical equipment"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "End-use (catch-all) controls mean a licence can still be required for items not on the consolidated list, if there's a risk they're intended or could be diverted for use in weapons of mass destruction — cryogenic equipment is the example ECJU's own guidance gives, since it has plausible uses in a nuclear weapons facility.",
         "why": "A control list can never be fully exhaustive — it has to name specific, known technologies, and something as generic as cryogenic equipment has too many legitimate civilian uses to sit on a list wholesale. Catch-all controls exist for exactly this gap: they shift the question from “is this specific part listed” to “do I have reason to believe where this is actually going,” which is a judgement the exporter is legally required to make.",
         "reference": "UK strategic export controls (ECJU/DBT) — End-use controls, WMD end-use controls"
       },
       {
+        "control": "Licence Types",
+        "section": "end_use_licence_types",
+        "scenario": "A company exports the same category of dual-use component regularly, to a range of established overseas customers, and wants to avoid submitting a fresh licence application for every single shipment.",
+        "question": "Which licence type is designed for this situation?",
+        "options": [
+          "A Standard Individual Export Licence, applied for fresh each time",
+          "There is no route for repeat exports — every shipment needs sign-off",
+          "A Standard Individual Trade Control Licence specifically",
+          "An Open General Export Licence — reusable, used after registering once"
+        ],
+        "correctIndex": 3,
+        "explanation": "Open General Export Licences (OGELs) are reusable, pre-published licences with set terms and conditions, designed for exporters who regularly send controlled items to a range of consignees or end users — you register for the relevant OGEL and can generally start using it once registered, rather than applying per shipment.",
+        "why": "A licensing system that demanded a brand-new application for every shipment of routine, lower-risk goods would be unworkable for exporters with steady, repeat business — and wouldn't improve scrutiny, since ECJU would just be re-approving the same facts repeatedly. OGELs shift the effort to registration (proving you meet the terms once) and back it up with occasional compliance audits, rather than gatekeeping every individual shipment.",
+        "reference": "Using SPIRE to get an export licence — Registering for an OGEL"
+      },
+      {
         "control": "Nuclear Exports",
+        "section": "nuclear_radioactive",
         "scenario": "A NucCol supplier is exporting reactor-grade materials and associated technology to an overseas nuclear new-build programme.",
         "question": "Beyond the standard export licence, what additional requirement applies specifically to internationally-controlled nuclear items?",
         "options": [
-          "None — the standard UK licence covers everything",
-          "Items on the NSG Trigger List require the recipient country to meet specified security standards and safeguards, with pre-notification or assurance of the export",
+          "Items on the NSG Trigger List need recipient-country safeguards and pre-notification",
+          "None — the standard UK export licence covers everything needed",
           "A licence is only needed if the destination is outside NATO",
-          "Nuclear materials are exempt from export control since they're civilian-use"
+          "Nuclear materials are exempt, since they're generally civilian-use, in line with common industry practice"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "Nuclear items, equipment, material or technology on the Nuclear Suppliers Group (NSG) Trigger List carry an extra international layer: the recipient country must meet specified security standards and safeguards, and the export needs pre-notification or assurance — on top of the standard UK export licence.",
         "why": "Nuclear exports sit at the intersection of two regimes at once — the UK's own strategic export controls, and an international non-proliferation framework the UK has committed to as an NSG member. A licence granted under UK rules alone doesn't automatically satisfy the separate international assurance obligations, which is why Trigger List items get their own dedicated route rather than being folded into the general dual-use process.",
         "reference": "Export controls: dual-use items, software and technology — Nuclear exports; NSG Trigger List guidance"
       },
       {
         "control": "Radioactive Sources",
+        "section": "nuclear_radioactive",
         "scenario": "A supplier is exporting a high-activity radioactive source used in non-destructive testing equipment to an overseas customer.",
         "question": "Does UK export control apply to this?",
         "options": [
-          "No — radioactive sources used for industrial or testing purposes are unregulated",
-          "Yes — certain high-activity radioactive sources require an export licence under the Export of Radioactive Sources (Control) Order 2006",
-          "Only if the source is weapons-grade material",
-          "Only if exporting to a sanctioned country"
+          "No — sources for industrial or testing purposes are unregulated",
+          "Yes — certain high-activity sources need a licence under the 2006 Order",
+          "Only if the source itself is weapons-grade material",
+          "Only if the export destination happens to be under sanctions"
         ],
         "correctIndex": 1,
         "explanation": "The Export of Radioactive Sources (Control) Order 2006 controls the export of certain high-activity radioactive sources, as defined under the IAEA Code of Conduct on the Safety and Security of Radioactive Sources — a licence is required regardless of whether the end application is industrial, medical, or otherwise.",
@@ -441,59 +722,63 @@
         "reference": "Export controls: dual-use items — Radioactive sources; Export of Radioactive Sources (Control) Order 2006"
       },
       {
+        "control": "Nuclear Exports",
+        "section": "nuclear_radioactive",
+        "scenario": "A supplier has already secured a standard UK export licence for a Trigger List item and, believing the process complete, ships the item the same week.",
+        "question": "Has the supplier met all the requirements for this export?",
+        "options": [
+          "Yes — a valid UK export licence is the only requirement for any item",
+          "Yes, since Trigger List status just changes which UK licence category applies",
+          "No — Trigger List items also need separate international pre-notification",
+          "No — Trigger List items need IAEA sign-off before every single shipment"
+        ],
+        "correctIndex": 2,
+        "explanation": "A UK export licence and the NSG Trigger List's international assurance requirement are separate obligations that both have to be satisfied — pre-notification or assurance regarding the recipient country's security standards and safeguards sits on top of the standard licence, not folded into it.",
+        "why": "Treating the UK licence as the whole story is a genuinely easy mistake to make, because it's the step that's most visible in day-to-day process — but the Trigger List obligation exists at the international non-proliferation level, separate from UK domestic licensing, and skipping it can leave an export non-compliant even with a valid UK licence in hand.",
+        "reference": "Export controls: dual-use items, software and technology — Nuclear exports; NSG Trigger List guidance"
+      },
+      {
         "control": "Technology Transfer",
+        "section": "technology_transfer",
         "scenario": "An engineer emails a set of technical drawings and a training manual for a controlled component to an overseas colleague, without physically shipping anything.",
         "question": "Does this count as an export requiring a licence?",
         "options": [
-          "No — nothing physical left the country, so it isn't an export",
-          "Yes — transferring controlled technology, including by email, blueprints or training manuals, to anyone outside the UK requires an export licence",
-          "Only if the drawings are printed and posted",
-          "Only if a fee is charged for the transfer"
+          "No — nothing physical left the country, so this isn't an export",
+          "Only if the drawings are printed out and posted physically",
+          "Only if a fee is charged for sending the material",
+          "Yes — transferring controlled technology abroad, including by email, needs a licence"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "You must get an export licence to transfer controlled technology to anyone outside the UK. Technology means any information necessary for the development, production or use of controlled goods, and explicitly covers blueprints, diagrams, technical and training manuals, and intangible transfers such as email.",
         "why": "If technology transfer weren't controlled the same way physical goods are, the whole export control regime would have an obvious workaround — just email the specification instead of shipping the part. The definition is deliberately broad, covering electronic and non-electronic transfer alike, because the sensitive content is the knowledge itself, not the medium it happens to travel on.",
         "reference": "Export controls: military goods, software and technology — Transfer of information (technology controls)"
       },
       {
-        "control": "Licence Types",
-        "scenario": "A company exports the same category of dual-use component regularly, to a range of established overseas customers, and wants to avoid submitting a fresh licence application for every single shipment.",
-        "question": "Which licence type is designed for this situation?",
-        "options": [
-          "A Standard Individual Export Licence (SIEL), applied for fresh each time",
-          "An Open General Export Licence (OGEL) — a reusable, pre-published licence with set terms and conditions, used after registering",
-          "There is no licence covering repeat exports — each shipment needs separate ECJU sign-off",
-          "A Standard Individual Trade Control Licence (SITCL)"
-        ],
-        "correctIndex": 1,
-        "explanation": "Open General Export Licences (OGELs) are reusable, pre-published licences with set terms and conditions, designed for exporters who regularly send controlled items to a range of consignees or end users — you register for the relevant OGEL and can generally start using it once registered, rather than applying per shipment.",
-        "why": "A licensing system that demanded a brand-new application for every shipment of routine, lower-risk goods would be unworkable for exporters with steady, repeat business — and wouldn't improve scrutiny, since ECJU would just be re-approving the same facts repeatedly. OGELs shift the effort to registration (proving you meet the terms once) and back it up with occasional compliance audits, rather than gatekeeping every individual shipment.",
-        "reference": "Using SPIRE to get an export licence — Registering for an OGEL"
-      },
-      {
         "control": "Sanctions Overlap",
+        "section": "sanctions_breaches_penalties",
         "scenario": "A company wants to export a non-controlled component to a destination currently subject to UK sanctions.",
         "question": "Does the fact that the item isn't on the control list mean no licence is needed?",
         "options": [
-          "Correct — only controlled items ever require a licence, regardless of destination",
-          "No — sanctioned destinations can require a licence independently of whether the item is on the strategic export control lists",
+          "No — a licence can still be needed regardless of the item's own control status",
+          "Correct — only controlled items ever require a licence, whatever the destination",
           "Only relevant for military goods, not general components",
-          "Sanctions only affect financial transactions, not goods"
+          "Sanctions only affect financial transactions, not physical goods"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "Sanctions and strategic export controls are separate, overlapping regimes. A destination subject to sanctions can require a licence for an export regardless of whether the item is separately controlled — and where an item is both controlled and sanctions-affected, both regimes get considered under a single combined application.",
         "why": "Export control is about what you're sending; sanctions are about who — or where — you're sending it to. A component that's entirely mundane in trade terms can still be caught the moment the destination itself is under restriction, which is why “is my item controlled” and “is my destination sanctioned” are two separate checks a responsible exporter has to run, not one.",
         "reference": "UK strategic export controls — Sanctions; Export controls: dual-use items — Overlap between sanctions and strategic export controls"
       },
       {
         "control": "Breaches & Reporting",
+        "section": "sanctions_breaches_penalties",
         "scenario": "A company realises, after the fact, that it shipped a controlled item without the correct export licence in place.",
         "question": "What is the recommended course of action?",
         "options": [
           "Say nothing, and hope a compliance audit doesn't pick it up",
-          "Report the irregularity to HMRC as soon as possible (“voluntary disclosure”), including export details, how it was found, and what's been done to prevent recurrence",
-          "Only report it if a customer complains",
-          "Wait until the next scheduled ECJU compliance audit to mention it"
+          "Report it to HMRC as soon as possible, as a voluntary disclosure",
+          "Only report it if a customer happens to complain about it",
+          "Wait for the next scheduled ECJU compliance audit to mention it"
         ],
         "correctIndex": 1,
         "explanation": "It's strongly recommended to report an export control irregularity to HMRC (“voluntary disclosure”) as soon as possible, providing export details, relevant documents, and an account of how the breach was discovered and what's been put in place to stop it recurring — HMRC is responsible for enforcing strategic export controls.",
@@ -502,15 +787,16 @@
       },
       {
         "control": "Penalties",
+        "section": "sanctions_breaches_penalties",
         "scenario": "A company is found to have exported a controlled item without a licence, with no evidence of any voluntary disclosure.",
         "question": "What penalties can apply?",
         "options": [
           "A written warning only, with no other consequence",
-          "Penalties ranging from licence revocation and seizure of goods to a fine and/or imprisonment for up to 10 years",
-          "A small administrative fee, comparable to a customs paperwork error",
-          "No penalty if the buyer turns out to be a legitimate end user"
+          "A small administrative fee, like a routine customs paperwork error",
+          "Penalties from licence revocation to a fine and up to 10 years' imprisonment",
+          "No penalty if the buyer later turns out to be a legitimate end user, regardless of the specific circumstances involved"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "Breaching export controls is a criminal offence. Penalties range from revocation of licences and seizure of goods to a fine and/or imprisonment for up to 10 years, depending on the nature and severity of the offence.",
         "why": "The scale of the penalty — up to a custodial sentence — reflects what's actually at stake: controlled items exist precisely because of their potential to end up in weapons programmes or destinations under international sanction. Treating a breach as a minor paperwork issue would badly understate what the control regime exists to prevent, which is why it sits in criminal rather than purely administrative law.",
         "reference": "Export controls: dual-use items, software and technology — Breaches of export control legislation; penalties"
@@ -520,8 +806,34 @@
   "modern_slavery": {
     "title": "Modern Slavery",
     "icon": "⛓️‍💥",
-    "intro": "Ten scenario questions covering the Modern Slavery Act 2015 — who has to publish a statement, what it must cover, how it gets approved and published, and the recruitment and audit practices that actually reduce risk in a supply chain. Sourced directly from the Home Office's own statutory guidance and \"Transparency in supply chains: a practical guide\" (Crown Copyright).",
+    "intro": "Twelve scenario questions covering the Modern Slavery Act 2015 — who has to publish a statement, the six statutory content areas a statement should cover, how it gets approved and published, and the recruitment and audit practices that actually reduce risk in a supply chain. Sourced directly from the Home Office's own statutory guidance and \"Transparency in supply chains: a practical guide\" (Crown Copyright).",
     "passMark": 80,
+    "sections": [
+      {
+        "id": "who_must_comply",
+        "title": "Who Must Comply & Threshold"
+      },
+      {
+        "id": "statement_content",
+        "title": "Statement Content — The Six Areas"
+      },
+      {
+        "id": "approval_signing_publishing",
+        "title": "Approval, Signing & Publishing"
+      },
+      {
+        "id": "group_statements",
+        "title": "Group Statements"
+      },
+      {
+        "id": "non_compliance_enforcement",
+        "title": "Non-Compliance & Enforcement"
+      },
+      {
+        "id": "recruitment_audits_risk",
+        "title": "Recruitment, Audits & Real-World Risk Indicators"
+      }
+    ],
     "learn": [
       {
         "heading": "Who Has To Publish a Statement",
@@ -529,7 +841,7 @@
       },
       {
         "heading": "What The Statement Must Cover",
-        "body": "The core legal obligation is narrower than it sounds: the statement must set out what steps the organisation has taken during the previous financial year to ensure modern slavery isn't taking place in its own business or its supply chains — or, if it has taken no steps at all, it must say so plainly. There's no requirement to guarantee a slavery-free supply chain, and legal compliance doesn't turn on how well-written or detailed the statement is, only on whether it accurately sets out the steps taken (or the absence of any).\n\nSection 54(5) sets out six areas organisations may cover, and the government's guidance walks through each in turn: the organisation's structure, business and supply chains; its policies on modern slavery; how it assesses and manages risk; its due diligence processes (including how it remediates issues found); the training it provides; and how it monitors and evaluates the effectiveness of all of the above. None of the six is individually mandatory in the way the turnover threshold is, but together they're what the guidance treats as good and best practice, and what a statement is expected to build on year over year."
+        "body": "The core legal obligation is narrower than it sounds: the statement must set out what steps the organisation has taken during the previous financial year to ensure modern slavery isn't taking place in its own business or its supply chains — or, if it has taken no steps at all, it must say so plainly. There's no requirement to guarantee a slavery-free supply chain, and legal compliance doesn't turn on how well-written or detailed the statement is, only on whether it accurately sets out the steps taken (or the absence of any).\n\nSection 54(5) sets out six areas organisations may cover: the organisation's structure, business and supply chains; its policies on modern slavery; how it assesses and manages risk; its due diligence processes, including how it remediates issues once found; the training it provides; and how it monitors and evaluates the effectiveness of all of the above. Due diligence in particular isn't just about spotting a problem — the guidance is explicit that walking away from a supplier the moment an issue surfaces can leave affected workers worse off than working with the supplier to fix it, reserving termination for cases where remediation genuinely fails. None of the six areas is individually mandatory in the way the turnover threshold is, but together they're what the guidance treats as good and best practice, and what a statement is expected to build on year over year."
       },
       {
         "heading": "Approval, Signing & Publishing",
@@ -547,41 +859,44 @@
     "questions": [
       {
         "control": "Who Must Comply",
+        "section": "who_must_comply",
         "scenario": "A UK-headquartered supplier has modest UK-only revenue of £20 million, but owns three overseas manufacturing subsidiaries with a combined turnover of £25 million.",
         "question": "Does the Modern Slavery Act's £36 million turnover threshold apply to this group?",
         "options": [
           "No — only the UK parent's own £20 million turnover counts",
-          "Yes — total turnover includes the parent plus all subsidiaries, wherever they're based, giving a combined £45 million",
           "No — overseas subsidiary turnover is excluded from the calculation",
-          "Only if the subsidiaries are separately registered at UK Companies House"
+          "Only if the subsidiaries are separately registered at Companies House",
+          "Yes — combined group turnover of £45 million puts it over the threshold"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "Total turnover for the £36 million threshold is calculated as the organisation's own turnover plus that of all its subsidiary undertakings, including those operating wholly outside the UK. This group's combined £45 million turnover puts it over the threshold, even though the UK parent alone would not be.",
         "why": "If only domestic turnover counted, a group could easily structure around the threshold by keeping UK revenue below £36 million while running much larger operations abroad — exactly the kind of gap the transparency requirement is meant to close, since supply chain risk doesn't respect where a subsidiary happens to be incorporated.",
         "reference": "Transparency in supply chains: a practical guide — 5.2.1 Who is required to comply?"
       },
       {
         "control": "What Must Be Covered",
+        "section": "statement_content",
         "scenario": "A company above the £36 million threshold reviews its supply chain and genuinely concludes it has taken no specific steps this financial year to address modern slavery risk.",
         "question": "What is the company's legal obligation in this situation?",
         "options": [
+          "It must still publish a statement, saying plainly that no steps were taken",
           "None — if no steps were taken, no statement is required",
-          "It must still publish a statement, stating plainly that no such steps have been taken",
-          "It must delay publication until it has taken at least some steps",
-          "It can publish an empty or blank statement instead"
+          "It must delay publication until it has taken at least some steps, unless a formal exception has been granted",
+          "It can publish an empty or entirely blank statement instead"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "The Act requires transparency, not a guaranteed set of actions. An organisation that has taken no steps to address modern slavery must still publish a statement saying so — legal compliance turns on whether the statement accurately sets out the steps taken (including 'none'), not on how much action was actually taken.",
         "why": "The whole mechanism behind section 54 is designed to work through visibility and reputational pressure rather than mandating specific actions — a statement that honestly says \"we did nothing this year\" is still compliant, but it's also publicly visible to customers, investors and NGOs, which is precisely the pressure the Act is designed to create.",
         "reference": "Transparency in supply chains: a practical guide — 5.1 The what"
       },
       {
         "control": "Statement Content",
+        "section": "statement_content",
         "scenario": "A company is drafting its first modern slavery statement and wants to know what areas the government's guidance recommends covering.",
         "question": "Which six areas does Section 54(5) set out as content a statement may cover?",
         "options": [
-          "Turnover, profit margin, headcount, dividend policy, tax paid, and audit fees",
-          "Organisational structure and supply chains; policies; risk assessment and management; due diligence; training; and monitoring/evaluation of effectiveness",
+          "Turnover, profit margin, headcount, dividend policy, tax paid, and audit fees, so long as no one raises an objection",
+          "Structure and supply chains; policies; risk assessment; due diligence; training; monitoring",
           "Only a list of suppliers and their countries of operation",
           "A single annual pledge signed by all employees"
         ],
@@ -591,29 +906,63 @@
         "reference": "Transparency in supply chains: a practical guide — Section 54(5) content areas"
       },
       {
+        "control": "Due Diligence & Remediation",
+        "section": "statement_content",
+        "scenario": "A company finds evidence of forced overtime at a second-tier supplier during a routine review. It terminates the contract immediately and moves the order to a new supplier the same week.",
+        "question": "Does immediately cutting the supplier off reflect the due diligence approach the guidance recommends?",
+        "options": [
+          "Yes — immediate termination is always the correct first response",
+          "No — findings should never be acted on without an external audit first",
+          "Not necessarily — remediation is preferred, since termination can leave workers worse off",
+          "Yes, provided the new supplier is based in a different country"
+        ],
+        "correctIndex": 2,
+        "explanation": "The guidance's due diligence process includes remediation, not just detection — walking away from a supplier the moment an issue is found can leave the affected workers without income or recourse, whereas working with the supplier to fix the underlying problem (and monitoring that it's actually fixed) is generally the better-practice response, reserving termination for cases where remediation genuinely isn't working.",
+        "why": "Cutting ties looks decisive, but it can quietly shift the harm onto the same workers the finding was meant to protect — they simply lose their jobs with nothing resolved, which is exactly why the guidance treats remediation as part of a genuine due diligence process rather than treating termination as the automatic correct answer.",
+        "reference": "Transparency in supply chains: a practical guide — Due diligence and remediation"
+      },
+      {
+        "control": "Risk Assessment & Management",
+        "section": "statement_content",
+        "scenario": "A company assesses modern slavery risk across its supply chain using a single generic checklist applied identically to every supplier, regardless of sector, country, or workforce type.",
+        "question": "Does this reflect good practice under the guidance's risk assessment area?",
+        "options": [
+          "Yes — one standard checklist ensures fair, consistent treatment",
+          "Yes, provided the checklist is reviewed by legal counsel once a year",
+          "No — checklists have no place in a modern slavery risk process at all, according to standard internal policy",
+          "Not fully — risk assessment should reflect sector, geography and workforce type"
+        ],
+        "correctIndex": 3,
+        "explanation": "The risk assessment and management content area is about identifying where modern slavery risk is actually highest — by sector, geography, business model and workforce type — and prioritising effort accordingly, rather than treating every supplier as equally risky with one identical, generic check.",
+        "why": "Risk in a real supply chain isn't evenly distributed — a low-margin, high-turnover, migrant-labour-dependent supplier in a high-risk sector carries a genuinely different risk profile to a long-established domestic professional services firm, and a one-size-fits-all checklist ends up both under-scrutinising the highest-risk relationships and wasting effort on the lowest-risk ones.",
+        "reference": "Transparency in supply chains: a practical guide — Risk assessment and management"
+      },
+      {
         "control": "Approval & Signing",
+        "section": "approval_signing_publishing",
         "scenario": "A company's head of compliance drafts a full, detailed modern slavery statement and wants to publish it on the website immediately to make the deadline.",
         "question": "What must happen before the statement can be legally published?",
         "options": [
+          "It must be approved by the board and signed by a director or designated member",
           "Nothing further — the compliance lead can publish it directly",
-          "It must be approved by the board of directors (or members, for an LLP) and signed by a director or designated member",
           "It only needs sign-off from the company's external auditor",
-          "It must be approved by every employee named in it"
+          "It must be approved by every employee named anywhere in the statement, provided it is documented in writing beforehand"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "Section 54(6) requires the statement to be approved by the board of directors (or the members, for an LLP) and signed by a director or designated member — a compliance team drafting it is not sufficient on its own without that senior-level sign-off.",
         "why": "The board approval requirement exists specifically to stop the statement becoming a communications exercise run entirely below leadership level — it forces the people who actually set supply chain strategy and budget to put their name to what the organisation says it's doing, which is what gives the statement any teeth at all.",
         "reference": "Transparency in supply chains: a practical guide — 5.2.4 Who approves a statement?"
       },
       {
         "control": "Publishing",
+        "section": "approval_signing_publishing",
         "scenario": "A company publishes its modern slavery statement on its website, but only as a PDF buried three levels deep in a 'Legal Documents' archive page with no link from the homepage.",
         "question": "Does this satisfy the Act's publishing requirement?",
         "options": [
-          "Yes — being anywhere on the website is sufficient",
-          "No — the Act requires a link in a prominent place on the homepage, clearly marked so its contents are apparent",
-          "Yes, as long as the PDF is findable via a site search",
-          "No — the statement must be emailed directly to every supplier instead"
+          "Yes — being anywhere on the website at all is sufficient",
+          "No — the Act requires a prominent, clearly labelled homepage link",
+          "Yes, as long as the PDF is findable via the site's internal search",
+          "No — the statement must instead be emailed directly to every supplier"
         ],
         "correctIndex": 1,
         "explanation": "Section 54(7) requires the statement to be published with a link in a prominent place on the organisation's homepage — directly visible or part of an obvious drop-down menu — clearly labelled so visitors immediately understand what it is. A buried archive page does not meet this.",
@@ -622,58 +971,62 @@
       },
       {
         "control": "Group Statements",
+        "section": "group_statements",
         "scenario": "A parent organisation and two subsidiaries all individually meet the Section 54 criteria. They want to publish a single combined statement rather than three separate ones.",
         "question": "Is this permitted, and what must the combined statement do?",
         "options": [
-          "Not permitted — each organisation must always publish separately",
-          "Permitted — it must cover the steps taken by each organisation it represents, clearly name them, and be published on each covered organisation's website",
+          "Not permitted — each qualifying organisation must publish separately",
           "Permitted, but only the parent organisation needs to be named",
-          "Permitted, with no requirement to name any of the organisations covered"
+          "Permitted — it must name each organisation and cover its own steps clearly",
+          "Permitted, with no requirement to name any organisation it covers"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "A group can publish a single statement covering multiple qualifying organisations, provided it fully covers the steps each one has taken, clearly names the parent and subsidiary organisations included, and is published on the websites of all organisations it covers.",
         "why": "Allowing a combined statement avoids pointless duplication for genuinely integrated group operations, but the naming and coverage requirements exist so a reader can still tell exactly which entities the statement's claims actually apply to — a vague group-wide statement that doesn't specify which subsidiaries it covers would undermine the same transparency the Act exists to create.",
         "reference": "Transparency in supply chains: a practical guide — 5.2.1 Groups of companies"
       },
       {
         "control": "Non-Compliance",
+        "section": "non_compliance_enforcement",
         "scenario": "A qualifying organisation simply never publishes a modern slavery statement, year after year, and ignores requests to do so.",
         "question": "What is the direct legal consequence under the Act?",
         "options": [
-          "An automatic fine issued by HMRC",
-          "The Secretary of State can seek a High Court injunction requiring compliance — ignoring that injunction is contempt of court, punishable by an unlimited fine",
-          "Immediate criminal prosecution of the signing director",
-          "No consequence — the requirement is entirely voluntary in practice"
+          "An automatic fine issued directly by HMRC",
+          "Immediate criminal prosecution of the would-be signing director",
+          "No consequence — the requirement is entirely voluntary in practice, according to standard internal policy",
+          "The Secretary of State can seek an injunction; ignoring it is contempt of court"
         ],
-        "correctIndex": 1,
+        "correctIndex": 3,
         "explanation": "There's no automatic fine for failing to publish. Instead, the Secretary of State can bring civil proceedings for an injunction compelling compliance; only if the organisation then defies that injunction does it become contempt of court, which carries an unlimited fine.",
         "why": "This is a genuinely different enforcement shape from most compliance obligations — it leans on court-ordered compliance and reputational exposure rather than an upfront penalty, which is worth knowing precisely because it's easy to assume (wrongly) that skipping the statement just risks a fixed fine like a late filing.",
         "reference": "Transparency in supply chains: a practical guide — 5.2.3 Failure to comply"
       },
       {
         "control": "Recruitment Fees",
+        "section": "recruitment_audits_risk",
         "scenario": "A labour agency supplying migrant workers to a company's site charges each worker a placement fee, which the workers pay off gradually from their wages over several months.",
         "question": "What risk does this recruitment practice create, and what standard does the guidance recommend?",
         "options": [
-          "No risk — recruitment fees are a normal cost of doing business for agencies",
-          "It creates a debt bondage risk; the recommended standard is the Employer Pays Principle — no worker should pay for the privilege of being recruited",
-          "It's only a risk if the fee exceeds one month's wages",
-          "It's acceptable as long as the fee is disclosed to the worker in advance"
+          "It creates a debt bondage risk; the Employer Pays Principle is the recommended standard",
+          "No risk — recruitment fees are a normal cost of doing business",
+          "It's only a risk if the fee exceeds one full month's wages",
+          "It's acceptable provided the fee is disclosed to the worker in advance"
         ],
-        "correctIndex": 1,
+        "correctIndex": 0,
         "explanation": "Worker-paid recruitment fees, especially for migrant workers, create real debt bondage risk — the debt can bind a worker to an employer until it's repaid. The guidance recommends the Employer Pays Principle: recruitment costs should sit with the employer, not the worker.",
         "why": "Debt bondage is one of the more subtle forms of modern slavery, precisely because it can look like an ordinary loan on the surface — the guidance flags it specifically because the power imbalance it creates (a worker who can't leave without losing the ability to repay) is easy for a well-meaning buyer to miss if they're only checking wage rates and contracts, not how workers arrived at the job in the first place.",
         "reference": "Transparency in supply chains: a practical guide — Recruitment fees and related costs; Debt Bondage/Bonded labour (Annex A)"
       },
       {
         "control": "Audit Limitations",
+        "section": "recruitment_audits_risk",
         "scenario": "A company relies solely on an announced annual audit, conducted by a generalist quality auditor, to confirm that a key overseas supplier has no modern slavery issues. The audit consistently comes back clean.",
         "question": "Does a clean announced audit reliably rule out modern slavery risk?",
         "options": [
-          "Yes — a clean audit is conclusive evidence the supplier is compliant",
-          "Not on its own — suppliers can present fabricated records or coach workers ahead of an announced audit; unannounced checks and direct worker engagement are recommended alongside audits",
+          "Yes — a clean audit is conclusive evidence of full compliance, provided it is documented in writing beforehand",
+          "Not on its own — suppliers can fabricate records ahead of an announced audit",
           "Yes, provided the auditor is internationally accredited",
-          "No — audits provide no useful information about modern slavery risk at all"
+          "No — audits provide no useful information about risk at all"
         ],
         "correctIndex": 1,
         "explanation": "The guidance is explicit that audits alone are not reliable: a supplier may present fake records or coach workers to lie to auditors, particularly when the audit is announced and expected. Best practice combines audits with worker-centred approaches — engaging directly with workers, using auditors who understand local risk and speak the workforce's language, and considering unannounced checks.",
@@ -682,15 +1035,16 @@
       },
       {
         "control": "Scope of Modern Slavery",
+        "section": "recruitment_audits_risk",
         "scenario": "A company discovers that a sub-tier supplier employs children in light, age-appropriate tasks that do not interfere with their education, alongside separate concerns about forced overtime for adult workers at the same site.",
         "question": "How should the company think about these two findings?",
         "options": [
-          "Both automatically count as modern slavery, since any child labour is slavery by definition",
-          "Light work appropriate to a child's age is not automatically modern slavery, but forced or compulsory labour of any worker is — the two findings need separate assessment against the actual facts",
-          "Neither counts as modern slavery unless it involves trafficking across a border",
-          "Only the child labour finding is relevant; forced overtime for adults falls outside the Act's scope entirely"
+          "Both automatically count as modern slavery, by definition",
+          "Neither counts as modern slavery unless it involves cross-border trafficking",
+          "Light, age-appropriate work isn't automatic slavery, but forced labour is — assess separately",
+          "Only the child labour finding is relevant; forced adult overtime falls outside scope, based on the usual day-to-day interpretation"
         ],
-        "correctIndex": 1,
+        "correctIndex": 2,
         "explanation": "The guidance distinguishes ordinary child labour from modern slavery: some 'light work' appropriate to a child's age does not automatically constitute modern slavery, though the worst forms of child labour (trafficking, debt bondage, forced recruitment, and similar) very likely do. Forced or compulsory labour of adult workers is separately and directly within scope, regardless of the child labour question.",
         "why": "Treating every instance of child labour as automatically equivalent to modern slavery — or dismissing forced overtime as \"just poor conditions\" rather than potential forced labour — both lead to the same failure: a company stops looking closely enough at the actual facts of each situation, which is exactly the judgement the guidance is trying to sharpen rather than blunt with a blanket rule.",
         "reference": "Transparency in supply chains: a practical guide — Annex A, Child labour; The worst forms of child labour"
