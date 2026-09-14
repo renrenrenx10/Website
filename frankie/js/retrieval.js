@@ -533,8 +533,17 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
         queryVec = await embedQuery(query);
     }
 
-    // Score all allowed chunks
-    const scored = allowedChunks.map(chunk => {
+    // Score all allowed chunks.
+    // Two passes: first compute each chunk's pre-boost base score, then apply
+    // HANDBOOK_BOOST only when it's not what decides the outcome. Root-caused
+    // 2026-09-14: a flat, unconditional multiplier let broad/generic handbook
+    // chapters (e.g. a general "Leading Change" chapter) outrank a specific,
+    // correct portal_guide match (e.g. the actual CSIP/action-plan how-to)
+    // purely because of the ×1.4, even though the portal_guide chunk was the
+    // stronger raw content match before any boost. The boost must only ever
+    // break a close/tied race in handbook's favour — never manufacture a win
+    // over a match that was already ahead on its own merits.
+    const preScored = allowedChunks.map(chunk => {
         const kw = keywordScore(tokens, chunk);
         const graphBoost = boostedIds.has(chunk.id) ? GRAPH_BOOST : 0;
 
@@ -553,11 +562,25 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
             baseScore = Math.min(kw / 20, 1) * 10;
         }
 
+        return { chunk, kw, graphBoost, baseScore };
+    });
+
+    // The strongest pre-boost match from any partition other than handbook
+    // (report-evidence chunks excluded too — they're already penalised, not
+    // a fair bar to clear). HANDBOOK_BOOST can only apply to a handbook chunk
+    // that's already at or above this bar on its own.
+    const strongestOtherRaw = preScored.reduce((max, p) => {
+        if (isHandbookChunk(p.chunk) || isAnonymisedReportChunk(p.chunk)) return max;
+        const raw = p.baseScore + p.graphBoost;
+        return raw > max ? raw : max;
+    }, 0);
+
+    const scored = preScored.map(({ chunk, kw, graphBoost, baseScore }) => {
         let finalScore = baseScore + graphBoost;
         const isReportEvidence = isAnonymisedReportChunk(chunk);
         const isHandbook = isHandbookChunk(chunk);
         if (isReportEvidence) finalScore *= REPORT_SOURCE_PENALTY;
-        if (isHandbook) finalScore *= HANDBOOK_BOOST;
+        if (isHandbook && finalScore >= strongestOtherRaw) finalScore *= HANDBOOK_BOOST;
         return { ...chunk, score: finalScore, _kw: kw, _graphBoosted: graphBoost > 0, _reportEvidence: isReportEvidence, _handbook: isHandbook };
     });
 
