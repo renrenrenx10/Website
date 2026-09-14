@@ -336,5 +336,185 @@
         "reference": "ICO Guidance on Special Category Data"
       }
     ]
+  },
+  "export_control": {
+    "title": "Export Control",
+    "icon": "🛃",
+    "intro": "Ten scenario questions covering UK strategic export controls — what's controlled, when a licence is needed even for items not on any list, the different licence types, and the extra layer that applies to nuclear and radioactive exports specifically. Sourced directly from the Export Control Joint Unit's own guidance (Crown Copyright) and the Export Control Order 2008.",
+    "passMark": 80,
+    "learn": [
+      {
+        "heading": "What's Controlled",
+        "body": "The UK maintains a consolidated list of strategic military and dual-use items that require export authorisation. Everything on it falls into one of two broad categories: military goods, software and technology specially designed or modified for military use, and dual-use items — goods, software and technology that can be used for both civilian and military applications. Dual-use items are further split into ten categories (0 to 9, covering everything from nuclear materials and electronics to navigation and marine equipment) and five sub-groups within each (equipment, test/production equipment, materials, software, technology).\n\nIt's the exporter's own responsibility to check whether an item is listed, using the consolidated control list itself, the OGEL and Goods Checker tools, or SPIRE's control list classification service — not something that gets checked for you at the point of shipment. Exporting a controlled item without the correct licence is a criminal offence, whatever the exporter's intentions were."
+      },
+      {
+        "heading": "When You Need a Licence — Even Off the List",
+        "body": "Being absent from the consolidated list doesn't settle the question. End-use controls (sometimes called \"catch-all\" controls) let the government require a licence for items that aren't listed at all, based on where they're actually going or what they're actually for. Military end-use controls apply if there's a risk an item is intended for military use in a destination under an arms embargo. WMD end-use controls apply if there's a risk an item may be intended or diverted for use in chemical, biological or nuclear weapons — cryogenic equipment is the example the guidance itself gives, since it has a plausible role in a nuclear weapons facility despite being a generic industrial technology.\n\nThese controls apply once a person is aware, or has been informed, that such an end-use is intended — so genuine ignorance of a buyer's real purpose is a different position to knowingly proceeding regardless. If anything about an order looks unusual — an odd end-user, a request to strip technical documentation, a destination that doesn't match the stated use — that's exactly the situation end-use controls are designed to catch, and SPIRE's end-user advice service exists for exactly this kind of judgement call."
+      },
+      {
+        "heading": "Licence Types",
+        "body": "Which licence fits depends on how repeatable the export is. Open General Export Licences (OGELs) are reusable, pre-published licences with fixed terms and conditions — register once, then use repeatedly for exports that fit the OGEL's specific items, activities and destinations, subject to occasional compliance audits. Standard Individual Export Licences (SIELs) cover a specific shipment (or set of shipments) to a named consignee, usually valid for two years, and are the right choice when an OGEL doesn't fit. Open Individual Export Licences (OIELs) sit in between — built for long-term contracts and repeat business with a company (rather than a single transaction), valid for three to five years, though usually only available once an exporter has an established track record.\n\nBrokering activity (arranging the movement of controlled goods between two overseas countries, without the goods ever touching the UK) is treated separately under trade control licences — Open General, Open Individual or Standard Individual Trade Control Licences, mirroring the same reusable-vs-one-off logic. All applications and registrations go through SPIRE, the Department for Business and Trade's online licensing system."
+      },
+      {
+        "heading": "Nuclear & Radioactive-Specific Controls",
+        "body": "Nuclear items carry an extra layer most other dual-use categories don't. Items, equipment, material or technology on the Nuclear Suppliers Group (NSG) Trigger List require recipient countries to meet specified security standards and safeguards, plus pre-notification or assurance of the proposed export — an international non-proliferation obligation that sits on top of, not instead of, the standard UK export licence. This reflects the UK's own commitments as an NSG member, not just domestic policy.\n\nRadioactive sources have their own separate control: the Export of Radioactive Sources (Control) Order 2006 requires a licence for certain high-activity sources, as defined under the IAEA's own Code of Conduct on the Safety and Security of Radioactive Sources. The control is keyed to the source's activity level, not to how benign the declared end-use is — an industrial testing application doesn't exempt it. Anyone in the F4N supply chain handling reactor-grade materials, associated technology, or radioactive sources for testing or measurement equipment should treat these as a routine part of any export check, not an edge case."
+      },
+      {
+        "heading": "Sanctions Overlap & Breaches",
+        "body": "Export control and sanctions are separate, overlapping regimes, and a clean answer on one doesn't settle the other. A destination under UK sanctions can require a licence for an export regardless of whether the item itself is separately controlled — sanctions restrict who and where, export control restricts what. Where an item is both controlled and sanctions-affected, a single application gets considered against both sets of criteria rather than requiring two separate processes; a licence refused under one is unlikely to be granted under the other for the same activity.\n\nIf a breach is discovered — an export that went ahead without the licence it needed — the recommended route is voluntary disclosure to HMRC as soon as possible: details of the export, how the breach was found, and what's been put in place to stop it recurring. Breaching export controls is a criminal offence, with penalties ranging from licence revocation and seizure of goods through to a fine and, in the most serious cases, imprisonment for up to 10 years. How a breach comes to light — self-reported versus found on audit — is treated very differently, which is why prompt voluntary disclosure matters even after the fact."
+      }
+    ],
+    "questions": [
+      {
+        "control": "Control Lists",
+        "scenario": "A precision valve manufacturer discovers their valve design appears in the consolidated list of strategic military and dual-use items, under Category 0 (nuclear materials).",
+        "question": "What must they do before exporting it?",
+        "options": [
+          "Nothing — it's exempt since it also has legitimate civilian nuclear uses",
+          "Apply for and hold a valid export licence from ECJU before export",
+          "Only get a licence if the buyer specifically asks for one",
+          "Self-certify compliance without applying for anything"
+        ],
+        "correctIndex": 1,
+        "explanation": "Items on the UK Strategic Export Control Lists require an export licence from the Export Control Joint Unit (ECJU) before export, whatever their legitimate civilian applications — dual-use classification exists precisely because the same item could plausibly serve either a civil or military end.",
+        "why": "“Dual-use” doesn't mean “exempt because it's also civilian” — it's closer to the opposite: the classification exists because the same valve could end up in a power station or a weapons programme, and no one can tell which just by looking at the part. The licence process is how the exporter's own knowledge of the actual buyer and end-use gets captured and checked before the goods ever leave the country.",
+        "reference": "UK strategic export controls (ECJU/DBT) — Control lists; Export controls: dual-use items — Category 0, nuclear materials"
+      },
+      {
+        "control": "Who It Applies To",
+        "scenario": "A small sub-tier supplier assumes export controls are only a large defence prime's problem, since they've never dealt with the military directly and their own turnover is modest.",
+        "question": "Who do UK strategic export controls actually apply to?",
+        "options": [
+          "Only companies holding existing MOD contracts",
+          "Anyone exporting or transferring controlled goods, software or technology, or providing brokering services — regardless of size or sector",
+          "Only companies exporting outside the EU",
+          "Only prime contractors, not their sub-tier suppliers"
+        ],
+        "correctIndex": 1,
+        "explanation": "Strategic export controls apply to anyone exporting or transferring goods, software or technology, or providing brokering services — there is no size or sector exemption. A small sub-tier supplier shipping a controlled component carries the same obligation as a prime.",
+        "why": "Supply chains for controlled items often run many tiers deep, and a regime that only bound the company holding the head contract would leave every sub-supplier as an unmonitored gap. The legal obligation sits with the exporter of record — whoever physically sends the item out of the country — whatever their position in the wider supply chain.",
+        "reference": "UK strategic export controls (ECJU/DBT) — Who export controls apply to"
+      },
+      {
+        "control": "End-Use Controls",
+        "scenario": "A machining company is asked to supply cryogenic equipment to an overseas buyer. The equipment itself doesn't appear anywhere on the UK Strategic Export Control Lists.",
+        "question": "Does that mean no export licence is needed?",
+        "options": [
+          "Correct — if it's not on the list, it's automatically licence-free",
+          "Not necessarily — end-use (“catch-all”) controls can still require a licence if there's a risk the item is intended for WMD purposes",
+          "Only relevant if the buyer is in an embargoed country",
+          "Only relevant for software, not physical equipment"
+        ],
+        "correctIndex": 1,
+        "explanation": "End-use (catch-all) controls mean a licence can still be required for items not on the consolidated list, if there's a risk they're intended or could be diverted for use in weapons of mass destruction — cryogenic equipment is the example ECJU's own guidance gives, since it has plausible uses in a nuclear weapons facility.",
+        "why": "A control list can never be fully exhaustive — it has to name specific, known technologies, and something as generic as cryogenic equipment has too many legitimate civilian uses to sit on a list wholesale. Catch-all controls exist for exactly this gap: they shift the question from “is this specific part listed” to “do I have reason to believe where this is actually going,” which is a judgement the exporter is legally required to make.",
+        "reference": "UK strategic export controls (ECJU/DBT) — End-use controls, WMD end-use controls"
+      },
+      {
+        "control": "Nuclear Exports",
+        "scenario": "A NucCol supplier is exporting reactor-grade materials and associated technology to an overseas nuclear new-build programme.",
+        "question": "Beyond the standard export licence, what additional requirement applies specifically to internationally-controlled nuclear items?",
+        "options": [
+          "None — the standard UK licence covers everything",
+          "Items on the NSG Trigger List require the recipient country to meet specified security standards and safeguards, with pre-notification or assurance of the export",
+          "A licence is only needed if the destination is outside NATO",
+          "Nuclear materials are exempt from export control since they're civilian-use"
+        ],
+        "correctIndex": 1,
+        "explanation": "Nuclear items, equipment, material or technology on the Nuclear Suppliers Group (NSG) Trigger List carry an extra international layer: the recipient country must meet specified security standards and safeguards, and the export needs pre-notification or assurance — on top of the standard UK export licence.",
+        "why": "Nuclear exports sit at the intersection of two regimes at once — the UK's own strategic export controls, and an international non-proliferation framework the UK has committed to as an NSG member. A licence granted under UK rules alone doesn't automatically satisfy the separate international assurance obligations, which is why Trigger List items get their own dedicated route rather than being folded into the general dual-use process.",
+        "reference": "Export controls: dual-use items, software and technology — Nuclear exports; NSG Trigger List guidance"
+      },
+      {
+        "control": "Radioactive Sources",
+        "scenario": "A supplier is exporting a high-activity radioactive source used in non-destructive testing equipment to an overseas customer.",
+        "question": "Does UK export control apply to this?",
+        "options": [
+          "No — radioactive sources used for industrial or testing purposes are unregulated",
+          "Yes — certain high-activity radioactive sources require an export licence under the Export of Radioactive Sources (Control) Order 2006",
+          "Only if the source is weapons-grade material",
+          "Only if exporting to a sanctioned country"
+        ],
+        "correctIndex": 1,
+        "explanation": "The Export of Radioactive Sources (Control) Order 2006 controls the export of certain high-activity radioactive sources, as defined under the IAEA Code of Conduct on the Safety and Security of Radioactive Sources — a licence is required regardless of whether the end application is industrial, medical, or otherwise.",
+        "why": "A radioactive source doesn't stop being a security and safety concern just because its intended use is benign — the same material that powers an industrial gauge could, if diverted, pose a real radiological hazard. The control is keyed to the source's activity level, not its declared purpose, which is exactly the nuance a supplier can get caught out by if they assume “industrial use” means “unregulated.”",
+        "reference": "Export controls: dual-use items — Radioactive sources; Export of Radioactive Sources (Control) Order 2006"
+      },
+      {
+        "control": "Technology Transfer",
+        "scenario": "An engineer emails a set of technical drawings and a training manual for a controlled component to an overseas colleague, without physically shipping anything.",
+        "question": "Does this count as an export requiring a licence?",
+        "options": [
+          "No — nothing physical left the country, so it isn't an export",
+          "Yes — transferring controlled technology, including by email, blueprints or training manuals, to anyone outside the UK requires an export licence",
+          "Only if the drawings are printed and posted",
+          "Only if a fee is charged for the transfer"
+        ],
+        "correctIndex": 1,
+        "explanation": "You must get an export licence to transfer controlled technology to anyone outside the UK. Technology means any information necessary for the development, production or use of controlled goods, and explicitly covers blueprints, diagrams, technical and training manuals, and intangible transfers such as email.",
+        "why": "If technology transfer weren't controlled the same way physical goods are, the whole export control regime would have an obvious workaround — just email the specification instead of shipping the part. The definition is deliberately broad, covering electronic and non-electronic transfer alike, because the sensitive content is the knowledge itself, not the medium it happens to travel on.",
+        "reference": "Export controls: military goods, software and technology — Transfer of information (technology controls)"
+      },
+      {
+        "control": "Licence Types",
+        "scenario": "A company exports the same category of dual-use component regularly, to a range of established overseas customers, and wants to avoid submitting a fresh licence application for every single shipment.",
+        "question": "Which licence type is designed for this situation?",
+        "options": [
+          "A Standard Individual Export Licence (SIEL), applied for fresh each time",
+          "An Open General Export Licence (OGEL) — a reusable, pre-published licence with set terms and conditions, used after registering",
+          "There is no licence covering repeat exports — each shipment needs separate ECJU sign-off",
+          "A Standard Individual Trade Control Licence (SITCL)"
+        ],
+        "correctIndex": 1,
+        "explanation": "Open General Export Licences (OGELs) are reusable, pre-published licences with set terms and conditions, designed for exporters who regularly send controlled items to a range of consignees or end users — you register for the relevant OGEL and can generally start using it once registered, rather than applying per shipment.",
+        "why": "A licensing system that demanded a brand-new application for every shipment of routine, lower-risk goods would be unworkable for exporters with steady, repeat business — and wouldn't improve scrutiny, since ECJU would just be re-approving the same facts repeatedly. OGELs shift the effort to registration (proving you meet the terms once) and back it up with occasional compliance audits, rather than gatekeeping every individual shipment.",
+        "reference": "Using SPIRE to get an export licence — Registering for an OGEL"
+      },
+      {
+        "control": "Sanctions Overlap",
+        "scenario": "A company wants to export a non-controlled component to a destination currently subject to UK sanctions.",
+        "question": "Does the fact that the item isn't on the control list mean no licence is needed?",
+        "options": [
+          "Correct — only controlled items ever require a licence, regardless of destination",
+          "No — sanctioned destinations can require a licence independently of whether the item is on the strategic export control lists",
+          "Only relevant for military goods, not general components",
+          "Sanctions only affect financial transactions, not goods"
+        ],
+        "correctIndex": 1,
+        "explanation": "Sanctions and strategic export controls are separate, overlapping regimes. A destination subject to sanctions can require a licence for an export regardless of whether the item is separately controlled — and where an item is both controlled and sanctions-affected, both regimes get considered under a single combined application.",
+        "why": "Export control is about what you're sending; sanctions are about who — or where — you're sending it to. A component that's entirely mundane in trade terms can still be caught the moment the destination itself is under restriction, which is why “is my item controlled” and “is my destination sanctioned” are two separate checks a responsible exporter has to run, not one.",
+        "reference": "UK strategic export controls — Sanctions; Export controls: dual-use items — Overlap between sanctions and strategic export controls"
+      },
+      {
+        "control": "Breaches & Reporting",
+        "scenario": "A company realises, after the fact, that it shipped a controlled item without the correct export licence in place.",
+        "question": "What is the recommended course of action?",
+        "options": [
+          "Say nothing, and hope a compliance audit doesn't pick it up",
+          "Report the irregularity to HMRC as soon as possible (“voluntary disclosure”), including export details, how it was found, and what's been done to prevent recurrence",
+          "Only report it if a customer complains",
+          "Wait until the next scheduled ECJU compliance audit to mention it"
+        ],
+        "correctIndex": 1,
+        "explanation": "It's strongly recommended to report an export control irregularity to HMRC (“voluntary disclosure”) as soon as possible, providing export details, relevant documents, and an account of how the breach was discovered and what's been put in place to stop it recurring — HMRC is responsible for enforcing strategic export controls.",
+        "why": "Breaching export controls is a criminal offence, and how a breach comes to light matters to how it's treated — a company that catches its own mistake and reports it promptly is in a materially different position than one where an audit finds it first. Voluntary disclosure doesn't erase the underlying breach, but it demonstrates the working compliance culture regulators are actually looking for, rather than one that only reacts under audit pressure.",
+        "reference": "Export controls: dual-use items — Breaches of export control legislation"
+      },
+      {
+        "control": "Penalties",
+        "scenario": "A company is found to have exported a controlled item without a licence, with no evidence of any voluntary disclosure.",
+        "question": "What penalties can apply?",
+        "options": [
+          "A written warning only, with no other consequence",
+          "Penalties ranging from licence revocation and seizure of goods to a fine and/or imprisonment for up to 10 years",
+          "A small administrative fee, comparable to a customs paperwork error",
+          "No penalty if the buyer turns out to be a legitimate end user"
+        ],
+        "correctIndex": 1,
+        "explanation": "Breaching export controls is a criminal offence. Penalties range from revocation of licences and seizure of goods to a fine and/or imprisonment for up to 10 years, depending on the nature and severity of the offence.",
+        "why": "The scale of the penalty — up to a custodial sentence — reflects what's actually at stake: controlled items exist precisely because of their potential to end up in weapons programmes or destinations under international sanction. Treating a breach as a minor paperwork issue would badly understate what the control regime exists to prevent, which is why it sits in criminal rather than purely administrative law.",
+        "reference": "Export controls: dual-use items, software and technology — Breaches of export control legislation; penalties"
+      }
+    ]
   }
 }
