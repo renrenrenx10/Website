@@ -1796,7 +1796,7 @@ button.rail-card--link {
     letter-spacing: .05em; color: #65758a;
 }
 .quiz-scenario {
-    font-size: .85rem; color: #40566c; line-height: 1.55;
+    font-size: .95rem; color: #40566c; line-height: 1.55;
     background: #f4f8fc; border-left: 3px solid #29b6e8;
     padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 6px 0 10px;
 }
