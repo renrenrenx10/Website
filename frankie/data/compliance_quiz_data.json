@@ -516,5 +516,185 @@
         "reference": "Export controls: dual-use items, software and technology — Breaches of export control legislation; penalties"
       }
     ]
+  },
+  "modern_slavery": {
+    "title": "Modern Slavery",
+    "icon": "⛓️‍💥",
+    "intro": "Ten scenario questions covering the Modern Slavery Act 2015 — who has to publish a statement, what it must cover, how it gets approved and published, and the recruitment and audit practices that actually reduce risk in a supply chain. Sourced directly from the Home Office's own statutory guidance and \"Transparency in supply chains: a practical guide\" (Crown Copyright).",
+    "passMark": 80,
+    "learn": [
+      {
+        "heading": "Who Has To Publish a Statement",
+        "body": "Section 54 of the Modern Slavery Act 2015 requires any commercial organisation that is a body corporate or partnership, carries on a business (or part of one) in the UK, supplies goods or services, and has an annual turnover of £36 million or more, to publish a modern slavery statement for each financial year. Turnover includes the organisation's own turnover plus that of all its subsidiaries, wherever in the world they're based — so a UK parent with modest domestic revenue but large overseas subsidiaries can still be caught by the threshold.\n\nWhere a group has several organisations that each meet the criteria, they can publish one combined statement covering all of them, provided it fully sets out the steps each one has taken and clearly names every organisation it covers. Organisations below the threshold aren't legally required to publish anything, but are actively encouraged to do so voluntarily — in practice, many smaller suppliers end up producing a statement anyway because a larger customer above the threshold asks for one as part of their own due diligence."
+      },
+      {
+        "heading": "What The Statement Must Cover",
+        "body": "The core legal obligation is narrower than it sounds: the statement must set out what steps the organisation has taken during the previous financial year to ensure modern slavery isn't taking place in its own business or its supply chains — or, if it has taken no steps at all, it must say so plainly. There's no requirement to guarantee a slavery-free supply chain, and legal compliance doesn't turn on how well-written or detailed the statement is, only on whether it accurately sets out the steps taken (or the absence of any).\n\nSection 54(5) sets out six areas organisations may cover, and the government's guidance walks through each in turn: the organisation's structure, business and supply chains; its policies on modern slavery; how it assesses and manages risk; its due diligence processes (including how it remediates issues found); the training it provides; and how it monitors and evaluates the effectiveness of all of the above. None of the six is individually mandatory in the way the turnover threshold is, but together they're what the guidance treats as good and best practice, and what a statement is expected to build on year over year."
+      },
+      {
+        "heading": "Approval, Signing & Publishing",
+        "body": "A statement has real procedural requirements even though its content requirement is light-touch. It must be approved by the board of directors (or the members, for an LLP) and signed by a director or designated member — this is a deliberate design choice, meant to put senior-level accountability behind the statement rather than leaving it as a communications exercise. It's best practice for the director who signs to also have sat on the board that approved it, and to record the approval date.\n\nOnce approved, the statement must be published on the organisation's website with a link in a prominent place on the homepage — visible directly or through an obvious drop-down, clearly labelled so it's recognisable as the modern slavery statement. Organisations without a website must provide a copy to anyone who requests one in writing, within 30 days. The government also encourages (but doesn't require) uploading statements to the public Modern Slavery Statement Registry, which brings statements together in one searchable place."
+      },
+      {
+        "heading": "What Happens If You Don't Comply",
+        "body": "There's no automatic fine for failing to publish a statement, or for publishing one that says no steps were taken. Instead, the Secretary of State can bring civil proceedings in the High Court for an injunction requiring compliance — and if an organisation then ignores that injunction, it's in contempt of court, which carries an unlimited fine. In practice, the more immediate consequence is reputational: a missing statement, or one that's clearly thin, is visible to customers, investors, NGOs and the press, and larger customers increasingly build a supplier's own statement into their procurement due diligence.\n\nThis is a genuinely different enforcement model from most compliance regimes suppliers encounter — the Act is built around transparency and market pressure rather than direct penalties for the statement itself, though the underlying offences of slavery, servitude, forced labour and human trafficking (created elsewhere in the Act) remain serious criminal offences in their own right, independent of the reporting requirement."
+      },
+      {
+        "heading": "Recruitment Fees, Debt Bondage & Audits",
+        "body": "One of the clearest practical risk areas the guidance flags is worker-paid recruitment fees, particularly for migrant workers. When a worker pays a third-party recruiter to secure a job, they often go into debt to do so — and that debt can trap them with the employer until it's repaid, an imbalance of power the guidance calls debt bondage. The recommended standard is the \"Employer Pays Principle\": no worker should pay for the privilege of being recruited, and organisations are encouraged to build that requirement into their own supply chain contracts.\n\nAudits are a useful tool for finding modern slavery risk but a limited one on their own: the guidance is explicit that a supplier under audit can present fabricated records or coach workers to give false answers, especially where the audit is announced in advance. Better practice combines audits with worker-centred approaches — engaging directly with workers (migrant and vulnerable workers especially), using auditors who speak the workforce's language and understand local risk, and considering unannounced checks — rather than treating a clean audit report as proof on its own."
+      }
+    ],
+    "questions": [
+      {
+        "control": "Who Must Comply",
+        "scenario": "A UK-headquartered supplier has modest UK-only revenue of £20 million, but owns three overseas manufacturing subsidiaries with a combined turnover of £25 million.",
+        "question": "Does the Modern Slavery Act's £36 million turnover threshold apply to this group?",
+        "options": [
+          "No — only the UK parent's own £20 million turnover counts",
+          "Yes — total turnover includes the parent plus all subsidiaries, wherever they're based, giving a combined £45 million",
+          "No — overseas subsidiary turnover is excluded from the calculation",
+          "Only if the subsidiaries are separately registered at UK Companies House"
+        ],
+        "correctIndex": 1,
+        "explanation": "Total turnover for the £36 million threshold is calculated as the organisation's own turnover plus that of all its subsidiary undertakings, including those operating wholly outside the UK. This group's combined £45 million turnover puts it over the threshold, even though the UK parent alone would not be.",
+        "why": "If only domestic turnover counted, a group could easily structure around the threshold by keeping UK revenue below £36 million while running much larger operations abroad — exactly the kind of gap the transparency requirement is meant to close, since supply chain risk doesn't respect where a subsidiary happens to be incorporated.",
+        "reference": "Transparency in supply chains: a practical guide — 5.2.1 Who is required to comply?"
+      },
+      {
+        "control": "What Must Be Covered",
+        "scenario": "A company above the £36 million threshold reviews its supply chain and genuinely concludes it has taken no specific steps this financial year to address modern slavery risk.",
+        "question": "What is the company's legal obligation in this situation?",
+        "options": [
+          "None — if no steps were taken, no statement is required",
+          "It must still publish a statement, stating plainly that no such steps have been taken",
+          "It must delay publication until it has taken at least some steps",
+          "It can publish an empty or blank statement instead"
+        ],
+        "correctIndex": 1,
+        "explanation": "The Act requires transparency, not a guaranteed set of actions. An organisation that has taken no steps to address modern slavery must still publish a statement saying so — legal compliance turns on whether the statement accurately sets out the steps taken (including 'none'), not on how much action was actually taken.",
+        "why": "The whole mechanism behind section 54 is designed to work through visibility and reputational pressure rather than mandating specific actions — a statement that honestly says \"we did nothing this year\" is still compliant, but it's also publicly visible to customers, investors and NGOs, which is precisely the pressure the Act is designed to create.",
+        "reference": "Transparency in supply chains: a practical guide — 5.1 The what"
+      },
+      {
+        "control": "Statement Content",
+        "scenario": "A company is drafting its first modern slavery statement and wants to know what areas the government's guidance recommends covering.",
+        "question": "Which six areas does Section 54(5) set out as content a statement may cover?",
+        "options": [
+          "Turnover, profit margin, headcount, dividend policy, tax paid, and audit fees",
+          "Organisational structure and supply chains; policies; risk assessment and management; due diligence; training; and monitoring/evaluation of effectiveness",
+          "Only a list of suppliers and their countries of operation",
+          "A single annual pledge signed by all employees"
+        ],
+        "correctIndex": 1,
+        "explanation": "Section 54(5) sets out six recommended content areas: the organisation's structure, business and supply chains; its policies; how it assesses and manages risk; its due diligence (including remediation); training; and monitoring and evaluation of how effective all of this has been.",
+        "why": "The six areas trace a logical arc — you can't manage a risk you haven't mapped, can't do due diligence without a policy behind it, and can't claim effectiveness without measuring it — which is why the guidance treats them as a coherent structure to build a statement around rather than a checklist to tick independently.",
+        "reference": "Transparency in supply chains: a practical guide — Section 54(5) content areas"
+      },
+      {
+        "control": "Approval & Signing",
+        "scenario": "A company's head of compliance drafts a full, detailed modern slavery statement and wants to publish it on the website immediately to make the deadline.",
+        "question": "What must happen before the statement can be legally published?",
+        "options": [
+          "Nothing further — the compliance lead can publish it directly",
+          "It must be approved by the board of directors (or members, for an LLP) and signed by a director or designated member",
+          "It only needs sign-off from the company's external auditor",
+          "It must be approved by every employee named in it"
+        ],
+        "correctIndex": 1,
+        "explanation": "Section 54(6) requires the statement to be approved by the board of directors (or the members, for an LLP) and signed by a director or designated member — a compliance team drafting it is not sufficient on its own without that senior-level sign-off.",
+        "why": "The board approval requirement exists specifically to stop the statement becoming a communications exercise run entirely below leadership level — it forces the people who actually set supply chain strategy and budget to put their name to what the organisation says it's doing, which is what gives the statement any teeth at all.",
+        "reference": "Transparency in supply chains: a practical guide — 5.2.4 Who approves a statement?"
+      },
+      {
+        "control": "Publishing",
+        "scenario": "A company publishes its modern slavery statement on its website, but only as a PDF buried three levels deep in a 'Legal Documents' archive page with no link from the homepage.",
+        "question": "Does this satisfy the Act's publishing requirement?",
+        "options": [
+          "Yes — being anywhere on the website is sufficient",
+          "No — the Act requires a link in a prominent place on the homepage, clearly marked so its contents are apparent",
+          "Yes, as long as the PDF is findable via a site search",
+          "No — the statement must be emailed directly to every supplier instead"
+        ],
+        "correctIndex": 1,
+        "explanation": "Section 54(7) requires the statement to be published with a link in a prominent place on the organisation's homepage — directly visible or part of an obvious drop-down menu — clearly labelled so visitors immediately understand what it is. A buried archive page does not meet this.",
+        "why": "The point of the publishing requirement is genuine public accessibility — to consumers, employees, NGOs and investors who want to check what a company is doing — and a statement that technically exists but is practically undiscoverable defeats that purpose just as much as not publishing one at all.",
+        "reference": "Transparency in supply chains: a practical guide — 5.3.2 Publishing a statement"
+      },
+      {
+        "control": "Group Statements",
+        "scenario": "A parent organisation and two subsidiaries all individually meet the Section 54 criteria. They want to publish a single combined statement rather than three separate ones.",
+        "question": "Is this permitted, and what must the combined statement do?",
+        "options": [
+          "Not permitted — each organisation must always publish separately",
+          "Permitted — it must cover the steps taken by each organisation it represents, clearly name them, and be published on each covered organisation's website",
+          "Permitted, but only the parent organisation needs to be named",
+          "Permitted, with no requirement to name any of the organisations covered"
+        ],
+        "correctIndex": 1,
+        "explanation": "A group can publish a single statement covering multiple qualifying organisations, provided it fully covers the steps each one has taken, clearly names the parent and subsidiary organisations included, and is published on the websites of all organisations it covers.",
+        "why": "Allowing a combined statement avoids pointless duplication for genuinely integrated group operations, but the naming and coverage requirements exist so a reader can still tell exactly which entities the statement's claims actually apply to — a vague group-wide statement that doesn't specify which subsidiaries it covers would undermine the same transparency the Act exists to create.",
+        "reference": "Transparency in supply chains: a practical guide — 5.2.1 Groups of companies"
+      },
+      {
+        "control": "Non-Compliance",
+        "scenario": "A qualifying organisation simply never publishes a modern slavery statement, year after year, and ignores requests to do so.",
+        "question": "What is the direct legal consequence under the Act?",
+        "options": [
+          "An automatic fine issued by HMRC",
+          "The Secretary of State can seek a High Court injunction requiring compliance — ignoring that injunction is contempt of court, punishable by an unlimited fine",
+          "Immediate criminal prosecution of the signing director",
+          "No consequence — the requirement is entirely voluntary in practice"
+        ],
+        "correctIndex": 1,
+        "explanation": "There's no automatic fine for failing to publish. Instead, the Secretary of State can bring civil proceedings for an injunction compelling compliance; only if the organisation then defies that injunction does it become contempt of court, which carries an unlimited fine.",
+        "why": "This is a genuinely different enforcement shape from most compliance obligations — it leans on court-ordered compliance and reputational exposure rather than an upfront penalty, which is worth knowing precisely because it's easy to assume (wrongly) that skipping the statement just risks a fixed fine like a late filing.",
+        "reference": "Transparency in supply chains: a practical guide — 5.2.3 Failure to comply"
+      },
+      {
+        "control": "Recruitment Fees",
+        "scenario": "A labour agency supplying migrant workers to a company's site charges each worker a placement fee, which the workers pay off gradually from their wages over several months.",
+        "question": "What risk does this recruitment practice create, and what standard does the guidance recommend?",
+        "options": [
+          "No risk — recruitment fees are a normal cost of doing business for agencies",
+          "It creates a debt bondage risk; the recommended standard is the Employer Pays Principle — no worker should pay for the privilege of being recruited",
+          "It's only a risk if the fee exceeds one month's wages",
+          "It's acceptable as long as the fee is disclosed to the worker in advance"
+        ],
+        "correctIndex": 1,
+        "explanation": "Worker-paid recruitment fees, especially for migrant workers, create real debt bondage risk — the debt can bind a worker to an employer until it's repaid. The guidance recommends the Employer Pays Principle: recruitment costs should sit with the employer, not the worker.",
+        "why": "Debt bondage is one of the more subtle forms of modern slavery, precisely because it can look like an ordinary loan on the surface — the guidance flags it specifically because the power imbalance it creates (a worker who can't leave without losing the ability to repay) is easy for a well-meaning buyer to miss if they're only checking wage rates and contracts, not how workers arrived at the job in the first place.",
+        "reference": "Transparency in supply chains: a practical guide — Recruitment fees and related costs; Debt Bondage/Bonded labour (Annex A)"
+      },
+      {
+        "control": "Audit Limitations",
+        "scenario": "A company relies solely on an announced annual audit, conducted by a generalist quality auditor, to confirm that a key overseas supplier has no modern slavery issues. The audit consistently comes back clean.",
+        "question": "Does a clean announced audit reliably rule out modern slavery risk?",
+        "options": [
+          "Yes — a clean audit is conclusive evidence the supplier is compliant",
+          "Not on its own — suppliers can present fabricated records or coach workers ahead of an announced audit; unannounced checks and direct worker engagement are recommended alongside audits",
+          "Yes, provided the auditor is internationally accredited",
+          "No — audits provide no useful information about modern slavery risk at all"
+        ],
+        "correctIndex": 1,
+        "explanation": "The guidance is explicit that audits alone are not reliable: a supplier may present fake records or coach workers to lie to auditors, particularly when the audit is announced and expected. Best practice combines audits with worker-centred approaches — engaging directly with workers, using auditors who understand local risk and speak the workforce's language, and considering unannounced checks.",
+        "why": "An audit measures what a supplier chooses to show an inspector on a given day, not the lived reality of the workforce — treating a clean audit as proof rather than one input among several is exactly the gap that lets real exploitation persist behind consistently passing paperwork, which is why the guidance pairs audits with direct engagement rather than presenting them as sufficient alone.",
+        "reference": "Transparency in supply chains: a practical guide — Modern slavery audits and inspections"
+      },
+      {
+        "control": "Scope of Modern Slavery",
+        "scenario": "A company discovers that a sub-tier supplier employs children in light, age-appropriate tasks that do not interfere with their education, alongside separate concerns about forced overtime for adult workers at the same site.",
+        "question": "How should the company think about these two findings?",
+        "options": [
+          "Both automatically count as modern slavery, since any child labour is slavery by definition",
+          "Light work appropriate to a child's age is not automatically modern slavery, but forced or compulsory labour of any worker is — the two findings need separate assessment against the actual facts",
+          "Neither counts as modern slavery unless it involves trafficking across a border",
+          "Only the child labour finding is relevant; forced overtime for adults falls outside the Act's scope entirely"
+        ],
+        "correctIndex": 1,
+        "explanation": "The guidance distinguishes ordinary child labour from modern slavery: some 'light work' appropriate to a child's age does not automatically constitute modern slavery, though the worst forms of child labour (trafficking, debt bondage, forced recruitment, and similar) very likely do. Forced or compulsory labour of adult workers is separately and directly within scope, regardless of the child labour question.",
+        "why": "Treating every instance of child labour as automatically equivalent to modern slavery — or dismissing forced overtime as \"just poor conditions\" rather than potential forced labour — both lead to the same failure: a company stops looking closely enough at the actual facts of each situation, which is exactly the judgement the guidance is trying to sharpen rather than blunt with a blanket rule.",
+        "reference": "Transparency in supply chains: a practical guide — Annex A, Child labour; The worst forms of child labour"
+      }
+    ]
   }
 }
