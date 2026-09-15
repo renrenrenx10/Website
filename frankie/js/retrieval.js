@@ -115,18 +115,30 @@ function phraseBoost(phrases, chunk) {
 
 // Detects a compound question joining two or more distinct asks with "and"
 // (e.g. "What are the granting criteria and what does SQEP stand for?").
-// Root-caused 2026-09-15/16 as the remaining half of the granting-criteria/SQEP
-// retrieval gap: even after the stopword fix and PHRASE_BOOST, a single flat
-// top-maxSources ranking lets whichever sub-question scores higher swallow
-// every result slot, starving the other sub-question's content even when a
-// good chunk exists for it — the real SQEP scoring-rubric chunk ranked #10
-// on this exact live query (kw=9, a solid match) but never made the default
-// top-5 because five "granting criteria" chunks outscored it. This only
-// detects "X and <wh-word/aux>...", so an ordinary single-topic query with an
-// incidental "and" in it ("stainless steel and inconel") is left untouched.
-const CLAUSE_SPLIT_RE = /\s+and\s+(?=(?:what|how|why|when|where|which|who|does|do|did|is|are|can|could|should|will|would)\b)/i;
+// Root-caused 2026-09-15/16: even after the stopword fix and PHRASE_BOOST, a
+// single flat top-maxSources ranking lets whichever sub-question scores
+// higher swallow every result slot, starving the other sub-question's
+// content even when a good chunk exists for it — the real SQEP scoring-
+// rubric chunk ranked #10 on this exact live query (kw=9, a solid match) but
+// never made the default top-5 because five "granting criteria" chunks
+// outscored it. This only detects "X and <wh-word/aux>...", so an ordinary
+// single-topic query with an incidental "and" in it ("stainless steel and
+// inconel") is left untouched.
+//
+// Exported for preprocessing.js: the actual per-clause coverage guarantee
+// lives in app.js's handleQuery() merge step, which is the only place that
+// sees every parallel searchKnowledgeBase() call and builds the final
+// maxSources-capped result list — earlier attempts to guarantee coverage
+// here by pushing extra results past `maxSources` were silently undone by
+// three separate downstream `.slice(0, 5)` calls (claude.js's prompt
+// context, evidence.js's evidence panel, ui.js's source rail) that each cap
+// independently and don't know about the guarantee. Splitting the query
+// into clauses stays a single, shared implementation here; preprocessing.js
+// uses it to build real per-clause search terms, and app.js reserves each
+// term its own slot within the maxSources cap instead of exceeding it.
+export const CLAUSE_SPLIT_RE = /\s+and\s+(?=(?:what|how|why|when|where|which|who|does|do|did|is|are|can|could|should|will|would)\b)/i;
 
-function splitQueryClauses(query) {
+export function splitQueryClauses(query) {
     const parts = (query || '').split(CLAUSE_SPLIT_RE).map(p => p.trim()).filter(Boolean);
     return parts.length > 1 ? parts : [query];
 }
@@ -689,40 +701,10 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
         return { ...chunk, score: finalScore, _kw: kw, _graphBoosted: graphBoost > 0, _reportEvidence: isReportEvidence, _handbook: isHandbook };
     });
 
-    let results = scored
+    const results = scored
         .filter(c => c.score > 0)
         .sort((a, b) => b.score - a.score)
         .slice(0, maxSources);
-
-    // ── Compound-question coverage ────────────────────────────────────────────
-    // For a query that splits into 2+ distinct asks (see splitQueryClauses above),
-    // guarantee each clause's own best-scoring chunk(s) a slot — appended on top
-    // of, never instead of, the normal combined-score top-maxSources ranking, so
-    // this can only add coverage, never bump a legitimately top-ranked result.
-    const clauses = splitQueryClauses(query);
-    if (clauses.length > 1) {
-        const CLAUSE_TOP_N = 2;
-        const presentIds = new Set(results.map(r => r.id));
-        for (const clause of clauses) {
-            const cTokens  = tokenize(clause);
-            const cPhrases = extractQueryPhrases(clause);
-            const clauseTop = scored
-                .map(c => ({ c, s: Math.min(keywordScore(cTokens, c) / 20, 1) * 10 + phraseBoost(cPhrases, c) }))
-                .filter(x => x.s > 0)
-                .sort((a, b) => b.s - a.s)
-                .slice(0, CLAUSE_TOP_N);
-            for (const { c } of clauseTop) {
-                if (!presentIds.has(c.id)) {
-                    presentIds.add(c.id);
-                    // Tagged so a downstream multi-query merge (app.js pools results
-                    // from several parallel searchKnowledgeBase() calls and re-slices
-                    // to CONFIG.maxSources by raw score) can preserve this guarantee
-                    // instead of silently re-dropping it — see app.js's merge step.
-                    results.push({ ...c, _clauseGuaranteed: true });
-                }
-            }
-        }
-    }
 
     // ── Debug trace ───────────────────────────────────────────────────────────
     const mode = queryVec ? 'hybrid' : (vectors ? 'keyword+graph' : 'keyword');

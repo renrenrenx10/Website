@@ -169,40 +169,84 @@ async function handleQuery(query) {
 
         if (!RequestManager.isActive(requestId)) return;
 
-        // Deduplicate and merge results
+        // Deduplicate results pooled from every parallel search term/clause
+        // (searchQueries — see preprocessing.js's rewriteQuery/splitQueryClauses),
+        // keeping each search call's own ranking intact per term so the merge
+        // below can reserve each term a slot before falling back to a flat
+        // score sort.
         const seen = new Set();
         let _chunkIdx = 0;
-        let allResults = [];
-
-        for (const sr of searchResults) {
+        const dedupedPerTerm = searchResults.map(sr => {
+            const kept = [];
             for (const chunk of (sr.results || [])) {
                 const key = chunk.id || (chunk.text || '').slice(0, 80) || String(_chunkIdx++);
                 if (!seen.has(key)) {
                     seen.add(key);
+                    kept.push(chunk);
+                }
+            }
+            return kept;
+        });
+
+        // ── Diversity-aware merge ──────────────────────────────────────────
+        // A flat "pool everything, sort by score, slice to maxSources" merge
+        // lets whichever search term happens to score higher overall swallow
+        // every result slot — silently dropping another term's genuinely
+        // matched content even when that term (e.g. a compound question's own
+        // clause) returned a solid top hit. Root-caused 2026-09-16 via the
+        // granting-criteria/SQEP compound query: the SQEP scoring-rubric chunk
+        // ranked highly within its own clause's search but its raw score
+        // couldn't compete with five "granting criteria" chunks once every
+        // term's results were pooled together and cut with one flat sort+slice.
+        //
+        // Fix: reserve each search term its own best remaining chunk first (in
+        // term order — the original full query gets first claim, then each
+        // rewritten term/clause), then fill any leftover slots with the
+        // highest-scored chunks from the full pool. The result never exceeds
+        // CONFIG.maxSources — earlier attempts guaranteed coverage by pushing
+        // extra results *past* maxSources instead, which downstream consumers
+        // (claude.js's prompt context, evidence.js's evidence panel, ui.js's
+        // source rail — each has its own independent `.slice(0, 5)`) silently
+        // discarded again, since none of them knew about the guarantee.
+        // Staying within the cap here means every one of those is automatically
+        // safe with no changes needed there.
+        // Round-robin across terms/clauses (each term's own list is already
+        // score-sorted from searchKnowledgeBase): round 1 gives every term its
+        // own best remaining chunk, round 2 gives every term still holding
+        // unclaimed chunks its next-best, and so on until maxSources chunks
+        // are claimed or every term is exhausted. A single reserved slot per
+        // term isn't enough on its own — verified live 2026-09-16: with one
+        // slot each, the SQEP clause only ever contributed its acronym-
+        // definition chunk, never the separate scoring-rubric chunk, because
+        // a single-topic term (the un-split full query, effectively a
+        // duplicate of the granting-criteria clause here) claimed 3 of the 5
+        // slots on raw score alone before the SQEP clause got a second turn.
+        // Round-robin lets a clause contribute more than one chunk once
+        // other terms run dry, without ever letting one term monopolise
+        // every slot outright.
+        let allResults = [];
+        const claimed = new Set();
+        const pointers = dedupedPerTerm.map(() => 0);
+        let progressed = true;
+
+        while (allResults.length < CONFIG.maxSources && progressed) {
+            progressed = false;
+            for (let i = 0; i < dedupedPerTerm.length; i++) {
+                if (allResults.length >= CONFIG.maxSources) break;
+                const list = dedupedPerTerm[i];
+                while (pointers[i] < list.length && claimed.has(list[pointers[i]].id)) {
+                    pointers[i]++;
+                }
+                if (pointers[i] < list.length) {
+                    const chunk = list[pointers[i]++];
+                    claimed.add(chunk.id);
                     allResults.push(chunk);
+                    progressed = true;
                 }
             }
         }
 
-        // Preserve any chunk retrieval.js guaranteed a slot for a compound-question
-        // clause (see splitQueryClauses()/_clauseGuaranteed in retrieval.js) — this
-        // merge step pools results from up to 3 parallel searchKnowledgeBase() calls
-        // and used to re-slice by raw score alone, which silently re-dropped exactly
-        // the chunks that guarantee exists to protect (root-caused 2026-09-16: the
-        // SQEP scoring-rubric chunk survived inside each individual search call but
-        // was cut again here because its raw score couldn't compete with five
-        // "granting criteria" chunks once everything was pooled together). Additive
-        // only — this can only add a result slot back, never bump a legitimately
-        // top-ranked one.
-        const clauseGuaranteed = allResults.filter(r => r._clauseGuaranteed);
-        allResults = allResults.sort((a, b) => b.score - a.score).slice(0, CONFIG.maxSources);
-        const _presentIds = new Set(allResults.map(r => r.id));
-        for (const r of clauseGuaranteed) {
-            if (!_presentIds.has(r.id)) {
-                _presentIds.add(r.id);
-                allResults.push(r);
-            }
-        }
+        allResults.sort((a, b) => b.score - a.score);
 
         // Normalise confidence: 0 ≤ confidence ≤ 1
         const confidence   = normaliseScore(allResults.length ? allResults[0].score : 0);
