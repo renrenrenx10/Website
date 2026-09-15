@@ -229,6 +229,40 @@ function rubricEntityBoost(query, chunk) {
     return 0;
 }
 
+// Score boost for the chunk that actually spells out the "Triple 85"
+// granting-criteria thresholds (85%+ overall Business Excellence score,
+// 85%+ QHSE score, 85%+ of action plan completed with evidence). Root-
+// caused 2026-09-15 live: Roy asked "what are the granting criteria?" and
+// Frankie hedged — "the sources reference these as a group but don't spell
+// out the individual thresholds" — even though the exact numeric thresholds
+// exist verbatim in the KB (frankie7_supplier_kb.json, "Pre-Conditions That
+// Must Be Met Before Initiating Pre-Granting"). Direct testing confirmed
+// that chunk ranked #17 of 500 for the query: its own text never uses the
+// word "criteria" (it's phrased as pre-conditions/a checklist), so keyword
+// score misses it, and vector similarity doesn't favour a bare bullet list
+// over the many chunks that use "criteria" explicitly while only gesturing
+// at the numbers. Same shape of gap as RUBRIC_ENTITY_BOOST above — a chunk
+// with the real, specific answer loses to chunks that merely talk about the
+// topic — so it gets the same fix: detect the chunk by its distinctive
+// "NN%+" threshold-list signature (>=2 such thresholds is not something
+// ordinary prose does) and boost it when the query is actually asking about
+// granting criteria. Additive only, gated tightly so it can't fire on an
+// unrelated chunk that happens to mention one percentage in passing.
+const GRANTING_CRITERIA_BOOST = 6.0;
+const GRANTING_THRESHOLD_PATTERN = /\d{1,3}%\+/g;
+function hasGrantingThresholds(chunk) {
+    const text = chunk.text || '';
+    const matches = text.match(GRANTING_THRESHOLD_PATTERN) || [];
+    return matches.length >= 2;
+}
+function grantingCriteriaBoost(query, chunk) {
+    if (!hasGrantingThresholds(chunk)) return 0;
+    const ql = query.toLowerCase();
+    const asksGrantingCriteria = /\bgrant(ing)?\b/.test(ql) && /\bcriteri/.test(ql);
+    const asksTriple85 = /triple\s*85/.test(ql);
+    return (asksGrantingCriteria || asksTriple85) ? GRANTING_CRITERIA_BOOST : 0;
+}
+
 // ── Caches ────────────────────────────────────────────────────────────────────
 
 let kbCache        = null;   // all non-lazy chunks
@@ -703,6 +737,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
         const graphBoost = boostedIds.has(chunk.id) ? GRAPH_BOOST : 0;
         const pBoost = phraseBoost(phrases, chunk);
         const rBoost = rubricEntityBoost(query, chunk);
+        const gBoost = grantingCriteriaBoost(query, chunk);
 
         let baseScore;
         if (queryVec && vectors) {
@@ -719,7 +754,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
             baseScore = Math.min(kw / 20, 1) * 10;
         }
 
-        return { chunk, kw, graphBoost, pBoost, rBoost, baseScore };
+        return { chunk, kw, graphBoost, pBoost, rBoost, gBoost, baseScore };
     });
 
     // The strongest pre-boost match from any partition other than handbook
@@ -728,12 +763,12 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
     // that's already at or above this bar on its own.
     const strongestOtherRaw = preScored.reduce((max, p) => {
         if (isHandbookChunk(p.chunk) || isAnonymisedReportChunk(p.chunk)) return max;
-        const raw = p.baseScore + p.graphBoost + p.pBoost + p.rBoost;
+        const raw = p.baseScore + p.graphBoost + p.pBoost + p.rBoost + p.gBoost;
         return raw > max ? raw : max;
     }, 0);
 
-    const scored = preScored.map(({ chunk, kw, graphBoost, pBoost, rBoost, baseScore }) => {
-        let finalScore = baseScore + graphBoost + pBoost + rBoost;
+    const scored = preScored.map(({ chunk, kw, graphBoost, pBoost, rBoost, gBoost, baseScore }) => {
+        let finalScore = baseScore + graphBoost + pBoost + rBoost + gBoost;
         const isReportEvidence = isAnonymisedReportChunk(chunk);
         const isHandbook = isHandbookChunk(chunk);
         if (isReportEvidence) finalScore *= REPORT_SOURCE_PENALTY;
