@@ -1,28 +1,28 @@
 // ── Model router ──────────────────────────────────────────────────────────────
-// Routes each query to the right model based on KB confidence score.
+// Routes each Claude-eligible query to Sonnet. History below for context on
+// why — this file has gone back and forth once already; this is the settled
+// position.
 //
-// Strategy:
-//   high confidence (>= 0.6)  -> Haiku   - KB has the answer; cheap synthesis
-//   medium confidence (0.3-0.6) -> Sonnet - needs more reasoning with partial context
-//   low confidence (< 0.3)    -> Sonnet - weakest context, needs best model to be useful
-//   no results                -> local   - no LLM can help without source material
-//
-// Restored 2026-09-15. Retired 2026-09-14 after live testing showed Haiku
-// fabricating precise facts (category lists, acronym expansions) even with
-// the correct source chunk in context. Two independent fixes have landed
-// since: the "Precision rule" in claude.js's SHARED_KNOWLEDGE (require exact
-// quoting of names/figures, say "not confident" rather than guess), and the
-// HANDBOOK_BOOST scoping fix in retrieval.js (a broad handbook chapter can no
-// longer outrank a specific, correct match purely from the boost multiplier).
-// Re-enabling Haiku now to test whether high-confidence routing holds up
-// with a genuinely correct source chunk and the precision rule doing the
-// same enforcement work regardless of which model is synthesising. If live
-// testing shows Haiku still drifting even with both fixes in place, revert
-// this file to route every Claude-eligible query to Sonnet — see git history
-// for that version (commit 4afab37).
-//
-// This keeps costs low (~70% Haiku) while reserving Sonnet for the queries
-// where it actually makes a difference.
+// 2026-09-14: Removed Haiku from routing entirely after live testing showed
+// it fabricating precise facts (category lists, acronym expansions) even
+// with the correct source chunk in context.
+// 2026-09-15: Restored Haiku for high-confidence queries after two root
+// causes were fixed (a retrieval-scoring bug, and a stricter "Precision
+// rule" in claude.js's system prompt) — worth retesting since both fixes
+// apply regardless of which model synthesises the answer.
+// 2026-09-15 (later same day): Reverted back to Sonnet-only. Retesting with
+// both fixes in place found Haiku's specific fabrications gone, but two new,
+// different accuracy gaps: it compressed a multi-tier scoring rubric
+// (dropping a caveat and the top band) and, separately, stated "five main
+// assessment areas" while listing six items directly underneath — a plain
+// self-contradiction. A content-aware escalation was built for the first
+// gap (see retrieval.js's hasScoringRubric — left in place, unused by this
+// router, in case Haiku is reconsidered later) but the second gap isn't
+// something a targeted rule can catch, and Rene's call was that F4N
+// guidance has to be right, always — measured live cost difference between
+// the two models turned out to be about $0.01/query either way, not
+// something worth trading accuracy for. Every Claude-eligible query goes to
+// Sonnet.
 
 export const MODELS = {
     haiku:  'claude-haiku-4-5-20251001',
@@ -30,32 +30,15 @@ export const MODELS = {
 };
 
 /**
- * @param {number}  confidence    Normalised KB confidence 0-1
+ * @param {number}  confidence   Normalised KB confidence 0-1 (unused — kept
+ *                                in the signature so callers don't need changing)
  * @param {boolean} claudeEnabled
- * @param {boolean} [forceSonnet] Bypass confidence-based routing and use
- *                                Sonnet regardless. Set this when the
- *                                retrieved sources contain content Haiku is
- *                                known to handle less reliably even with
- *                                correct retrieval — currently: a multi-tier
- *                                scoring rubric (see hasScoringRubric() in
- *                                retrieval.js). Live testing 2026-09-15 found
- *                                Haiku compresses rubric bands (dropping a
- *                                caveat, omitting the top tier) in a way
- *                                that changes what the rubric means, even
- *                                though it no longer invents wrong numbers
- *                                outright. This keeps Haiku as the default
- *                                for the bulk of traffic while routing this
- *                                specific, previously-hallucinating output
- *                                type to Sonnet automatically.
  * @returns {{ route: string, model: string }}
  */
-export function routeModel(confidence, claudeEnabled, forceSonnet) {
+export function routeModel(confidence, claudeEnabled) {
     if (!claudeEnabled)    return { route: 'local',  model: null };
     if (confidence === 0)  return { route: 'local',  model: null };
 
-    if (forceSonnet)       return { route: 'claude', model: MODELS.sonnet };
-    if (confidence >= 0.6) return { route: 'claude', model: MODELS.haiku };
-    // medium or low confidence — use Sonnet for better reasoning with weak context
     return { route: 'claude', model: MODELS.sonnet };
 }
 
