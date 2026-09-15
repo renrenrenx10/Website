@@ -190,6 +190,45 @@ export function hasScoringRubric(chunk) {
     return matches.length >= 3;
 }
 
+// Score boost for a chunk that is both (a) a genuine scoring rubric
+// (hasScoringRubric() above) and (b) about the same F4N pillar/topic the
+// query names. Root-caused 2026-09-16 live: real hybrid (60% vector / 40%
+// keyword) scoring ranks a scoring-rubric chunk very low against a plain-
+// language question about its own topic — e.g. "what does SQEP stand for?"
+// ranked the actual SQEP scoring-rubric chunk (0/2/7/10 "Option Score"
+// bands) #46 out of 500 candidates, even run as its own isolated clause
+// search, because semantically a rubric/question-table reads as an
+// assessment artefact, not a definition. But F4N guidance always treats an
+// entity's score criteria as part of "knowing" that entity — see claude.js's
+// SCC-mode prompt: "Reference the relevant score criteria (0/2/7/10) where
+// applicable" — so when the query names a pillar via F4N_ALIASES and a
+// chunk is both that pillar's content and its scoring rubric, it earns a
+// boost the same way GRAPH_BOOST lifts an explicitly pinned chunk. Additive
+// only, and gated behind hasScoringRubric() so it can't fire on an ordinary
+// chunk that merely mentions a pillar's alias in passing.
+const RUBRIC_ENTITY_BOOST = 6.0;
+function rubricEntityBoost(query, chunk) {
+    if (!hasScoringRubric(chunk)) return 0;
+    const ql = query.toLowerCase();
+    const searchable = ((chunk.text || '') + ' ' + (chunk.section || '')).toLowerCase();
+    // Require the query and the chunk to share the SAME specific alias term,
+    // not merely the same pillar bucket — checked live 2026-09-16: matching
+    // on "any alias for the shared pillar" was too loose. A query naming
+    // "sqep" matched every People Excellence rubric chunk that happened to
+    // contain the pillar's OTHER aliases too (e.g. "people excellence" or
+    // "competency framework" in an unrelated employee-development question's
+    // rubric), which pushed three different rubric chunks into the top 5 and
+    // displaced the plain "SQEP stands for..." definition chunk entirely.
+    // Requiring the literal same term on both sides keeps this scoped to the
+    // chunk that's actually about the thing the query named.
+    for (const aliases of Object.values(F4N_ALIASES)) {
+        for (const alias of aliases) {
+            if (ql.includes(alias) && searchable.includes(alias)) return RUBRIC_ENTITY_BOOST;
+        }
+    }
+    return 0;
+}
+
 // ── Caches ────────────────────────────────────────────────────────────────────
 
 let kbCache        = null;   // all non-lazy chunks
@@ -663,6 +702,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
         const kw = keywordScore(tokens, chunk);
         const graphBoost = boostedIds.has(chunk.id) ? GRAPH_BOOST : 0;
         const pBoost = phraseBoost(phrases, chunk);
+        const rBoost = rubricEntityBoost(query, chunk);
 
         let baseScore;
         if (queryVec && vectors) {
@@ -679,7 +719,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
             baseScore = Math.min(kw / 20, 1) * 10;
         }
 
-        return { chunk, kw, graphBoost, pBoost, baseScore };
+        return { chunk, kw, graphBoost, pBoost, rBoost, baseScore };
     });
 
     // The strongest pre-boost match from any partition other than handbook
@@ -688,12 +728,12 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
     // that's already at or above this bar on its own.
     const strongestOtherRaw = preScored.reduce((max, p) => {
         if (isHandbookChunk(p.chunk) || isAnonymisedReportChunk(p.chunk)) return max;
-        const raw = p.baseScore + p.graphBoost + p.pBoost;
+        const raw = p.baseScore + p.graphBoost + p.pBoost + p.rBoost;
         return raw > max ? raw : max;
     }, 0);
 
-    const scored = preScored.map(({ chunk, kw, graphBoost, pBoost, baseScore }) => {
-        let finalScore = baseScore + graphBoost + pBoost;
+    const scored = preScored.map(({ chunk, kw, graphBoost, pBoost, rBoost, baseScore }) => {
+        let finalScore = baseScore + graphBoost + pBoost + rBoost;
         const isReportEvidence = isAnonymisedReportChunk(chunk);
         const isHandbook = isHandbookChunk(chunk);
         if (isReportEvidence) finalScore *= REPORT_SOURCE_PENALTY;

@@ -98,7 +98,26 @@ function buildRequestBody(query, sources, history, mode, confProfile, stream = f
             } else {
                 body = body.slice(0, 600);
             }
-            return `[Source ${i + 1}] ${s.title || s.source || 'KB'}${s.url ? ` — ${s.url}` : ''}:\n${body}`;
+            // Chunk objects never carry .title/.source — checked live 2026-09-16:
+            // every partition's chunks only have .source_file (confirmed on a
+            // live chunk: keys were id/source_file/section/category/... with no
+            // title or source field at all). That meant this fallback chain fell
+            // straight through to the literal string 'KB' for every source, on
+            // every query — the model was never told which document (or
+            // section) a source actually came from, only bare unlabeled body
+            // text truncated to 600 chars. That's a very plausible root cause
+            // for exactly the kind of acronym mix-up the Precision rule above
+            // exists to prevent: asked what SCC stands for, the model wrote
+            // "Supply Chain Co-ordinator" — a plausible guess — when the KB
+            // consistently uses "Supply Chain Consultant" (confirmed: 30/30
+            // matching chunks say "Consultant", none say "Co-ordinator") and
+            // one of the actual retrieved sources that query was literally
+            // titled "F4N Supply Chain Consultant Training Manual" — the model
+            // just never saw that filename, only "[Source 3] KB:".
+            const rawLabel   = s.title || s.source || s.source_file || 'KB';
+            const label      = String(rawLabel).replace(/\.[a-z0-9]+$/i, '').replace(/_/g, ' ');
+            const sectionNote = s.section ? ` — ${s.section}` : '';
+            return `[Source ${i + 1}] ${label}${sectionNote}${s.url ? ` — ${s.url}` : ''}:\n${body}`;
         })
         .join('\n\n');
 

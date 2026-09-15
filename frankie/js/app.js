@@ -169,24 +169,28 @@ async function handleQuery(query) {
 
         if (!RequestManager.isActive(requestId)) return;
 
-        // Deduplicate results pooled from every parallel search term/clause
-        // (searchQueries — see preprocessing.js's rewriteQuery/splitQueryClauses),
-        // keeping each search call's own ranking intact per term so the merge
-        // below can reserve each term a slot before falling back to a flat
-        // score sort.
-        const seen = new Set();
+        // Each search term's own results, unmodified — cross-term duplicates
+        // are resolved inside the round-robin merge below via its own
+        // `claimed` set, not here. An earlier version of this step pre-deduped
+        // every term's list against a single shared `seen` set built in fixed
+        // term order, which looked equivalent but wasn't: whenever an early
+        // term's results heavily overlapped a later term's (the common case —
+        // the un-split full query and its own first clause return almost the
+        // same top chunks), the later term's list came out of that pre-dedup
+        // almost empty, so its round-robin "turn" fell through to whatever
+        // single low-ranked item it had left, instead of its own genuinely
+        // strong 2nd/3rd-ranked chunk. Root-caused 2026-09-16 live: this is
+        // why "17.4 The Fourth Granting Criterion" (a strong match, rank 3 in
+        // both the full-query and granting-clause searches) dropped out of the
+        // final 5 even though round-robin was meant to protect exactly this
+        // case — the granting clause's own list had already been stripped
+        // down to a single, much weaker leftover chunk before round-robin
+        // ever got to choose from it.
         let _chunkIdx = 0;
-        const dedupedPerTerm = searchResults.map(sr => {
-            const kept = [];
-            for (const chunk of (sr.results || [])) {
-                const key = chunk.id || (chunk.text || '').slice(0, 80) || String(_chunkIdx++);
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    kept.push(chunk);
-                }
-            }
-            return kept;
-        });
+        const dedupedPerTerm = searchResults.map(sr => (sr.results || []).map((chunk, idx) => {
+            if (!chunk.id) chunk = { ...chunk, id: (chunk.text || '').slice(0, 80) || `auto_${_chunkIdx++}_${idx}` };
+            return chunk;
+        }));
 
         // ── Diversity-aware merge ──────────────────────────────────────────
         // A flat "pool everything, sort by score, slice to maxSources" merge
