@@ -714,7 +714,11 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
             for (const { c } of clauseTop) {
                 if (!presentIds.has(c.id)) {
                     presentIds.add(c.id);
-                    results.push(c);
+                    // Tagged so a downstream multi-query merge (app.js pools results
+                    // from several parallel searchKnowledgeBase() calls and re-slices
+                    // to CONFIG.maxSources by raw score) can preserve this guarantee
+                    // instead of silently re-dropping it — see app.js's merge step.
+                    results.push({ ...c, _clauseGuaranteed: true });
                 }
             }
         }

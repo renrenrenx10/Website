@@ -184,7 +184,25 @@ async function handleQuery(query) {
             }
         }
 
+        // Preserve any chunk retrieval.js guaranteed a slot for a compound-question
+        // clause (see splitQueryClauses()/_clauseGuaranteed in retrieval.js) — this
+        // merge step pools results from up to 3 parallel searchKnowledgeBase() calls
+        // and used to re-slice by raw score alone, which silently re-dropped exactly
+        // the chunks that guarantee exists to protect (root-caused 2026-09-16: the
+        // SQEP scoring-rubric chunk survived inside each individual search call but
+        // was cut again here because its raw score couldn't compete with five
+        // "granting criteria" chunks once everything was pooled together). Additive
+        // only — this can only add a result slot back, never bump a legitimately
+        // top-ranked one.
+        const clauseGuaranteed = allResults.filter(r => r._clauseGuaranteed);
         allResults = allResults.sort((a, b) => b.score - a.score).slice(0, CONFIG.maxSources);
+        const _presentIds = new Set(allResults.map(r => r.id));
+        for (const r of clauseGuaranteed) {
+            if (!_presentIds.has(r.id)) {
+                _presentIds.add(r.id);
+                allResults.push(r);
+            }
+        }
 
         // Normalise confidence: 0 ≤ confidence ≤ 1
         const confidence   = normaliseScore(allResults.length ? allResults[0].score : 0);
