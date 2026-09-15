@@ -438,12 +438,37 @@ export function normaliseScore(raw) {
 
 // ── Keyword scoring ───────────────────────────────────────────────────────────
 
+// Common English stopwords, filtered out of query tokens before keyword scoring.
+// Root-caused 2026-09-15: keywordScore() counted every token occurrence with no
+// stopword filtering, so a compound question like "What are the granting criteria
+// and what does SQEP stand for?" let "what/are/the/and/does/for" (which appear in
+// almost every chunk, and far more often in longer chunks) dominate the score —
+// a real live example scored 30 "matches" on a chunk that contained the word
+// "granting" zero times, 25 of those 30 coming from five stopwords alone. That
+// buried a short, precise, exact-phrase-match chunk ("Complete F4N Granting
+// Criteria – All Four Requirements") outside the top 50 results entirely, so the
+// live chat never saw it and had to fall back to hedging. Stopwords are stripped
+// from the query's tokens only — chunk text itself is untouched — so scoring is
+// driven by the words that actually carry the query's meaning.
+const STOPWORDS = new Set([
+    'a','an','and','are','as','at','be','been','being','by','can','could','did',
+    'do','does','doing','for','from','had','has','have','having','he','her','hers',
+    'him','his','how','i','if','in','into','is','it','its','me','my','of','on',
+    'or','our','she','should','so','than','that','the','their','them','then',
+    'there','these','they','this','those','to','was','we','were','what','when',
+    'where','which','who','why','will','with','would','you','your'
+]);
+
 function tokenize(text) {
-    return (text || '')
+    const tokens = (text || '')
         .toLowerCase()
         .replace(/[^a-z0-9\s]/g, ' ')
         .split(/\s+/)
         .filter(Boolean);
+    const filtered = tokens.filter(t => !STOPWORDS.has(t));
+    // Fallback for a query that's entirely stopwords (rare) — better to score on
+    // something than return zero results.
+    return filtered.length ? filtered : tokens;
 }
 
 function keywordScore(tokens, chunk) {
