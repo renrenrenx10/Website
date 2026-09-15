@@ -100,6 +100,28 @@ function isHandbookChunk(chunk) {
     return chunk.category === 'handbook_guidance';
 }
 
+// Detects a multi-tier numeric scoring rubric in a chunk's text (F4N's
+// standard 0 / 2 / 7 / 10 scoring bands, e.g. "0. No process... 2. Basic
+// process... 7. Strong process, but occasional lapses... 10. Comprehensive,
+// fully embedded", or the "Option Score: N" / "Option Description:" form
+// used in question_set_structure_f4n.xlsx). Live testing 2026-09-15 found
+// Haiku reliably gets names, figures and single facts right post-fix, but
+// still tends to compress rubric text — e.g. dropping the caveat in a
+// middle band ("occasional lapses") or omitting the top band entirely,
+// changing what the rubric actually means even though no single number is
+// wrong. Rather than trust Haiku on this narrow, previously-hallucinating
+// output type, queries whose retrieved sources contain a rubric like this
+// are always escalated to Sonnet in app.js — see routeModel()'s forceSonnet
+// parameter in modelRouter.js.
+const RUBRIC_TIER_PATTERN = /(?:^|\n)\s*(?:0|2|7|10)\.\s|Option Score:\s*\d/i;
+export function hasScoringRubric(chunk) {
+    const text = chunk.text || '';
+    const matches = text.match(new RegExp(RUBRIC_TIER_PATTERN.source, 'gi')) || [];
+    // Require at least 3 tier markers so a stray "2." in ordinary prose
+    // doesn't trigger this — a real rubric lists multiple bands together.
+    return matches.length >= 3;
+}
+
 // ── Caches ────────────────────────────────────────────────────────────────────
 
 let kbCache        = null;   // all non-lazy chunks

@@ -3,7 +3,7 @@ import { CONFIG, ConfigManager, refreshConfig } from './config.js';
 import { RequestManager } from './requestManager.js';
 import { escapeHtml } from './utils.js';
 import { initialiseUI, appendMessage, updateMessage, updateRail, updateSuggestions, setLoadStatus, getActiveMode, renderRecentPanel } from './ui.js';
-import { searchKnowledgeBase, getKbStats, normaliseScore, isPlantComponentQuery } from './retrieval.js';
+import { searchKnowledgeBase, getKbStats, normaliseScore, isPlantComponentQuery, hasScoringRubric } from './retrieval.js';
 import { matchHandbookLink } from './handbook-links.js';
 import { preprocessQuery } from './preprocessing.js';
 import { streamClaude, generateWithClaude } from './claude.js';
@@ -217,10 +217,15 @@ async function handleQuery(query) {
         // ── Stage 3: Route ────────────────────────────────────────────────
         // High confidence (≥ 0.6) → Haiku (cheap, KB has the answer)
         // Medium / low confidence  → Sonnet (needs more reasoning with weak context)
+        // Exception: any retrieved source containing a multi-tier scoring
+        // rubric always goes to Sonnet, regardless of confidence — see
+        // hasScoringRubric() in retrieval.js and routeModel()'s forceSonnet
+        // param in modelRouter.js for why (2026-09-15).
         advancePipeline(pipelineBar, 'route');
-        const useClaude  = ConfigManager.useClaude && !!CONFIG.claudeApiKey;
-        const activeMode = getActiveMode();
-        const { route, model: routedModel } = routeModel(confidence, useClaude);
+        const useClaude   = ConfigManager.useClaude && !!CONFIG.claudeApiKey;
+        const activeMode  = getActiveMode();
+        const forceSonnet = allResults.some(hasScoringRubric);
+        const { route, model: routedModel } = routeModel(confidence, useClaude, forceSonnet);
 
         if (!RequestManager.isActive(requestId)) return;
 

@@ -30,14 +30,30 @@ export const MODELS = {
 };
 
 /**
- * @param {number}  confidence   Normalised KB confidence 0-1
+ * @param {number}  confidence    Normalised KB confidence 0-1
  * @param {boolean} claudeEnabled
+ * @param {boolean} [forceSonnet] Bypass confidence-based routing and use
+ *                                Sonnet regardless. Set this when the
+ *                                retrieved sources contain content Haiku is
+ *                                known to handle less reliably even with
+ *                                correct retrieval — currently: a multi-tier
+ *                                scoring rubric (see hasScoringRubric() in
+ *                                retrieval.js). Live testing 2026-09-15 found
+ *                                Haiku compresses rubric bands (dropping a
+ *                                caveat, omitting the top tier) in a way
+ *                                that changes what the rubric means, even
+ *                                though it no longer invents wrong numbers
+ *                                outright. This keeps Haiku as the default
+ *                                for the bulk of traffic while routing this
+ *                                specific, previously-hallucinating output
+ *                                type to Sonnet automatically.
  * @returns {{ route: string, model: string }}
  */
-export function routeModel(confidence, claudeEnabled) {
+export function routeModel(confidence, claudeEnabled, forceSonnet) {
     if (!claudeEnabled)    return { route: 'local',  model: null };
     if (confidence === 0)  return { route: 'local',  model: null };
 
+    if (forceSonnet)       return { route: 'claude', model: MODELS.sonnet };
     if (confidence >= 0.6) return { route: 'claude', model: MODELS.haiku };
     // medium or low confidence — use Sonnet for better reasoning with weak context
     return { route: 'claude', model: MODELS.sonnet };
