@@ -75,6 +75,44 @@ const KEYWORD_WEIGHT = 0.4;
 // Score boost for chunks pinned by graph entity match
 const GRAPH_BOOST = 3.0;
 
+// Score boost for a chunk containing an exact multi-word phrase from the
+// query verbatim. Root-caused 2026-09-15 alongside the stopword fix above:
+// even with stopwords stripped, single-token keyword counting still dilutes
+// a precise multi-word domain phrase (e.g. "granting criteria") across a
+// large corpus (11k+ regs chunks alone) where plenty of unrelated documents
+// happen to contain "criteria" or "granting" individually. A short, exact
+// chunk titled "Complete F4N Granting Criteria" scored below 130 other
+// chunks on a live query asking for exactly that phrase, because nothing in
+// the scoring model rewarded matching the whole phrase over matching its
+// words separately and scattered. This only fires for genuine 2-3 word
+// phrases pulled from the query that still contain real content words after
+// stopword removal, and only adds — it can't zero out a stronger semantic
+// match, the same discipline as HANDBOOK_BOOST's tie-breaking-only rule.
+const PHRASE_BOOST = 3.0;
+
+function extractQueryPhrases(query) {
+    const words = (query || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+    const phrases = [];
+    for (let n = 3; n >= 2; n--) {
+        for (let i = 0; i + n <= words.length; i++) {
+            const gram = words.slice(i, i + n);
+            const nonStop = gram.filter(w => !STOPWORDS.has(w)).length;
+            if (nonStop >= 2) phrases.push(gram.join(' '));
+        }
+    }
+    return phrases;
+}
+
+// Best (longest) matching phrase only, so overlapping n-grams of the same
+// hit ("granting criteria" inside a trigram and a bigram) don't stack.
+function phraseBoost(phrases, chunk) {
+    const searchable = ((chunk.text || '') + ' ' + (chunk.section || '')).toLowerCase();
+    for (const phrase of phrases) {
+        if (searchable.includes(phrase)) return PHRASE_BOOST;
+    }
+    return 0;
+}
+
 // Anonymised company-submission chunks (F4N/Reports/BE, F4N/Reports/NSS —
 // another supplier's assessment evidence, not guidance written for the
 // reader) get demoted relative to genuine guidance content so a "how do I
@@ -551,6 +589,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
 
     const tier   = getActiveTier();
     const tokens = tokenize(query);
+    const phrases = extractQueryPhrases(query);
 
     // ── Graph entity boost ────────────────────────────────────────────────────
     const boostedIds = new Set();
@@ -593,6 +632,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
     const preScored = allowedChunks.map(chunk => {
         const kw = keywordScore(tokens, chunk);
         const graphBoost = boostedIds.has(chunk.id) ? GRAPH_BOOST : 0;
+        const pBoost = phraseBoost(phrases, chunk);
 
         let baseScore;
         if (queryVec && vectors) {
@@ -609,7 +649,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
             baseScore = Math.min(kw / 20, 1) * 10;
         }
 
-        return { chunk, kw, graphBoost, baseScore };
+        return { chunk, kw, graphBoost, pBoost, baseScore };
     });
 
     // The strongest pre-boost match from any partition other than handbook
@@ -618,12 +658,12 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
     // that's already at or above this bar on its own.
     const strongestOtherRaw = preScored.reduce((max, p) => {
         if (isHandbookChunk(p.chunk) || isAnonymisedReportChunk(p.chunk)) return max;
-        const raw = p.baseScore + p.graphBoost;
+        const raw = p.baseScore + p.graphBoost + p.pBoost;
         return raw > max ? raw : max;
     }, 0);
 
-    const scored = preScored.map(({ chunk, kw, graphBoost, baseScore }) => {
-        let finalScore = baseScore + graphBoost;
+    const scored = preScored.map(({ chunk, kw, graphBoost, pBoost, baseScore }) => {
+        let finalScore = baseScore + graphBoost + pBoost;
         const isReportEvidence = isAnonymisedReportChunk(chunk);
         const isHandbook = isHandbookChunk(chunk);
         if (isReportEvidence) finalScore *= REPORT_SOURCE_PENALTY;
