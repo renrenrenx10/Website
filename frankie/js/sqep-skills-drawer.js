@@ -163,7 +163,16 @@
             headers: supaHeaders(token, { 'Prefer': 'return=representation' }),
             body: JSON.stringify(row),
         });
-        if (!res.ok) throw new Error('insert failed: ' + res.status);
+        if (!res.ok) {
+            // Surface Supabase/PostgREST's own error body (RLS violation, missing
+            // column, FK failure, etc.) instead of a bare status code -- this is
+            // what actually shows up in console.error / the alert() the caller
+            // shows, so a failed insert is diagnosable instead of looking like
+            // the button "did nothing".
+            let detail = '';
+            try { const body = await res.json(); detail = body.message || body.hint || JSON.stringify(body); } catch (e) { /* body wasn't JSON */ }
+            throw new Error('insert into ' + table + ' failed: ' + res.status + (detail ? ' — ' + detail : ''));
+        }
         const rows = await res.json();
         return rows[0];
     }
@@ -215,10 +224,21 @@
         }
     }
 
+    // Added after live testing found these gave no feedback at all when
+    // they worked (silent DB insert, tiny count-text change on the staff
+    // card, no navigation) and no feedback either when they failed (the
+    // catch swallowed the error completely) -- both looked identical to
+    // "does nothing" from the button. Now: dedupes against what's already
+    // on the person's record, surfaces failures with a visible alert and a
+    // console.error for diagnosis, and jumps to the relevant tab on any
+    // success so the new rows are immediately visible.
     async function addSqepFromSeed(personnelId, jobTitle) {
         const role = findSeedRole(jobTitle);
-        if (!role) return;
+        if (!role) { console.warn('[SqepSkillsDrawer] no seed role for job title:', jobTitle); return; }
+        const existing = new Set(state.sqepEntries.filter(e => e.personnel_id === personnelId).map(e => e.activity));
+        let added = 0, failed = 0, lastErr = null;
         for (const a of role.sqepActivities) {
+            if (existing.has(a.activity)) continue; // already added for this person
             try {
                 const row = await insertRow(SQEP_TABLE, {
                     company_id: companyId, personnel_id: personnelId,
@@ -227,24 +247,41 @@
                 });
                 row.status = computeStatus(row);
                 state.sqepEntries.push(row);
-            } catch (e) { /* skip on failure, keep going */ }
+                added++;
+            } catch (e) { failed++; lastErr = e; console.error('[SqepSkillsDrawer] addSqepFromSeed insert failed:', e); }
         }
+        if (added > 0) state.tab = 'sqep';
         render();
+        if (added === 0 && failed > 0) {
+            alert('Could not add the suggested SQEP activities (' + (lastErr && lastErr.message ? lastErr.message : 'save failed') + '). Check you\'re signed in and try again.');
+        } else if (added === 0 && failed === 0) {
+            alert('Those suggested SQEP activities are already on this person\'s record.');
+        }
     }
 
     async function addSkillsFromSeed(personnelId, jobTitle) {
         const role = findSeedRole(jobTitle);
-        if (!role) return;
+        if (!role) { console.warn('[SqepSkillsDrawer] no seed role for job title:', jobTitle); return; }
+        const existing = new Set(state.skillsEntries.filter(e => e.personnel_id === personnelId).map(e => e.skill_area));
+        let added = 0, failed = 0, lastErr = null;
         for (const s of role.skillAreas) {
+            if (existing.has(s.skillArea)) continue; // already added for this person
             try {
                 const row = await insertRow(SKILLS_TABLE, {
                     company_id: companyId, personnel_id: personnelId,
                     skill_area: s.skillArea, mandatory: !!s.mandatory, rating: 0,
                 });
                 state.skillsEntries.push(row);
-            } catch (e) { /* skip on failure, keep going */ }
+                added++;
+            } catch (e) { failed++; lastErr = e; console.error('[SqepSkillsDrawer] addSkillsFromSeed insert failed:', e); }
         }
+        if (added > 0) state.tab = 'skills';
         render();
+        if (added === 0 && failed > 0) {
+            alert('Could not add the suggested skills (' + (lastErr && lastErr.message ? lastErr.message : 'save failed') + '). Check you\'re signed in and try again.');
+        } else if (added === 0 && failed === 0) {
+            alert('Those suggested skills are already on this person\'s record.');
+        }
     }
 
     async function addBlankSqep(personnelId) {
@@ -325,6 +362,24 @@
         return state.seed.roles.map(r => `<option value="${esc(r.jobTitle)}">`).join('');
     }
 
+    // Shared "quick add from role" shortcuts, shown directly on the SQEP
+    // Register / Skills Matrix tabs themselves -- added after live testing
+    // showed the "+ Suggested SQEP" text in those tabs' empty-state message
+    // reads like a button but was just plain text (the real buttons only
+    // ever lived on the Staff Roster tab, one tab away). Reuses the same
+    // seed-sqep/seed-skills data-action buttons and handlers as the Staff
+    // Roster tab.
+    function renderSeedShortcuts(kind) {
+        const withRole = state.personnel.filter(p => findSeedRole(p.job_title));
+        if (!withRole.length) return '';
+        const action = kind === 'sqep' ? 'seed-sqep' : 'seed-skills';
+        const label  = kind === 'sqep' ? '+ Suggested SQEP for' : '+ Suggested skills for';
+        const chips = withRole.map(p =>
+            `<button class="sqs-btn sqs-btn-sm" data-action="${action}" data-person="${p.id}" data-role="${esc(p.job_title)}">${label} ${esc(p.name)}</button>`
+        ).join('');
+        return `<div class="sqs-shortcuts"><span class="sqs-shortcuts-lbl">Quick add from role:</span>${chips}</div>`;
+    }
+
     function renderStaffTab() {
         const rows = state.personnel.map(p => {
             const role = findSeedRole(p.job_title);
@@ -382,13 +437,14 @@
         }).join('');
 
         return `
+        ${renderSeedShortcuts('sqep')}
         <div class="sqs-table-wrap">
           <table class="sqs-table">
             <thead><tr>
               <th>Person</th><th>Activity / scope</th><th>Qualification required</th><th>Qualification held</th>
               <th>Cert ref</th><th>Expiry</th><th>Stages</th><th>Status</th><th></th>
             </tr></thead>
-            <tbody id="sqsSqepBody">${rows || `<tr><td colspan="9" class="sqs-empty-cell">No SQEP activities yet — use "+ Suggested SQEP" on the Staff Roster tab, or add one from a person's card.</td></tr>`}</tbody>
+            <tbody id="sqsSqepBody">${rows || `<tr><td colspan="9" class="sqs-empty-cell">No SQEP activities yet — use a "Quick add from role" button above, or add one below.</td></tr>`}</tbody>
           </table>
         </div>
         <div class="sqs-add-row">
@@ -434,10 +490,11 @@
         }).join('');
 
         return `
+        ${renderSeedShortcuts('skills')}
         <div class="sqs-table-wrap">
           <table class="sqs-table">
             <thead><tr><th>Person</th><th>Skill area</th><th>Rating</th><th>Mandatory?</th><th></th></tr></thead>
-            <tbody id="sqsSkillsBody">${rows || `<tr><td colspan="5" class="sqs-empty-cell">No skills tracked yet — use "+ Suggested skills" on the Staff Roster tab, or add one below.</td></tr>`}</tbody>
+            <tbody id="sqsSkillsBody">${rows || `<tr><td colspan="5" class="sqs-empty-cell">No skills tracked yet — use a "Quick add from role" button above, or add one below.</td></tr>`}</tbody>
           </table>
         </div>
         <div class="sqs-add-row">

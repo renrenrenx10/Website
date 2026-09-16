@@ -106,3 +106,14 @@
   .sqs-staff-add, .sqs-add-row { flex-direction: column; align-items: stretch; }
   .sqs-add-row .sqs-input { flex: 1 1 auto; }
 }
+
+/* Quick-add-from-role shortcuts on the SQEP Register / Skills Matrix tabs
+   (added after live testing: the equivalent buttons only lived on the
+   Staff Roster tab, one tab away, and the empty-state text mentioning
+   "+ Suggested SQEP" wasn't actually clickable there). */
+.sqs-shortcuts {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    background: #fff; border: 1px solid #e2e9f1; border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 12px;
+}
+.sqs-shortcuts-lbl { font-size: .78rem; font-weight: 700; color: #5a6b7d; margin-right: 2px; }
