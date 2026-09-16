@@ -64,6 +64,7 @@
 <link rel="stylesheet" href="css/nuccolpedia.css">
 <link rel="stylesheet" href="css/drawer-splash.css">
 <link rel="stylesheet" href="css/hero-landing.css">
+<link rel="stylesheet" href="css/sqep-skills.css">
 </head>
 <body>
 <div class="app no-rail">
@@ -143,6 +144,9 @@
       </button>
       <button class="sb-item" data-tool="supplierIntel" onclick="window.DueDiligenceDrawer && window.DueDiligenceDrawer.open()" type="button">
         <span class="sb-ico">🛡️</span><span>Supplier Intel</span>
+      </button>
+      <button class="sb-item" data-tool="sqepSkills" onclick="window.SqepSkillsDrawer && window.SqepSkillsDrawer.open()" type="button">
+        <span class="sb-ico">👷</span><span>SQEP &amp; Skills Matrix</span>
       </button>
     </nav>
 
@@ -323,6 +327,7 @@
 <script src="js/sqdcp-drawer.js"></script>
 <script src="js/ncr-drawer.js"></script>
 <script src="js/strategy-drawer.js"></script>
+<script src="js/sqep-skills-drawer.js"></script>
 <script>
 // Authorization notice — check if this user is the linked account in nr_companies
 (async function showAuthNotice() {
