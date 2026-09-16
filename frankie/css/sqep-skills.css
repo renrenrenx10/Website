@@ -117,3 +117,21 @@
     padding: 10px 12px; margin-bottom: 12px;
 }
 .sqs-shortcuts-lbl { font-size: .78rem; font-weight: 700; color: #5a6b7d; margin-right: 2px; }
+
+/* Inline banner (replaces native alert() for informational feedback) */
+.sqs-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 14px; border-radius: 8px; margin-bottom: 14px;
+    font-size: .86rem; font-weight: 600;
+}
+.sqs-banner-success { background: #e5f6ec; color: #1e824c; border: 1px solid #b9e5cb; }
+.sqs-banner-info     { background: #e3edfb; color: #1a5fb4; border: 1px solid #bcd6f5; }
+.sqs-banner-error    { background: #fce9e7; color: #c0392b; border: 1px solid #f3c1ba; }
+.sqs-banner-close {
+    background: none; border: none; cursor: pointer; font-size: .8rem;
+    color: inherit; opacity: .7; flex-shrink: 0;
+}
+.sqs-banner-close:hover { opacity: 1; }
+
+/* Download button */
+.sqs-btn-download { margin-left: auto; }

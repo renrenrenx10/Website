@@ -79,7 +79,21 @@
         skillsEntries: [],
         seed: null,
         seedLoaded: false,
+        banner: null,        // { type: 'success'|'info'|'error', text }
     };
+
+    // Inline banner replaces native alert() for informational feedback --
+    // a blocking browser popup read as "broken" to a user who wasn't
+    // expecting it. Native confirm() is kept for the one genuinely
+    // destructive action (removing a person) since a blocking confirmation
+    // is the right pattern there.
+    let bannerTimer = null;
+    function showBanner(type, text) {
+        state.banner = { type, text };
+        render();
+        clearTimeout(bannerTimer);
+        bannerTimer = setTimeout(() => { state.banner = null; render(); }, 5000);
+    }
 
     function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
@@ -149,9 +163,61 @@
             state.personnel     = pRes.ok ? await pRes.json() : [];
             state.sqepEntries   = sRes.ok ? await sRes.json() : [];
             state.skillsEntries = kRes.ok ? await kRes.json() : [];
+            await dedupeEntries();
         } catch (e) { /* leave whatever loaded */ }
         state.loading = false;
         render();
+    }
+
+    // Self-healing cleanup: earlier versions of the "+ Suggested SQEP" / "+
+    // Suggested skills" buttons had no dedupe check, so repeat clicks kept
+    // inserting the same activity/skill again for the same person. Runs
+    // once per drawer open, after loading, using the member's own
+    // read/write access (the delete RLS policy already scopes this to
+    // their own company) -- so it quietly cleans up any pile-up from
+    // before the fix without needing a manual database cleanup.
+    async function dedupeEntries() {
+        const sqepGroups = {};
+        state.sqepEntries.forEach(e => {
+            const key = e.personnel_id + '|' + e.activity;
+            (sqepGroups[key] = sqepGroups[key] || []).push(e);
+        });
+        const sqepToDelete = [];
+        Object.values(sqepGroups).forEach(group => {
+            if (group.length > 1) {
+                group.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                sqepToDelete.push(...group.slice(1));
+            }
+        });
+
+        const skillGroups = {};
+        state.skillsEntries.forEach(e => {
+            const key = e.personnel_id + '|' + e.skill_area;
+            (skillGroups[key] = skillGroups[key] || []).push(e);
+        });
+        const skillsToDelete = [];
+        Object.values(skillGroups).forEach(group => {
+            if (group.length > 1) {
+                group.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                skillsToDelete.push(...group.slice(1));
+            }
+        });
+
+        if (!sqepToDelete.length && !skillsToDelete.length) return;
+
+        await Promise.all([
+            ...sqepToDelete.map(e => deleteRow(SQEP_TABLE, e.id).catch(err => console.error('[SqepSkillsDrawer] dedupe delete failed:', err))),
+            ...skillsToDelete.map(e => deleteRow(SKILLS_TABLE, e.id).catch(err => console.error('[SqepSkillsDrawer] dedupe delete failed:', err))),
+        ]);
+
+        const sqepDeletedIds = new Set(sqepToDelete.map(e => e.id));
+        const skillsDeletedIds = new Set(skillsToDelete.map(e => e.id));
+        state.sqepEntries = state.sqepEntries.filter(e => !sqepDeletedIds.has(e.id));
+        state.skillsEntries = state.skillsEntries.filter(e => !skillsDeletedIds.has(e.id));
+
+        if (sqepToDelete.length || skillsToDelete.length) {
+            console.info('[SqepSkillsDrawer] cleaned up', sqepToDelete.length, 'duplicate SQEP entries and', skillsToDelete.length, 'duplicate skills entries.');
+        }
     }
 
     // ── Supabase CRUD helpers ────────────────────────────────────────────
@@ -210,7 +276,7 @@
             state.personnel.push(row);
             state.personnel.sort((a, b) => a.name.localeCompare(b.name));
             render();
-        } catch (e) { alert('Could not add staff member — try again.'); }
+        } catch (e) { showBanner('error', 'Could not add staff member — try again.'); }
     }
 
     async function removePerson(id) {
@@ -250,12 +316,15 @@
                 added++;
             } catch (e) { failed++; lastErr = e; console.error('[SqepSkillsDrawer] addSqepFromSeed insert failed:', e); }
         }
+        const who = personName(personnelId);
         if (added > 0) state.tab = 'sqep';
         render();
-        if (added === 0 && failed > 0) {
-            alert('Could not add the suggested SQEP activities (' + (lastErr && lastErr.message ? lastErr.message : 'save failed') + '). Check you\'re signed in and try again.');
-        } else if (added === 0 && failed === 0) {
-            alert('Those suggested SQEP activities are already on this person\'s record.');
+        if (added > 0) {
+            showBanner('success', 'Added ' + added + ' suggested SQEP ' + (added === 1 ? 'activity' : 'activities') + ' for ' + who + '.' + (failed ? ' (' + failed + ' failed to save.)' : ''));
+        } else if (failed > 0) {
+            showBanner('error', 'Could not add the suggested SQEP activities for ' + who + (lastErr && lastErr.message ? ' — ' + lastErr.message : '') + '.');
+        } else {
+            showBanner('info', 'Those suggested SQEP activities are already on ' + who + '\'s record.');
         }
     }
 
@@ -275,12 +344,15 @@
                 added++;
             } catch (e) { failed++; lastErr = e; console.error('[SqepSkillsDrawer] addSkillsFromSeed insert failed:', e); }
         }
+        const whoSkills = personName(personnelId);
         if (added > 0) state.tab = 'skills';
         render();
-        if (added === 0 && failed > 0) {
-            alert('Could not add the suggested skills (' + (lastErr && lastErr.message ? lastErr.message : 'save failed') + '). Check you\'re signed in and try again.');
-        } else if (added === 0 && failed === 0) {
-            alert('Those suggested skills are already on this person\'s record.');
+        if (added > 0) {
+            showBanner('success', 'Added ' + added + ' suggested ' + (added === 1 ? 'skill' : 'skills') + ' for ' + whoSkills + '.' + (failed ? ' (' + failed + ' failed to save.)' : ''));
+        } else if (failed > 0) {
+            showBanner('error', 'Could not add the suggested skills for ' + whoSkills + (lastErr && lastErr.message ? ' — ' + lastErr.message : '') + '.');
+        } else {
+            showBanner('info', 'Those suggested skills are already on ' + whoSkills + '\'s record.');
         }
     }
 
@@ -292,7 +364,7 @@
             row.status = computeStatus(row);
             state.sqepEntries.push(row);
             render();
-        } catch (e) { alert('Could not add activity — try again.'); }
+        } catch (e) { showBanner('error', 'Could not add activity — try again.'); }
     }
 
     async function addBlankSkill(personnelId) {
@@ -302,7 +374,7 @@
             const row = await insertRow(SKILLS_TABLE, { company_id: companyId, personnel_id: personnelId, skill_area: skillArea.trim(), rating: 0 });
             state.skillsEntries.push(row);
             render();
-        } catch (e) { alert('Could not add skill — try again.'); }
+        } catch (e) { showBanner('error', 'Could not add skill — try again.'); }
     }
 
     async function patchSqepField(id, field, value) {
@@ -332,6 +404,51 @@
     async function removeSkill(id) {
         const ok = await deleteRow(SKILLS_TABLE, id);
         if (ok) { state.skillsEntries = state.skillsEntries.filter(e => e.id !== id); render(); }
+    }
+
+    // ── CSV export ──────────────────────────────────────────────────────
+
+    function csvEscape(v) {
+        const s = String(v == null ? '' : v);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+
+    function downloadCsv(filename, rows) {
+        const csv = rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' }); // BOM so Excel reads UTF-8 correctly
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }
+
+    function todayStamp() {
+        const d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function downloadSqepCsv() {
+        const header = ['Person', 'Job Title', 'Activity / Scope', 'Qualification Required', 'Qualification Held', 'Cert Ref', 'Issue Date', 'Expiry Date', 'Stage 1 Complete', 'Stage 2 Complete', 'Stage 3 Granted', 'Status', 'Notes'];
+        const rows = [header, ...state.sqepEntries.map(e => {
+            const p = state.personnel.find(pp => pp.id === e.personnel_id);
+            return [
+                p ? p.name : '', p ? p.job_title : '', e.activity, e.qualification_required, e.qualification_held,
+                e.cert_ref, e.issue_date, e.expiry_date,
+                e.stage1_complete ? 'Yes' : 'No', e.stage2_complete ? 'Yes' : 'No', e.stage3_granted ? 'Yes' : 'No',
+                STATUS_LABEL[computeStatus(e)].label, e.notes,
+            ];
+        })];
+        downloadCsv('sqep-register-' + todayStamp() + '.csv', rows);
+    }
+
+    function downloadSkillsCsv() {
+        const header = ['Person', 'Job Title', 'Skill Area', 'Rating', 'Rating Label', 'Mandatory', 'Notes'];
+        const rows = [header, ...state.skillsEntries.map(e => {
+            const p = state.personnel.find(pp => pp.id === e.personnel_id);
+            return [p ? p.name : '', p ? p.job_title : '', e.skill_area, e.rating, RATING_LABELS[e.rating] || '', e.mandatory ? 'Yes' : 'No', e.notes];
+        })];
+        downloadCsv('skills-matrix-' + todayStamp() + '.csv', rows);
     }
 
     // ── Rendering ────────────────────────────────────────────────────────
@@ -450,6 +567,7 @@
         <div class="sqs-add-row">
           <select id="sqsSqepPersonPick" class="sqs-input">${state.personnel.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select>
           <button class="sqs-btn" id="sqsAddSqep" type="button">+ Add activity</button>
+          <button class="sqs-btn sqs-btn-download" id="sqsDownloadSqep" type="button">⬇ Download CSV</button>
         </div>`;
     }
 
@@ -500,6 +618,7 @@
         <div class="sqs-add-row">
           <select id="sqsSkillPersonPick" class="sqs-input">${state.personnel.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select>
           <button class="sqs-btn" id="sqsAddSkill" type="button">+ Add skill</button>
+          <button class="sqs-btn sqs-btn-download" id="sqsDownloadSkills" type="button">⬇ Download CSV</button>
         </div>
         ${gapRows ? `
         <div class="sqs-gap-section">
@@ -511,11 +630,17 @@
         </div>` : ''}`;
     }
 
+    function renderBanner() {
+        if (!state.banner) return '';
+        const cls = state.banner.type === 'error' ? 'sqs-banner-error' : state.banner.type === 'success' ? 'sqs-banner-success' : 'sqs-banner-info';
+        return `<div class="sqs-banner ${cls}"><span>${esc(state.banner.text)}</span><button class="sqs-banner-close" id="sqsBannerClose" type="button" aria-label="Dismiss">✕</button></div>`;
+    }
+
     function renderMain() {
         if (state.loading) return `<div class="sqs-loading">Loading…</div>`;
         if (state.noCompany) return `<div class="sqs-empty">Sign in with a linked company account to use the SQEP &amp; Skills Matrix.</div>`;
         const body = state.tab === 'staff' ? renderStaffTab() : state.tab === 'sqep' ? renderSqepTab() : renderSkillsTab();
-        return `${renderDashboard()}
+        return `${renderBanner()}${renderDashboard()}
         <div class="sqs-tabs">
           <button class="sqs-tab ${state.tab === 'staff' ? 'sqs-tab--active' : ''}" data-tab="staff">Staff Roster</button>
           <button class="sqs-tab ${state.tab === 'sqep' ? 'sqs-tab--active' : ''}" data-tab="sqep">SQEP Register</button>
@@ -536,6 +661,9 @@
     function wireBody() {
         const main = document.getElementById('sqsMain');
         if (!main) return;
+
+        const bannerClose = document.getElementById('sqsBannerClose');
+        if (bannerClose) bannerClose.addEventListener('click', () => { clearTimeout(bannerTimer); state.banner = null; render(); });
 
         main.querySelectorAll('.sqs-tab').forEach(btn => {
             btn.addEventListener('click', () => { state.tab = btn.dataset.tab; render(); });
@@ -560,6 +688,12 @@
             const pid = document.getElementById('sqsSkillPersonPick').value;
             if (pid) addBlankSkill(pid);
         });
+
+        const dlSqepBtn = document.getElementById('sqsDownloadSqep');
+        if (dlSqepBtn) dlSqepBtn.addEventListener('click', downloadSqepCsv);
+
+        const dlSkillsBtn = document.getElementById('sqsDownloadSkills');
+        if (dlSkillsBtn) dlSkillsBtn.addEventListener('click', downloadSkillsCsv);
 
         main.querySelectorAll('[data-action="seed-sqep"]').forEach(btn => {
             btn.addEventListener('click', () => addSqepFromSeed(btn.dataset.person, btn.dataset.role));
