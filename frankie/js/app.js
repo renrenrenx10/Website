@@ -288,23 +288,21 @@ async function handleQuery(query) {
 
         const totalGated = searchResults.reduce((n, r) => n + (r.gatedHits || 0), 0);
 
-        // 2026-09-18: an off-topic question (e.g. "what's the weather in Tokyo")
-        // still gets *some* keyword-overlap hits back from searchKnowledgeBase —
-        // just weak ones — and the model is instructed (confProfile === 'low') to
-        // say plainly that it found nothing strong. Showing the Sources rail and
-        // follow-up chips full of those same weak, irrelevant chunks right next to
-        // that honest "I didn't find anything" answer contradicted the answer
-        // itself (observed live: "Page 16", "How is Page 16 scored in F4N?" chips
-        // under a declined weather question). Gate all three surfaces — rail,
-        // suggestions, and the in-message evidence panel below — on there being an
-        // actual usable match.
-        const hasReliableMatch = confProfile !== 'low' && confProfile !== 'none';
-
-        updateRail(hasReliableMatch ? allResults : []);
-
-        // ── Suggested follow-up questions (from top result metadata) ──────
-        const suggestions = hasReliableMatch ? _buildSuggestions(allResults, processed.intent) : [];
-        updateSuggestions(suggestions);
+        // 2026-09-18: the Sources rail, follow-up chips, and evidence panel used
+        // to populate unconditionally right here, straight off retrieval — before
+        // the model had even answered. That meant an off-topic question (e.g.
+        // "what's the weather in Tokyo") could still show irrelevant chunks as
+        // "sources" right next to an answer that correctly declined to use them
+        // (observed live: "Page 16", "How is Page 16 scored in F4N?" chips under
+        // a declined weather question). A first attempt gated this on
+        // confProfile === 'low'/'none', but that's not reliable either — live
+        // testing found an off-topic query's top score can land in the 'medium'
+        // band by incidental keyword overlap even though Claude still correctly
+        // declines. The real signal is whether the model actually declined, not
+        // how confident retrieval felt about its own weak matches — see
+        // claude.js's NO_MATCH_MARKER / window.frankieLastAnswerDeclined. These
+        // three surfaces are now populated after the answer exists (below),
+        // using that signal.
 
         // ── Stage 3: Route ────────────────────────────────────────────────
         // Every Claude-eligible query → Sonnet. See modelRouter.js's header
@@ -334,20 +332,23 @@ async function handleQuery(query) {
             bubble.insertBefore(badge, answerContainer);
         }
 
-        let answerText  = null;
-        let answerError = null;
-        let usedClaude  = false;
+        let answerText      = null;
+        let answerError     = null;
+        let usedClaude      = false;
+        let answerDeclined  = false;
 
         if (useClaude && (route === 'claude' || route === 'hybrid')) {
             try {
                 // ── True SSE streaming: tokens appear as they arrive ──────
                 advancePipeline(pipelineBar, 'render');
+                window.frankieLastAnswerDeclined = false;
                 answerText = await streamClaude(
                     answerContainer,
                     query, allResults, getHistoryForClaude(), activeMode, confProfile,
                     signal, requestId, routedModel
                 );
                 usedClaude = !!answerText;
+                answerDeclined = window.frankieLastAnswerDeclined === true;
             } catch (err) {
                 answerError = err.message;
                 console.warn('Frankie: Claude streaming failed, falling back to local:', err.message);
@@ -367,6 +368,11 @@ async function handleQuery(query) {
         // Local fallback — only reached if Claude wasn't used or failed
         if (!usedClaude) {
             answerText = buildLocalAnswer(query, allResults, processed.intent, confidence, confProfile);
+            // Local answers have no model to ask, so reuse the one signal this
+            // path already computes for itself: buildLocalAnswer() declines
+            // outright exactly when confProfile === 'none' (see its own
+            // no-results branch) — same condition, no separate marker needed.
+            answerDeclined = confProfile === 'none';
 
             // ── Stage 5: Render (local) ───────────────────────────────────
             advancePipeline(pipelineBar, 'render');
@@ -389,8 +395,14 @@ async function handleQuery(query) {
 
         if (!RequestManager.isActive(requestId)) return;
 
-        // Evidence panel — same for all routes. Suppressed alongside the rail/
-        // suggestions above when there was no reliable match (see hasReliableMatch).
+        // Sources rail, follow-up chips, and evidence panel — populated now that
+        // the answer (and whether it declined) is known, not straight off
+        // retrieval. See the 2026-09-18 note above where these used to fire.
+        const hasReliableMatch = !answerDeclined;
+
+        updateRail(hasReliableMatch ? allResults : []);
+        updateSuggestions(hasReliableMatch ? _buildSuggestions(allResults, processed.intent) : []);
+
         const evidenceHtml = hasReliableMatch ? renderEvidencePanel(allResults) : null;
         if (evidenceHtml) {
             const ep = document.createElement('div');

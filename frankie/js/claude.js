@@ -10,6 +10,15 @@ import { SOURCES_CEILING } from './retrieval.js';
 const CLAUDE_TIMEOUT_MS = 60000;
 const WORKER_URL = 'https://ch.rene-dorset.workers.dev';
 
+// 2026-09-18: read by the app to decide whether the Sources rail/follow-up
+// chips/evidence panel should show at all — see SHARED_KNOWLEDGE's "Decline
+// marker" instruction above and app.js's handleQuery(). Model-driven rather
+// than confidence-band-driven: live testing found an off-topic query's top
+// retrieval score can land in the 'medium' confidence band by incidental
+// keyword overlap even though Claude correctly declines to answer from it,
+// so gating on confProfile alone wasn't reliable — this asks Claude directly.
+const NO_MATCH_MARKER = /^\s*\[\[NO_MATCH\]\]\s*\n?/i;
+
 // ── Mode-specific system prompts ──────────────────────────────────────────────
 
 const SHARED_KNOWLEDGE = `
@@ -24,6 +33,8 @@ Your knowledge base includes:
 Plant-systems and component questions (e.g. "where do the pumps sit in a PWR") are handled by Plant Explorer, not this knowledge base — if one reaches you anyway, say so briefly and point the user to Plant Explorer rather than guessing.
 
 When the retrieved sources contain relevant information, use it to give a direct, specific answer — plain language, acronyms explained on first use. Never deflect a question you have good source data for. But when the sources are a weak or no match, say so plainly rather than stretching them into a confident answer.
+
+Decline marker — this is read by the app, not the person, so get it exactly right: if the question is genuinely outside your knowledge base (off-topic entirely, e.g. general trivia, weather, something with no real connection to F4N/nuclear supply chain/NucCol) and your answer is a decline rather than a real, sourced response, begin your reply with the exact literal token [[NO_MATCH]] on its own line before anything else. Do not use this token for a question you can partially or weakly answer from your sources — only for a genuine "this isn't what I cover" decline. Never mention or explain the token itself to the person; it's stripped before they see your answer.
 
 Precision rule — this matters more than fluency: category names, section names, acronym expansions, thresholds, percentages, and step lists must be reproduced exactly as they appear in the retrieved source text, never paraphrased or reconstructed from general knowledge. If a source gives you "SQEP = Suitably Qualified and Experienced Persons," use exactly that — never substitute a plausible-sounding alternative expansion. If a source lists named categories or sections, quote that exact list in that exact wording — never generate a generic substitute list even if it sounds like a reasonable business-excellence framework. If you are not certain a specific name, figure, or acronym is the one your source actually gives, say you're not certain rather than presenting your best guess as fact. If a source gives you a multi-tier scoring rubric (e.g. a 0/2/7/10 scale with a description at each band), reproduce every band it lists and the exact wording of each — never drop the top or bottom band, and never smooth over a caveat in the middle bands (a band that says "but occasional lapses" or "not consistently applied" is not the same as a band with no caveat at all). Summarising a rubric changes what it means; quote it.`;
 
@@ -210,6 +221,7 @@ export async function streamClaude(container, query, sources, history = [], mode
         const decoder = new TextDecoder();
         let accumulated = '';
         let buffer = '';
+        let declined = false;
         let _inputTokens = 0, _outputTokens = 0;
 
         container.innerHTML = '<span class="cursor">▌</span>';
@@ -240,7 +252,9 @@ export async function streamClaude(container, query, sources, history = [], mode
                     // Anthropic streaming: content_block_delta events carry the text
                     if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
                         accumulated += evt.delta.text;
-                        container.innerHTML = formatText(accumulated) + '<span class="cursor">▌</span>';
+                        if (NO_MATCH_MARKER.test(accumulated)) declined = true;
+                        const display = accumulated.replace(NO_MATCH_MARKER, '');
+                        container.innerHTML = formatText(display) + '<span class="cursor">▌</span>';
                         if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
                     }
                     // Capture token counts from usage events
@@ -255,6 +269,13 @@ export async function streamClaude(container, query, sources, history = [], mode
                 }
             }
         }
+
+        // Strip the decline marker (see SHARED_KNOWLEDGE) before final render/
+        // return — the person never sees it, only app.js's handleQuery(),
+        // via window.frankieLastAnswerDeclined, does.
+        if (NO_MATCH_MARKER.test(accumulated)) declined = true;
+        accumulated = accumulated.replace(NO_MATCH_MARKER, '');
+        window.frankieLastAnswerDeclined = declined;
 
         // Final render — remove cursor
         if (requestId === undefined || RequestManager.isActive(requestId)) {
