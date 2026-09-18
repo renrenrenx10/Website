@@ -3,7 +3,7 @@ import { CONFIG, ConfigManager, refreshConfig } from './config.js';
 import { RequestManager } from './requestManager.js';
 import { escapeHtml } from './utils.js';
 import { initialiseUI, appendMessage, updateMessage, updateRail, updateSuggestions, setLoadStatus, getActiveMode, renderRecentPanel } from './ui.js';
-import { searchKnowledgeBase, getKbStats, normaliseScore, isPlantComponentQuery } from './retrieval.js';
+import { searchKnowledgeBase, getKbStats, normaliseScore, isPlantComponentQuery, SOURCES_CEILING } from './retrieval.js';
 import { matchHandbookLink } from './handbook-links.js';
 import { preprocessQuery } from './preprocessing.js';
 import { streamClaude, generateWithClaude } from './claude.js';
@@ -228,15 +228,28 @@ async function handleQuery(query) {
         // Round-robin lets a clause contribute more than one chunk once
         // other terms run dry, without ever letting one term monopolise
         // every slot outright.
+        // 2026-09-18: the merge cap used to be a flat CONFIG.maxSources (5),
+        // which silently re-truncated a term whose own searchKnowledgeBase()
+        // call had legitimately returned more than 5 (see retrieval.js's
+        // expandForNumberedSeries — a numbered-series topic like "the 8
+        // stages of F4N" or Module 12's OSV sub-sections). Trust whatever
+        // each term's own search actually returned instead of re-imposing
+        // the base cap here; still bounded by SOURCES_CEILING so this can't
+        // grow unbounded.
+        const mergeCap = Math.min(
+            SOURCES_CEILING,
+            Math.max(CONFIG.maxSources, ...dedupedPerTerm.map(list => list.length))
+        );
+
         let allResults = [];
         const claimed = new Set();
         const pointers = dedupedPerTerm.map(() => 0);
         let progressed = true;
 
-        while (allResults.length < CONFIG.maxSources && progressed) {
+        while (allResults.length < mergeCap && progressed) {
             progressed = false;
             for (let i = 0; i < dedupedPerTerm.length; i++) {
-                if (allResults.length >= CONFIG.maxSources) break;
+                if (allResults.length >= mergeCap) break;
                 const list = dedupedPerTerm[i];
                 while (pointers[i] < list.length && claimed.has(list[pointers[i]].id)) {
                     pointers[i]++;

@@ -5,6 +5,7 @@
 
 import { CONFIG } from './config.js';
 import { formatText } from './streaming.js';
+import { SOURCES_CEILING } from './retrieval.js';
 
 const CLAUDE_TIMEOUT_MS = 60000;
 const WORKER_URL = 'https://ch.rene-dorset.workers.dev';
@@ -84,8 +85,13 @@ function buildRequestBody(query, sources, history, mode, confProfile, stream = f
                 : ''
     );
 
+    // 2026-09-18: was a hardcoded 5, independent of app.js's own merge cap —
+    // silently re-truncated a numbered-series query's expanded result set
+    // right back down (see retrieval.js's expandForNumberedSeries). allResults
+    // is already correctly capped by the time it gets here; this is now just
+    // the shared safety ceiling, not a second independent limit.
     const sourceSummary = sources
-        .slice(0, 5)
+        .slice(0, SOURCES_CEILING)
         .map((s, i) => {
             // KB chunks store content in 'content' (often JSON); fall back to 'text'
             let body = s.content || s.text || '';

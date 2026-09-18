@@ -6,7 +6,7 @@
 //        the panel no longer hardcodes frankie_normalized_kb.json, a
 //        pre-partition legacy filename that isn't part of current retrieval.
 
-import { normaliseScore } from './retrieval.js';
+import { normaliseScore, SOURCES_CEILING } from './retrieval.js';
 
 // ── Legacy → canonical source mapping ────────────────────────────────────────
 
@@ -41,7 +41,8 @@ function canonicalSource(raw) {
 export function renderEvidencePanel(results) {
     if (!results?.length) return '';
 
-    const cards = results.slice(0, 5).map((r, i) => {
+    // 2026-09-18: was a hardcoded 5 — see claude.js's matching 2026-09-18 note.
+    const cards = results.slice(0, SOURCES_CEILING).map((r, i) => {
         const rawSrc  = r.source || r.source_file || CANONICAL;
         const source  = canonicalSource(rawSrc);
         const shortSrc = source.replace(/\.[a-z]+$/i, '').replace(/_/g, ' ');

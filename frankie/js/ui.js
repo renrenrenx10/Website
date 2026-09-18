@@ -2,6 +2,8 @@
 // Handles: mode dropdown, sidebar history accordion,
 //          chat message append, rail source cards with links, suggest panel.
 
+import { SOURCES_CEILING } from './retrieval.js';
+
 // ── Source humanisation ───────────────────────────────────────────────────────
 // Maps raw source filenames/stems to display labels and icons.
 // handbook_chapter_prefix is used to build a deep-link into the members portal.
@@ -327,7 +329,8 @@ export function updateRail(results) {
         return;
     }
 
-    const top = results.slice(0, 5);
+    // 2026-09-18: was a hardcoded 5 — see claude.js's matching 2026-09-18 note.
+    const top = results.slice(0, SOURCES_CEILING);
 
     // Stash the raw chunk + resolved meta per card, indexed to match the
     // rendered order below. Supplier/regs/reactors/toolkit sources have no

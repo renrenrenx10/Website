@@ -434,11 +434,12 @@ async function loadGraph() {
 
 // ── KB loaders ────────────────────────────────────────────────────────────────
 
-// UK-relevant regs categories for the F4N-member launch — see "Frankie, Recalibrated"
-// proposal, §02. Drops nrc_reference, wano, inpo, iaea, nei, gov_policy, cyber_security:
-// none of it is what a UK F4N supplier cites. Filtered client-side for now; folding this
-// into the regs KB build itself is part of the corpus rebuild plan.
-const REGS_CATEGORY_ALLOWLIST = new Set(['onr_sap', 'onr_tag', 'gda_guidance', 'cyber_security']);
+// Regs partition note: this KB partition used to be filtered client-side down to
+// UK-relevant categories (onr_sap, onr_tag, gda_guidance, cyber_security) via a
+// REGS_CATEGORY_ALLOWLIST here. As of the regs corpus rebuild (2026-09-08 build,
+// deployed to the live blob shortly after), the blob itself IS the narrowed set
+// (kb_version: frankie_regs_v2_narrowed_plus_cyber) — so the client-side filter had
+// become a no-op and was removed (blueprint v20 §9 #12/#13).
 
 async function loadPartitionKb(partition) {
     try {
@@ -446,11 +447,6 @@ async function loadPartitionKb(partition) {
         if (!r.ok) return [];
         const data = await r.json();
         let chunks = Array.isArray(data) ? data : (data.chunks || []);
-        if (partition.name === 'regs') {
-            const before = chunks.length;
-            chunks = chunks.filter(c => REGS_CATEGORY_ALLOWLIST.has(c.category));
-            console.log(`Frankie: regs narrowed to UK-relevant categories — ${chunks.length.toLocaleString()} of ${before.toLocaleString()} chunks`);
-        }
         console.log(`Frankie: loaded ${partition.name} KB — ${chunks.length.toLocaleString()} chunks`);
         return chunks;
     } catch (e) {
@@ -672,6 +668,64 @@ export async function getKbStats() {
     };
 }
 
+// ── Numbered-series expansion (stages/modules/steps) ───────────────────────────
+// Root-caused 2026-09-18: a single-topic question whose real answer is spread
+// across many small, individually-numbered chunks (e.g. "What are the stages
+// of the F4N programme?" — one intro chunk plus 8 separate "Stage 1:".."Stage
+// 8:" chunks; "What happens at my Onsite Verification?" — Module 12's dozen
+// "12.1".."12.6" sub-sections) never got past the flat 5-source cap. Unlike
+// the compound-question case (CLAUSE_SPLIT_RE, above) there's no "and" to
+// split on — it's one topic, just one that the source document itself chose
+// to break into a numbered series. Detected structurally off the chunk's own
+// `section` heading rather than guessing query keywords, so it generalises to
+// any current or future numbered series without a topic-specific word list.
+//
+// SOURCES_CEILING is the shared hard ceiling every downstream consumer
+// (claude.js's prompt context, evidence.js's evidence panel, ui.js's source
+// rail) now respects instead of an independent hardcoded 5 — see those
+// files' own 2026-09-18 comments. Kept modest (not "unlimited") so a
+// detected series still can't balloon the prompt/UI without bound.
+export const SOURCES_CEILING = 10;
+
+const NUMBERED_SECTION_RE = /^(stage|module|step|phase)\s+\d+\b|^\d+\.\d+\s/i;
+const SERIES_EXPANSION_WINDOW = 20; // how far into the ranked list to look for a series
+const SERIES_MIN_MEMBERS = 3;       // don't expand for a stray pair of numbered headings
+
+function seriesKey(chunk, headingMatch) {
+    // Group by source document + the series' own label ("stage"/"module"/
+    // etc., or the leading integer for an "N.N " sub-section heading like
+    // "12.2 The Day of the OSV") so "Stage 3" and "Module 12" chunks from the
+    // same manual never get merged into one inflated series.
+    const label = headingMatch[1]
+        ? headingMatch[1].toLowerCase()
+        : headingMatch[0].split('.')[0];
+    return `${chunk.source_file || chunk.source || ''}::${label}`;
+}
+
+/**
+ * Given the full score-sorted candidate list (already filtered to score > 0),
+ * returns how many sources this query should actually return: `maxSources`
+ * unchanged, unless the top of the list clusters into a numbered series from
+ * one document — then enough slots to cover that whole series, capped at
+ * SOURCES_CEILING.
+ */
+function expandForNumberedSeries(sortedScored, maxSources) {
+    const window = sortedScored.slice(0, SERIES_EXPANSION_WINDOW);
+    const counts = new Map();
+    for (const chunk of window) {
+        const m = (chunk.section || '').match(NUMBERED_SECTION_RE);
+        if (!m) continue;
+        const key = seriesKey(chunk, m);
+        counts.set(key, (counts.get(key) || 0) + 1);
+    }
+    let seriesSize = 0;
+    for (const count of counts.values()) {
+        if (count >= SERIES_MIN_MEMBERS) seriesSize = Math.max(seriesSize, count);
+    }
+    if (seriesSize <= maxSources) return maxSources;
+    return Math.min(seriesSize, SOURCES_CEILING);
+}
+
 // ── Main search export ────────────────────────────────────────────────────────
 
 export async function searchKnowledgeBase(query, maxSources = 5) {
@@ -776,10 +830,12 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
         return { ...chunk, score: finalScore, _kw: kw, _graphBoosted: graphBoost > 0, _reportEvidence: isReportEvidence, _handbook: isHandbook };
     });
 
-    const results = scored
+    const scoredSorted = scored
         .filter(c => c.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, maxSources);
+        .sort((a, b) => b.score - a.score);
+
+    const effectiveMaxSources = expandForNumberedSeries(scoredSorted, maxSources);
+    const results = scoredSorted.slice(0, effectiveMaxSources);
 
     // ── Debug trace ───────────────────────────────────────────────────────────
     const mode = queryVec ? 'hybrid' : (vectors ? 'keyword+graph' : 'keyword');
