@@ -23,8 +23,17 @@ Website bios.docx
 *.log
 
 # Frankie KB files — these live in Azure Blob storage behind the gated
-# Cloudflare Worker /kb/* route, never committed to this repo (added 2026-08-03)
-frankie/kb/
+# Cloudflare Worker /kb/* route, never committed to this repo (added 2026-08-03).
+# Exception (2026-09-18): handbook_url_map.json is NOT one of these — per its
+# own header comment in handbook-links.js ("static, same-origin — no Worker
+# needed"), it's meant to be a small static file served straight off this
+# repo's deploy, same-origin, not proxied through the Worker like the others.
+# It got swept into this blanket rule anyway, so it silently 404'd in
+# production (the SPA's HTML fallback got returned and failed to parse as
+# JSON) and the "Open in handbook" deep-links never had anything to match
+# against. Un-ignore just this one file so it actually ships.
+frankie/kb/*
+!frankie/kb/handbook_url_map.json
 
 # Backup/snapshot files created during editing sessions — never intended for deploy
 *.backup-*
