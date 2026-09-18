@@ -688,7 +688,6 @@ export async function getKbStats() {
 export const SOURCES_CEILING = 10;
 
 const NUMBERED_SECTION_RE = /^(stage|module|step|phase)\s+\d+\b|^\d+\.\d+\s/i;
-const SERIES_EXPANSION_WINDOW = 20; // how far into the ranked list to look for a series
 const SERIES_MIN_MEMBERS = 3;       // don't expand for a stray pair of numbered headings
 
 function seriesKey(chunk, headingMatch) {
@@ -702,28 +701,87 @@ function seriesKey(chunk, headingMatch) {
     return `${chunk.source_file || chunk.source || ''}::${label}`;
 }
 
+// Extract the leading number from a section heading ("Stage 3: …" → 3,
+// "12.2 The Day of the OSV" → 12.2) so series members can be sorted back
+// into reading order once they're pulled together from all over the
+// ranked list.
+function seriesOrdinal(chunk) {
+    const m = (chunk.section || '').match(/(\d+(?:\.\d+)?)/);
+    return m ? parseFloat(m[1]) : 0;
+}
+
 /**
- * Given the full score-sorted candidate list (already filtered to score > 0),
- * returns how many sources this query should actually return: `maxSources`
- * unchanged, unless the top of the list clusters into a numbered series from
- * one document — then enough slots to cover that whole series, capped at
- * SOURCES_CEILING.
+ * Given `scored` — every allowed chunk with its keyword/vector score attached,
+ * *including* chunks that scored 0 or scored too low to land anywhere near
+ * the top — decide the final result set for this query.
+ *
+ * Live-tested 2026-09-18: raising maxSources alone doesn't help when a
+ * numbered-series sibling scores far outside the top of the ranked list —
+ * "Stage 1:".."Stage 8:" chunks barely overlap a generic "what are the
+ * stages of the F4N programme?" query on keywords (their body text is
+ * stage-specific detail, not repeated "F4N"/"programme"; "stages" plural in
+ * the query doesn't even keyword-match "Stage" singular in their headings),
+ * so they never entered any ranked window regardless of its size — only the
+ * document's own intro/overview chunk ("Module 2: The F4N Journey – All 8
+ * Stages in Full") scored well. Instead of trusting the ranked list to
+ * contain the siblings, use the top-ranked chunk's own *source document* as
+ * the anchor and scan every chunk from that document for a numbered series,
+ * regardless of each member's individual score — then splice the whole
+ * series into the result set in reading order. Falls back to the plain
+ * score-ranked top-`maxSources` when no series is found.
  */
-function expandForNumberedSeries(sortedScored, maxSources) {
-    const window = sortedScored.slice(0, SERIES_EXPANSION_WINDOW);
-    const counts = new Map();
-    for (const chunk of window) {
-        const m = (chunk.section || '').match(NUMBERED_SECTION_RE);
+function expandForNumberedSeries(scored, maxSources) {
+    const sorted = scored.filter(c => c.score > 0).sort((a, b) => b.score - a.score);
+    const fallback = sorted.slice(0, maxSources);
+    if (!sorted.length) return fallback;
+
+    const anchorDoc = sorted[0].source_file || sorted[0].source || '';
+    if (!anchorDoc) return fallback;
+
+    // Every chunk from the anchor document whose own heading is part of a
+    // numbered series, grouped by that series' label — a document can carry
+    // more than one series (e.g. "Stage 1".."Stage 8" alongside "12.1".."12.6"),
+    // so pick whichever group is actually a series (≥ SERIES_MIN_MEMBERS),
+    // preferring the largest.
+    const groups = new Map(); // seriesKey -> chunk[]
+    for (const c of scored) {
+        if ((c.source_file || c.source || '') !== anchorDoc) continue;
+        const m = (c.section || '').match(NUMBERED_SECTION_RE);
         if (!m) continue;
-        const key = seriesKey(chunk, m);
-        counts.set(key, (counts.get(key) || 0) + 1);
+        const key = seriesKey(c, m);
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key).push(c);
     }
-    let seriesSize = 0;
-    for (const count of counts.values()) {
-        if (count >= SERIES_MIN_MEMBERS) seriesSize = Math.max(seriesSize, count);
+
+    let bestSeries = null;
+    for (const members of groups.values()) {
+        if (members.length >= SERIES_MIN_MEMBERS && (!bestSeries || members.length > bestSeries.length)) {
+            bestSeries = members;
+        }
     }
-    if (seriesSize <= maxSources) return maxSources;
-    return Math.min(seriesSize, SOURCES_CEILING);
+    if (!bestSeries) return fallback;
+
+    // Reading order (Stage 1, 2, 3… / 12.1, 12.2…), not score order — this
+    // is a structural inclusion, not a relevance ranking.
+    const numbered = [...bestSeries].sort((a, b) => seriesOrdinal(a) - seriesOrdinal(b));
+
+    // A series member with no real keyword/vector match of its own (score 0
+    // or near it) still needs a non-zero, honest-looking match score in the
+    // UI — it's included because it's structurally part of what was asked
+    // for, not because it scored well. Floor it below the anchor's own
+    // score rather than showing a misleading "0%".
+    const floor = sorted[0].score * 0.3;
+    const numberedScored = numbered.map(c => c.score > 0 ? c : { ...c, score: floor, _seriesIncluded: true });
+
+    const seriesIds = new Set(numbered.map(c => c.id));
+    const combined = [...numberedScored];
+    for (const c of sorted) {
+        if (combined.length >= SOURCES_CEILING) break;
+        if (seriesIds.has(c.id)) continue;
+        combined.push(c);
+    }
+
+    return combined.slice(0, SOURCES_CEILING);
 }
 
 // ── Main search export ────────────────────────────────────────────────────────
@@ -830,12 +888,7 @@ export async function searchKnowledgeBase(query, maxSources = 5) {
         return { ...chunk, score: finalScore, _kw: kw, _graphBoosted: graphBoost > 0, _reportEvidence: isReportEvidence, _handbook: isHandbook };
     });
 
-    const scoredSorted = scored
-        .filter(c => c.score > 0)
-        .sort((a, b) => b.score - a.score);
-
-    const effectiveMaxSources = expandForNumberedSeries(scoredSorted, maxSources);
-    const results = scoredSorted.slice(0, effectiveMaxSources);
+    const results = expandForNumberedSeries(scored, maxSources);
 
     // ── Debug trace ───────────────────────────────────────────────────────────
     const mode = queryVec ? 'hybrid' : (vectors ? 'keyword+graph' : 'keyword');
