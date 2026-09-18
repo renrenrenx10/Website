@@ -287,10 +287,23 @@ async function handleQuery(query) {
         })));
 
         const totalGated = searchResults.reduce((n, r) => n + (r.gatedHits || 0), 0);
-        updateRail(allResults);
+
+        // 2026-09-18: an off-topic question (e.g. "what's the weather in Tokyo")
+        // still gets *some* keyword-overlap hits back from searchKnowledgeBase —
+        // just weak ones — and the model is instructed (confProfile === 'low') to
+        // say plainly that it found nothing strong. Showing the Sources rail and
+        // follow-up chips full of those same weak, irrelevant chunks right next to
+        // that honest "I didn't find anything" answer contradicted the answer
+        // itself (observed live: "Page 16", "How is Page 16 scored in F4N?" chips
+        // under a declined weather question). Gate all three surfaces — rail,
+        // suggestions, and the in-message evidence panel below — on there being an
+        // actual usable match.
+        const hasReliableMatch = confProfile !== 'low' && confProfile !== 'none';
+
+        updateRail(hasReliableMatch ? allResults : []);
 
         // ── Suggested follow-up questions (from top result metadata) ──────
-        const suggestions = _buildSuggestions(allResults, processed.intent);
+        const suggestions = hasReliableMatch ? _buildSuggestions(allResults, processed.intent) : [];
         updateSuggestions(suggestions);
 
         // ── Stage 3: Route ────────────────────────────────────────────────
@@ -376,8 +389,9 @@ async function handleQuery(query) {
 
         if (!RequestManager.isActive(requestId)) return;
 
-        // Evidence panel — same for all routes
-        const evidenceHtml = renderEvidencePanel(allResults);
+        // Evidence panel — same for all routes. Suppressed alongside the rail/
+        // suggestions above when there was no reliable match (see hasReliableMatch).
+        const evidenceHtml = hasReliableMatch ? renderEvidencePanel(allResults) : null;
         if (evidenceHtml) {
             const ep = document.createElement('div');
             ep.innerHTML = evidenceHtml;
