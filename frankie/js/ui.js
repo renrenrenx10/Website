@@ -98,7 +98,7 @@ export function initialiseUI() {
 // ── Mode dropdown ─────────────────────────────────────────────────────────────
 
 const MODE_LABELS = {
-    company:   ['Company Mode',   'Practical F4N guidance with source-backed response cards.'],
+    company:   ['Company Mode',   'Ask anything about F4N — the process, scoring, training, evidence, and how to implement it.'],
     scc:       ['SCC Mode',        'Red flag identification and scoring perspective.'],
     osv:       ['OSV Prep Mode',   'Checklist-led onsite verification preparation.'],
     readiness: ['Readiness Mode',  'Short public diagnostic questions and guidance.'],
