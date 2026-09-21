@@ -740,9 +740,14 @@ function expandForNumberedSeries(scored, maxSources) {
 
     // Every chunk from the anchor document whose own heading is part of a
     // numbered series, grouped by that series' label — a document can carry
-    // more than one series (e.g. "Stage 1".."Stage 8" alongside "12.1".."12.6"),
-    // so pick whichever group is actually a series (≥ SERIES_MIN_MEMBERS),
-    // preferring the largest.
+    // more than one series at once (live-verified 2026-09-18/21: the F4N
+    // Supply Chain Consultant Training Manual has BOTH a top-level "Module
+    // 1".."Module 18" chapter series AND, nested inside Module 2, its own
+    // "Stage 1".."Stage 8" sub-series — 9 modules vs 8 stages, so "pick the
+    // largest group" silently picked the chapter list every time, even for
+    // a question asking specifically about the stages). Preferring the
+    // largest group isn't the right tie-break: what matters is which series
+    // the anchor chunk's own heading is actually pointing at.
     const groups = new Map(); // seriesKey -> chunk[]
     for (const c of scored) {
         if ((c.source_file || c.source || '') !== anchorDoc) continue;
@@ -753,13 +758,32 @@ function expandForNumberedSeries(scored, maxSources) {
         groups.get(key).push(c);
     }
 
-    let bestSeries = null;
-    for (const members of groups.values()) {
-        if (members.length >= SERIES_MIN_MEMBERS && (!bestSeries || members.length > bestSeries.length)) {
-            bestSeries = members;
-        }
+    const anchor = sorted[0];
+    const anchorHeading = (anchor.section || '').toLowerCase();
+
+    const candidates = [];
+    for (const [key, members] of groups.entries()) {
+        if (members.length < SERIES_MIN_MEMBERS) continue;
+        const label = key.slice(key.lastIndexOf('::') + 2);
+        // Does the anchor's own heading name this series ("Module 2: The F4N
+        // Journey – All 8 Stages in Full" names both "module" and "stage")?
+        const mentionedInAnchor = new RegExp(`\b${label}s?\b`, 'i').test(anchorHeading);
+        const containsAnchor = members.some(m => m.id === anchor.id);
+        candidates.push({ members, mentionedInAnchor, containsAnchor });
     }
-    if (!bestSeries) return fallback;
+    if (!candidates.length) return fallback;
+
+    // Prefer a series the anchor names but isn't itself a member of — an
+    // overview/index chunk pointing at a sub-series (Module 2 naming "All 8
+    // Stages") is the real content gap a question is usually asking about,
+    // not the outer chapter list the anchor already belongs to. Then fall
+    // back to any series the anchor at least mentions, then to size.
+    candidates.sort((a, b) => {
+        const rank = c => c.mentionedInAnchor ? (c.containsAnchor ? 1 : 2) : 0;
+        const diff = rank(b) - rank(a);
+        return diff !== 0 ? diff : b.members.length - a.members.length;
+    });
+    const bestSeries = candidates[0].members;
 
     // Reading order (Stage 1, 2, 3… / 12.1, 12.2…), not score order — this
     // is a structural inclusion, not a relevance ranking.
