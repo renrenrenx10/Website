@@ -767,7 +767,7 @@ function expandForNumberedSeries(scored, maxSources) {
         const label = key.slice(key.lastIndexOf('::') + 2);
         // Does the anchor's own heading name this series ("Module 2: The F4N
         // Journey – All 8 Stages in Full" names both "module" and "stage")?
-        const mentionedInAnchor = new RegExp(`\b${label}s?\b`, 'i').test(anchorHeading);
+        const mentionedInAnchor = new RegExp(`\\b${label}s?\\b`, 'i').test(anchorHeading);
         const containsAnchor = members.some(m => m.id === anchor.id);
         candidates.push({ members, mentionedInAnchor, containsAnchor });
     }
