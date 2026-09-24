@@ -3601,11 +3601,11 @@ async function nrOnCompanySelect(companyId) {
   // draft in progress isn't overwritten.
   const { data } = await db.from('nr_profile_updates')
     .select('*').eq('company_id', companyId).eq('status', 'pending')
-    .order('created_at', {ascending: false}).limit(1).maybeSingle();
+    .order('submitted_at', {ascending: false}).limit(1).maybeSingle();
 
   const pb = document.getElementById('nr-pending-banner');
   const pd = document.getElementById('nr-pending-date');
-  if (data && pb) { pb.style.display = 'block'; if (pd) pd.textContent = new Date(data.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+  if (data && pb) { pb.style.display = 'block'; if (pd) pd.textContent = new Date(data.submitted_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
   else if (pb) pb.style.display = 'none';
 
   // Prefer the pending draft value, else fall back to the live company record.
@@ -3652,7 +3652,7 @@ function nrPreviewLogo(input) {
 async function nrUploadLogo(userId) {
   if (!nrLogoFile) return null;
   const ext  = nrLogoFile.name.split('.').pop();
-  const path = `${userId}/logo.${ext}`;
+  const path = `${userId}/logo-${Date.now()}.${ext}`;
   const { error } = await db.storage.from('nr-logos').upload(path, nrLogoFile, { upsert: true });
   if (error) { document.getElementById('nr-logo-status').textContent = 'Logo upload failed: ' + error.message; return null; }
   const { data } = db.storage.from('nr-logos').getPublicUrl(path);
