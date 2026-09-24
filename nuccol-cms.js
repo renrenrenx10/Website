@@ -8,7 +8,7 @@
  */
 (function () {
   const BLOB_BASE = 'https://nuccolmedia.blob.core.windows.net/content';
-  const BLOB_SAS  = 'sv=2026-02-06&ss=b&srt=o&sp=rwdctfx&se=2032-01-01T20:14:16Z&st=2026-06-16T10:59:16Z&spr=https&sig=JVx5ozHDrnCCcLKtK6npIZrswRrTi9njeifMBXgRHg4%3D';
+  const BLOB_SAS  = 'sp=r&st=2026-09-24T11:03:39Z&se=2028-01-03T20:18:39Z&spr=https&sv=2026-02-06&sr=c&sig=AUxbKVwcZmCmboog7jq3GDiuGEBNRQBQ7B89IIZY5m8%3D';
 
   async function loadBlob(slug) {
     try {
