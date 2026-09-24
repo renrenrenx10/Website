@@ -3575,20 +3575,43 @@ async function loadNRSection() {
 }
 
 async function nrLoadCompanyPicker(userId) {
-  const sel = document.getElementById('nr-company-select');
+  // [2026-09-24] Company comes from the Portal Users links staff set in SCC
+  // (company_members), falling back to the older nr_companies.member_user_id.
+  // Members can no longer pick any company from a full list.
+  const sel  = document.getElementById('nr-company-select');
+  const note = document.getElementById('nr-co-note');
   if (!sel) return;
-  sel.innerHTML = '<option value="">\u2014 Select your company \u2014</option>';
-  const { data, error } = await db.from('nr_companies').select('id,name').order('name');
-  if (error || !data) return;
-  const { data: { session } } = await db.auth.getSession();
-  const userCo = session?.user?.user_metadata?.company || '';
-  data.forEach(c => {
+  sel.innerHTML = '<option value="">Loading your company…</option>';
+  sel.disabled = true;
+
+  const ids = new Set();
+  const { data: links } = await db.from('company_members').select('company_id').eq('user_id', userId);
+  (links || []).forEach(r => r.company_id && ids.add(r.company_id));
+  const { data: legacy } = await db.from('nr_companies').select('id').eq('member_user_id', userId);
+  (legacy || []).forEach(r => ids.add(r.id));
+
+  let companies = [];
+  if (ids.size) {
+    const { data } = await db.from('nr_companies').select('id,name').in('id', [...ids]).order('name');
+    companies = data || [];
+  }
+
+  if (!companies.length) {
+    sel.innerHTML = '<option value="">No company linked to your account</option>';
+    if (note) note.textContent = '— please contact fit4@nuccol.co.uk and we’ll link your account';
+    ['nr-submit-btn','nrn-submit-btn'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
+    return;
+  }
+
+  sel.innerHTML = '';
+  companies.forEach(c => {
     const o = document.createElement('option');
     o.value = c.id; o.textContent = c.name;
-    if (userCo && c.name.toLowerCase() === userCo.toLowerCase()) o.selected = true;
     sel.appendChild(o);
   });
-  if (sel.value) nrOnCompanySelect(sel.value);
+  sel.disabled = companies.length === 1;   // several linked companies: let them choose between those only
+  if (note) note.textContent = companies.length === 1 ? '' : '— your account is linked to several companies';
+  nrOnCompanySelect(sel.value);
 }
 
 async function nrOnCompanySelect(companyId) {
@@ -3906,14 +3929,14 @@ async function nrLoadNewsHistory(session) {
   const hist = document.getElementById('nrn-history');
   if (!hist) return;
   const { data } = await db.from('nr_news_submissions')
-    .select('*').eq('user_id', session.user.id).order('created_at',{ascending:false}).limit(10);
+    .select('*').eq('user_id', session.user.id).order('submitted_at',{ascending:false}).limit(10);
   if (!data || !data.length) { hist.innerHTML = ''; return; }
   hist.innerHTML = data.map(n => {
     const statusColor = n.status==='approved'?'#16a34a':n.status==='rejected'?'#c0392b':'#d97706';
     return `<div style="background:#fff;border:1px solid #dde4ee;border-radius:8px;padding:16px;font-size:.82rem">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <strong>${n.title||'(no title)'}</strong>
-        <span style="font-size:.72rem;color:#94a3b8">${new Date(n.created_at).toLocaleDateString('en-GB')}</span>
+        <span style="font-size:.72rem;color:#94a3b8">${new Date(n.submitted_at).toLocaleDateString('en-GB')}</span>
       </div>
       ${n.type?`<div style="color:#6a7a90;font-size:.75rem;margin-bottom:6px">${n.type}</div>`:''}
       <div style="color:#374151;line-height:1.5">${n.body||''}</div>
@@ -3936,6 +3959,11 @@ async function submitNRNews() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) { btn.disabled=false; btn.textContent='Submit Update'; return; }
   const sel = document.getElementById('nr-company-select');
+  if (!sel || !sel.value) {
+    msg.textContent = 'Your account is not linked to a company yet — please contact fit4@nuccol.co.uk.';
+    msg.style.background='#fee2e2'; msg.style.color='#c0392b'; msg.style.display='block';
+    btn.disabled=false; btn.textContent='Submit Update'; return;
+  }
   const { error } = await db.from('nr_news_submissions').insert({
     user_id:      session.user.id,
     company_id:   sel?.value || null,
