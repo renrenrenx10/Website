@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lean Manufacturing: Quick Wins for Small Teams</title>
+<meta name="description" content="Five practical lean quick wins a small manufacturing team can start this week: 5S, a visual KPI board, SOPs, a simple root-cause method and a daily huddle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A1628; --dark:#060F1C; --blue:#29B6E8; --accent:#0E7CB0;
+  --bg:#FFFFFF; --card:#FFFFFF; --ink:#1A1A2E; --ink-soft:#4A5C6A;
+  --line:#E2E8EF; --light:#F2F6F9; --light2:#EAF6FC;
+  --amber-bg:#FFF6E5; --amber-line:#E9C46A;
+  --good:#1E8A5F;
+  --radius:4px; --maxw:960px; --read:820px;
+  --font-head:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body:'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1522; --card:#121F30; --ink:#EAF1F6; --ink-soft:#AFC1CE;
+    --line:#243546; --light:#132536; --light2:#102a3c;
+    --amber-bg:#2E2410; --amber-line:#7A5C1E; --accent:#5CC6EE;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1522; --card:#121F30; --ink:#EAF1F6; --ink-soft:#AFC1CE;
+  --line:#243546; --light:#132536; --light2:#102a3c; --accent:#5CC6EE;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.6; -webkit-font-smoothing:antialiased;}
+
+/* ---- site header ---- */
+.sitehead{position:sticky; top:0; z-index:50; background:var(--navy); border-bottom:1px solid rgba(255,255,255,.06);}
+.sh-inner{max-width:1240px; margin:0 auto; display:flex; align-items:center; gap:18px; padding:10px 22px;}
+.sh-logo{display:flex; align-items:center; flex:none;}
+.sh-logo img{height:46px; width:46px; border-radius:8px; display:block; background:#fff;}
+.sh-logo-txt{font-family:var(--font-head); font-weight:800; text-transform:lowercase; font-size:30px; letter-spacing:.01em; color:#fff; line-height:1;}
+.sh-logo-txt b{color:var(--blue);}
+.sh-nav{display:flex; flex-wrap:wrap; gap:18px; margin-left:12px; flex:1;}
+.sh-nav a{color:#D7E3EE; text-decoration:none; font-family:var(--font-head); font-weight:600; text-transform:uppercase; font-size:14px; letter-spacing:.04em;}
+.sh-nav a:hover{color:var(--blue);}
+.sh-login{flex:none; background:var(--blue); color:var(--navy); text-decoration:none; font-family:var(--font-head); font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:.06em; padding:9px 18px; border-radius:var(--radius);}
+.sh-login:hover{filter:brightness(1.07);}
+@media(max-width:900px){ .sh-nav{display:none;} }
+
+/* ---- hero band ---- */
+.wrap{max-width:var(--read); margin:0 auto; padding:0 22px 72px;}
+.topband{background:linear-gradient(135deg,#0E2238 0%,var(--dark) 100%); color:#fff; padding:40px 22px 46px;}
+.topband-inner{max-width:var(--read); margin:0 auto;}
+.brand{display:flex; align-items:center; gap:10px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8FA7BA; font-weight:600; font-family:var(--font-head);}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+.kicker{margin-top:20px; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:var(--blue); font-weight:600; font-family:var(--font-head); display:flex; align-items:center; gap:10px;}
+.kicker:before{content:""; width:34px; height:2px; background:var(--blue); display:inline-block;}
+h1.title{font-family:var(--font-head); font-weight:800; font-size:clamp(34px,6vw,54px); line-height:1.02; text-transform:uppercase; margin:10px 0 14px; color:#fff; letter-spacing:.005em;}
+.subtitle{font-size:17px; color:#C4D2DE; max-width:660px; margin:0; line-height:1.55;}
+.meta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; font-size:12px; font-family:var(--font-head); text-transform:uppercase; letter-spacing:.06em;}
+.meta-row span{color:#9FB6C6; border:1px solid rgba(255,255,255,.16); padding:5px 12px; border-radius:999px;}
+
+/* ---- cards & content ---- */
+.card{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:28px 26px; margin-top:22px; box-shadow:0 1px 2px rgba(10,22,40,.03);}
+h2.h2{font-family:var(--font-head); font-size:26px; font-weight:700; text-transform:uppercase; color:var(--navy); margin:0 0 14px; padding-bottom:12px; border-bottom:2px solid var(--light); letter-spacing:.01em; line-height:1.1;}
+:root[data-theme="dark"] h2.h2{color:#fff;}
+h2.h2 .num{color:var(--blue); margin-right:10px; font-weight:800;}
+p{color:var(--ink-soft); font-size:16px;}
+p.lead{color:var(--ink); font-size:17px;}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+ul.blist{margin:12px 0; padding-left:0; list-style:none;}
+ul.blist li{position:relative; padding-left:24px; margin-bottom:10px; font-size:15.5px; color:var(--ink-soft);}
+ul.blist li:before{content:"\25B8"; position:absolute; left:0; top:0; color:var(--blue); font-weight:700;}
+table.tbl{width:100%; border-collapse:collapse; margin:16px 0; font-size:14.5px;}
+table.tbl th{background:var(--navy); color:#fff; text-align:left; padding:11px 13px; font-family:var(--font-head); font-weight:600; text-transform:uppercase; font-size:13px; letter-spacing:.03em;}
+table.tbl td{padding:11px 13px; border-bottom:1px solid var(--line); color:var(--ink-soft); vertical-align:top;}
+table.tbl tr:last-child td{border-bottom:none;}
+table.tbl tr:nth-child(even) td{background:var(--light);}
+.note{border-radius:6px; padding:16px 18px; margin:16px 0; font-size:15px;}
+.note.amber{background:var(--amber-bg); border:1px solid var(--amber-line); color:var(--ink);}
+.note.blue{background:var(--light2); border:1px solid #BEE4F6; color:var(--ink);}
+:root[data-theme="dark"] .note.blue{border-color:#1d4a63;}
+.note b{color:var(--accent);}
+.cta{background:linear-gradient(135deg,var(--navy),var(--dark)); color:#fff; border-radius:8px; padding:30px 26px; margin-top:28px; text-align:center; border:1px solid rgba(41,182,232,.25);}
+.cta h3{font-family:var(--font-head); font-weight:800; text-transform:uppercase; margin:0 0 10px; font-size:26px; letter-spacing:.01em;}
+.cta p{color:#C4D2DE; margin:0 auto 18px; font-size:15.5px; max-width:560px;}
+.cta a.btn{display:inline-block; background:var(--blue); color:var(--navy); font-family:var(--font-head); font-weight:700; text-transform:uppercase; letter-spacing:.06em; text-decoration:none; padding:13px 34px; border-radius:var(--radius); font-size:16px;}
+.cta a.btn:hover{filter:brightness(1.07);}
+.pill{display:inline-block; background:var(--light2); color:var(--accent); font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; margin-right:6px; font-family:var(--font-head); text-transform:uppercase;}
+.stepbox{background:var(--light); border-left:3px solid var(--blue); border-radius:0 6px 6px 0; padding:14px 16px; margin-bottom:10px;}
+.stepbox b{color:var(--navy); display:block; margin-bottom:4px; font-family:var(--font-head); font-weight:700; text-transform:uppercase; font-size:15px; letter-spacing:.02em;}
+:root[data-theme="dark"] .stepbox b{color:#fff;}
+.faq{border-bottom:1px solid var(--line); padding:15px 0;}
+.faq:last-child{border-bottom:none;}
+.faq b{display:block; color:var(--navy); font-size:16px; margin-bottom:6px; font-family:var(--font-head); font-weight:700;}
+:root[data-theme="dark"] .faq b{color:#fff;}
+.faq p{margin:0;}
+.example{background:var(--light2); border-left:4px solid var(--blue); border-radius:0 6px 6px 0; padding:15px 18px; margin:16px 0; font-size:15px;}
+.example b{color:var(--accent); display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-head); font-weight:700;}
+.deflist{margin:10px 0;}
+.deflist .term{font-weight:700; color:var(--navy); font-size:16px; margin-top:12px; font-family:var(--font-head); text-transform:uppercase;}
+:root[data-theme="dark"] .deflist .term{color:#fff;}
+.deflist .def{color:var(--ink-soft); font-size:15px; margin:2px 0 0;}
+.glossary{display:grid; grid-template-columns:1fr; gap:2px;}
+.mistake{display:flex; gap:10px; padding:11px 0; border-bottom:1px dashed var(--line); font-size:15px; color:var(--ink-soft);}
+.mistake:last-child{border-bottom:none;}
+.mistake .x{color:#C1443C; font-weight:700; flex:none;}
+h3.h3{font-family:var(--font-head); font-size:19px; font-weight:700; text-transform:uppercase; color:var(--navy); margin:20px 0 8px;}
+:root[data-theme="dark"] h3.h3{color:#fff;}
+.dl{display:flex; align-items:flex-start; gap:16px; background:var(--light); border:1px solid var(--line); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:18px 20px; margin:18px 0;}
+.dl .dl-ic{flex:none; width:42px; height:42px; border-radius:8px; background:var(--blue); color:var(--navy); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;}
+.dl .dl-body{flex:1;}
+.dl .dl-body b{color:var(--navy); font-size:16px; display:block; margin-bottom:3px; font-family:var(--font-head); font-weight:700; text-transform:uppercase;}
+:root[data-theme="dark"] .dl .dl-body b{color:#fff;}
+.dl .dl-body p{margin:0 0 10px; font-size:14px;}
+.dl a.dl-btn{display:inline-block; background:var(--navy); color:#fff; text-decoration:none; font-family:var(--font-head); font-weight:700; text-transform:uppercase; letter-spacing:.04em; font-size:13.5px; padding:9px 18px; border-radius:var(--radius);}
+
+/* ---- site footer ---- */
+.sitefoot{background:var(--dark); color:#9FB2C2; margin-top:10px;}
+.sf-inner{max-width:1240px; margin:0 auto; padding:46px 22px 20px; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:30px;}
+.sf-inner h4{font-family:var(--font-head); font-weight:700; text-transform:uppercase; color:#fff; font-size:15px; letter-spacing:.05em; margin:0 0 14px;}
+.sf-inner p, .sf-inner a{font-size:14px; color:#9FB2C2; line-height:1.7;}
+.sf-inner a{display:block; text-decoration:none;}
+.sf-inner a:hover{color:var(--blue);}
+.sf-desc{max-width:320px;}
+.sf-addr{margin-top:12px; font-style:normal; color:#8097A8; font-size:13.5px; line-height:1.6;}
+.sf-bottom{border-top:1px solid rgba(255,255,255,.08); max-width:1240px; margin:0 auto; padding:16px 22px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; font-size:12.5px; color:#73889A;}
+.sf-bottom a{color:#73889A; text-decoration:none; margin-left:16px;}
+.sf-bottom a:hover{color:var(--blue);}
+@media(max-width:760px){ .sf-inner{grid-template-columns:1fr 1fr;} }
+@media(max-width:480px){ .sf-inner{grid-template-columns:1fr;} }
+
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]) h2.h2{color:#fff;}
+:root:not([data-theme="light"]) .note.blue{border-color:#1d4a63;}
+:root:not([data-theme="light"]) .stepbox b{color:#fff;}
+:root:not([data-theme="light"]) .faq b{color:#fff;}
+:root:not([data-theme="light"]) .deflist .term{color:#fff;}
+:root:not([data-theme="light"]) h3.h3{color:#fff;}
+:root:not([data-theme="light"]) .dl .dl-body b{color:#fff;}
+}
+</style>
+</head>
+<body>
+<header class="sitehead"><div class="sh-inner"><a class="sh-logo" href="https://www.nuccol.co.uk/"><img src="https://nuccolmedia.blob.core.windows.net/videos/wp-1727694383470.webp?sp=r&amp;st=2026-09-24T11:08:22Z&amp;se=2028-01-03T20:23:22Z&amp;spr=https&amp;sv=2026-02-06&amp;sr=c&amp;sig=gRa4tlsXXIJUNYk3aydlSSdXzn73cBO5obcIbLFVPSE%3D" alt="NucCol" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'"><span class="sh-logo-txt" style="display:none">nuc<b>col</b></span></a><nav class="sh-nav"><a href="/index.html">Home</a><a href="/about.html">Who We Are</a><a href="/markets.html">Markets</a><a href="/services.html">Services</a><a href="/who-we-work-with.html">Who We Work With</a><a href="/events.html">Events</a><a href="/f4n.html">F4N</a><a href="/our-thoughts.html">Our Thoughts</a><a href="/work-with-us.html">Work With Us</a><a href="/contact.html">Contact</a></nav><a class="sh-login" href="/members.html">Members Login</a></div></header>
+<div class="topband"><div class="topband-inner">
+  <div class="kicker">For Small Teams</div>
+  <h1 class="title">Lean Manufacturing: Quick Wins for Small Teams</h1>
+  <p class="subtitle">You do not need a lean transformation programme to get real results. Five small, practical changes you can start this week, with the detail behind each one.</p>
+  <div class="meta-row"><span>3 min read</span><span>Operations</span></div>
+</div></div>
+<div class="wrap">
+<div class="card"><h2 class="h2"><span class="num">01</span>Run a 5S pass on one area</h2><p class="">5S stands for Sort, Straighten, Shine, Standardise, Sustain. Pick one workbench or cell, not the whole factory, and work through each step: remove what is not needed, arrange what remains logically, clean it properly, agree a standard for how it should look, and build a habit of maintaining it. Start this week, on one small area, and let success there build the case for doing more.</p></div><div class="card"><h2 class="h2"><span class="num">02</span>Put up a simple visual KPI board</h2><p class="">One whiteboard, three or four numbers that actually matter, such as output, quality or on-time delivery, updated daily or weekly where the whole team can see it, not just management. The value is not sophistication, it is visibility: problems get noticed and acted on faster when everyone can see the trend, rather than reading about it in a meeting.</p></div><div class="card"><h2 class="h2"><span class="num">03</span>Write SOPs for your top three recurring problems</h2><p class="">Not everything needs a written procedure. Just the three issues that cost you the most time or cause the most rework. A one-page standard operating procedure that a new starter could follow without asking for help is worth more than a comprehensive manual nobody reads.</p></div><div class="card"><h2 class="h2"><span class="num">04</span>Use a simple root-cause method</h2><p class="">Ask "why" five times on your next defect or delay before acting. Most first answers describe a symptom, not the actual cause. This costs nothing but a few minutes of discipline, and it prevents the same problem recurring next month in a slightly different form.</p><div class="example"><b>A worked example</b>Defect found &rarr; why? Wrong tolerance set &rarr; why? Operator used the wrong job sheet &rarr; why? Job sheets are not clearly labelled by revision &rarr; why? No standard for revision control on the shop floor. The fix here is a labelling standard, not just retraining one operator.</div></div><div class="card"><h2 class="h2"><span class="num">05</span>Hold a 10-minute daily huddle</h2><p class="">Same time, same three questions: what went well, what did not, what needs help. Kept strictly to ten minutes and standing up if possible, this catches small problems while they are still small, rather than letting them build into a bigger issue by the end of the week.</p></div><div class="card"><h2 class="h2"><span class="num">06</span>Why buyers value this</h2><p class="">Buyers awarding regulated or safety-critical work look for suppliers who improve steadily and can show it. Small, evidenced changes that you sustain week after week say more about how you will perform on a contract than a one-off, big-bang transformation that is hard to keep going. The habit of noticing a problem, fixing its cause and holding on to the gain is exactly what a serious customer wants to see, and it is visible in your KPI board, your huddle notes and your SOPs long before anyone has to ask for it.</p></div><div class="dl"><div class="dl-ic">&#8595;</div><div class="dl-body"><b>5S, Huddle and 5 Whys Toolkit</b><p>A one-page pack: a 5S checklist, a daily huddle board layout, and a 5 Whys template. NucCol colours, free to use.</p><a class="dl-btn" href="lean-quick-wins-toolkit.pdf" download>Download the one-page tool</a></div></div><div class="example"><b>A short before and after</b>A six-person machine shop spent the first twenty minutes of most mornings looking for tooling and setting sheets. One 5S pass on the setup bench, a shadow board for the common tools, and a labelled folder for current-revision setting sheets cut that to a few minutes. Nothing was bought in, and the time saved went straight back into running work.</div><div class="glossary"><div class="faq"><b>Do I need lean consultants to do any of this?</b><p>No. Everything above can be started this week with no external help and no budget. External support can add value later, but it is not a prerequisite to begin.</p></div><div class="faq"><b>How do I know if it is working?</b><p>Your KPI board is the answer. If the numbers you chose to track are moving in the right direction over a few weeks, it is working.</p></div></div>
+<div class="cta">
+  <h3>Want these wins to stick?</h3>
+  <p>Quick wins are the easy part. Making them part of how your team works every day is where most small businesses stall. If you would like a second pair of eyes on your shop floor, we are happy to talk it through.</p>
+  
+  <a class="btn" href="https://www.nuccol.co.uk/contact.html?utm_source=manufacturinguk&utm_medium=best-practice&utm_campaign=nuccol-sponsorship&utm_content=lean" target="_blank" rel="noopener">Talk to an improvement specialist &rarr;</a>
+</div>
+</div>
+
+
+<footer class="sitefoot">
+<div class="sf-inner">
+  <div>
+    <h4>NucCol</h4>
+    <p class="sf-desc">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+    <address class="sf-addr">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</address>
+  </div>
+  <div>
+    <h4>Services</h4>
+    <a href="/services.html">Supply Chain Development</a>
+    <a href="/services.html">Manufacturing Innovation</a>
+    <a href="/services.html">IT Services</a>
+    <a href="/events.html">Networking &amp; Events</a>
+    <a href="/services.html">People Services</a>
+  </div>
+  <div>
+    <h4>Company</h4>
+    <a href="/about.html">Who We Are</a>
+    <a href="/markets.html">Markets</a>
+    <a href="/who-we-work-with.html">Who We Work With</a>
+    <a href="/f4n.html">F4N Programme</a>
+    <a href="/work-with-us.html">Work With Us</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+  <div>
+    <h4>Connect</h4>
+    <a href="https://www.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn &#8599;</a>
+    <a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a>
+    <a href="/members.html">Members Login</a>
+  </div>
+</div>
+<div class="sf-bottom">
+  <span>&copy; 2026 NucCol, Nuclear Collaboration Ltd. All rights reserved.</span>
+  <span><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms-of-use.html">Terms of Use</a></span>
+</div>
+</footer>
+
+</body>
+</html>
