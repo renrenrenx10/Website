@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is Your Business Nuclear-Ready?</title>
+<meta name="description" content="A quick, private 16-point self-assessment across the seven areas Fit For Nuclear assesses, with a live readiness score and a note on why each question matters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A1628; --dark:#060F1C; --blue:#29B6E8; --accent:#0E7CB0;
+  --bg:#FFFFFF; --card:#FFFFFF; --ink:#1A1A2E; --ink-soft:#4A5C6A;
+  --line:#E2E8EF; --light:#F2F6F9; --light2:#EAF6FC;
+  --amber-bg:#FFF6E5; --amber-line:#E9C46A;
+  --good:#1E8A5F;
+  --radius:4px; --maxw:960px; --read:820px;
+  --font-head:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body:'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1522; --card:#121F30; --ink:#EAF1F6; --ink-soft:#AFC1CE;
+    --line:#243546; --light:#132536; --light2:#102a3c;
+    --amber-bg:#2E2410; --amber-line:#7A5C1E; --accent:#5CC6EE;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1522; --card:#121F30; --ink:#EAF1F6; --ink-soft:#AFC1CE;
+  --line:#243546; --light:#132536; --light2:#102a3c; --accent:#5CC6EE;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.6; -webkit-font-smoothing:antialiased;}
+
+/* ---- site header ---- */
+.sitehead{position:sticky; top:0; z-index:50; background:var(--navy); border-bottom:1px solid rgba(255,255,255,.06);}
+.sh-inner{max-width:1240px; margin:0 auto; display:flex; align-items:center; gap:18px; padding:10px 22px;}
+.sh-logo{display:flex; align-items:center; flex:none;}
+.sh-logo img{height:46px; width:46px; border-radius:8px; display:block;}
+.sh-nav{display:flex; flex-wrap:wrap; gap:18px; margin-left:12px; flex:1;}
+.sh-nav a{color:#D7E3EE; text-decoration:none; font-family:var(--font-head); font-weight:600; text-transform:uppercase; font-size:14px; letter-spacing:.04em;}
+.sh-nav a:hover{color:var(--blue);}
+.sh-login{flex:none; background:var(--blue); color:var(--navy); text-decoration:none; font-family:var(--font-head); font-weight:700; text-transform:uppercase; font-size:14px; letter-spacing:.06em; padding:9px 18px; border-radius:var(--radius);}
+.sh-login:hover{filter:brightness(1.07);}
+@media(max-width:900px){ .sh-nav{display:none;} }
+
+/* ---- hero band ---- */
+.wrap{max-width:var(--read); margin:0 auto; padding:0 22px 72px;}
+.topband{background:linear-gradient(135deg,#0E2238 0%,var(--dark) 100%); color:#fff; padding:40px 22px 46px;}
+.topband-inner{max-width:var(--read); margin:0 auto;}
+.brand{display:flex; align-items:center; gap:10px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8FA7BA; font-weight:600; font-family:var(--font-head);}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+.kicker{margin-top:20px; font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:var(--blue); font-weight:600; font-family:var(--font-head); display:flex; align-items:center; gap:10px;}
+.kicker:before{content:""; width:34px; height:2px; background:var(--blue); display:inline-block;}
+h1.title{font-family:var(--font-head); font-weight:800; font-size:clamp(34px,6vw,54px); line-height:1.02; text-transform:uppercase; margin:10px 0 14px; color:#fff; letter-spacing:.005em;}
+.subtitle{font-size:17px; color:#C4D2DE; max-width:660px; margin:0; line-height:1.55;}
+.meta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:24px; font-size:12px; font-family:var(--font-head); text-transform:uppercase; letter-spacing:.06em;}
+.meta-row span{color:#9FB6C6; border:1px solid rgba(255,255,255,.16); padding:5px 12px; border-radius:999px;}
+
+/* ---- cards & content ---- */
+.card{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:28px 26px; margin-top:22px; box-shadow:0 1px 2px rgba(10,22,40,.03);}
+h2.h2{font-family:var(--font-head); font-size:26px; font-weight:700; text-transform:uppercase; color:var(--navy); margin:0 0 14px; padding-bottom:12px; border-bottom:2px solid var(--light); letter-spacing:.01em; line-height:1.1;}
+:root[data-theme="dark"] h2.h2{color:#fff;}
+h2.h2 .num{color:var(--blue); margin-right:10px; font-weight:800;}
+p{color:var(--ink-soft); font-size:16px;}
+p.lead{color:var(--ink); font-size:17px;}
+a{color:var(--accent); text-decoration:underline; text-underline-offset:2px;}
+ul.blist{margin:12px 0; padding-left:0; list-style:none;}
+ul.blist li{position:relative; padding-left:24px; margin-bottom:10px; font-size:15.5px; color:var(--ink-soft);}
+ul.blist li:before{content:"\25B8"; position:absolute; left:0; top:0; color:var(--blue); font-weight:700;}
+table.tbl{width:100%; border-collapse:collapse; margin:16px 0; font-size:14.5px;}
+table.tbl th{background:var(--navy); color:#fff; text-align:left; padding:11px 13px; font-family:var(--font-head); font-weight:600; text-transform:uppercase; font-size:13px; letter-spacing:.03em;}
+table.tbl td{padding:11px 13px; border-bottom:1px solid var(--line); color:var(--ink-soft); vertical-align:top;}
+table.tbl tr:last-child td{border-bottom:none;}
+table.tbl tr:nth-child(even) td{background:var(--light);}
+.note{border-radius:6px; padding:16px 18px; margin:16px 0; font-size:15px;}
+.note.amber{background:var(--amber-bg); border:1px solid var(--amber-line); color:var(--ink);}
+.note.blue{background:var(--light2); border:1px solid #BEE4F6; color:var(--ink);}
+:root[data-theme="dark"] .note.blue{border-color:#1d4a63;}
+.note b{color:var(--accent);}
+.cta{background:linear-gradient(135deg,var(--navy),var(--dark)); color:#fff; border-radius:8px; padding:30px 26px; margin-top:28px; text-align:center; border:1px solid rgba(41,182,232,.25);}
+.cta h3{font-family:var(--font-head); font-weight:800; text-transform:uppercase; margin:0 0 10px; font-size:26px; letter-spacing:.01em;}
+.cta p{color:#C4D2DE; margin:0 auto 18px; font-size:15.5px; max-width:560px;}
+.cta a.btn{display:inline-block; background:var(--blue); color:var(--navy); font-family:var(--font-head); font-weight:700; text-transform:uppercase; letter-spacing:.06em; text-decoration:none; padding:13px 34px; border-radius:var(--radius); font-size:16px;}
+.cta a.btn:hover{filter:brightness(1.07);}
+.pill{display:inline-block; background:var(--light2); color:var(--accent); font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px; margin-right:6px; font-family:var(--font-head); text-transform:uppercase;}
+.stepbox{background:var(--light); border-left:3px solid var(--blue); border-radius:0 6px 6px 0; padding:14px 16px; margin-bottom:10px;}
+.stepbox b{color:var(--navy); display:block; margin-bottom:4px; font-family:var(--font-head); font-weight:700; text-transform:uppercase; font-size:15px; letter-spacing:.02em;}
+:root[data-theme="dark"] .stepbox b{color:#fff;}
+.faq{border-bottom:1px solid var(--line); padding:15px 0;}
+.faq:last-child{border-bottom:none;}
+.faq b{display:block; color:var(--navy); font-size:16px; margin-bottom:6px; font-family:var(--font-head); font-weight:700;}
+:root[data-theme="dark"] .faq b{color:#fff;}
+.faq p{margin:0;}
+.example{background:var(--light2); border-left:4px solid var(--blue); border-radius:0 6px 6px 0; padding:15px 18px; margin:16px 0; font-size:15px;}
+.example b{color:var(--accent); display:block; margin-bottom:4px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; font-family:var(--font-head); font-weight:700;}
+.deflist{margin:10px 0;}
+.deflist .term{font-weight:700; color:var(--navy); font-size:16px; margin-top:12px; font-family:var(--font-head); text-transform:uppercase;}
+:root[data-theme="dark"] .deflist .term{color:#fff;}
+.deflist .def{color:var(--ink-soft); font-size:15px; margin:2px 0 0;}
+.glossary{display:grid; grid-template-columns:1fr; gap:2px;}
+.mistake{display:flex; gap:10px; padding:11px 0; border-bottom:1px dashed var(--line); font-size:15px; color:var(--ink-soft);}
+.mistake:last-child{border-bottom:none;}
+.mistake .x{color:#C1443C; font-weight:700; flex:none;}
+h3.h3{font-family:var(--font-head); font-size:19px; font-weight:700; text-transform:uppercase; color:var(--navy); margin:20px 0 8px;}
+:root[data-theme="dark"] h3.h3{color:#fff;}
+.dl{display:flex; align-items:flex-start; gap:16px; background:var(--light); border:1px solid var(--line); border-left:3px solid var(--blue); border-radius:0 8px 8px 0; padding:18px 20px; margin:18px 0;}
+.dl .dl-ic{flex:none; width:42px; height:42px; border-radius:8px; background:var(--blue); color:var(--navy); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;}
+.dl .dl-body{flex:1;}
+.dl .dl-body b{color:var(--navy); font-size:16px; display:block; margin-bottom:3px; font-family:var(--font-head); font-weight:700; text-transform:uppercase;}
+:root[data-theme="dark"] .dl .dl-body b{color:#fff;}
+.dl .dl-body p{margin:0 0 10px; font-size:14px;}
+.dl a.dl-btn{display:inline-block; background:var(--navy); color:#fff; text-decoration:none; font-family:var(--font-head); font-weight:700; text-transform:uppercase; letter-spacing:.04em; font-size:13.5px; padding:9px 18px; border-radius:var(--radius);}
+
+/* ---- site footer ---- */
+.sitefoot{background:var(--dark); color:#9FB2C2; margin-top:10px;}
+.sf-inner{max-width:1240px; margin:0 auto; padding:46px 22px 20px; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:30px;}
+.sf-inner h4{font-family:var(--font-head); font-weight:700; text-transform:uppercase; color:#fff; font-size:15px; letter-spacing:.05em; margin:0 0 14px;}
+.sf-inner p, .sf-inner a{font-size:14px; color:#9FB2C2; line-height:1.7;}
+.sf-inner a{display:block; text-decoration:none;}
+.sf-inner a:hover{color:var(--blue);}
+.sf-desc{max-width:320px;}
+.sf-addr{margin-top:12px; font-style:normal; color:#8097A8; font-size:13.5px; line-height:1.6;}
+.sf-bottom{border-top:1px solid rgba(255,255,255,.08); max-width:1240px; margin:0 auto; padding:16px 22px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; font-size:12.5px; color:#73889A;}
+.sf-bottom a{color:#73889A; text-decoration:none; margin-left:16px;}
+.sf-bottom a:hover{color:var(--blue);}
+@media(max-width:760px){ .sf-inner{grid-template-columns:1fr 1fr;} }
+@media(max-width:480px){ .sf-inner{grid-template-columns:1fr;} }
+
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]) h2.h2{color:#fff;}
+:root:not([data-theme="light"]) .note.blue{border-color:#1d4a63;}
+:root:not([data-theme="light"]) .stepbox b{color:#fff;}
+:root:not([data-theme="light"]) .faq b{color:#fff;}
+:root:not([data-theme="light"]) .deflist .term{color:#fff;}
+:root:not([data-theme="light"]) h3.h3{color:#fff;}
+:root:not([data-theme="light"]) .dl .dl-body b{color:#fff;}
+}
+
+.topband{background:linear-gradient(135deg,#0E2238 0%,var(--dark) 100%);}
+.catlabel{font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--blue); font-weight:700; margin:26px 0 2px;}
+.catlabel:first-child{margin-top:4px;}
+.catdesc{font-size:13.5px; color:var(--ink-soft); margin:0 0 10px;}
+.qrow{display:flex; align-items:flex-start; gap:12px; padding:12px; border-radius:10px; cursor:pointer; margin-bottom:6px; transition:background .15s;}
+.qrow:hover{background:var(--light);}
+.qbox{width:20px; height:20px; margin-top:2px; accent-color:var(--blue); flex:none; cursor:pointer;}
+.qtext{font-size:15px; color:var(--ink); display:block;}
+.qwhy{display:block; font-size:13px; color:var(--ink-soft); font-weight:400; margin-top:4px;}
+#scorebar{
+  position:sticky; top:0; z-index:20; margin:0 -20px 22px; padding:10px 20px;
+  background:var(--card); border-bottom:1px solid var(--line); box-shadow:0 2px 10px rgba(0,0,0,.06);
+  display:flex; align-items:center; gap:14px;
+}
+#scorebar .sb-num{font-family:var(--font-head); font-size:19px; font-weight:600; color:var(--navy); flex:none;}
+:root[data-theme="dark"] #scorebar .sb-num{color:#8FCBEF;}
+#scorebar .sb-max{font-size:12.5px; color:var(--ink-soft); flex:none; margin-left:-8px;}
+#scorebar .sb-bartrack{flex:1; height:7px; background:var(--light); border-radius:999px; overflow:hidden; min-width:60px;}
+#scorebar .sb-barfill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--blue)); transition:width .3s;}
+#scorebar .sb-label{font-size:12.5px; font-weight:700; color:var(--blue); flex:none; white-space:nowrap;}
+#scorebar .sb-reset{flex:none; background:none; border:1px solid var(--line); color:var(--ink-soft); font-size:11.5px; padding:5px 10px; border-radius:999px; cursor:pointer; white-space:nowrap;}
+#scorebar .sb-reset:hover{border-color:var(--blue); color:var(--blue);}
+@media(max-width:560px){
+  #scorebar{gap:8px; padding:8px 16px; margin:0 -16px 18px;}
+  #scorebar .sb-label{display:none;}
+}
+.scoreband{font-size:14.5px; padding:14px 16px; border-radius:10px; background:var(--light); color:var(--ink);}
+.scoreband b{color:var(--navy);}
+:root[data-theme="dark"] .scoreband b{color:#8FCBEF;}
+.intro{color:var(--ink-soft); font-size:15px; margin:0 0 12px;}
+.privacy{font-size:13px; color:var(--ink-soft); margin:0; padding:10px 14px; background:var(--light); border-radius:8px;}
+.h2b{font-family:var(--font-head); font-size:19px; font-weight:600; color:var(--navy); margin:0 0 12px; padding-bottom:8px; border-bottom:2px solid var(--light);}
+:root[data-theme="dark"] .h2b{color:#8FCBEF;}
+.afterlist{margin:10px 0; padding-left:0; list-style:none;}
+.afterlist li{position:relative; padding-left:22px; margin-bottom:10px; font-size:14.5px; color:var(--ink-soft);}
+.afterlist li:before{content:"\25CF"; position:absolute; left:0; top:1px; color:var(--blue); font-size:9px; line-height:1.9;}
+.ctanext{color:#EAF4FB; font-size:13.5px; font-style:italic; margin:0 0 14px;}
+
+@media (prefers-color-scheme: dark){
+:root:not([data-theme="light"]) #scorebar .sb-num{color:#8FCBEF;}
+:root:not([data-theme="light"]) .scoreband b{color:#8FCBEF;}
+:root:not([data-theme="light"]) .h2b{color:#8FCBEF;}
+}
+</style>
+</head>
+<body>
+<header class="sitehead"><div class="sh-inner"><a class="sh-logo" href="https://www.nuccol.co.uk/"><img src="https://www.nuccol.co.uk/wp-content/uploads/2024/09/wp-1727694383470.jpg" alt="NucCol"></a><nav class="sh-nav"><a href="/index.html">Home</a><a href="/about.html">Who We Are</a><a href="/markets.html">Markets</a><a href="/services.html">Services</a><a href="/who-we-work-with.html">Who We Work With</a><a href="/events.html">Events</a><a href="/f4n.html">F4N</a><a href="/our-thoughts.html">Our Thoughts</a><a href="/work-with-us.html">Work With Us</a><a href="/contact.html">Contact</a></nav><a class="sh-login" href="/members.html">Members Login</a></div></header>
+<div class="topband"><div class="topband-inner">
+  <div class="kicker">Interactive Self-Assessment</div>
+  <h1 class="title">Is Your Business Nuclear-Ready?</h1>
+  <p class="subtitle">Answer honestly across the seven areas that Fit For Nuclear (F4N) assesses. There are no wrong answers. This is a starting point for a conversation, not a certificate.</p>
+  <div class="meta-row"><span>16 quick checks</span><span>~4 minutes</span><span>Based on the F4N readiness framework</span></div>
+</div></div>
+<div class="wrap">
+<div id="scorebar">
+  <span class="sb-num" id="scoreNum">0</span><span class="sb-max" id="scoreMax">/ 32</span>
+  <div class="sb-bartrack"><div class="sb-barfill" id="barInner"></div></div>
+  <span class="sb-label" id="sbLabel">Early stage</span>
+  <button class="sb-reset" id="resetBtn">Reset</button>
+</div>
+<div class="card">
+  <div class="h2b">About this self-assessment</div>
+  <p class="intro">Thinking about whether nuclear work is realistic for your business, or just want a clear view of how ready you are for regulated, high-integrity work in general? This self-check is a quick, honest way to find out. It is based on the seven categories F4N (Fit For Nuclear) uses to assess UK manufacturers: Nuclear Industry Fundamentals, Nuclear Safety Culture, Quality &amp; Compliance, Leadership &amp; Governance, Human Performance, Supply Chain Readiness, and Security of Information.</p>
+  <p class="intro">Each question below has a short note explaining why it matters. Read it even if you are unsure how to answer, because understanding the "why" is often more useful than the tick itself. There is no pass mark. It exists purely to help you have an honest conversation with yourself and your team about where you actually stand today.</p>
+  <p class="privacy"><b>Private to you.</b> Your answers stay in your own browser and are not sent to NucCol. Use Reset at the top to clear them.</p>
+</div>
+<div class="card">
+<div class="catlabel">Nuclear Industry Fundamentals</div><p class="catdesc">The basics of how the sector works, what buyers expect, and what recognised certification signals.</p>
+        <label class="qrow" for="q1">
+          <input type="checkbox" id="q1" class="qbox" data-cat="Nuclear Industry Fundamentals">
+          <span class="qtext">We understand the basics of the UK civil nuclear sector and how our products or services could fit in.<span class="qwhy">This is not about being a nuclear expert. It is about knowing enough of the landscape (reactor types, key programmes, typical supply chain tiers) to talk credibly with a buyer.</span></span>
+        </label>
+        <label class="qrow" for="q2">
+          <input type="checkbox" id="q2" class="qbox" data-cat="Nuclear Industry Fundamentals">
+          <span class="qtext">We know what F4N (Fit For Nuclear) is and what a certificate signals to buyers.<span class="qwhy">F4N is the recognised assessment route into this sector. Buyers use it as a fast, trusted signal of readiness, so not knowing what it is puts you a step behind before a conversation even starts.</span></span>
+        </label><div class="catlabel">Nuclear Safety Culture</div><p class="catdesc">How safety thinking actually shows up day to day, not just in a policy document.</p>
+        <label class="qrow" for="q3">
+          <input type="checkbox" id="q3" class="qbox" data-cat="Nuclear Safety Culture">
+          <span class="qtext">Our leadership can describe what safety culture means in practice, not just in policy.<span class="qwhy">If a leader can only point to a document rather than describe a real behaviour or decision, that is usually a sign the culture is aspirational rather than lived.</span></span>
+        </label>
+        <label class="qrow" for="q4">
+          <input type="checkbox" id="q4" class="qbox" data-cat="Nuclear Safety Culture">
+          <span class="qtext">Employees would feel comfortable raising a safety concern without fear of blame.<span class="qwhy">This is one of the most reliable predictors of a healthy safety culture, and one assessors specifically probe for by talking to staff directly, not just management.</span></span>
+        </label><div class="catlabel">Quality &amp; Compliance</div><p class="catdesc">Your quality management foundation, and how it maps onto nuclear-specific expectations.</p>
+        <label class="qrow" for="q5">
+          <input type="checkbox" id="q5" class="qbox" data-cat="Quality &amp; Compliance">
+          <span class="qtext">We hold ISO 9001 certification, or are actively working towards it.<span class="qwhy">This is the non-negotiable foundation almost everything else in this category builds on.</span></span>
+        </label>
+        <label class="qrow" for="q6">
+          <input type="checkbox" id="q6" class="qbox" data-cat="Quality &amp; Compliance">
+          <span class="qtext">We understand what ISO 19443 adds on top of ISO 9001 for the nuclear supply chain.<span class="qwhy">ISO 19443 adds nuclear-specific expectations (independence of verification, traceability, safety culture) for items classed as Important To Nuclear Safety (ITNS).</span></span>
+        </label>
+        <label class="qrow" for="q7">
+          <input type="checkbox" id="q7" class="qbox" data-cat="Quality &amp; Compliance">
+          <span class="qtext">We have a document control and traceability system for parts and records.<span class="qwhy">Traceability is consistently the biggest practical gap SMEs discover once they start engaging with nuclear-specific requirements, so it is worth checking honestly now.</span></span>
+        </label><div class="catlabel">Leadership &amp; Governance</div><p class="catdesc">Whether safety and quality decisions have clear, visible ownership at the top.</p>
+        <label class="qrow" for="q8">
+          <input type="checkbox" id="q8" class="qbox" data-cat="Leadership &amp; Governance">
+          <span class="qtext">Senior leaders are visibly and personally involved in quality and safety decisions.<span class="qwhy">Visible involvement, not just sign-off, is what assessors and buyers are actually looking for here.</span></span>
+        </label>
+        <label class="qrow" for="q9">
+          <input type="checkbox" id="q9" class="qbox" data-cat="Leadership &amp; Governance">
+          <span class="qtext">We have clear governance for who signs off design, quality and safety-critical decisions.<span class="qwhy">Ambiguity about who has final authority on a safety-relevant decision is a common and serious gap in growing SMEs.</span></span>
+        </label><div class="catlabel">Human Performance</div><p class="catdesc">The everyday tools and habits that prevent small mistakes becoming big problems.</p>
+        <label class="qrow" for="q10">
+          <input type="checkbox" id="q10" class="qbox" data-cat="Human Performance">
+          <span class="qtext">We use error-prevention tools (checklists, self-checking, peer-checking) on critical tasks.<span class="qwhy">Simple tools like these are proven to catch mistakes before they become defects, and they cost very little to introduce.</span></span>
+        </label>
+        <label class="qrow" for="q11">
+          <input type="checkbox" id="q11" class="qbox" data-cat="Human Performance">
+          <span class="qtext">We have a formal process for investigating mistakes and near-misses, not just outcomes.<span class="qwhy">Investigating near-misses, not just actual failures, is what separates a mature operation from one that only reacts after harm has already occurred.</span></span>
+        </label><div class="catlabel">Supply Chain Readiness</div><p class="catdesc">How well you understand your own supply chain, capacity and exposure to risk.</p>
+        <label class="qrow" for="q12">
+          <input type="checkbox" id="q12" class="qbox" data-cat="Supply Chain Readiness">
+          <span class="qtext">We know our own supply chain well enough to answer a customer&#x27;s traceability questions.<span class="qwhy">Buyers will ask where your materials and sub-components come from, so being able to answer confidently and quickly is a real differentiator.</span></span>
+        </label>
+        <label class="qrow" for="q13">
+          <input type="checkbox" id="q13" class="qbox" data-cat="Supply Chain Readiness">
+          <span class="qtext">We have assessed our financial and operational capacity to take on nuclear-scale contracts.<span class="qwhy">This protects you as much as the buyer. Taking on more than you can safely deliver is a risk to your own business, not just theirs.</span></span>
+        </label>
+        <label class="qrow" for="q14">
+          <input type="checkbox" id="q14" class="qbox" data-cat="Supply Chain Readiness">
+          <span class="qtext">We understand basic export control and counterfeit-parts (CFSI) awareness.<span class="qwhy">Both are areas where a small, proactive awareness effort now prevents a much bigger problem later.</span></span>
+        </label><div class="catlabel">Security of Information</div><p class="catdesc">Protecting the sensitive technical and commercial information nuclear work involves.</p>
+        <label class="qrow" for="q15">
+          <input type="checkbox" id="q15" class="qbox" data-cat="Security of Information">
+          <span class="qtext">We have basic cyber security controls in place, for example aligned to Cyber Essentials.<span class="qwhy">The five Cyber Essentials control themes (firewalls, secure configuration, patching, access control, malware protection) are the recognised baseline expected across the sector.</span></span>
+        </label>
+        <label class="qrow" for="q16">
+          <input type="checkbox" id="q16" class="qbox" data-cat="Security of Information">
+          <span class="qtext">We control who can access sensitive technical and commercial information.<span class="qwhy">Limiting access to only those who need it is one of the simplest, lowest-cost controls available, and one of the most commonly overlooked in growing businesses.</span></span>
+        </label>
+</div>
+<div class="card">
+  <div class="h2b">Your result</div>
+  <div class="scoreband" id="scoreBand"></div>
+</div>
+<div class="card">
+  <div class="h2b">What to do with your result</div>
+  <ul class="afterlist">
+    <li>A lower score is not bad news. It simply tells you where a proper assessment is likely to add the most value first.</li>
+    <li>Share this with a colleague or two and compare answers. Differences in how people at different levels of the business see things are often the most useful finding of all.</li>
+    <li>Use the category names above to see where you are strongest and weakest. If quality, traceability or supply chain came up short, the <a href="traceability.html">Traceability &amp; Documentation</a> and <a href="counterfeit-parts.html">Spotting Counterfeit Parts</a> guides are good next reads.</li>
+    <li>Revisit this in three to six months. Readiness is something you build over time, and tracking the change is more useful than a single snapshot.</li>
+  </ul>
+</div>
+<div class="cta">
+  <h3>Ready to see where you really stand?</h3>
+  <p>This self-check gives you a feel for it. A conversation with one of our advisers gives you the detail: where your gaps are, what to fix first, and what it would take to get nuclear-ready.</p>
+  <p class="ctanext" id="ctaNext"></p>
+  <a class="btn" href="https://www.nuccol.co.uk/contact.html?utm_source=manufacturinguk&utm_medium=best-practice&utm_campaign=nuccol-sponsorship&utm_content=quiz" target="_blank" rel="noopener">Book a readiness conversation &rarr;</a>
+</div>
+</div>
+
+<script>
+(function(){
+  var BANDS = {"early": {"t": "Early stage", "d": "Nuclear readiness is still an early conversation for you, and that is completely normal. Most manufacturers start here, often with no nuclear-specific experience at all. The most useful next step is not to close every gap at once, but to understand the readiness framework properly, so you can see which of the seven areas above matter most for your business.", "next": "A short call is a good first step, just to talk through what nuclear work could mean for a business like yours."}, "building": {"t": "Building the foundations", "d": "You have real building blocks in place across several of the seven areas. The gaps that remain are likely specific and fixable rather than fundamental. This is a good stage to start engaging with sector events, and to gap-assess against ISO 19443 if you have not already.", "next": "You have solid foundations. A call can help pin down the two or three gaps worth closing first."}, "ready": {"t": "Well placed to engage", "d": "You look well positioned across most of the seven areas assessed here. The priority now shifts from foundational readiness to visibility: getting onto the Nuclear Supplier Database and building buyer relationships through events.", "next": "You look well placed. Let us talk about making it official and getting you in front of buyers."}};
+  var boxes = document.querySelectorAll('.qbox');
+  var TOTAL = boxes.length * 2;
+  var scoreEl = document.getElementById('scoreNum');
+  var maxEl = document.getElementById('scoreMax');
+  var barEl = document.getElementById('barInner');
+  var bandEl = document.getElementById('scoreBand');
+  var sbLabel = document.getElementById('sbLabel');
+  var ctaNext = document.getElementById('ctaNext');
+  maxEl.textContent = '/ ' + TOTAL;
+
+  function bandFor(score, total){
+    var pct = score/total;
+    if(pct <= 0.28){ return BANDS.early; }
+    else if(pct <= 0.66){ return BANDS.building; }
+    else { return BANDS.ready; }
+  }
+
+  function recalc(){
+    var score = 0;
+    boxes.forEach(function(b){ if(b.checked) score += 2; });
+    scoreEl.textContent = score;
+    var pct = Math.round((score/TOTAL)*100);
+    barEl.style.width = pct + '%';
+    var band = bandFor(score, TOTAL);
+    bandEl.innerHTML = '<b>' + band.t + '.</b> ' + band.d;
+    if(sbLabel) sbLabel.textContent = band.t;
+    if(ctaNext) ctaNext.textContent = band.next;
+    try{ localStorage.setItem('nuccol_quiz_state', JSON.stringify(Array.from(boxes).map(function(b){return b.checked;}))); }catch(e){}
+  }
+
+  boxes.forEach(function(b){ b.addEventListener('change', recalc); });
+
+  try{
+    var saved = JSON.parse(localStorage.getItem('nuccol_quiz_state') || 'null');
+    if(saved && saved.length === boxes.length){
+      boxes.forEach(function(b,i){ b.checked = !!saved[i]; });
+    }
+  }catch(e){}
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    boxes.forEach(function(b){ b.checked = false; });
+    recalc();
+  });
+
+  recalc();
+})();
+</script>
+
+
+
+<footer class="sitefoot">
+<div class="sf-inner">
+  <div>
+    <h4>NucCol</h4>
+    <p class="sf-desc">NucCol is a specialist supply chain solutions provider dedicated to enhancing the UK's nuclear and clean energy manufacturing capabilities.</p>
+    <address class="sf-addr">Unit 8, Riverside Court<br>Riverside Road, Pride Park<br>Derby, DE24 8HY</address>
+  </div>
+  <div>
+    <h4>Services</h4>
+    <a href="/services.html">Supply Chain Development</a>
+    <a href="/services.html">Manufacturing Innovation</a>
+    <a href="/services.html">IT Services</a>
+    <a href="/events.html">Networking &amp; Events</a>
+    <a href="/services.html">People Services</a>
+  </div>
+  <div>
+    <h4>Company</h4>
+    <a href="/about.html">Who We Are</a>
+    <a href="/markets.html">Markets</a>
+    <a href="/who-we-work-with.html">Who We Work With</a>
+    <a href="/f4n.html">F4N Programme</a>
+    <a href="/work-with-us.html">Work With Us</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+  <div>
+    <h4>Connect</h4>
+    <a href="https://www.linkedin.com/company/nuccol" target="_blank" rel="noopener">LinkedIn &#8599;</a>
+    <a href="mailto:enquiries@nuccol.co.uk">enquiries@nuccol.co.uk</a>
+    <a href="/members.html">Members Login</a>
+  </div>
+</div>
+<div class="sf-bottom">
+  <span>&copy; 2026 NucCol, Nuclear Collaboration Ltd. All rights reserved.</span>
+  <span><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms-of-use.html">Terms of Use</a></span>
+</div>
+</footer>
+
+</body>
+</html>
