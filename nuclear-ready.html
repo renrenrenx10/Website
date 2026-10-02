@@ -314,13 +314,16 @@ h3.h3{font-family:var(--font-head); font-size:19px; font-weight:700; text-transf
     else { return BANDS.ready; }
   }
 
+  var started=false, completedFired=false;
   function recalc(){
-    var score = 0;
-    boxes.forEach(function(b){ if(b.checked) score += 2; });
+    var score = 0, answered = 0;
+    boxes.forEach(function(b){ if(b.checked){ score += 2; answered++; } });
     scoreEl.textContent = score;
+    if(answered>0 && !started){ started=true; if(window.nuccolTrack) window.nuccolTrack('quiz_start'); }
     var pct = Math.round((score/TOTAL)*100);
     barEl.style.width = pct + '%';
     var band = bandFor(score, TOTAL);
+    if(answered===boxes.length && !completedFired){ completedFired=true; if(window.nuccolTrack) window.nuccolTrack('quiz_complete', band.t); }
     bandEl.innerHTML = '<b>' + band.t + '.</b> ' + band.d;
     if(sbLabel) sbLabel.textContent = band.t;
     if(ctaNext) ctaNext.textContent = band.next;
@@ -384,5 +387,32 @@ h3.h3{font-family:var(--font-head); font-size:19px; font-weight:700; text-transf
 </div>
 </footer>
 
+
+<script>
+/* NucCol public-page analytics -> Supabase public_events. Anonymous,
+   per-visit (sessionStorage) id, no cookies, no personal data. Fails silent. */
+(function(){
+  var URL="https://qkyvmtouwrzrcyagkheo.supabase.co", KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXZtdG91d3J6cmN5YWdraGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODQzNjMsImV4cCI6MjA5MDk2MDM2M30.gKEgkVA-VjOnS_084W79kpzOdZhFQkhFp63MAe_FTd4", PAGE="quiz";
+  function vid(){try{var k="nuccol_visit_id",v=sessionStorage.getItem(k);
+    if(!v){v=Date.now().toString(36)+Math.random().toString(36).slice(2,10);sessionStorage.setItem(k,v);}
+    return v;}catch(e){return "novisit";}}
+  function qp(n){try{return new URLSearchParams(location.search).get(n);}catch(e){return null;}}
+  function send(type,detail){try{
+    fetch(URL+"/rest/v1/public_events",{method:"POST",keepalive:true,
+      headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+      body:JSON.stringify({visit_id:vid(),page:PAGE,event_type:type,detail:detail||null,
+        referrer:document.referrer||null,utm_source:qp("utm_source"),utm_medium:qp("utm_medium"),
+        utm_campaign:qp("utm_campaign"),utm_content:qp("utm_content")})}).catch(function(){});
+  }catch(e){}}
+  window.nuccolTrack=send;
+  send("view");
+  document.addEventListener("click",function(e){
+    var a=e.target.closest?e.target.closest("a"):null; if(!a)return;
+    var h=a.getAttribute("href")||"";
+    if(h.indexOf("contact.html")>-1) send("contact_click",(a.textContent||"").trim().slice(0,60));
+    else if(/\.pdf($|\?)/i.test(h)) send("download",h.split("/").pop().split("?")[0]);
+  },true);
+})();
+</script>
 </body>
 </html>
