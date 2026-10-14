@@ -30,7 +30,7 @@
     #cs-tagline{font-size:1.05rem;font-weight:300;line-height:1.7;color:rgba(232,238,246,0.82);max-width:680px}
 
     main{max-width:1160px;margin:0 auto;padding:56px 48px 20px}
-    .cs-photo{width:100%;max-height:440px;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-bottom:48px;display:none}
+    .cs-photo{width:100%;max-height:640px;object-fit:contain;background:var(--light);border-radius:8px;border:1px solid var(--border);margin-bottom:48px;display:none}
 
     .cs-layout{display:grid;grid-template-columns:1fr 320px;gap:64px;align-items:start}
     .cs-main{min-width:0}
@@ -294,16 +294,6 @@
       img.src = cs.photo_url;
       img.alt = cs.company_name || '';
       img.style.display = 'block';
-      // Portrait photos (e.g. a team shot taller than it is wide) get
-      // cropped hard by object-fit:cover in this wide, short hero box —
-      // centring on the middle band cuts heads off the top. Bias the crop
-      // upward for anything portrait-oriented; leave landscape photos
-      // centred as before.
-      img.addEventListener('load', () => {
-        if (img.naturalHeight > img.naturalWidth) {
-          img.style.objectPosition = 'center 12%';
-        }
-      }, { once: true });
     }
 
     const bodyParts = (cs.body || []).map(p => `<p>${esc(p)}</p>`);
