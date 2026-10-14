@@ -258,12 +258,20 @@
       const granted = rows.filter(r => r.section === 'Granted').sort((a, b) => (a.sort || 0) - (b.sort || 0));
       const journey = rows.filter(r => r.section === 'Journey').sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
-      const renderCards = (items) => items.map(c => `
-        <a href="${escAttr(c.linkUrl || '#')}" target="${c.linkUrl && c.linkUrl !== '#' ? '_blank' : '_self'}" rel="noopener" class="f4n-company-card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;border:1px solid #dde4ee;border-radius:6px;background:#fff;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 18px rgba(41,182,232,0.12)'" onmouseout="this.style.boxShadow='none'">
+      // A published case study takes priority over the plain website link —
+      // it's a page on this site, not an outbound link, but still opens in
+      // a new tab so the directory grid stays where it was.
+      const renderCards = (items) => items.map(c => {
+        const href = c.caseStudyUrl || c.linkUrl || '#';
+        const isLink = href !== '#';
+        return `
+        <a href="${escAttr(href)}" target="${isLink ? '_blank' : '_self'}" rel="noopener" class="f4n-company-card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;border:1px solid #dde4ee;border-radius:6px;background:#fff;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 18px rgba(41,182,232,0.12)'" onmouseout="this.style.boxShadow='none'">
           ${c.imageUrl ? `<img src="${escAttr(c.imageUrl)}" alt="${escAttr(c.title || '')}" loading="lazy" style="max-height:60px;max-width:160px;object-fit:contain;margin-bottom:10px">` : ''}
           <div style="font-weight:600;font-size:.85rem;text-align:center;color:var(--navy)">${escHtml(c.title || '')}</div>
           ${c.body ? `<div style="font-size:.75rem;color:#6a7a90;text-align:center;margin-top:4px;line-height:1.4">${escHtml(c.body)}</div>` : ''}
-        </a>`).join('');
+          ${c.caseStudyUrl ? `<div style="font-size:.72rem;font-weight:700;color:var(--amber);margin-top:8px">Read Case Study →</div>` : ''}
+        </a>`;
+      }).join('');
 
       const grantedEl = document.getElementById('f4n-granted-grid');
       if (grantedEl && granted.length) grantedEl.innerHTML = renderCards(granted);
