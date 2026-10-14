@@ -714,6 +714,45 @@
           grid.appendChild(card);
         });
     }
+
+    // Wire up "Read Case Study" links on existing static Granted-section
+    // cards (e.g. Backer Heatrod) that don't yet have an outbound website
+    // link — these cards are hand-coded in the page HTML and were never
+    // touched by the block above, which only ever appends new Journey
+    // cards. We only convert cards with no existing <a> wrapper, so a
+    // company that already links out to its own website is left alone.
+    const grantedGrid = document.getElementById('f4n-granted-grid');
+    if (grantedGrid) {
+      const byName = {};
+      rows.filter(x => x.section === 'Granted' && x.title).forEach(x => { byName[x.title.trim().toLowerCase()] = x; });
+
+      grantedGrid.querySelectorAll('.company-card.company-card-nolink').forEach(oldCard => {
+        const nameEl = oldCard.querySelector('.company-name');
+        if (!nameEl) return;
+        const match = byName[nameEl.textContent.trim().toLowerCase()];
+        if (!match || !match.caseStudyUrl) return;
+        if (oldCard.querySelector('.company-link-indicator')) return; // already has one
+
+        // The whole card becomes the link, so the indicator is a plain
+        // <span> here (not a nested <a>) — matching the "Visit Website"
+        // span used for linkUrl-only cards elsewhere on this page.
+        const newCard = document.createElement('a');
+        newCard.className = 'company-card';
+        newCard.href = match.caseStudyUrl;
+        newCard.target = '_blank';
+        newCard.rel = 'noopener';
+        newCard.innerHTML = oldCard.innerHTML;
+        const body = newCard.querySelector('.company-body');
+        if (body) {
+          const indicator = document.createElement('span');
+          indicator.className = 'company-link-indicator';
+          indicator.style.color = 'var(--amber)';
+          indicator.textContent = 'Read Case Study';
+          body.appendChild(indicator);
+        }
+        oldCard.replaceWith(newCard);
+      });
+    }
   } catch(e) {}
 })();
 </script>
