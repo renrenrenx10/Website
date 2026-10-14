@@ -294,6 +294,16 @@
       img.src = cs.photo_url;
       img.alt = cs.company_name || '';
       img.style.display = 'block';
+      // Portrait photos (e.g. a team shot taller than it is wide) get
+      // cropped hard by object-fit:cover in this wide, short hero box —
+      // centring on the middle band cuts heads off the top. Bias the crop
+      // upward for anything portrait-oriented; leave landscape photos
+      // centred as before.
+      img.addEventListener('load', () => {
+        if (img.naturalHeight > img.naturalWidth) {
+          img.style.objectPosition = 'center 12%';
+        }
+      }, { once: true });
     }
 
     const bodyParts = (cs.body || []).map(p => `<p>${esc(p)}</p>`);
