@@ -1636,6 +1636,10 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
         <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Company Description</label>
         <textarea id="nr-description" rows="4" placeholder="A clear, public-facing summary of what your company does and its nuclear expertise…" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
       </div>
+        <div style="margin-bottom:13px">
+          <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Full Description <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#8a9bb0">&mdash; optional, shown under your capabilities</span></label>
+          <textarea id="nr-full-description" rows="8" placeholder="The longer version: your history, facilities, accreditations and what sets you apart. Leave a blank line between paragraphs." style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
+        </div>
       <div style="margin-bottom:13px">
         <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Website</label>
         <input id="nr-website" type="url" placeholder="https://www.yourcompany.co.uk" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
@@ -3638,7 +3642,7 @@ async function nrOnCompanySelect(companyId) {
     return null;
   };
   const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
-  set('nr-description', pick('description'));
+  set('nr-description', pick('description')); set('nr-full-description', pick('full_description'));
   set('nr-website', pick('website'));
   set('nr-contact-name', pick('contact_name'));
   set('nr-contact-phone', pick('contact_phone'));
@@ -3697,6 +3701,7 @@ async function submitNRUpdate() {
     company_id:    companyId,
     company_name:  companyName,
     description:   document.getElementById('nr-description').value.trim(),
+    full_description: document.getElementById('nr-full-description').value.trim(),
     website:       document.getElementById('nr-website').value.trim(),
     contact_name:  document.getElementById('nr-contact-name').value.trim(),
     contact_phone: document.getElementById('nr-contact-phone').value.trim(),
