@@ -1641,6 +1641,11 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
           <textarea id="nr-full-description" rows="8" placeholder="The longer version: your history, facilities, accreditations and what sets you apart. Leave a blank line between paragraphs." style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);resize:vertical;box-sizing:border-box;font-family:'Barlow',sans-serif;line-height:1.55"></textarea>
         </div>
       <div style="margin-bottom:13px">
+        <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Links <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#8a9bb0">— case studies, press, anything about you. Up to 8.</span></label>
+        <div id="nr-links-rows"></div>
+        <button type="button" id="nr-links-add" style="margin-top:6px;background:none;border:1px solid #dde4ee;border-radius:6px;padding:6px 12px;font-size:.8rem;color:var(--navy);cursor:pointer">+ Add a link</button>
+      </div>
+      <div style="margin-bottom:13px">
         <label style="display:block;font-size:.72rem;font-weight:700;color:#6a7a90;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Website</label>
         <input id="nr-website" type="url" placeholder="https://www.yourcompany.co.uk" style="width:100%;background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:10px 12px;font-size:.88rem;color:var(--navy);box-sizing:border-box"/>
       </div>
@@ -3521,6 +3526,67 @@ function nrUpdateTotalCount() {
   if (el) el.textContent = total + ' selected';
 }
 
+/* Member links: repeatable label + URL rows, stored as [{label,url}].
+   The public page sanitises every URL through safeUrl() before rendering,
+   so nothing here is trusted on the way out -- this is only a convenience
+   check so a member sees an obvious mistake while they are still in the form. */
+const NR_LINKS_MAX = 8;
+
+function nrLinkRow(label, url) {
+  const wrap = document.createElement('div');
+  wrap.className = 'nr-link-row';
+  wrap.style.cssText = 'display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;margin-bottom:8px';
+  const fld = 'background:#f4f7fb;border:1px solid #dde4ee;border-radius:6px;padding:9px 11px;font-size:.85rem;color:var(--navy);box-sizing:border-box;width:100%';
+  const l = document.createElement('input');
+  l.type = 'text'; l.className = 'nr-link-label'; l.placeholder = 'Label, e.g. SMR case study';
+  l.maxLength = 120; l.style.cssText = fld; l.value = label || '';
+  const u = document.createElement('input');
+  u.type = 'text'; u.className = 'nr-link-url'; u.placeholder = 'https://…';
+  u.style.cssText = fld; u.value = url || '';
+  const x = document.createElement('button');
+  x.type = 'button'; x.textContent = 'Remove'; x.setAttribute('aria-label', 'Remove this link');
+  x.style.cssText = 'background:none;border:1px solid #dde4ee;border-radius:6px;padding:0 11px;font-size:.78rem;color:#6a7a90;cursor:pointer';
+  x.addEventListener('click', () => { wrap.remove(); nrLinksSyncAdd(); });
+  wrap.append(l, u, x);
+  return wrap;
+}
+
+function nrLinksSyncAdd() {
+  const rows = document.querySelectorAll('#nr-links-rows .nr-link-row').length;
+  const btn = document.getElementById('nr-links-add');
+  if (btn) btn.style.display = rows >= NR_LINKS_MAX ? 'none' : '';
+}
+
+function nrRenderLinks(value) {
+  const box = document.getElementById('nr-links-rows');
+  if (!box) return;
+  let list = value;
+  if (typeof list === 'string') { try { list = JSON.parse(list); } catch (e) { list = []; } }
+  if (!Array.isArray(list)) list = [];
+  box.innerHTML = '';
+  list.slice(0, NR_LINKS_MAX).forEach(l => box.appendChild(nrLinkRow(l && l.label, l && l.url)));
+  if (!box.children.length) box.appendChild(nrLinkRow('', ''));
+  nrLinksSyncAdd();
+}
+
+function nrSerializeLinks() {
+  const out = [];
+  document.querySelectorAll('#nr-links-rows .nr-link-row').forEach(r => {
+    const label = (r.querySelector('.nr-link-label') || {}).value || '';
+    const url   = (r.querySelector('.nr-link-url')   || {}).value || '';
+    if (!url.trim()) return;                       // a label with no URL is nothing
+    out.push({ label: label.trim().slice(0, 120), url: url.trim() });
+  });
+  return out.slice(0, NR_LINKS_MAX);
+}
+
+document.addEventListener('click', e => {
+  if (e.target && e.target.id === 'nr-links-add') {
+    const box = document.getElementById('nr-links-rows');
+    if (box && box.children.length < NR_LINKS_MAX) { box.appendChild(nrLinkRow('', '')); nrLinksSyncAdd(); }
+  }
+});
+
 function nrSerializeSelections() {
   const out = {};
   NR_GROUPS.forEach(g => { if (nrSelections[g.key].size) out[g.key] = [...nrSelections[g.key]]; });
@@ -3642,6 +3708,7 @@ async function nrOnCompanySelect(companyId) {
     return null;
   };
   const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+  nrRenderLinks(pick('links'));
   set('nr-description', pick('description')); set('nr-full-description', pick('full_description'));
   set('nr-website', pick('website'));
   set('nr-contact-name', pick('contact_name'));
@@ -3698,6 +3765,7 @@ async function submitNRUpdate() {
   const companyName = sel.options[sel.selectedIndex]?.text || '';
   const payload = {
     user_id:       session.user.id,
+    links:         nrSerializeLinks(),
     company_id:    companyId,
     company_name:  companyName,
     description:   document.getElementById('nr-description').value.trim(),
