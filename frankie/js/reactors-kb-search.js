@@ -11,7 +11,7 @@
 // does not touch loadKnowledgeBase()/searchKnowledgeBase(), so this module
 // can't perturb the main chat's default retrieval path. WORKER_URL/
 // authHeaders() are duplicated here rather than imported, matching the
-// existing pattern in claude.js/groq.js.
+// existing pattern in claude.js and other Worker-calling modules (groq.js removed — unused, see blueprint v20 §9 groq dead-code item).
 //
 // Two-stage search, chosen over reusing retrieval.js's per-chunk regex scan
 // as-is: at 61k chunks / ~22M words, scanning the full corpus with a fresh

@@ -402,7 +402,10 @@ function pvOpenBuilding(b){
 /* ---- drawer: plant overview (home) ---- */
 function pvKV(k,v){return v?('<div class="pv-di-kv"><span class="k">'+esc(k)+'</span><span class="v">'+esc(v)+'</span></div>'):'';}
 function pvRenderHome(sel){
-  const info=PLANT_INFO[pvInfoKey(sel)]||{};
+  let info=PLANT_INFO[pvInfoKey(sel)]||{};
+  if(sel==='GW'||sel==='SMR'){ // blueprint v20 #5 fix: compute live instead of stale hand-typed figures
+    info=Object.assign({},info,pvCompositeStats(sel,sel==='GW'?PV_GW_SET:PV_SMR_SET));
+  }
   const content=document.getElementById('drill-content');
   document.getElementById('drill-title-main').textContent=info.full_name||pvSelLabel();
   document.getElementById('drill-title-sub').textContent=(info.vendor||'')+(info.status?(' · '+info.status):'');
@@ -534,6 +537,28 @@ function pvFilterSet(setArr){
       if(comps.length)syss.push(Object.assign({},sys,{components:comps}));});
     if(syss.length)locs.push(Object.assign({},loc,{systems:syss}));});
     if(locs.length)out.push(Object.assign({},site,{locations:locs}));});return out;}
+
+/* ---- live composite stats (blueprint v20 #5 fix) ----
+   PLANT_INFO's bom_rows/mix/summary for Generic_GW_v2/Generic_SMR_v2 used to be
+   static, hand-typed numbers that had to be manually refreshed after every
+   BOM/DSE classification pass (v20 §9 #5) and went stale in between passes.
+   This computes them live from PLANT_TREE on first use and caches the result
+   for the rest of the session (PLANT_TREE itself never changes after load). */
+const _pvCompositeStatsCache={};
+function pvCompositeStats(setKey,setArr){
+  if(_pvCompositeStatsCache[setKey])return _pvCompositeStatsCache[setKey];
+  const filtered=pvFilterSet(setArr);
+  const perReactor={};let total=0;
+  filtered.forEach(site=>site.locations.forEach(loc=>loc.systems.forEach(sys=>sys.components.forEach(comp=>comp.subcomponents.forEach(sub=>{
+    (sub.instances||[]).forEach(inst=>{if(setArr.includes(inst.reactor)){perReactor[inst.reactor]=(perReactor[inst.reactor]||0)+1;total++;}});
+  })))));
+  const mix=Object.entries(perReactor).sort((a,b)=>b[1]-a[1]).map(([name,n])=>[name,Math.round(n/total*100)]);
+  const summary=mix.length?('A composite '+(setKey==='GW'?'gigawatt-class':'small-modular')+' plant built from all '+setArr.length+' '+
+    (setKey==='GW'?'large':'SMR/advanced')+' designs. Make-up by component share: '+mix.map(m=>m[0]+' '+m[1]+'%').join(', ')+'.'):'';
+  const result={bom_rows:String(total),mix,summary};
+  _pvCompositeStatsCache[setKey]=result;
+  return result;
+}
 
 
 
