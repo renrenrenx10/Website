@@ -1603,6 +1603,11 @@ body{font-family:'Barlow',sans-serif;background:#f4f7fb;color:var(--navy);overfl
     <div id="nr-approved-banner" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:#166534">
       <strong>✓ Last update approved</strong> on <span id="nr-approved-date"></span> and is now live in the Explorer.
     </div>
+    <div id="nr-draft-banner" style="display:none;background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:#1e3a8a">
+      <strong>✍ Unsaved changes restored</strong> — we’ve put back what you had entered on <span id="nr-draft-date"></span>. Check it over, then submit it for review.
+      <span id="nr-draft-logo-note" style="display:none"><br>Your logo selection could not be saved — please choose the file again if you were changing it.</span>
+      <br><button type="button" onclick="nrDraftDiscard()" style="margin-top:10px;background:none;border:1px solid #93c5fd;border-radius:6px;padding:5px 12px;font-size:.78rem;color:#1e3a8a;cursor:pointer">Discard and start from our records</button>
+    </div>
 
     <!-- Logo -->
     <div style="background:#fff;border:1px solid #dde4ee;border-radius:10px;padding:22px;margin-bottom:18px">
@@ -3555,6 +3560,7 @@ function nrLinksSyncAdd() {
   const rows = document.querySelectorAll('#nr-links-rows .nr-link-row').length;
   const btn = document.getElementById('nr-links-add');
   if (btn) btn.style.display = rows >= NR_LINKS_MAX ? 'none' : '';
+  if (typeof nrDraftQueueSave === 'function') nrDraftQueueSave();
 }
 
 function nrRenderLinks(value) {
@@ -3635,10 +3641,165 @@ function nrSyncCheckboxDom() {
   });
 }
 
+
+// ── DRAFT AUTOSAVE ───────────────────────────────────────────────────────────
+// [2026-11-02] This form used to hold everything in the DOM until the single
+// insert at the end of submitNRUpdate(), so any interruption lost the lot: a
+// reload, a sleeping laptop, or — the case that prompted this — a corporate
+// browser-isolation layer ending its remote session roughly ten minutes into
+// an edit. Every field is now mirrored to localStorage as it is typed and
+// offered back on return.
+const NR_DRAFT_PREFIX     = 'nr_draft_v1';
+const NR_DRAFT_MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;   // older drafts are dropped unread
+const NR_DRAFT_FIELDS = ['nr-description','nr-full-description','nr-website',
+  'nr-contact-name','nr-contact-phone','nr-contact-email','nr-linkedin',
+  'nr-region','nr-employees'];
+
+let nrDraftUserId = null;
+let nrDraftKey    = null;   // null until a company is selected
+let nrDraftDirty  = false;  // arms the beforeunload guard
+let nrDraftTimer  = null;
+let nrDraftReady  = false;  // false during the server prefill, so it isn't saved back
+
+// localStorage throws outright in some privacy modes. A draft is a safety net,
+// never a dependency, so every access is guarded and failure is silent.
+function nrDraftStore(key, value) {
+  try {
+    if (value === null) localStorage.removeItem(key); else localStorage.setItem(key, value);
+    return true;
+  } catch (e) { return false; }
+}
+function nrDraftFetch(key) {
+  try { return localStorage.getItem(key); } catch (e) { return null; }
+}
+
+function nrDraftArm(companyId) {
+  nrDraftReady = false;
+  nrDraftKey = (nrDraftUserId && companyId)
+    ? NR_DRAFT_PREFIX + ':' + nrDraftUserId + ':' + companyId
+    : null;
+}
+
+function nrDraftCollect() {
+  const fields = {};
+  NR_DRAFT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) fields[id] = el.value;
+  });
+  return {
+    v: 1,
+    savedAt: Date.now(),
+    fields: fields,
+    links: nrSerializeLinks(),
+    capabilities: nrSerializeSelections(),
+    // A File object can't be serialised, so the logo is flagged rather than kept.
+    logoPending: !!nrLogoFile
+  };
+}
+
+function nrDraftSave() {
+  if (!nrDraftKey || !nrDraftReady) return;
+  if (!nrDraftStore(nrDraftKey, JSON.stringify(nrDraftCollect()))) return;
+  nrDraftDirty = true;
+}
+
+// Typing shouldn't write on every keystroke, and the taxonomy is 380-odd boxes.
+function nrDraftQueueSave() {
+  if (!nrDraftKey || !nrDraftReady) return;
+  const keyAtQueue = nrDraftKey;
+  clearTimeout(nrDraftTimer);
+  nrDraftTimer = setTimeout(() => { if (nrDraftKey === keyAtQueue) nrDraftSave(); }, 800);
+}
+
+function nrDraftClear() {
+  clearTimeout(nrDraftTimer);
+  if (nrDraftKey) nrDraftStore(nrDraftKey, null);
+  nrDraftDirty = false;
+}
+
+function nrDraftApply(draft) {
+  const f = draft.fields || {};
+  Object.keys(f).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = f[id];
+  });
+  if (draft.links) nrRenderLinks(draft.links);
+  if (draft.capabilities) {
+    // Wipe first: nrSerializeSelections omits empty groups, so without this a
+    // group the member had cleared would keep the prefilled server values.
+    NR_GROUPS.forEach(g => nrSelections[g.key] = new Set());
+    nrRestoreSelections(draft.capabilities);
+  }
+}
+
+function nrDraftMaybeRestore() {
+  const banner = document.getElementById('nr-draft-banner');
+  if (!nrDraftKey) { nrDraftReady = true; return; }
+
+  const raw = nrDraftFetch(nrDraftKey);
+  let draft = null;
+  if (raw) { try { draft = JSON.parse(raw); } catch (e) { draft = null; } }
+  if (draft && draft.savedAt && (Date.now() - draft.savedAt) > NR_DRAFT_MAX_AGE_MS) {
+    nrDraftStore(nrDraftKey, null);
+    draft = null;
+  }
+
+  if (draft) {
+    nrDraftApply(draft);
+    nrDraftDirty = true;
+    if (banner) {
+      const when = document.getElementById('nr-draft-date');
+      if (when && draft.savedAt) when.textContent = new Date(draft.savedAt)
+        .toLocaleString('en-GB', { day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' });
+      const logoNote = document.getElementById('nr-draft-logo-note');
+      if (logoNote) logoNote.style.display = draft.logoPending ? '' : 'none';
+      banner.style.display = 'block';
+    }
+  } else if (banner) {
+    banner.style.display = 'none';
+  }
+  nrDraftReady = true;
+}
+
+// Throw the draft away and show the staff-maintained record instead.
+function nrDraftDiscard() {
+  nrDraftClear();
+  const banner = document.getElementById('nr-draft-banner');
+  if (banner) banner.style.display = 'none';
+  nrDraftReady = false;
+  // nrOnCompanySelect only sets a field when the record has a value for it, so
+  // blank them here or discarded text would survive in whatever the record
+  // leaves empty.
+  NR_DRAFT_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  NR_GROUPS.forEach(g => nrSelections[g.key] = new Set());
+  nrSyncCheckboxDom();
+  NR_GROUPS.forEach(g => nrUpdateSelCount(g.key));
+  nrUpdateTotalCount();
+  nrRenderLinks([]);
+  const sel = document.getElementById('nr-company-select');
+  if (sel && sel.value) nrOnCompanySelect(sel.value);
+}
+
+// Delegated so dynamically added link rows are covered too.
+document.addEventListener('input', e => {
+  if (e.target && e.target.closest && e.target.closest('#nrt-profile')) nrDraftQueueSave();
+});
+document.addEventListener('change', e => {
+  if (e.target && e.target.closest && e.target.closest('#nrt-profile')) nrDraftQueueSave();
+});
+
+window.addEventListener('beforeunload', e => {
+  if (!nrDraftDirty) return;
+  e.preventDefault();
+  e.returnValue = '';
+  return '';
+});
+
 // ── NR SECTION INIT ───────────────────────────────────────────────────────────
 async function loadNRSection() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) return;
+  nrDraftUserId = session.user.id;
   nrBuildTaxonomy();
   await nrLoadCompanyPicker(session.user.id);
   nrLoadNewsHistory(session);
@@ -3686,6 +3847,7 @@ async function nrLoadCompanyPicker(userId) {
 
 async function nrOnCompanySelect(companyId) {
   if (!companyId) return;
+  nrDraftArm(companyId);   // suspends draft writes until the prefill is done
   // Live company record (staff-maintained, incl. capabilities/logo pulled from
   // the DataVault supplier DB via SCC).
   const { data: company } = await db.from('nr_companies')
@@ -3727,6 +3889,8 @@ async function nrOnCompanySelect(companyId) {
     const ph  = document.getElementById('nr-logo-placeholder');
     if (img) { img.src = logoUrl; img.style.display = ''; if (ph) ph.style.display = 'none'; }
   }
+
+  nrDraftMaybeRestore();
 }
 
 function nrPreviewLogo(input) {
@@ -3784,9 +3948,12 @@ async function submitNRUpdate() {
   btn.textContent = 'Submitting\u2026';
   const { error } = await db.from('nr_profile_updates').insert(payload);
   if (error) {
-    showNRMsg('Something went wrong: ' + error.message, '#c0392b');
+    showNRMsg('Something went wrong: ' + error.message + ' \u2014 your changes are saved on this device, so you can sign in again and resubmit without retyping them.', '#c0392b');
     btn.disabled = false; btn.textContent = 'Submit for Review';
   } else {
+    nrDraftClear();
+    const dbn = document.getElementById('nr-draft-banner');
+    if (dbn) dbn.style.display = 'none';
     showNRMsg('\u2713 Profile update submitted! NucCol will review it within 2 working days.', '#166534', '#f0fdf4', '#86efac');
     btn.textContent = 'Submitted';
     const pb = document.getElementById('nr-pending-banner');
