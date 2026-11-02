@@ -3830,7 +3830,20 @@ async function nrLoadCompanyPicker(userId) {
   if (!companies.length) {
     sel.innerHTML = '<option value="">No company linked to your account</option>';
     if (note) note.textContent = '— please contact fit4@nuccol.co.uk and we’ll link your account';
-    ['nr-submit-btn','nrn-submit-btn'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
+    // [2026-11-02] These buttons carry their colours inline, so disabling them
+    // left them looking live: members filled in the whole form, clicked, and got
+    // nothing back at all. Grey them out and say why next to the button itself —
+    // the note above is #aab grey at the top of a long form and was being missed.
+    ['nr-submit-btn','nrn-submit-btn'].forEach(id => {
+      const b = document.getElementById(id);
+      if (!b) return;
+      b.disabled = true;
+      b.style.background = '#e2e8f0';
+      b.style.color      = '#8a9bb0';
+      b.style.cursor     = 'not-allowed';
+      b.textContent      = 'Account not linked';
+    });
+    showNRMsg('Your account isn’t linked to a company yet, so this form can’t be submitted. Please email fit4@nuccol.co.uk and we’ll link it — then you can fill this in and submit.', '#c0392b', '#fef2f2', '#fca5a5');
     return;
   }
 
