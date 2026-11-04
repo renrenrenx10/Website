@@ -3439,6 +3439,20 @@ const NR_GROUPS = [
 // Selections state
 let nrSelections = {};
 NR_GROUPS.forEach(g => nrSelections[g.key] = new Set());
+
+// [2026-11-04] Copied from MARKET_MAP in nr-data.js. nr_companies.markets holds
+// DataVault labels ("Rail", "Oil and Gas"); the Explorer resolves them to the
+// canonical taxonomy names before display, and so must this form.
+const NR_MARKET_MAP = {
+  'Aerospace': 'Aerospace - Civil and Defence',
+  'Chemical': 'Petrochemical & Refining',
+  'Defence': 'Nuclear Defence - Naval Marine',
+  'Medical & Pharmaceuticals': 'Pharmaceutical & Medical',
+  'Oil and Gas': 'Oil & Gas including LNG',
+  'Rail': 'Rail & Transport',
+  'Renewables': 'Renewables - (Wind, Tidal, Solar, Biomass etc.)',
+  'Hydrogen': 'Renewables - (Wind, Tidal, Solar, Biomass etc.)'
+};
 let nrLogoFile = null;
 const SUPA_URL_NR = 'https://qkyvmtouwrzrcyagkheo.supabase.co';
 
@@ -3895,6 +3909,26 @@ async function nrOnCompanySelect(companyId) {
 
   const caps = pick('capabilities');
   if (caps) nrRestoreSelections(caps);
+
+  // [2026-11-04] The markets column was invisible here: whatever nr_companies
+  // .markets held, this form showed no markets ticked. A member ticked their
+  // own, and mapCompany() in nr-data.js then preferred the grouped group over
+  // the column for display — so anything they were never shown silently
+  // disappeared from their public profile. P.A.R.C. would have lost Nuclear
+  // Civil that way. Seed from the column when the grouped object has no
+  // markets of its own; a member unticking one still removes it, because the
+  // group stays non-empty.
+  if (!nrSelections.markets.size && company && Array.isArray(company.markets)) {
+    const opts = (typeof NR_TAXONOMY !== 'undefined' && NR_TAXONOMY.markets) || [];
+    company.markets.forEach(m => {
+      const canon = String(NR_MARKET_MAP[m] || m).toLowerCase();
+      const hit = opts.find(it => it.toLowerCase() === canon);
+      if (hit) nrSelections.markets.add(hit);
+    });
+    nrSyncCheckboxDom();
+    nrUpdateSelCount('markets');
+    nrUpdateTotalCount();
+  }
 
   const logoUrl = pick('logo_url');
   if (logoUrl) {
