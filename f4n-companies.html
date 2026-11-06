@@ -681,15 +681,31 @@
   try {
     const BASE = 'https://nuccolmedia.blob.core.windows.net/content';
     const SAS  = 'sp=r&st=2026-09-24T11:03:39Z&se=2028-01-03T20:18:39Z&spr=https&sv=2026-02-06&sr=c&sig=AUxbKVwcZmCmboog7jq3GDiuGEBNRQBQ7B89IIZY5m8%3D';
-    const r = await fetch(`${BASE}/site-pages/f4n-companies.json?${SAS}`);
+    // &t= defeats the browser/CDN cache. Without it this read can return a
+    // stale copy of the JSON while nuccol-cms.js — which already cache-busts
+    // in loadBlob() — renders the current one, so the page contradicted
+    // itself: the heading said 24/13 while the grids showed 37/18.
+    const r = await fetch(`${BASE}/site-pages/f4n-companies.json?${SAS}&t=${Date.now()}`);
     if (!r.ok) return;
     const rows = await r.json();
-    const granted = rows.filter(x => x.section === 'Granted').length;
-    const journey = rows.filter(x => x.section === 'Journey').length;
-    const gc = document.getElementById('f4n-page-granted-count');
-    const jc = document.getElementById('f4n-page-journey-count');
-    if (gc) gc.textContent = '- ' + granted;
-    if (jc) jc.textContent = '- ' + journey;
+    // Count the cards actually in each grid rather than re-reading the JSON.
+    // nuccol-cms.js replaces these grids asynchronously and the block below
+    // appends more, so a separate count could never be trusted to agree with
+    // what the visitor sees. Observing the grid means the heading always
+    // matches the cards on screen, and hidden companies drop out for free.
+    const countInto = (gridId, spanId) => {
+      const grid = document.getElementById(gridId);
+      const span = document.getElementById(spanId);
+      if (!grid || !span) return;
+      const update = () => {
+        const n = grid.querySelectorAll('.company-card, .f4n-company-card').length;
+        span.textContent = n ? '- ' + n : '';
+      };
+      update();
+      new MutationObserver(update).observe(grid, { childList: true });
+    };
+    countInto('f4n-granted-grid', 'f4n-page-granted-count');
+    countInto('f4n-journey-grid', 'f4n-page-journey-count');
 
     // Append any staff-published Journey rows (e.g. approved member F4N Journey
     // case studies) that aren't already represented as a static card above.
@@ -698,7 +714,7 @@
       const existingNames = [...grid.querySelectorAll('.company-name')].map(el => el.textContent.trim().toLowerCase());
       const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
       rows
-        .filter(x => x.section === 'Journey' && x.title && !existingNames.includes(x.title.trim().toLowerCase()))
+        .filter(x => x.section === 'Journey' && !x.hidden && x.title && !existingNames.includes(x.title.trim().toLowerCase()))
         .sort((a,b) => (a.sort||0) - (b.sort||0))
         .forEach(x => {
           const card = document.createElement(x.linkUrl ? 'a' : 'div');
@@ -724,7 +740,7 @@
     const grantedGrid = document.getElementById('f4n-granted-grid');
     if (grantedGrid) {
       const byName = {};
-      rows.filter(x => x.section === 'Granted' && x.title).forEach(x => { byName[x.title.trim().toLowerCase()] = x; });
+      rows.filter(x => x.section === 'Granted' && !x.hidden && x.title).forEach(x => { byName[x.title.trim().toLowerCase()] = x; });
 
       grantedGrid.querySelectorAll('.company-card.company-card-nolink').forEach(oldCard => {
         const nameEl = oldCard.querySelector('.company-name');

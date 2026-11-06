@@ -255,8 +255,10 @@
       const rows = await loadBlob('f4n-companies');
       if (!rows.length) return;
 
-      const granted = rows.filter(r => r.section === 'Granted').sort((a, b) => (a.sort || 0) - (b.sort || 0));
-      const journey = rows.filter(r => r.section === 'Journey').sort((a, b) => (a.sort || 0) - (b.sort || 0));
+      // `hidden: true` is set from the Website Editor in scc.html to take a
+      // company off this page without deleting its record.
+      const granted = rows.filter(r => r.section === 'Granted' && !r.hidden).sort((a, b) => (a.sort || 0) - (b.sort || 0));
+      const journey = rows.filter(r => r.section === 'Journey' && !r.hidden).sort((a, b) => (a.sort || 0) - (b.sort || 0));
 
       // A published case study takes priority over the plain website link —
       // it's a page on this site, not an outbound link, but still opens in

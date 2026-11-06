@@ -537,11 +537,15 @@
   try {
     const BASE = 'https://nuccolmedia.blob.core.windows.net/content';
     const SAS  = 'sp=r&st=2026-09-24T11:03:39Z&se=2028-01-03T20:18:39Z&spr=https&sv=2026-02-06&sr=c&sig=AUxbKVwcZmCmboog7jq3GDiuGEBNRQBQ7B89IIZY5m8%3D';
-    const r = await fetch(`${BASE}/site-pages/f4n-companies.json?${SAS}`);
+    // &t= defeats the browser/CDN cache. Without it this read can return a
+    // stale copy of the JSON while nuccol-cms.js — which already cache-busts
+    // in loadBlob() — renders the current one, so the page contradicted
+    // itself: the heading said 24/13 while the grids showed 37/18.
+    const r = await fetch(`${BASE}/site-pages/f4n-companies.json?${SAS}&t=${Date.now()}`);
     if (!r.ok) return;
     const rows = await r.json();
-    const granted = rows.filter(x => x.section === 'Granted').length;
-    const journey = rows.filter(x => x.section === 'Journey').length;
+    const granted = rows.filter(x => x.section === 'Granted' && !x.hidden).length;
+    const journey = rows.filter(x => x.section === 'Journey' && !x.hidden).length;
     const gc = document.getElementById('f4n-granted-count');
     const jc = document.getElementById('f4n-journey-count');
     if (gc) gc.textContent = granted;
