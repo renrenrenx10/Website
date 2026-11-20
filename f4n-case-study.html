@@ -115,32 +115,68 @@
 
     .print-header,.print-footer{display:none}
 
+    @page{size:A4;margin:11mm 11mm 12mm}
+
     @media print{
       nav,footer,.cs-cta,.cs-back,.cs-toolbar{display:none!important}
       *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
-      body{background:#fff}
-      .page-header{padding:32px 0 28px}
+      html,body{background:#fff}
+
+      /* Compact masthead: the on-screen navy hero is far too tall for A4. */
+      .page-header{padding:0 0 9pt;margin:0 0 11pt;background:#fff;border-bottom:2.5pt solid var(--navy)}
       .page-header-glow,.page-header-grid{display:none}
-      main{max-width:100%;padding:20px 0 0}
-      .cs-layout{grid-template-columns:1fr 250px;gap:32px}
-      .cs-sidebar{position:static}
-      .cs-photo{max-height:280px}
-      .cs-panel,.cs-quote-card,.cs-body p{break-inside:avoid}
+      .page-header-content{max-width:none;margin:0}
+      .eyebrow{color:var(--navy);font-size:.60rem;letter-spacing:.14em;margin-bottom:5pt}
+      h1{font-size:22pt;line-height:1.03;color:var(--navy);margin-bottom:5pt}
+      #cs-tagline{font-size:9.5pt;line-height:1.35;color:#44536a;max-width:none;font-weight:400}
 
-      .print-header{display:flex;align-items:center;justify-content:space-between;padding:0 0 16px;margin-bottom:26px;border-bottom:2px solid var(--navy)}
-      .print-header-brand{display:flex;align-items:center;gap:10px}
-      .print-header-brand img{height:32px;width:32px;object-fit:contain;border-radius:4px;display:block}
-      .print-header-brand span{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
-      .print-header-tag{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
-      .print-header-tag::before{content:'';width:18px;height:2px;background:var(--amber)}
+      main{max-width:100%;margin:0;padding:0}
+      .cs-photo{max-height:38mm;margin-bottom:9pt;border-radius:4px;background:#fff;border-color:var(--border)}
 
-      .print-footer{display:block;margin-top:36px;padding-top:14px;border-top:1px solid var(--border);font-size:.72rem;color:#5a6a80}
-      .print-footer-row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+      /* CSS grid fragments badly across printed pages — it leaves half-empty
+         pages. Flow everything in one column stream and set the body in two
+         text columns instead, which is also the trade-press look. */
+      .cs-layout{display:block}
+      .cs-main{min-width:0}
+      .cs-body{max-width:none;columns:2;column-gap:11mm;orphans:3;widows:3}
+      .cs-body p{font-size:9pt;line-height:1.46;color:#2b3545;margin:0 0 7pt;text-align:justify;hyphens:auto;-webkit-hyphens:auto;break-inside:auto}
+      .cs-inline-photo{max-height:32mm;object-fit:cover;margin:2pt 0 7pt;break-inside:avoid}
+
+      .cs-sidebar{display:block;position:static;columns:2;column-gap:11mm;margin-top:4pt}
+      .cs-sidebar>*{break-inside:avoid;margin:0 0 9pt}
+
+      .cs-quote-card{background:#f4f7fb;border-left:3pt solid var(--amber);border-radius:0 4px 4px 0;padding:10pt 12pt}
+      .cs-quote-card blockquote{font-size:11pt;line-height:1.35;margin-bottom:6pt}
+      .cs-quote-attr{font-size:8pt}
+
+      .cs-panel{border:.75pt solid var(--border);border-radius:4px;padding:10pt 12pt}
+      .cs-panel-label{font-size:.62rem;margin-bottom:8pt}
+      .cs-stat-list{gap:7pt}
+      .cs-stat-row{padding-bottom:7pt}
+      .cs-stat-val{font-size:1.05rem}
+      .cs-stat-label{font-size:.68rem}
+      .cs-milestone-list{gap:5pt}
+      .cs-milestone-list li{font-size:7.8pt;line-height:1.4;gap:7pt}
+      .cs-milestone-list li::before{width:4pt;height:4pt;margin-top:4pt}
+
+      .print-header{display:flex;align-items:center;justify-content:space-between;padding:0 0 7pt;margin-bottom:10pt;border-bottom:1.5pt solid var(--navy)}
+      .print-header-brand{display:flex;align-items:center;gap:8pt}
+      .print-header-brand img{height:22pt;width:22pt;object-fit:contain;border-radius:3px;display:block}
+      .print-header-brand span{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+      .print-header-tag{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:7pt}
+      .print-header-tag::before{content:'';width:16pt;height:1.5pt;background:var(--amber)}
+
+      .print-footer{display:block;margin-top:12pt;padding-top:7pt;border-top:.75pt solid var(--border);font-size:.66rem;color:#5a6a80}
+      .print-footer-row{display:flex;justify-content:space-between;align-items:center;gap:14pt;flex-wrap:wrap}
       .print-footer-brand{font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--navy)}
     }
   </style>
 </head>
 <body>
+
+<div id="cs-draft-banner" style="display:none;background:var(--amber);color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:.84rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:11px 16px">
+  Draft &mdash; not published &middot; for review only
+</div>
 
 <div class="print-header">
   <div class="print-header-brand">
@@ -274,13 +310,19 @@
   if (!slug) { loading.style.display = 'none'; notfound.style.display = 'block'; return; }
 
   try {
-    const r = await fetch(`${BASE}/site-pages/f4n-case-studies.json?${SAS}&t=${Date.now()}`);
+    // ?draft=1 reads the separate drafts file written by the SCC app's
+    // "Save & preview draft". Drafts are never in the live file, are not linked
+    // from any company card, and are clearly banner-marked here and in print.
+    const isDraft = params.get('draft') === '1';
+    const srcFile = isDraft ? 'f4n-case-studies-drafts.json' : 'f4n-case-studies.json';
+    if (isDraft) document.getElementById('cs-draft-banner').style.display = 'block';
+    const r = await fetch(`${BASE}/site-pages/${srcFile}?${SAS}&t=${Date.now()}`);
     if (!r.ok) throw new Error('fetch failed');
     const all = await r.json();
     const cs = Array.isArray(all) ? all.find(c => c.slug === slug) : null;
     if (!cs) throw new Error('not found');
 
-    document.getElementById('cs-title').textContent = (cs.headline || cs.company_name || 'F4N Case Study') + ' – NucCol';
+    document.getElementById('cs-title').textContent = (isDraft ? 'DRAFT – ' : '') + (cs.headline || cs.company_name || 'F4N Case Study') + ' – NucCol';
     document.getElementById('cs-headline').textContent = cs.headline || cs.company_name || '';
     document.getElementById('cs-tagline').textContent  = cs.tagline || '';
 
