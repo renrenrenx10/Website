@@ -213,12 +213,9 @@
   </div>
 
   <main>
-    <div class="cs-toolbar">
-      <button type="button" class="cs-pdf-btn" onclick="window.print()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
-        Download PDF
-      </button>
-    </div>
+    <!-- "Download PDF" button removed 2026-11-20 at NucCol's request. The print
+         stylesheet below still formats this page as a two-side A4 document, so
+         Ctrl+P (or re-adding a button that calls window.print()) still works. -->
     <img id="cs-photo" class="cs-photo" src="" alt="">
 
     <div class="cs-layout">
