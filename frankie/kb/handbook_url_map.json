@@ -70,5 +70,9 @@
   "supply-chain-readiness-flow-down-of-nuclear-requirements-to-subcontractors": "SUP02",
   "supply-chain-readiness-nuclear-specific-procurement-supply-chain-requirements": "SUP03",
   "supply-chain-readiness-regular-inspection-and-surveillance-of-nuclear-work": "SUP02",
-  "supply-chain-risk-management": "SCS05"
+  "supply-chain-risk-management": "SCS05",
+  "security-of-information-classification-and-protection-of-nuclear-related-information": "SEC01",
+  "security-of-information-cybersecurity-controls-for-the-nuclear-supply-chain": "SEC02",
+  "security-of-information-protection-of-sensitive-documents-and-intellectual-property": "SEC03",
+  "security-of-information-security-vetting-and-personnel-clearance": "SEC04"
 }

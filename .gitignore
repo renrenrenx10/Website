@@ -40,3 +40,10 @@ frankie/kb/*
 *.bak-*
 *.bak
 *.preocr
+
+# Working outputs from editing sessions — drafts, exports and build
+# leftovers that are not part of the deploy (added 2026-11-23).
+# manufacturing-uk-pages/ holds a superseded 1 Oct draft of nuclear-ready.html;
+# the live version sits at the repo root.
+Claude outputs/
+manufacturing-uk-pages/
